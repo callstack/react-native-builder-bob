@@ -1,0 +1,9 @@
+{
+  "name": "@react-native-community/bob",
+  "version": "0.1.0",
+  "description": "CLI to build JavaScript files for React Native libraries",
+  "main": "src/index.js",
+  "repository": "git@github.com:react-native-community/bob.git",
+  "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
+  "license": "MIT"
+}
