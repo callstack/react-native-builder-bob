@@ -1,6 +1,6 @@
 # @react-native-community/bob
 
-Simple CLI to build React Native libraries for different targets.
+👷‍♂️ Simple CLI to build React Native libraries for different targets.
 
 ## Features
 
@@ -9,7 +9,6 @@ The CLI can build code for following targets:
 - Generic CommonJS build
 - ES modules build for bundlers such as webpack
 - Flow definitions (copies .js files to .flow files)
-- TypeScript definitions (uses tsc to generate declaration files)
 
 ## Why?
 

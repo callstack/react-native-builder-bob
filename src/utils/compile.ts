@@ -33,7 +33,7 @@ export default async function compile({
 
       if (!/\.(js|tsx?)/.test(filepath)) {
         // Copy files which aren't source code
-        fs.copy(filepath, outputFilename, { overwrite: true });
+        fs.copy(filepath, outputFilename);
       }
 
       const content = await fs.readFile(filepath, 'utf-8');
@@ -59,9 +59,8 @@ export default async function compile({
 
       await fs.writeFile(outputFilename, code);
 
-      // If the code has flow comment, also copy the file for flow
-      if (flow && content.includes('@flow')) {
-        fs.copy(filepath, outputFilename + '.flow', { overwrite: true });
+      if (flow) {
+        fs.copy(filepath, outputFilename + '.flow');
       }
     })
   );
