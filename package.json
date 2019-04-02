@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/bob",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:react-native-community/bob.git",
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
@@ -13,6 +13,10 @@
     "bin",
     "lib"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "typescript": "tsc --noEmit",
     "build": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start",
