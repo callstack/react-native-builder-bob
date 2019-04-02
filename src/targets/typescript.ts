@@ -15,4 +15,6 @@ export default async function build({ root, output }: Input) {
     '--outDir',
     output,
   ]);
+
+  logger.info(`wrote definition files to ${path.relative(root, output)}`);
 }

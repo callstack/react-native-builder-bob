@@ -80,20 +80,31 @@ yargs
       },
     ]);
 
-    const target = targets[0];
-    const entries = {
-      main: path.join(output, target, 'index.js'),
-      module: path.join(output, 'module', 'index.js'),
-      types: path.join(output, 'typescript', source, 'index.d.ts'),
+    const target =
+      targets[0] === 'commonjs' || targets[0] === 'module'
+        ? targets[0]
+        : undefined;
+
+    const entries: { [key: string]: string } = {
+      main: target
+        ? path.join(output, target, 'index.js')
+        : path.join(source, 'index.js'),
       'react-native': path.join(source, 'index.js'),
     };
+
+    if (targets.includes('module')) {
+      entries.module = path.join(output, 'module', 'index.js');
+    }
+
+    if (targets.includes('typescript')) {
+      entries.types = path.join(output, 'typescript', source, 'index.d.ts');
+    }
 
     const prepare = 'bob build';
     const files = [source, output];
 
     for (const key in entries) {
-      // @ts-ignore
-      const entry = entries[key] as string;
+      const entry = entries[key];
 
       if (pkg[key] && pkg[key] !== entry) {
         const { replace } = await inquirer.prompt({
