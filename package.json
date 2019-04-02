@@ -17,7 +17,8 @@
     "typescript": "tsc --noEmit",
     "build": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start",
     "watch": "yarn build --watch",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "release": "release-it"
   },
   "dependencies": {
     "@babel/core": "^7.4.0",
@@ -35,6 +36,7 @@
     "@babel/cli": "^7.2.3",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
+    "@commitlint/config-conventional": "^7.5.0",
     "@types/babel__core": "^7.1.0",
     "@types/chalk": "^2.2.0",
     "@types/cosmiconfig": "^5.0.3",
@@ -43,8 +45,16 @@
     "@types/inquirer": "^6.0.0",
     "@types/ora": "^3.2.0",
     "@types/yargs": "^12.0.11",
+    "commitlint": "^7.5.2",
     "conventional-changelog-cli": "^2.0.12",
+    "husky": "^1.3.1",
     "release-it": "^10.4.0",
     "typescript": "^3.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn typescript"
+    }
   }
 }
