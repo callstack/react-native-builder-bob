@@ -36,6 +36,7 @@ yargs
         `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
       );
     }
+
     const { source } = await inquirer.prompt({
       type: 'input',
       name: 'source',
@@ -44,16 +45,21 @@ yargs
       validate: input => Boolean(input),
     });
 
-    if (
-      !(
-        (await fs.pathExists(path.join(root, source, 'index.js'))) ||
-        (await fs.pathExists(path.join(root, source, 'index.ts'))) ||
-        (await fs.pathExists(path.join(root, source, 'index.tsx')))
-      )
-    ) {
+    let entryFile;
+
+    if (await fs.pathExists(path.join(root, source, 'index.js'))) {
+      entryFile = 'index.js';
+    } else if (await fs.pathExists(path.join(root, source, 'index.ts'))) {
+      entryFile = 'index.ts';
+    } else if (await fs.pathExists(path.join(root, source, 'index.tsx'))) {
+      entryFile = 'index.tsx';
+    }
+
+    if (!entryFile) {
       logger.exit(
         `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'. Please re-run the CLI after creating it.`
       );
+      return;
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
@@ -88,8 +94,8 @@ yargs
     const entries: { [key: string]: string } = {
       main: target
         ? path.join(output, target, 'index.js')
-        : path.join(source, 'index.js'),
-      'react-native': path.join(source, 'index.js'),
+        : path.join(source, entryFile),
+      'react-native': path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
