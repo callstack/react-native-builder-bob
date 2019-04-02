@@ -7,6 +7,7 @@ import isGitDirty from 'is-git-dirty';
 import * as logger from './utils/logger';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
+import buildTypescript from './targets/typescript';
 import { Options } from './types';
 
 const { name } = require('../package.json');
@@ -32,19 +33,31 @@ yargs
 
     if (!(await fs.pathExists(pak))) {
       logger.exit(
-        `Couldn't find a 'package.json' file in ${pak}. Are you in a project folder?`
+        `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
+      );
+    }
+    const { source } = await inquirer.prompt({
+      type: 'input',
+      name: 'source',
+      message: 'Where are your source files?',
+      default: 'src',
+      validate: input => Boolean(input),
+    });
+
+    if (
+      !(
+        (await fs.pathExists(path.join(root, source, 'index.js'))) ||
+        (await fs.pathExists(path.join(root, source, 'index.ts'))) ||
+        (await fs.pathExists(path.join(root, source, 'index.tsx')))
+      )
+    ) {
+      logger.exit(
+        `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'. Please re-run the CLI after creating it.`
       );
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
-    const { source, output, targets, flow } = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'source',
-        message: 'Where are your source files?',
-        default: 'src',
-        validate: input => Boolean(input),
-      },
+    const { output, targets, flow } = await inquirer.prompt([
       {
         type: 'input',
         name: 'output',
@@ -56,7 +69,7 @@ yargs
         type: 'checkbox',
         name: 'targets',
         message: 'Which targets do you want to build?',
-        choices: ['commonjs', 'module'],
+        choices: ['commonjs', 'module', 'typescript'],
         validate: input => Boolean(input.length),
       },
       {
@@ -71,6 +84,7 @@ yargs
     const entries = {
       main: path.join(output, target, 'index.js'),
       module: path.join(output, 'module', 'index.js'),
+      types: path.join(output, 'typescript', source, 'index.d.ts'),
       'react-native': path.join(source, 'index.js'),
     };
 
@@ -224,6 +238,13 @@ yargs
             source: source as string,
             output: path.resolve(root, output as string, 'module'),
             options: targetOptions,
+          });
+          break;
+        case 'typescript':
+          await buildTypescript({
+            root,
+            source: source as string,
+            output: path.resolve(root, output as string, 'typescript'),
           });
           break;
         default:

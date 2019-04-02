@@ -9,6 +9,7 @@ The CLI can build code for following targets:
 - Generic CommonJS build
 - ES modules build for bundlers such as webpack
 - Flow definitions (copies .js files to .flow files)
+- TypeScript definitions (uses tsc to generate declaration files)
 
 ## Why?
 
@@ -16,7 +17,7 @@ Metro handles compiling source code for React Native libraries, but it's possibl
 
 Just as an example, this is a command we have in one of the packages: `babel --extensions '.js,.ts,.tsx' --no-babelrc --config-file=./babel.config.publish.js src --ignore '**/__tests__/**' --copy-files --source-maps --delete-dir-on-start --out-dir dist && del-cli 'dist/**/__tests__' && yarn tsc --emitDeclarationOnly`. This isn't all, there's even a separate `babel.config.publish.js` file. And this only works for webpack and Metro, and will fail on Node due to ESM usage.
 
-Bob wraps tools such as `babel-cli` and simplifies these common tasks across multiple projects. It's tailored specifically to React Native projects to minimize the configuration required.
+Bob wraps tools such as `babel` and `typescript` to simplify these common tasks across multiple projects. It's tailored specifically to React Native projects to minimize the configuration required.
 
 ## Installation
 
@@ -40,7 +41,8 @@ To configure your project manually, follow these steps:
      "output": "lib",
      "targets": [
        ["commonjs", {"flow": true}],
-       "module"
+       "module",
+       "typescript",
      ]
    }
    ```
@@ -59,6 +61,7 @@ To configure your project manually, follow these steps:
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
    "react-native": "src/index.js",
+   "typescript": "lib/typescript/src/index.d.ts",
    "files": [
      "lib/",
      "src/"
@@ -73,10 +76,6 @@ To configure your project manually, follow these steps:
    ```
 
 And we're done 🎉
-
-## TODO
-
-- TypeScript support
 
 ## LICENSE
 

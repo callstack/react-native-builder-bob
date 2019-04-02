@@ -1,4 +1,4 @@
-import del from 'del'
+import del from 'del';
 import compile from '../utils/compile';
 import * as logger from '../utils/logger';
 import { Input } from '../types';

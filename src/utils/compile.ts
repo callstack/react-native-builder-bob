@@ -20,6 +20,7 @@ export default async function compile({
   const files = glob.sync('**/*', {
     cwd: source,
     absolute: true,
+    nodir: true,
     ignore: '**/__tests__/**,**/__fixtures__/**',
   });
 
@@ -27,13 +28,14 @@ export default async function compile({
     files.map(async filepath => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
-        .replace(/\.(js|tsx?)/, '.js');
+        .replace(/\.(js|tsx?)$/, '.js');
 
       await fs.mkdirp(path.dirname(outputFilename));
 
-      if (!/\.(js|tsx?)/.test(filepath)) {
+      if (!/\.(js|tsx?)$/.test(filepath)) {
         // Copy files which aren't source code
         fs.copy(filepath, outputFilename);
+        return;
       }
 
       const content = await fs.readFile(filepath, 'utf-8');
@@ -41,6 +43,7 @@ export default async function compile({
         babelrc: false,
         configFile: false,
         sourceMaps: true,
+        filename: filepath,
         ...options,
       });
 

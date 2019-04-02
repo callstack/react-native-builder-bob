@@ -4,7 +4,7 @@ export type Input = {
   output: string,
 };
 
-export type Target = 'commonjs' | 'module';
+export type Target = 'commonjs' | 'module' | 'typescript';
 
 export type Options = {
   source?: string,
