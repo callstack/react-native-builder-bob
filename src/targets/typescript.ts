@@ -1,13 +1,15 @@
+import chalk from 'chalk';
 import path from 'path';
 import child_process from 'child_process';
 import del from 'del';
-import * as logger from '../utils/logger';
 import { Input } from '../types';
 
-export default async function build({ root, output }: Input) {
-  logger.info('building files for typscript target');
+export default async function build({ root, output, report }: Input) {
+  report.info('Cleaning up previous build');
 
   await del([output]);
+
+  report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
   child_process.execFileSync(path.join(root, 'node_modules', '.bin', 'tsc'), [
     '--declaration',
@@ -16,5 +18,7 @@ export default async function build({ root, output }: Input) {
     output,
   ]);
 
-  logger.info(`wrote definition files to ${path.relative(root, output)}`);
+  report.success(
+    `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
+  );
 }

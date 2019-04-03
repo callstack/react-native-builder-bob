@@ -1,6 +1,5 @@
 import del from 'del';
 import compile from '../utils/compile';
-import * as logger from '../utils/logger';
 import { Input } from '../types';
 
 type Options = Input & {
@@ -12,10 +11,12 @@ export default async function build({
   source,
   output,
   options,
+  report
 }: Options) {
-  logger.info('building files for module target');
+  report.info('Cleaning up previous build');
 
   await del([output]);
+
   await compile({
     root,
     source,
@@ -29,5 +30,6 @@ export default async function build({
       ],
     },
     flow: options && options.flow ? true : false,
+    report
   });
 }

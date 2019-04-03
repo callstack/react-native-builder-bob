@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
+import chalk from 'chalk';
 import yargs from 'yargs';
 import inquirer from 'inquirer';
 import cosmiconfig from 'cosmiconfig';
@@ -148,7 +149,11 @@ yargs
       pkg.scripts.prepare = prepare;
     }
 
-    if (pkg.files) {
+    if (
+      pkg.files &&
+      JSON.stringify(pkg.files.slice().sort()) !==
+        JSON.stringify(files.slice().sort())
+    ) {
       const { replace } = await inquirer.prompt({
         type: 'confirm',
         name: 'replace',
@@ -190,7 +195,7 @@ yargs
       }
     }
 
-    console.log('🎉 Your project is configured!');
+    logger.success('Your project is configured!');
   })
   .command('build', 'build files for publishing', {}, async argv => {
     const result = explorer.searchSync();
@@ -236,36 +241,48 @@ yargs
       );
     }
 
+    const report = {
+      info: logger.info,
+      warn: logger.warn,
+      error: logger.error,
+      success: logger.success,
+    };
+
     for (const target of options.targets!) {
       const targetName = Array.isArray(target) ? target[0] : target;
       const targetOptions = Array.isArray(target) ? target[1] : undefined;
+
+      report.info(`Building target ${chalk.blue(targetName)}`);
 
       switch (targetName) {
         case 'commonjs':
           await buildCommonJS({
             root,
-            source: source as string,
+            source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'commonjs'),
             options: targetOptions,
+            report,
           });
           break;
         case 'module':
           await buildModule({
             root,
-            source: source as string,
+            source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'module'),
             options: targetOptions,
+            report,
           });
           break;
         case 'typescript':
           await buildTypescript({
             root,
-            source: source as string,
+            source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'typescript'),
+            report,
           });
           break;
         default:
-          logger.exit(`Invalid target '${target}'.`);
+          logger.exit(`Invalid target ${chalk.blue(targetName)}.`);
       }
     }
   })

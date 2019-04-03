@@ -1,13 +1,13 @@
 import path from 'path';
 import fs from 'fs-extra';
+import chalk from 'chalk';
 import * as babel from '@babel/core';
 import glob from 'glob';
 import { Input } from '../types';
-import * as logger from './logger';
 
 type Options = Input & {
   options: babel.TransformOptions;
-  flow: boolean,
+  flow: boolean;
 };
 
 export default async function compile({
@@ -15,7 +15,8 @@ export default async function compile({
   source,
   output,
   options,
-  flow
+  flow,
+  report,
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
@@ -23,6 +24,12 @@ export default async function compile({
     nodir: true,
     ignore: '**/__tests__/**,**/__fixtures__/**',
   });
+
+  report.info(
+    `Compiling ${chalk.blue(String(files.length))} files in ${chalk.blue(
+      path.relative(root, source)
+    )} with ${chalk.blue('babel')}`
+  );
 
   await Promise.all(
     files.map(async filepath => {
@@ -68,5 +75,5 @@ export default async function compile({
     })
   );
 
-  logger.info(`built ${files.length} files in ${path.relative(root, source)} to ${path.relative(root, output)}`);
+  report.success(`Wrote files to ${chalk.blue(path.relative(root, output))}`);
 }
