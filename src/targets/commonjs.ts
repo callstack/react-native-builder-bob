@@ -13,9 +13,11 @@ export default async function build({
   source,
   output,
   options,
-  report
+  report,
 }: Options) {
-  report.info(`Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`);
+  report.info(
+    `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
+  );
 
   await del([output]);
 
@@ -27,6 +29,6 @@ export default async function build({
       presets: [[require.resolve('metro-react-native-babel-preset')]],
     },
     flow: options && options.flow ? true : false,
-    report
+    report,
   });
 }

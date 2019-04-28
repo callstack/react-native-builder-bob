@@ -18,7 +18,7 @@ export default async function build({ root, output, report }: Input) {
   const tsc =
     path.join(root, 'node_modules', '.bin', 'tsc') +
     (platform() === 'win32' ? '.cmd' : '');
-  
+
   const tsconfig = path.join(root, 'tsconfig.json');
 
   try {
