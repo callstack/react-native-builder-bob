@@ -13,8 +13,33 @@ export default async function build({ root, output, report }: Input) {
   report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
   const tsc = path.join(root, 'node_modules', '.bin', 'tsc');
+  const tsconfig = path.join(root, 'tsconfig.json');
 
   try {
+    if (await fs.pathExists(tsconfig)) {
+      const config = JSON.parse(await fs.readFile(tsconfig, 'utf-8'));
+
+      if (config.compilerOptions) {
+        if (config.compilerOptions.outDir) {
+          report.warn(
+            `Found ${chalk.blue('compilerOptions.outDir')} in ${chalk.blue(
+              'tsconfig.json'
+            )} which can conflict with the CLI options. It's recommended to remove it from the config file.`
+          );
+        }
+
+        if (config.compilerOptions && config.compilerOptions.declarationDir) {
+          report.warn(
+            `Found ${chalk.blue(
+              'compilerOptions.declarationDir'
+            )} in ${chalk.blue(
+              'tsconfig.json'
+            )} which can conflict with the CLI options. It's recommended to remove it from the config file.`
+          );
+        }
+      }
+    }
+
     if (await fs.pathExists(tsc)) {
       child_process.execFileSync(tsc, [
         '--declaration',
