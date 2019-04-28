@@ -22,7 +22,7 @@ export default async function compile({
     cwd: source,
     absolute: true,
     nodir: true,
-    ignore: '**/__tests__/**,**/__fixtures__/**',
+    ignore: '**/{__tests__,__fixtures__}/**',
   });
 
   report.info(
