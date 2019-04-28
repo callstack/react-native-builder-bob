@@ -15,6 +15,8 @@ const { name } = require('../package.json');
 const root = process.cwd();
 const explorer = cosmiconfig(name);
 
+const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
+
 yargs
   .command('init', 'configure the package to use bob', {}, async () => {
     const pak = path.join(root, 'package.json');
@@ -64,7 +66,7 @@ yargs
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
-    const { output, targets, flow } = await inquirer.prompt([
+    const questions: inquirer.Question[] = [
       {
         type: 'input',
         name: 'output',
@@ -79,13 +81,23 @@ yargs
         choices: ['commonjs', 'module', 'typescript'],
         validate: input => Boolean(input.length),
       },
-      {
+    ];
+
+    if (
+      entryFile.endsWith('.js') &&
+      FLOW_PRGAMA_REGEX.test(
+        await fs.readFile(path.join(root, source, entryFile), 'utf-8')
+      )
+    ) {
+      questions.push({
         type: 'confirm',
         name: 'flow',
         message: 'Do you want to publish definitions for flow?',
         default: Object.keys(pkg.devDependencies || {}).includes('flow-bin'),
-      },
-    ]);
+      });
+    }
+
+    const { output, targets, flow } = await inquirer.prompt(questions);
 
     const target =
       targets[0] === 'commonjs' || targets[0] === 'module'
