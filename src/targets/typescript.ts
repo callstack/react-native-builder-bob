@@ -4,6 +4,7 @@ import child_process from 'child_process';
 import fs from 'fs-extra';
 import del from 'del';
 import { Input } from '../types';
+import {platform} from 'os';
 
 export default async function build({ root, output, report }: Input) {
   report.info(`Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`);
@@ -12,7 +13,7 @@ export default async function build({ root, output, report }: Input) {
 
   report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
-  const tsc = path.join(root, 'node_modules', '.bin', 'tsc');
+  const tsc = path.join(root, 'node_modules', '.bin', 'tsc') + (/^win/.test(platform()) ? '.cmd' : '');
   const tsconfig = path.join(root, 'tsconfig.json');
 
   try {
