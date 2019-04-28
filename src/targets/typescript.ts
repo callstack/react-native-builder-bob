@@ -6,7 +6,7 @@ import del from 'del';
 import { Input } from '../types';
 
 export default async function build({ root, output, report }: Input) {
-  report.info('Cleaning up previous build');
+  report.info(`Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`);
 
   await del([output]);
 

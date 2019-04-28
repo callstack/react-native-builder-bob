@@ -68,11 +68,17 @@ To configure your project manually, follow these steps:
    ]
    ```
 
-1. Add the output directory to `.gitignore`
+1. Add the output directory to `.gitignore` and `.eslintignore`
 
    ```gitignore
    # generated files by bob
    lib/
+   ```
+
+1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
+
+   ```json
+   "modulePathIgnorePatterns": ["<rootDir>/lib/"]
    ```
 
 And we're done 🎉

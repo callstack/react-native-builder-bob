@@ -1,3 +1,5 @@
+import path from 'path';
+import chalk from 'chalk';
 import del from 'del';
 import compile from '../utils/compile';
 import { Input } from '../types';
@@ -13,7 +15,7 @@ export default async function build({
   options,
   report
 }: Options) {
-  report.info('Cleaning up previous build');
+  report.info(`Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`);
 
   await del([output]);
 
