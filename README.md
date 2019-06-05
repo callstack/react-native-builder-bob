@@ -6,6 +6,7 @@
 
 The CLI can build code for following targets:
 
+- Android AAR files
 - Generic CommonJS build
 - ES modules build for bundlers such as webpack
 - Flow definitions (copies .js files to .flow files)
@@ -40,6 +41,7 @@ To configure your project manually, follow these steps:
      "source": "src",
      "output": "lib",
      "targets": [
+       ["aar", {"reverseJetify": true}],
        ["commonjs", {"flow": true}],
        "module",
        "typescript",

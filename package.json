@@ -36,6 +36,9 @@
     "metro-react-native-babel-preset": "^0.53.1",
     "yargs": "^13.2.2"
   },
+  "optionalDependencies": {
+    "jetifier": "^1.0.0-beta04.2"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/preset-env": "^7.4.2",
