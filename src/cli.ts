@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import cosmiconfig from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import * as logger from './utils/logger';
+import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
@@ -78,7 +79,7 @@ yargs
         type: 'checkbox',
         name: 'targets',
         message: 'Which targets do you want to build?',
-        choices: ['commonjs', 'module', 'typescript'],
+        choices: ['aar', 'commonjs', 'module', 'typescript'],
         validate: input => Boolean(input.length),
       },
     ];
@@ -286,6 +287,15 @@ yargs
       report.info(`Building target ${chalk.blue(targetName)}`);
 
       switch (targetName) {
+        case 'aar':
+          await buildAAR({
+            root,
+            source: path.resolve(root, source as string),
+            output: path.resolve(root, output as string, 'aar'),
+            options: targetOptions,
+            report,
+          });
+          break;
         case 'commonjs':
           await buildCommonJS({
             root,

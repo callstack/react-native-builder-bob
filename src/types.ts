@@ -1,18 +1,19 @@
 export type Log = (message: string) => void;
+export type Report = {
+  info: Log;
+  warn: Log;
+  success: Log;
+  error: Log;
+};
 
 export type Input = {
   root: string;
   source: string;
   output: string;
-  report: {
-    info: Log;
-    warn: Log;
-    success: Log;
-    error: Log;
-  };
+  report: Report;
 };
 
-export type Target = 'commonjs' | 'module' | 'typescript';
+export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';
 
 export type Options = {
   source?: string;
