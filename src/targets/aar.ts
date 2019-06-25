@@ -8,11 +8,13 @@ import jetifier from '../utils/jetifier';
 
 type TargetOptions = {
   androidPath: string,
+  androidBundleName: string;
   reverseJetify: boolean
 };
 
 const defaultOptions: TargetOptions = {
   androidPath: "android",
+  androidBundleName: "android.aar",
   reverseJetify: false
 };
 
@@ -49,8 +51,8 @@ export default async function build({
   );
   await fs.mkdir(output);
 
-  const sourceAar = path.join(targetOptions.androidPath, 'build', 'outputs', 'aar', 'android.aar');
-  const targetAar = path.join(output, 'android.aar');
+  const sourceAar = path.join(targetOptions.androidPath, 'build', 'outputs', 'aar', targetOptions.androidBundleName);
+  const targetAar = path.join(output, targetOptions.androidBundleName);
 
   report.info(
     `Copying AAR from ${chalk.blue(path.relative(root, sourceAar))} to ${chalk.blue(path.relative(root, targetAar))}`
@@ -70,7 +72,7 @@ export default async function build({
     );
     await fs.mkdir(supportOutputPath);
 
-    const supportAar = path.join(supportOutputPath, 'android.aar');
+    const supportAar = path.join(supportOutputPath, targetOptions.androidBundleName);
     report.info(
       `Using Jetifier to convert AAR from AndroidX to Support AAR at ${chalk.blue(path.relative(root, supportAar))}`
     );
