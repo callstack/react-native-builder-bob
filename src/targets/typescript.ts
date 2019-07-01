@@ -26,21 +26,32 @@ export default async function build({ root, output, report }: Input) {
       const config = JSON.parse(await fs.readFile(tsconfig, 'utf-8'));
 
       if (config.compilerOptions) {
-        if (config.compilerOptions.outDir) {
-          report.warn(
-            `Found ${chalk.blue('compilerOptions.outDir')} in ${chalk.blue(
-              'tsconfig.json'
-            )} which can conflict with the CLI options. It's recommended to remove it from the config file.`
-          );
+        const conflicts: string[] = [];
+
+        if (config.compilerOptions.noEmit !== undefined) {
+          conflicts.push('compilerOptions.noEmit');
         }
 
-        if (config.compilerOptions && config.compilerOptions.declarationDir) {
+        if (config.compilerOptions.emitDeclarationOnly !== undefined) {
+          conflicts.push('compilerOptions.emitDeclarationOnly');
+        }
+
+        if (config.compilerOptions.outDir) {
+          conflicts.push('compilerOptions.outDir');
+        }
+
+        if (config.compilerOptions.declarationDir) {
+          conflicts.push('compilerOptions.declarationDir');
+        }
+
+        if (conflicts.length) {
           report.warn(
-            `Found ${chalk.blue(
-              'compilerOptions.declarationDir'
-            )} in ${chalk.blue(
+            `Found following options in the config file which can conflict with the CLI options. Please remove them from ${chalk.blue(
               'tsconfig.json'
-            )} which can conflict with the CLI options. It's recommended to remove it from the config file.`
+            )}:${conflicts.reduce(
+              (acc, curr) => acc + `\n${chalk.gray('-')} ${chalk.yellow(curr)}`,
+              ''
+            )}`
           );
         }
       }
@@ -48,6 +59,7 @@ export default async function build({ root, output, report }: Input) {
 
     if (await fs.pathExists(tsc)) {
       child_process.execFileSync(tsc, [
+        '--pretty',
         '--declaration',
         '--emitDeclarationOnly',
         '--outDir',
@@ -71,7 +83,7 @@ export default async function build({ root, output, report }: Input) {
   } catch (e) {
     if (e.stdout) {
       report.error(
-        `Errors found when building definition files.\n${e.stdout.toString()}`
+        `Errors found when building definition files:\n${e.stdout.toString()}`
       );
     } else {
       report.error(e.message);
