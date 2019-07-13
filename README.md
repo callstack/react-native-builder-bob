@@ -44,7 +44,7 @@ To configure your project manually, follow these steps:
        ["aar", {"reverseJetify": true}],
        ["commonjs", {"flow": true}],
        "module",
-       "typescript",
+       "typescript"
      ]
    }
    ```
@@ -62,7 +62,7 @@ To configure your project manually, follow these steps:
    ```json
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
-   "react-native": "src/index.js",
+   "react-native": "lib/module/index.js",
    "types": "lib/typescript/src/index.d.ts",
    "files": [
      "lib/",
