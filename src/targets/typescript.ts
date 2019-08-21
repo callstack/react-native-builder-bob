@@ -15,10 +15,6 @@ export default async function build({ root, output, report }: Input) {
 
   report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
-  const tsc =
-    path.join(root, 'node_modules', '.bin', 'tsc') +
-    (platform() === 'win32' ? '.cmd' : '');
-
   const tsconfig = path.join(root, 'tsconfig.json');
 
   try {
@@ -57,6 +53,14 @@ export default async function build({ root, output, report }: Input) {
       }
     }
 
+    let tsc =
+      path.join(root, 'node_modules', '.bin', 'tsc') +
+      (platform() === 'win32' ? '.cmd' : '');
+
+    if (!await fs.pathExists(tsc)) {
+      tsc = child_process.execSync('which tsc').toString('utf-8').trim();
+    }
+
     if (await fs.pathExists(tsc)) {
       child_process.execFileSync(tsc, [
         '--pretty',
@@ -75,7 +79,7 @@ export default async function build({ root, output, report }: Input) {
           'tsc'
         )} binary doesn't seem to be installed under ${chalk.blue(
           'node_modules'
-        )}. Make sure you have added ${chalk.blue(
+        )} or present in $PATH. Make sure you have added ${chalk.blue(
           'typescript'
         )} to your ${chalk.blue('devDependencies')}.`
       );
