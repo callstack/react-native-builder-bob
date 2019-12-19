@@ -1,0 +1,4 @@
+{
+  "extends": "satya164",
+  "env": { "node": true }
+}

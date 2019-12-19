@@ -18,6 +18,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
+    "lint": "eslint --ext '.js,.ts,.tsx' .",
     "typescript": "tsc --noEmit",
     "build": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start",
     "watch": "yarn build --watch",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.7.7",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-typescript": "^7.7.7",
     "@commitlint/config-conventional": "^8.2.0",
@@ -53,6 +55,8 @@
     "@types/inquirer": "^6.5.0",
     "@types/yargs": "^13.0.3",
     "commitlint": "^8.2.0",
+    "eslint": "^6.7.2",
+    "eslint-config-satya164": "^3.1.5",
     "husky": "^3.1.0",
     "prettier": "^1.19.1",
     "release-it": "^12.4.3",
@@ -61,7 +65,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn typescript"
+      "pre-commit": "yarn lint && yarn typescript"
     }
   }
 }

@@ -7,15 +7,15 @@ import { Input } from '../types';
 import jetifier from '../utils/jetifier';
 
 type TargetOptions = {
-  androidPath: string,
+  androidPath: string;
   androidBundleName: string;
-  reverseJetify: boolean
+  reverseJetify: boolean;
 };
 
 const defaultOptions: TargetOptions = {
-  androidPath: "android",
-  androidBundleName: "android.aar",
-  reverseJetify: false
+  androidPath: 'android',
+  androidBundleName: 'android.aar',
+  reverseJetify: false,
 };
 
 type Options = Input & {
@@ -24,7 +24,10 @@ type Options = Input & {
 
 async function createGradleFile(file: string) {
   await fs.createFile(file);
-  await fs.writeFile(file, 'configurations.maybeCreate("default")\nartifacts.add("default", file(\'android.aar\'))')
+  await fs.writeFile(
+    file,
+    'configurations.maybeCreate("default")\nartifacts.add("default", file(\'android.aar\'))'
+  );
 }
 
 export default async function build({
@@ -35,7 +38,7 @@ export default async function build({
 }: Options) {
   const targetOptions = {
     ...defaultOptions,
-    ...options
+    ...options,
   };
 
   report.info(
@@ -44,18 +47,32 @@ export default async function build({
 
   await del([output]);
 
-  await androidAssemble({ root, androidPath: targetOptions.androidPath, report });
+  await androidAssemble({
+    root,
+    androidPath: targetOptions.androidPath,
+    report,
+  });
 
   report.info(
-    `Creating new output directory at ${chalk.blue(path.relative(root, output))}`
+    `Creating new output directory at ${chalk.blue(
+      path.relative(root, output)
+    )}`
   );
   await fs.mkdir(output);
 
-  const sourceAar = path.join(targetOptions.androidPath, 'build', 'outputs', 'aar', targetOptions.androidBundleName);
+  const sourceAar = path.join(
+    targetOptions.androidPath,
+    'build',
+    'outputs',
+    'aar',
+    targetOptions.androidBundleName
+  );
   const targetAar = path.join(output, targetOptions.androidBundleName);
 
   report.info(
-    `Copying AAR from ${chalk.blue(path.relative(root, sourceAar))} to ${chalk.blue(path.relative(root, targetAar))}`
+    `Copying AAR from ${chalk.blue(
+      path.relative(root, sourceAar)
+    )} to ${chalk.blue(path.relative(root, targetAar))}`
   );
   await fs.copyFile(sourceAar, targetAar);
 
@@ -68,13 +85,20 @@ export default async function build({
   if (targetOptions.reverseJetify) {
     const supportOutputPath = path.join(output, 'support');
     report.info(
-      `Creating new support output directory at ${chalk.blue(path.relative(root, supportOutputPath))}`
+      `Creating new support output directory at ${chalk.blue(
+        path.relative(root, supportOutputPath)
+      )}`
     );
     await fs.mkdir(supportOutputPath);
 
-    const supportAar = path.join(supportOutputPath, targetOptions.androidBundleName);
+    const supportAar = path.join(
+      supportOutputPath,
+      targetOptions.androidBundleName
+    );
     report.info(
-      `Using Jetifier to convert AAR from AndroidX to Support AAR at ${chalk.blue(path.relative(root, supportAar))}`
+      `Using Jetifier to convert AAR from AndroidX to Support AAR at ${chalk.blue(
+        path.relative(root, supportAar)
+      )}`
     );
 
     await jetifier({
@@ -82,17 +106,17 @@ export default async function build({
       report,
       input: targetAar,
       output: supportAar,
-      reverse: true
+      reverse: true,
     });
 
     const supportGradleFile = path.join(supportOutputPath, 'build.gradle');
     report.info(
-      `Creating Support AAR Gradle file at ${chalk.blue(path.relative(root, supportGradleFile))}`
+      `Creating Support AAR Gradle file at ${chalk.blue(
+        path.relative(root, supportGradleFile)
+      )}`
     );
     await createGradleFile(supportGradleFile);
   }
 
-  report.success(
-    `Wrote files to ${chalk.blue(path.relative(root, output))}`
-  );
+  report.success(`Wrote files to ${chalk.blue(path.relative(root, output))}`);
 }

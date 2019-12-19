@@ -12,12 +12,15 @@ import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import { Options } from './types';
 
+// eslint-disable-next-line import/no-commonjs
 const { name } = require('../package.json');
+
 const root = process.cwd();
 const explorer = cosmiconfigSync(name);
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
+// eslint-disable-next-line babel/no-unused-expressions
 yargs
   .command('init', 'configure the package to use bob', {}, async () => {
     const pak = path.join(root, 'package.json');
@@ -131,9 +134,7 @@ yargs
         const { replace } = await inquirer.prompt({
           type: 'confirm',
           name: 'replace',
-          message: `Your package.json has the '${key}' field set to '${
-            pkg[key]
-          }'. Do you want to replace it with '${entry}'?`,
+          message: `Your package.json has the '${key}' field set to '${pkg[key]}'. Do you want to replace it with '${entry}'?`,
           default: true,
         });
 
@@ -149,9 +150,7 @@ yargs
       const { replace } = await inquirer.prompt({
         type: 'confirm',
         name: 'replace',
-        message: `Your package.json has the 'scripts.prepare' field set to '${
-          pkg.scripts.prepare
-        }'. Do you want to replace it with '${prepare}'?`,
+        message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'. Do you want to replace it with '${prepare}'?`,
         default: true,
       });
 
@@ -233,11 +232,9 @@ yargs
   .command('build', 'build files for publishing', {}, async argv => {
     const result = explorer.search();
 
-    if (!(result && result.config)) {
+    if (!result?.config) {
       logger.exit(
-        `No configuration found. Run '${
-          argv.$0
-        } init' to create one automatically.`
+        `No configuration found. Run '${argv.$0} init' to create one automatically.`
       );
     }
 

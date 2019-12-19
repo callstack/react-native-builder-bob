@@ -11,14 +11,21 @@ type Options = {
   report: Report;
 };
 
-export default async function androidAssemble({ root, androidPath, report }: Options) {
-  const cwd = path.relative(root, androidPath)
-  
+export default async function androidAssemble({
+  root,
+  androidPath,
+  report,
+}: Options) {
+  const cwd = path.relative(root, androidPath);
+
   report.info(
-    `Assembling Android project in ${chalk.blue(cwd)} with ${chalk.blue('gradle')}`
+    `Assembling Android project in ${chalk.blue(cwd)} with ${chalk.blue(
+      'gradle'
+    )}`
   );
 
-  const gradleWrapper = './gradlew' + ((platform() === "win32") ? './gradlew.bat' : '');
+  const gradleWrapper =
+    './gradlew' + (platform() === 'win32' ? './gradlew.bat' : '');
   if (await fs.pathExists(path.join(androidPath, gradleWrapper))) {
     execFileSync(gradleWrapper, ['assemble'], { cwd: androidPath });
   } else {

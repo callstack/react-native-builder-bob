@@ -57,8 +57,11 @@ export default async function build({ root, output, report }: Input) {
       path.join(root, 'node_modules', '.bin', 'tsc') +
       (platform() === 'win32' ? '.cmd' : '');
 
-    if (!await fs.pathExists(tsc)) {
-      tsc = child_process.execSync('which tsc').toString('utf-8').trim();
+    if (!(await fs.pathExists(tsc))) {
+      tsc = child_process
+        .execSync('which tsc')
+        .toString('utf-8')
+        .trim();
     }
 
     if (await fs.pathExists(tsc)) {

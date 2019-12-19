@@ -18,5 +18,5 @@ export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';
 export type Options = {
   source?: string;
   output?: string;
-  targets?: Array<Target | [Target, object]>;
+  targets?: (Target | [Target, object])[];
 };

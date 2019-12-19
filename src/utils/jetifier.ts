@@ -12,15 +12,25 @@ type Options = {
   report: Report;
 };
 
-export default async function jetifier({ root, input, output, reverse }: Options) {
-  const jetifierStandalone = path.join(root, 'node_modules', '.bin', 'jetifier-standalone')
+export default async function jetifier({
+  root,
+  input,
+  output,
+  reverse,
+}: Options) {
+  const jetifierStandalone = path.join(
+    root,
+    'node_modules',
+    '.bin',
+    'jetifier-standalone'
+  );
 
   if (await fs.pathExists(jetifierStandalone)) {
     const args = ['-i', input, '-o', output];
     if (reverse) {
-      args.push("-r");
+      args.push('-r');
     }
-    
+
     execFileSync(jetifierStandalone, args);
   } else {
     throw new Error(

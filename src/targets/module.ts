@@ -33,7 +33,7 @@ export default async function build({
         ],
       ],
     },
-    flow: options && options.flow ? true : false,
+    flow: options?.flow ? true : false,
     report,
   });
 }
