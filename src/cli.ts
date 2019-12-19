@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import chalk from 'chalk';
 import yargs from 'yargs';
 import inquirer from 'inquirer';
-import cosmiconfig from 'cosmiconfig';
+import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
@@ -14,7 +14,7 @@ import { Options } from './types';
 
 const { name } = require('../package.json');
 const root = process.cwd();
-const explorer = cosmiconfig(name);
+const explorer = cosmiconfigSync(name);
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -79,6 +79,7 @@ yargs
         type: 'checkbox',
         name: 'targets',
         message: 'Which targets do you want to build?',
+        // @ts-ignore
         choices: ['aar', 'commonjs', 'module', 'typescript'],
         validate: input => Boolean(input.length),
       },
@@ -230,7 +231,7 @@ yargs
     logger.success('Your project is configured!');
   })
   .command('build', 'build files for publishing', {}, async argv => {
-    const result = explorer.searchSync();
+    const result = explorer.search();
 
     if (!(result && result.config)) {
       logger.exit(
