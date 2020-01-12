@@ -34,6 +34,7 @@
     "glob": "^7.1.6",
     "inquirer": "^7.0.1",
     "is-git-dirty": "^1.0.0",
+    "json5": "^2.1.1",
     "metro-react-native-babel-preset": "^0.57.0",
     "yargs": "^15.0.2"
   },
@@ -53,6 +54,7 @@
     "@types/fs-extra": "^8.0.1",
     "@types/glob": "^7.1.1",
     "@types/inquirer": "^6.5.0",
+    "@types/json5": "^0.0.30",
     "@types/yargs": "^13.0.3",
     "commitlint": "^8.2.0",
     "eslint": "^6.7.2",

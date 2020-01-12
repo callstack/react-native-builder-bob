@@ -3,6 +3,7 @@ import path from 'path';
 import child_process from 'child_process';
 import fs from 'fs-extra';
 import del from 'del';
+import JSON5 from 'json5';
 import { platform } from 'os';
 import { Input } from '../types';
 
@@ -19,37 +20,47 @@ export default async function build({ root, output, report }: Input) {
 
   try {
     if (await fs.pathExists(tsconfig)) {
-      const config = JSON.parse(await fs.readFile(tsconfig, 'utf-8'));
+      try {
+        const config = JSON5.parse(await fs.readFile(tsconfig, 'utf-8'));
 
-      if (config.compilerOptions) {
-        const conflicts: string[] = [];
+        if (config.compilerOptions) {
+          const conflicts: string[] = [];
 
-        if (config.compilerOptions.noEmit !== undefined) {
-          conflicts.push('compilerOptions.noEmit');
+          if (config.compilerOptions.noEmit !== undefined) {
+            conflicts.push('compilerOptions.noEmit');
+          }
+
+          if (config.compilerOptions.emitDeclarationOnly !== undefined) {
+            conflicts.push('compilerOptions.emitDeclarationOnly');
+          }
+
+          if (config.compilerOptions.declarationDir) {
+            conflicts.push('compilerOptions.declarationDir');
+          }
+
+          if (
+            config.compilerOptions.outDir &&
+            path.join(root, config.compilerOptions.outDir) !== output
+          ) {
+            conflicts.push('compilerOptions.outDir');
+          }
+
+          if (conflicts.length) {
+            report.warn(
+              `Found following options in the config file which can conflict with the CLI options. Please remove them from ${chalk.blue(
+                'tsconfig.json'
+              )}:${conflicts.reduce(
+                (acc, curr) =>
+                  acc + `\n${chalk.gray('-')} ${chalk.yellow(curr)}`,
+                ''
+              )}`
+            );
+          }
         }
-
-        if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-          conflicts.push('compilerOptions.emitDeclarationOnly');
-        }
-
-        if (config.compilerOptions.outDir) {
-          conflicts.push('compilerOptions.outDir');
-        }
-
-        if (config.compilerOptions.declarationDir) {
-          conflicts.push('compilerOptions.declarationDir');
-        }
-
-        if (conflicts.length) {
-          report.warn(
-            `Found following options in the config file which can conflict with the CLI options. Please remove them from ${chalk.blue(
-              'tsconfig.json'
-            )}:${conflicts.reduce(
-              (acc, curr) => acc + `\n${chalk.gray('-')} ${chalk.yellow(curr)}`,
-              ''
-            )}`
-          );
-        }
+      } catch (e) {
+        report.warn(
+          `Couldn't parse 'tsconfig.json'. There might be validation errors.`
+        );
       }
     }
 
@@ -72,6 +83,8 @@ export default async function build({ root, output, report }: Input) {
         '--outDir',
         output,
       ]);
+
+      await del([path.join(output, 'tsconfig.tsbuildinfo')]);
 
       report.success(
         `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
