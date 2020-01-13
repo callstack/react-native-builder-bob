@@ -317,6 +317,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'typescript'),
+            options: targetOptions,
             report,
           });
           break;

@@ -7,7 +7,16 @@ import JSON5 from 'json5';
 import { platform } from 'os';
 import { Input } from '../types';
 
-export default async function build({ root, output, report }: Input) {
+type Options = Input & {
+  options?: { project?: string };
+};
+
+export default async function build({
+  root,
+  output,
+  report,
+  options,
+}: Options) {
   report.info(
     `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
   );
@@ -16,7 +25,8 @@ export default async function build({ root, output, report }: Input) {
 
   report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
-  const tsconfig = path.join(root, 'tsconfig.json');
+  const project = options?.project ? options.project : 'tsconfig.json';
+  const tsconfig = path.join(root, project);
 
   try {
     if (await fs.pathExists(tsconfig)) {
@@ -48,7 +58,7 @@ export default async function build({ root, output, report }: Input) {
           if (conflicts.length) {
             report.warn(
               `Found following options in the config file which can conflict with the CLI options. Please remove them from ${chalk.blue(
-                'tsconfig.json'
+                project
               )}:${conflicts.reduce(
                 (acc, curr) =>
                   acc + `\n${chalk.gray('-')} ${chalk.yellow(curr)}`,
@@ -59,7 +69,7 @@ export default async function build({ root, output, report }: Input) {
         }
       } catch (e) {
         report.warn(
-          `Couldn't parse 'tsconfig.json'. There might be validation errors.`
+          `Couldn't parse '${project}'. There might be validation errors.`
         );
       }
     }
@@ -80,11 +90,15 @@ export default async function build({ root, output, report }: Input) {
         '--pretty',
         '--declaration',
         '--emitDeclarationOnly',
+        '--project',
+        project,
         '--outDir',
         output,
       ]);
 
-      await del([path.join(output, 'tsconfig.tsbuildinfo')]);
+      await del([
+        path.join(output, project.replace(/\.json$/, '.tsbuildinfo')),
+      ]);
 
       report.success(
         `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
