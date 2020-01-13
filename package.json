@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/bob",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:react-native-community/bob.git",
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
