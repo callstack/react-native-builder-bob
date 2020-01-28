@@ -121,7 +121,7 @@ yargs
     }
 
     if (targets.includes('typescript')) {
-      entries.types = path.join(output, 'typescript', source, 'index.d.ts');
+      entries.types = path.join(output, 'typescript', 'index.d.ts');
     }
 
     const prepare = 'bob build';

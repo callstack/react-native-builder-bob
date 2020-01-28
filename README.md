@@ -63,7 +63,7 @@ To configure your project manually, follow these steps:
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
    "react-native": "src/index.js",
-   "types": "lib/typescript/src/index.d.ts",
+   "types": "lib/typescript/index.d.ts",
    "files": [
      "lib/",
      "src/"
