@@ -16,7 +16,9 @@ import { Options } from './types';
 const { name } = require('../package.json');
 
 const root = process.cwd();
-const explorer = cosmiconfigSync(name);
+const explorer = cosmiconfigSync(name, {
+  searchPlaces: ['package.json', `bob.config.js`],
+});
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
