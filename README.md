@@ -1,10 +1,25 @@
 # @react-native-community/bob
 
-👷‍♂️ Simple CLI to build React Native libraries for different targets.
+👷‍♂️ Simple CLI to scaffold and build React Native libraries for different targets.
 
 ## Features
 
-The CLI can build code for following targets:
+### Scaffold new projects
+
+If you want to create your own React Native module, scaffolding the project can be a daunting task. Bob can scaffold a new project for you with the following things:
+
+- Simple example modules for Android and iOS which you can build upon
+- [Kotlin](https://kotlinlang.org/) configured for building the module for Android
+- Example React Native app to manually test your modules
+- [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/) and [Husky](https://github.com/typicode/husky) pre-configured
+- Bob pre-configured to compile your files
+- CircleCI pre-configured to run tests on the CI
+
+<img src="assets/bob-create.gif" width="480px" height="auto">
+
+### Build your projects
+
+Bob can build code for following targets:
 
 - Generic CommonJS build
 - ES modules build for bundlers such as webpack
@@ -12,7 +27,7 @@ The CLI can build code for following targets:
 - TypeScript definitions (uses `tsc` to generate declaration files)
 - Android AAR files
 
-## Why?
+## Why
 
 Metro handles compiling source code for React Native libraries, but it's possible to use them in other targets such as web. Currently, to handle this, we need to have multiple babel configs and write a long `babel-cli` command in our `package.json`. We also need to keep the configs in sync between our projects.
 
@@ -29,6 +44,20 @@ yarn add --dev @react-native-community/bob
 ```
 
 ## Usage
+
+### Creating a new project
+
+To create new project with Bob, run the following:
+
+```sh
+npx @react-native-community/bob create react-native-awesome-module
+```
+
+This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
+
+The difference from [create-react-native-module](https://github.com/brodybits/create-react-native-module) is that the generated project with Bob is very opinionated and configured with additional tools.
+
+### Configuring an existing project
 
 To configure your project to use Bob, open a Terminal and run `yarn bob init` for automatic configuration.
 
@@ -161,6 +190,13 @@ Example:
 ```json
 ["aar", { "reverseJetify": true }]
 ```
+
+## Acknowledgements
+
+Thanks to the authors of these libraries for inspiration:
+
+- [create-react-native-module](https://github.com/brodybits/create-react-native-module)
+- [react-native-webview](https://github.com/react-native-community/react-native-webview)
 
 ## LICENSE
 

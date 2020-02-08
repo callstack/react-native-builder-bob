@@ -1,0 +1,93 @@
+{
+  "name": "<%= project.slug %>",
+  "version": "0.1.0",
+  "description": "<%= project.description %>",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index.tsx",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "test": "jest",
+    "typescript": "tsc --noEmit",
+    "lint": "eslint --ext .js,.ts,.tsx .",
+    "prepare": "bob build",
+    "example": "yarn --cwd example",
+    "bootstrap": "yarn example && yarn && cd example/ios && pod install"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": "<%= repo %>",
+  "author": "<%= author.name %> <<%= author.email %>> (<%= author.url %>)",
+  "license": "MIT",
+  "bugs": {
+    "url": "<%= repo %>/issues"
+  },
+  "homepage": "<%= repo %>#readme",
+  "devDependencies": {
+    "@commitlint/config-conventional": "^8.3.4",
+    "@react-native-community/bob": "^0.9.0",
+    "@react-native-community/eslint-config": "^0.0.7",
+    "@types/jest": "^25.1.2",
+    "@types/react": "^16.9.19",
+    "@types/react-native": "0.61.10",
+    "commitlint": "^8.3.4",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.0.1",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "react": "~16.9.0",
+    "react-native": "~0.61.5",
+    "typescript": "^3.7.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "es5",
+          "useTabs": false
+        }
+      ]
+    }
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
+}

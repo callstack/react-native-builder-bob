@@ -5,6 +5,7 @@ import yargs from 'yargs';
 import inquirer from 'inquirer';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
+import create from './create';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
@@ -24,6 +25,7 @@ const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
 // eslint-disable-next-line babel/no-unused-expressions
 yargs
+  .command('create <name>', 'create a react native library', {}, create)
   .command('init', 'configure the package to use bob', {}, async () => {
     const pak = path.join(root, 'package.json');
 
