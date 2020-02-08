@@ -124,6 +124,47 @@ yargs
 
     if (targets.includes('typescript')) {
       entries.types = path.join(output, 'typescript', source, 'index.d.ts');
+
+      if (!(await fs.pathExists(path.join(root, 'tsconfig.json')))) {
+        const { tsconfig } = await inquirer.prompt({
+          type: 'confirm',
+          name: 'tsconfig',
+          message: `You have enabled 'typescript' compilation, but we couldn't find a 'tsconfig.json' in project root. Generate one?`,
+          default: true,
+        });
+
+        if (tsconfig) {
+          await fs.writeFile(
+            path.join(root, 'tsconfig.json'),
+            JSON.stringify(
+              {
+                compilerOptions: {
+                  allowUnreachableCode: false,
+                  allowUnusedLabels: false,
+                  esModuleInterop: true,
+                  forceConsistentCasingInFileNames: true,
+                  jsx: 'react',
+                  lib: ['esnext'],
+                  module: 'esnext',
+                  moduleResolution: 'node',
+                  noFallthroughCasesInSwitch: true,
+                  noImplicitReturns: true,
+                  noImplicitUseStrict: false,
+                  noStrictGenericChecks: false,
+                  noUnusedLocals: true,
+                  noUnusedParameters: true,
+                  resolveJsonModule: true,
+                  skipLibCheck: true,
+                  strict: true,
+                  target: 'esnext',
+                },
+              },
+              null,
+              2
+            )
+          );
+        }
+      }
     }
 
     const prepare = 'bob build';
