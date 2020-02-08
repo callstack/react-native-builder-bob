@@ -134,7 +134,7 @@ This is useful for bundlers which understand ES modules and can tree-shake. The 
 Example:
 
 ```json
-["commonjs", { "babelrc": true, "copyFlow": true }]
+["module", { "babelrc": true, "copyFlow": true }]
 ```
 
 #### `typescript`
