@@ -5,7 +5,11 @@ import compile from '../utils/compile';
 import { Input } from '../types';
 
 type Options = Input & {
-  options?: { flow?: boolean };
+  options?: {
+    babelrc?: boolean | null;
+    configFile?: string | false | null;
+    copyFlow?: boolean;
+  };
 };
 
 export default async function build({
@@ -25,15 +29,10 @@ export default async function build({
     root,
     source,
     output,
-    options: {
-      presets: [
-        [
-          require.resolve('metro-react-native-babel-preset'),
-          { disableImportExportTransform: true },
-        ],
-      ],
-    },
-    flow: options?.flow ? true : false,
+    modules: false,
+    babelrc: options?.babelrc,
+    configFile: options?.configFile,
+    copyFlow: options?.copyFlow ? true : false,
     report,
   });
 }

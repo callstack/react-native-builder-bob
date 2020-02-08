@@ -42,12 +42,14 @@ To configure your project manually, follow these steps:
      "output": "lib",
      "targets": [
        ["aar", {"reverseJetify": true}],
-       ["commonjs", {"flow": true}],
+       ["commonjs", {"copyFlow": true}],
        "module",
        "typescript",
      ]
    }
    ```
+
+   See options below for more details.
 
 1. Add `bob` to your `prepare` step:
 
@@ -62,7 +64,7 @@ To configure your project manually, follow these steps:
    ```json
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
-   "react-native": "src/index.js",
+   "react-native": "src/index.ts",
    "types": "lib/typescript/src/index.d.ts",
    "files": [
      "lib/",

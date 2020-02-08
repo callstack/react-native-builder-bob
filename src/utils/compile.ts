@@ -6,16 +6,20 @@ import glob from 'glob';
 import { Input } from '../types';
 
 type Options = Input & {
-  options: babel.TransformOptions;
-  flow: boolean;
+  babelrc?: boolean | null;
+  configFile?: string | false | null;
+  modules: 'commonjs' | false;
+  copyFlow: boolean;
 };
 
 export default async function compile({
   root,
   source,
   output,
-  options,
-  flow,
+  babelrc,
+  configFile,
+  modules,
+  copyFlow,
   report,
 }: Options) {
   const files = glob.sync('**/*', {
@@ -47,11 +51,42 @@ export default async function compile({
 
       const content = await fs.readFile(filepath, 'utf-8');
       const result = await babel.transformAsync(content, {
-        babelrc: false,
-        configFile: false,
+        babelrc: babelrc,
+        configFile: configFile,
         sourceMaps: true,
         filename: filepath,
-        ...options,
+        ...(babelrc || configFile
+          ? null
+          : {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: {
+                      browsers: [
+                        '>1%',
+                        'last 2 chrome versions',
+                        'last 2 edge versions',
+                        'last 2 firefox versions',
+                        'last 2 safari versions',
+                        'not dead',
+                        'not ie <= 11',
+                        'not op_mini all',
+                        'not android <= 4.4',
+                        'not samsung <= 4',
+                      ],
+                      node: '10',
+                    },
+                    useBuiltIns: false,
+                    modules,
+                  },
+                ],
+                '@babel/preset-react',
+                '@babel/preset-typescript',
+                '@babel/preset-flow',
+              ],
+              plugins: ['@babel/plugin-proposal-class-properties'],
+            }),
       });
 
       if (result == null) {
@@ -69,7 +104,7 @@ export default async function compile({
 
       await fs.writeFile(outputFilename, code);
 
-      if (flow) {
+      if (copyFlow) {
         fs.copy(filepath, outputFilename + '.flow');
       }
     })
