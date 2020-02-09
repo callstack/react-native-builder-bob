@@ -128,7 +128,7 @@ export default async function create(argv: yargs.Arguments<any>) {
         .toUpperCase()}${project
         .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
         .slice(1)}`,
-      package: project.replace(/[^a-z0-9]/g, '').toLowerCase(),
+      package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
     },
     author: {
       name: authorName,
