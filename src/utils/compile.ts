@@ -60,7 +60,7 @@ export default async function compile({
           : {
               presets: [
                 [
-                  '@babel/preset-env',
+                  require.resolve('@babel/preset-env'),
                   {
                     targets: {
                       browsers: [
@@ -81,11 +81,13 @@ export default async function compile({
                     modules,
                   },
                 ],
-                '@babel/preset-react',
-                '@babel/preset-typescript',
-                '@babel/preset-flow',
+                require.resolve('@babel/preset-react'),
+                require.resolve('@babel/preset-typescript'),
+                require.resolve('@babel/preset-flow'),
               ],
-              plugins: ['@babel/plugin-proposal-class-properties'],
+              plugins: [
+                require.resolve('@babel/plugin-proposal-class-properties'),
+              ],
             }),
       });
 
