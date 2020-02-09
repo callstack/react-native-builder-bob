@@ -32,7 +32,7 @@
   "homepage": "<%= repo %>#readme",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
-    "@react-native-community/bob": "^0.9.0",
+    "@react-native-community/bob": "^<%= bob.version %>",
     "@react-native-community/eslint-config": "^0.0.7",
     "@types/jest": "^25.1.2",
     "@types/react": "^16.9.19",

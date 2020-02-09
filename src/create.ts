@@ -8,6 +8,7 @@ import inquirer from 'inquirer';
 import yargs from 'yargs';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
+import pack from '../package.json';
 
 const TEMPLATE = path.resolve(__dirname, '../templates/library');
 const BINARIES = /(gradlew|\.(jar|xib|keystore|png|jpg|gif))$/;
@@ -120,6 +121,9 @@ export default async function create(argv: yargs.Arguments<any>) {
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
   const options = {
+    bob: {
+      version: pack.version,
+    },
     project: {
       slug,
       description,
