@@ -8,7 +8,10 @@
   "react-native": "src/index.tsx",
   "files": [
     "src",
-    "lib"
+    "lib",
+    "android",
+    "ios",
+    "<%= project.package %>.podspec"
   ],
   "scripts": {
     "test": "jest",
@@ -18,11 +21,7 @@
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && cd example/ios && pod install"
   },
-  "keywords": [
-    "react-native",
-    "ios",
-    "android"
-  ],
+  "keywords": ["react-native", "ios", "android"],
   "repository": "<%= repo %>",
   "author": "<%= author.name %> <<%= author.email %>> (<%= author.url %>)",
   "license": "MIT",
@@ -54,9 +53,7 @@
   },
   "jest": {
     "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/lib/"
-    ]
+    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
   },
   "husky": {
     "hooks": {
@@ -65,10 +62,7 @@
     }
   },
   "eslintConfig": {
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
+    "extends": ["@react-native-community", "prettier"],
     "rules": {
       "prettier/prettier": [
         "error",
@@ -84,10 +78,6 @@
   "@react-native-community/bob": {
     "source": "src",
     "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      "typescript"
-    ]
+    "targets": ["commonjs", "module", "typescript"]
   }
 }
