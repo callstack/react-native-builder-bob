@@ -148,7 +148,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     const files = await fs.readdir(source);
 
     for (const f of files) {
-      const target = path.join(dest, ejs.render(f.replace(/^$/, ''), options));
+      const target = path.join(dest, ejs.render(f.replace(/^\$/, ''), options));
 
       const file = path.join(source, f);
       const stats = await fs.stat(file);
