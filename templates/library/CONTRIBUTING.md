@@ -1,16 +1,39 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make by opening an issue in this repository before making a change.
-
 We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project.
 
 ## Development workflow
 
-> **Working on your first pull request?** You can learn how from this _free_ series: [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
 
-1. Fork the repo and create your branch from `master` (a guide on [how to fork a repository](https://help.github.com/articles/fork-a-repo/)).
-2. Run `yarn bootstrap` to setup the development environment.
-3. Do the changes you want and test them out in the example app before sending a pull request.
+```sh
+yarn bootstrap
+```
+
+While developing, you can run the [example app](/example/) with [Expo](https://expo.io/) to test your changes:
+
+```sh
+yarn example start
+```
+
+Make sure your code passes TypeScript and ESLint. Run the following to verify:
+
+```sh
+yarn typescript
+yarn lint
+```
+
+To fix formatting errors, run the following:
+
+```sh
+yarn lint --fix
+```
+
+Remember to add tests for your change if possible. Run the unit tests by:
+
+```sh
+yarn test
+```
 
 ### Commit message convention
 
