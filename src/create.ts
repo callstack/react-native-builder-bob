@@ -42,6 +42,8 @@ export default async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
+  const basename = path.basename(argv.name);
+
   const {
     slug,
     description,
@@ -53,9 +55,15 @@ export default async function create(argv: yargs.Arguments<any>) {
     {
       type: 'input',
       name: 'slug',
-      message: "What is the name of the package? (e.g. 'react-native-magic')",
-      default: path.basename(argv.name),
-      validate: input => validateNpmPackage(input).validForNewPackages,
+      message: 'What is the name of the npm package?',
+      default: validateNpmPackage(basename).validForNewPackages
+        ? /^(@|react-native)/.test(basename)
+          ? basename
+          : `react-native-${basename}`
+        : undefined,
+      validate: input =>
+        validateNpmPackage(input).validForNewPackages ||
+        'Must be a valid npm package name',
     },
     {
       type: 'input',
@@ -75,7 +83,8 @@ export default async function create(argv: yargs.Arguments<any>) {
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
       default: email,
-      validate: input => input.includes('@'),
+      validate: input =>
+        /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     {
       type: 'input',
@@ -92,7 +101,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
         return undefined;
       },
-      validate: input => /^https?:\/\//.test(input),
+      validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
       type: 'input',
@@ -107,7 +116,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
         return undefined;
       },
-      validate: input => /^https?:\/\//.test(input),
+      validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
   ])) as {
     slug: string;
