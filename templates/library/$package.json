@@ -75,6 +75,7 @@
       ]
     }
   },
+  "eslintIgnore": ["node_modules/", "lib/"],
   "@react-native-community/bob": {
     "source": "src",
     "output": "lib",
