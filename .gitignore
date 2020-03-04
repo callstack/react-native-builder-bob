@@ -62,5 +62,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# android
+.gradle
+.project
+.settings
+
 # generated files
 lib/
