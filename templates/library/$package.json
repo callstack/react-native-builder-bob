@@ -76,6 +76,12 @@
     }
   },
   "eslintIgnore": ["node_modules/", "lib/"],
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
+  },
   "@react-native-community/bob": {
     "source": "src",
     "output": "lib",
