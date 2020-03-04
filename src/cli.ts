@@ -252,6 +252,12 @@ yargs
       }
     }
 
+    pkg.eslintIgnore = pkg.eslintIgnore || ['node_modules/'];
+
+    if (!pkg.eslintIgnore.includes(`${output}/`)) {
+      pkg.eslintIgnore.push(`${output}/`);
+    }
+
     await fs.writeFile(pak, JSON.stringify(pkg, null, 2));
 
     const ignorefiles = [
