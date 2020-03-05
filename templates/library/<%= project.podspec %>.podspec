@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "9.0" }
-  s.source       = { :git => "<%= repo %>", :tag => "#{s.version}" }
+  s.source       = { :git => "<%= repo %>.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m}"
 
