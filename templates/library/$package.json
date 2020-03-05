@@ -18,10 +18,15 @@
     "typescript": "tsc --noEmit",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "prepare": "bob build",
+    "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && cd example/ios && pod install"
   },
-  "keywords": ["react-native", "ios", "android"],
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
   "repository": "<%= repo %>",
   "author": "<%= author.name %> <<%= author.email %>> (<%= author.url %>)",
   "license": "MIT",
@@ -33,6 +38,7 @@
     "@commitlint/config-conventional": "^8.3.4",
     "@react-native-community/bob": "^<%= bob.version %>",
     "@react-native-community/eslint-config": "^0.0.7",
+    "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "^25.1.2",
     "@types/react": "^16.9.19",
     "@types/react-native": "0.61.10",
@@ -45,6 +51,7 @@
     "prettier": "^1.19.1",
     "react": "~16.9.0",
     "react-native": "~0.61.5",
+    "release-it": "^12.6.3",
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
@@ -53,7 +60,10 @@
   },
   "jest": {
     "preset": "react-native",
-    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ]
   },
   "husky": {
     "hooks": {
@@ -62,7 +72,10 @@
     }
   },
   "eslintConfig": {
-    "extends": ["@react-native-community", "prettier"],
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
     "rules": {
       "prettier/prettier": [
         "error",
@@ -81,6 +94,23 @@
     "tabWidth": 2,
     "trailingComma": "es5",
     "useTabs": false
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release %s",
+      "tagName": "v%s"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
   },
   "@react-native-community/bob": {
     "source": "src",
