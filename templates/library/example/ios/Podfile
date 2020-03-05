@@ -34,7 +34,7 @@ target '<%= project.name %>Example' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod '<%= project.package %>', :path => '../..'
+  pod '<%= project.podspec %>', :path => '../..'
 
   use_native_modules!
 end
