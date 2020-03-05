@@ -11,7 +11,7 @@ import githubUsername from 'github-username';
 import pack from '../package.json';
 
 const TEMPLATE = path.resolve(__dirname, '../templates/library');
-const BINARIES = /(gradlew|\.(jar|xib|keystore|png|jpg|gif))$/;
+const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
