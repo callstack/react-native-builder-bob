@@ -1,4 +1,3 @@
-import child_process from 'child_process';
 import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
@@ -6,6 +5,7 @@ import dedent from 'dedent';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import yargs from 'yargs';
+import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import pack from '../package.json';
@@ -29,14 +29,14 @@ export default async function create(argv: yargs.Arguments<any>) {
   let name, email;
 
   try {
-    name = child_process
-      .execSync('git config --get user.name')
-      .toString()
+    name = spawn
+      .sync('git', ['config', '--get', 'user.name'])
+      .stdout.toString()
       .trim();
 
-    email = child_process
-      .execSync('git config --get user.email')
-      .toString()
+    email = spawn
+      .sync('git', ['config', '--get', 'user.email'])
+      .stdout.toString()
       .trim();
   } catch (e) {
     // Ignore error
@@ -178,7 +178,7 @@ export default async function create(argv: yargs.Arguments<any>) {
   await copyDir(TEMPLATE, folder);
 
   try {
-    await child_process.execSync(
+    await spawn.sync(
       'git init && git add . && git commit -m "chore: initial commit"',
       { cwd: folder }
     );

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import path from 'path';
-import child_process from 'child_process';
 import fs from 'fs-extra';
+import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
 import { platform } from 'os';
@@ -83,22 +83,34 @@ export default async function build({
       (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
-      tsc = child_process
-        .execSync('which tsc')
-        .toString('utf-8')
+      tsc = spawn
+        .sync('which', ['tsc'])
+        .stdout.toString()
         .trim();
+
+      report.warn(
+        `Using a global version of ${chalk.blue(
+          'tsc'
+        )}. Consider adding ${chalk.blue('typescript')} to your ${chalk.blue(
+          'devDependencies'
+        )} instead.`
+      );
     }
 
     if (await fs.pathExists(tsc)) {
-      child_process.execFileSync(tsc, [
-        '--pretty',
-        '--declaration',
-        '--emitDeclarationOnly',
-        '--project',
-        project,
-        '--outDir',
-        output,
-      ]);
+      spawn.sync(
+        tsc,
+        [
+          '--pretty',
+          '--declaration',
+          '--emitDeclarationOnly',
+          '--project',
+          project,
+          '--outDir',
+          output,
+        ],
+        { stdio: 'inherit' }
+      );
 
       await del([
         path.join(output, project.replace(/\.json$/, '.tsbuildinfo')),
