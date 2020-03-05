@@ -10,10 +10,24 @@ To get started with the project, run `yarn bootstrap` in the root directory to i
 yarn bootstrap
 ```
 
-While developing, you can run the [example app](/example/) with [Expo](https://expo.io/) to test your changes:
+While developing, you can run the [example app](/example/) to test your changes.
+
+To start the packager:
 
 ```sh
 yarn example start
+```
+
+To run the example app on Android:
+
+```sh
+yarn example android
+```
+
+To run the example app on iOS:
+
+```sh
+yarn example android
 ```
 
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
