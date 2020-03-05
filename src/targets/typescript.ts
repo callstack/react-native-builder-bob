@@ -72,6 +72,10 @@ export default async function build({
           `Couldn't parse '${project}'. There might be validation errors.`
         );
       }
+    } else {
+      throw new Error(
+        `Couldn't find a ${chalk.blue('tsc')} in the project root.`
+      );
     }
 
     let tsc =
