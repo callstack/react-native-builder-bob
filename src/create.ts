@@ -69,6 +69,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       type: 'input',
       name: 'description',
       message: 'What is the description for the package?',
+      validate: input => Boolean(input),
     },
     {
       type: 'input',

@@ -20,7 +20,8 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && cd example/ios && pod install"
+    "pods": "cd example/ios && node -e \"process.exit(require('os').platform() === 'darwin')\" || pod install",
+    "bootstrap": "yarn example && yarn && yarn pods"
   },
   "keywords": [
     "react-native",
