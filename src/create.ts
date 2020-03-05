@@ -69,7 +69,6 @@ export default async function create(argv: yargs.Arguments<any>) {
       type: 'input',
       name: 'description',
       message: 'What is the description for the package?',
-      validate: input => Boolean(input),
     },
     {
       type: 'input',
@@ -176,6 +175,15 @@ export default async function create(argv: yargs.Arguments<any>) {
   };
 
   await copyDir(TEMPLATE, folder);
+
+  try {
+    await child_process.execSync(
+      'git init && git add . && git commit -m "chore: initial commit"',
+      { cwd: folder }
+    );
+  } catch (e) {
+    // Ignore error
+  }
 
   console.log(
     dedent(chalk`
