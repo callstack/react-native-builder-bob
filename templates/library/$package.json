@@ -11,7 +11,9 @@
     "lib",
     "android",
     "ios",
+    <% if (project.includeNative) { %>
     "<%= project.package %>.podspec"
+    <% } %>
   ],
   "scripts": {
     "test": "jest",
