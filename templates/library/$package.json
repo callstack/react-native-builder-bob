@@ -8,9 +8,9 @@
   "react-native": "src/index.tsx",
   "files": [
     "src",
-    "lib",
+    "lib"<% if (project.includeNative) { %>,
     "android",
-    "ios"<% if (project.includeNative) { %>,
+    "ios",
     "<%= project.package %>.podspec"
     <% } %>
   ],
