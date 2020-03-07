@@ -10,8 +10,7 @@
     "src",
     "lib",
     "android",
-    "ios",
-    <% if (project.includeNative) { %>
+    "ios"<% if (project.includeNative) { %>,
     "<%= project.package %>.podspec"
     <% } %>
   ],
