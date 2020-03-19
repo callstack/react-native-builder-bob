@@ -69,7 +69,7 @@
     "@types/yargs": "^15.0.3",
     "commitlint": "^8.3.5",
     "eslint": "^6.8.0",
-    "eslint-config-satya164": "^3.1.5",
+    "eslint-config-satya164": "^3.1.6",
     "husky": "^4.2.1",
     "prettier": "^1.19.1",
     "release-it": "^12.4.3",
