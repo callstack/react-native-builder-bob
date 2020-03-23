@@ -15,4 +15,14 @@ RCT_REMAP_METHOD(getDeviceName,
   resolve(deviceInfo.name);
 }
 
+<%if (project.useCpp==true) {%>
+RCT_EXPORT_METHOD(multiply:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b resolver:(RCTPromiseResolveBlock)resolve
+withReject:(RCTPromiseRejectBlock)reject)
+{
+    long result = example::multiply([a longValue], [b longValue]);
+
+    resolve(@(result));
+}
+<%}%>
+
 @end

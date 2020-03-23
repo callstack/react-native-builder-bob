@@ -12,6 +12,7 @@ import pack from '../package.json';
 
 const TEMPLATE = path.resolve(__dirname, '../templates/library');
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
+const CPP_FILES = path.resolve(__dirname, '../templates/cppLibrary');
 
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
@@ -51,6 +52,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     githubUrl: repo,
+    useCpp,
   } = (await inquirer.prompt([
     {
       type: 'input',
@@ -118,6 +120,12 @@ export default async function create(argv: yargs.Arguments<any>) {
       },
       validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
+    {
+      type: 'confirm',
+      name: 'useCpp',
+      message: 'Does your library use C++ code?',
+      default: false,
+    },
   ])) as {
     slug: string;
     description: string;
@@ -125,6 +133,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail: string;
     authorUrl: string;
     githubUrl: string;
+    useCpp: boolean;
   };
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
@@ -143,6 +152,7 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
+      useCpp,
     },
     author: {
       name: authorName,
@@ -176,6 +186,9 @@ export default async function create(argv: yargs.Arguments<any>) {
   };
 
   await copyDir(TEMPLATE, folder);
+  if (options.project.useCpp) {
+    await copyDir(CPP_FILES, folder);
+  }
 
   try {
     await spawn.sync(

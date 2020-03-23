@@ -2,6 +2,9 @@ import { NativeModules } from 'react-native';
 
 type <%= project.name %>Type = {
   getDeviceName(): Promise<string>;
+  <%if (project.useCpp==true) {%>
+  multiply(a: number, b: number): Promise<number>;
+  <%}%>
 };
 
 const { <%= project.name %> } = NativeModules;

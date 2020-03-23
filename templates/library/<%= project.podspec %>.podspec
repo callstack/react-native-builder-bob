@@ -13,7 +13,12 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "9.0" }
   s.source       = { :git => "<%= repo %>.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m}"
+  s.source_files = "ios/**/*.{h,m,mm}"
 
+  <% if(project.useCpp==true){ %>
+  s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp}"
+   <% } else{ %>
+  s.source_files = "ios/**/*.{h,m,mm}"
+  <% } %>
   s.dependency "React"
 end
