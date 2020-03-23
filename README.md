@@ -14,6 +14,7 @@ If you want to create your own React Native module, scaffolding the project can 
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/) and [Husky](https://github.com/typicode/husky) pre-configured
 - Bob pre-configured to compile your files
 - CircleCI pre-configured to run tests on the CI
+- Use C++ code to boost performance of your modules
 
 <img src="assets/bob-create.gif" width="480px" height="auto">
 
@@ -26,6 +27,7 @@ Bob can build code for following targets:
 - Flow definitions (copies .js files to .flow files)
 - TypeScript definitions (uses `tsc` to generate declaration files)
 - Android AAR files
+- C++ modules
 
 ## Why
 
