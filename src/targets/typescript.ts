@@ -8,7 +8,7 @@ import { platform } from 'os';
 import { Input } from '../types';
 
 type Options = Input & {
-  options?: { project?: string };
+  options?: { project?: string; tsc?: string };
 };
 
 export default async function build({
@@ -78,9 +78,10 @@ export default async function build({
       );
     }
 
-    let tsc =
-      path.join(root, 'node_modules', '.bin', 'tsc') +
-      (platform() === 'win32' ? '.cmd' : '');
+    const tscPath = options?.tsc
+      ? options.tsc
+      : path.join(root, 'node_modules', '.bin', 'tsc');
+    let tsc = tscPath + (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
       tsc = spawn
