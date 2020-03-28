@@ -93,7 +93,9 @@ export default async function build({
           'tsc'
         )}. Consider adding ${chalk.blue('typescript')} to your ${chalk.blue(
           'devDependencies'
-        )} instead.`
+        )} or specifying the ${chalk.blue(
+          'tsc'
+        )} option for the typescript target.`
       );
     }
 
@@ -127,7 +129,9 @@ export default async function build({
           'node_modules'
         )} or present in $PATH. Make sure you have added ${chalk.blue(
           'typescript'
-        )} to your ${chalk.blue('devDependencies')}.`
+        )} to your ${chalk.blue('devDependencies')} or specify the ${chalk.blue(
+          'tsc'
+        )} option for typescript.`
       );
     }
   } catch (e) {
