@@ -78,10 +78,9 @@ export default async function build({
       );
     }
 
-    const tscPath = options?.tsc
-      ? options.tsc
-      : path.join(root, 'node_modules', '.bin', 'tsc');
-    let tsc = tscPath + (platform() === 'win32' ? '.cmd' : '');
+    let tsc = options?.tsc
+      ? path.resolve(root, options.tsc)
+      : path.join(root, 'node_module') + (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
       tsc = spawn
