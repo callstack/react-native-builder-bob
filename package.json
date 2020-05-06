@@ -3,6 +3,7 @@
   "version": "0.10.1",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:react-native-community/bob.git",
+  "homepage": "https://github.com/react-native-community/bob/blob/master/README.md",
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
