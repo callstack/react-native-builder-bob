@@ -10,11 +10,12 @@ If you want to create your own React Native module, scaffolding the project can 
 
 - Simple example modules for Android and iOS which you can build upon
 - [Kotlin](https://kotlinlang.org/) configured for building the module for Android
+- C++ support for native modules on Android
+- Expo support for libraries without native code and web support
 - Example React Native app to manually test your modules
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/) and [Husky](https://github.com/typicode/husky) pre-configured
 - Bob pre-configured to compile your files
 - CircleCI pre-configured to run tests on the CI
-- Use C++ code to boost performance of your modules
 
 <img src="assets/bob-create.gif" width="480px" height="auto">
 
@@ -27,7 +28,6 @@ Bob can build code for following targets:
 - Flow definitions (copies .js files to .flow files)
 - TypeScript definitions (uses `tsc` to generate declaration files)
 - Android AAR files
-- C++ modules
 
 ## Why
 

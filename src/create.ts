@@ -10,9 +10,12 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import pack from '../package.json';
 
-const TEMPLATE = path.resolve(__dirname, '../templates/library');
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
-const CPP_FILES = path.resolve(__dirname, '../templates/cppLibrary');
+
+const COMMON_FILES = path.resolve(__dirname, '../templates/common');
+const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
+const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
+const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
@@ -52,6 +55,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     githubUrl: repo,
+    useNative,
     useCpp,
   } = (await inquirer.prompt([
     {
@@ -122,9 +126,16 @@ export default async function create(argv: yargs.Arguments<any>) {
     },
     {
       type: 'confirm',
+      name: 'useNative',
+      message: 'Do you want to use Java or Objective-C code?',
+      default: true,
+    },
+    {
+      type: 'confirm',
       name: 'useCpp',
       message: 'Do you want to use C++ code?',
       default: false,
+      when: response => response.useNative,
     },
   ])) as {
     slug: string;
@@ -133,6 +144,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail: string;
     authorUrl: string;
     githubUrl: string;
+    useNative: boolean;
     useCpp: boolean;
   };
 
@@ -185,9 +197,15 @@ export default async function create(argv: yargs.Arguments<any>) {
     }
   };
 
-  await copyDir(TEMPLATE, folder);
+  await copyDir(COMMON_FILES, folder);
 
-  if (options.project.useCpp) {
+  if (useNative) {
+    await copyDir(NATIVE_FILES, folder);
+  } else {
+    await copyDir(EXPO_FILES, folder);
+  }
+
+  if (useCpp) {
     await copyDir(CPP_FILES, folder);
   }
 

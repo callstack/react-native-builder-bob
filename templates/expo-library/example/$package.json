@@ -1,0 +1,28 @@
+{
+  "name": "<%= project.slug %>-example",
+  "description": "Example app for <%= project.slug %>",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "expo": "~37.0.3",
+    "react": "~16.9.0",
+    "react-dom": "~16.9.0",
+    "react-native": "~0.61.5",
+    "react-native-unimodules": "~0.9.0",
+    "react-native-web": "~0.11.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/runtime": "^7.9.6",
+    "babel-preset-expo": "~8.1.0",
+    "expo-cli": "^3.17.18"
+  }
+}
