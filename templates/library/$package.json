@@ -11,7 +11,7 @@
     "lib",
     "android",
     "ios",
-    "<%= project.package %>.podspec"
+    "<%= project.podspec %>.podspec"
   ],
   "scripts": {
     "test": "jest",

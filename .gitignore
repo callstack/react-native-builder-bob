@@ -67,5 +67,8 @@ typings/
 .project
 .settings
 
+# VSCode
+.history
+
 # generated files
 lib/
