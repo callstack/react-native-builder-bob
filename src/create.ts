@@ -123,7 +123,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     {
       type: 'confirm',
       name: 'useCpp',
-      message: 'Does your library use C++ code?',
+      message: 'Do you want to use C++ code?',
       default: false,
     },
   ])) as {
@@ -186,6 +186,7 @@ export default async function create(argv: yargs.Arguments<any>) {
   };
 
   await copyDir(TEMPLATE, folder);
+
   if (options.project.useCpp) {
     await copyDir(CPP_FILES, folder);
   }
