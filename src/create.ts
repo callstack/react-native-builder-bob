@@ -10,8 +10,12 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import pack from '../package.json';
 
-const TEMPLATE = path.resolve(__dirname, '../templates/library');
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
+
+const COMMON_FILES = path.resolve(__dirname, '../templates/common');
+const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
+const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
+const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
@@ -51,6 +55,8 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     githubUrl: repo,
+    useNative,
+    useCpp,
   } = (await inquirer.prompt([
     {
       type: 'input',
@@ -118,6 +124,19 @@ export default async function create(argv: yargs.Arguments<any>) {
       },
       validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
+    {
+      type: 'confirm',
+      name: 'useNative',
+      message: 'Do you want to use Java or Objective-C code?',
+      default: true,
+    },
+    {
+      type: 'confirm',
+      name: 'useCpp',
+      message: 'Do you want to use C++ code?',
+      default: false,
+      when: response => response.useNative,
+    },
   ])) as {
     slug: string;
     description: string;
@@ -125,6 +144,8 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail: string;
     authorUrl: string;
     githubUrl: string;
+    useNative: boolean;
+    useCpp: boolean;
   };
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
@@ -143,6 +164,7 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
+      useCpp,
     },
     author: {
       name: authorName,
@@ -175,7 +197,17 @@ export default async function create(argv: yargs.Arguments<any>) {
     }
   };
 
-  await copyDir(TEMPLATE, folder);
+  await copyDir(COMMON_FILES, folder);
+
+  if (useNative) {
+    await copyDir(NATIVE_FILES, folder);
+  } else {
+    await copyDir(EXPO_FILES, folder);
+  }
+
+  if (useCpp) {
+    await copyDir(CPP_FILES, folder);
+  }
 
   try {
     await spawn.sync(
