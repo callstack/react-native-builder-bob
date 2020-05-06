@@ -17,4 +17,23 @@ class <%= project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
     fun getDeviceName(promise: Promise) {
         promise.resolve(android.os.Build.MODEL)
     }
+    <%if (project.useCpp==true) {%>
+      
+    @ReactMethod
+    fun multiply(a: Int, b: Int, promise: Promise) {
+      promise.resolve(nativeMultiply(a, b));
+    }
+
+    external fun nativeMultiply(a: Int, b: Int): Int;
+
+    companion object
+    {
+
+        // Used to load the 'native-lib' library on application startup.
+        init
+        {
+            System.loadLibrary("cpp")
+        }
+    }
+    <%}%>
 }
