@@ -5,7 +5,7 @@ import <%= project.name %> from '<%= project.slug %>';
 export default function App() {
   const [deviceName, setDeviceName] = React.useState('');
   <%if (project.useCpp==true) {%>
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState<number | undefined>();
   <%}%>
 
 

@@ -1,0 +1,22 @@
+{
+  "name": "<%= project.slug %>-example",
+  "displayName": "<%= project.name %> Example",
+  "expo": {
+    "name": "<%= project.slug %>-example",
+    "slug": "<%= project.slug %>-example",
+    "description": "Example app for <%= project.slug %>",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
