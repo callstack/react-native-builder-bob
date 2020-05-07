@@ -15,7 +15,7 @@ import <%= project.name %> from "<%= project.slug %>";
 
 // ...
 
-const deviceName = await <%= project.name %>.getDeviceName();
+const result = await <%= project.name %>.multiply(3, 7);
 ```
 
 ## Contributing

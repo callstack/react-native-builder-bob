@@ -3,9 +3,15 @@ import { StyleSheet, View, Text } from 'react-native';
 import <%= project.name %> from '<%= project.slug %>';
 
 export default function App() {
+  const [result, setResult] = React.useState<number | undefined>();
+
+  React.useEffect(() => {
+    <%= project.name %>.multiply(3, 7).then(setResult);
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>{<%= project.name %>}</Text>
+      <Text>Result: {result}</Text>
     </View>
   );
 }

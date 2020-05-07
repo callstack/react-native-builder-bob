@@ -1,7 +1,7 @@
 #include "example.h"
 
 namespace example {
-	int multiply(int a, int b) {
+	int multiply(float a, float b) {
 		return a * b;
 	}
 }

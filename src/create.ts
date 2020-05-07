@@ -16,6 +16,7 @@ const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
+const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
 
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
@@ -55,8 +56,8 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     githubUrl: repo,
-    useNative,
-    useCpp,
+    native,
+    cpp,
   } = (await inquirer.prompt([
     {
       type: 'input',
@@ -126,16 +127,16 @@ export default async function create(argv: yargs.Arguments<any>) {
     },
     {
       type: 'confirm',
-      name: 'useNative',
+      name: 'native',
       message: 'Do you want to use Java or Objective-C code?',
       default: true,
     },
     {
       type: 'confirm',
-      name: 'useCpp',
+      name: 'cpp',
       message: 'Do you want to use C++ code?',
       default: false,
-      when: (response) => response.useNative,
+      when: (response) => response.native,
     },
   ])) as {
     slug: string;
@@ -144,8 +145,8 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail: string;
     authorUrl: string;
     githubUrl: string;
-    useNative: boolean;
-    useCpp: boolean;
+    native: boolean;
+    cpp: boolean;
   };
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
@@ -164,7 +165,8 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      useCpp,
+      native,
+      cpp,
     },
     author: {
       name: authorName,
@@ -199,14 +201,16 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   await copyDir(COMMON_FILES, folder);
 
-  if (useNative) {
+  if (native) {
     await copyDir(NATIVE_FILES, folder);
   } else {
     await copyDir(EXPO_FILES, folder);
   }
 
-  if (useCpp) {
+  if (cpp) {
     await copyDir(CPP_FILES, folder);
+  } else {
+    await copyDir(OBJC_FILES, folder);
   }
 
   try {
@@ -219,23 +223,29 @@ export default async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
+  const platforms = {
+    ios: { name: 'iOS', color: 'cyan' },
+    android: { name: 'Android', color: 'green' },
+    ...(native ? null : { web: { name: 'Web', color: 'blue' } }),
+  };
+
   console.log(
     dedent(chalk`
-      Project created successfully at {blue ${argv.name}}!
+      Project created successfully at {yellow ${argv.name}}!
 
       {magenta {bold Get started} with the project}{gray :}
 
         {gray $} yarn bootstrap
+      ${Object.entries(platforms)
+        .map(
+          ([script, { name, color }]) => chalk`
+      {${color} Run the example app on {bold ${name}}}{gray :}
 
-      {cyan Run the example app on {bold iOS}}{gray :}
+        {gray $} yarn example ${script}`
+        )
+        .join('\n')}
 
-        {gray $} yarn example ios
-
-      {green Run the example app on {bold Android}}{gray :}
-
-        {gray $} yarn example android
-
-      {blue Good luck!}
+      {yellow Good luck!}
     `)
   );
 }

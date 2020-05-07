@@ -14,16 +14,15 @@ class <%= project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
     // Example method
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
-    fun getDeviceName(promise: Promise) {
-        promise.resolve(android.os.Build.MODEL)
-    }
-    <%if (project.useCpp==true) {%>
-      
-    @ReactMethod
     fun multiply(a: Int, b: Int, promise: Promise) {
+    <% if (project.cpp) {%>
       promise.resolve(nativeMultiply(a, b));
+    <% } else { %>
+      promise.resolve(a * b)
+    <% } %>
     }
 
+    <% if (project.cpp) {%>
     external fun nativeMultiply(a: Int, b: Int): Int;
 
     companion object
@@ -35,5 +34,5 @@ class <%= project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
             System.loadLibrary("cpp")
         }
     }
-    <%}%>
+    <% } %>
 }

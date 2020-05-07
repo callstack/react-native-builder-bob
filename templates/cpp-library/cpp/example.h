@@ -2,7 +2,7 @@
 #define EXAMPLE_H
 
 namespace example {
-  int multiply(int a, int b);
+  int multiply(float a, float b);
 }
 
 #endif /* EXAMPLE_H */
