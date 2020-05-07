@@ -210,10 +210,11 @@ export default async function create(argv: yargs.Arguments<any>) {
   }
 
   try {
-    await spawn.sync(
-      'git init && git add . && git commit -m "chore: initial commit"',
-      { cwd: folder }
-    );
+    spawn.sync('git', ['init'], { cwd: folder });
+    spawn.sync('git', ['add', '.'], { cwd: folder });
+    spawn.sync('git', ['commit', '-m', 'chore: initial commit'], {
+      cwd: folder,
+    });
   } catch (e) {
     // Ignore error
   }
