@@ -6,8 +6,8 @@ RCT_EXPORT_MODULE()
 
 // Example method for C++
 RCT_EXPORT_METHOD(multiply:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withReject:(RCTPromiseRejectBlock)reject)
 {
     NSNumber *result = @(example::multiply([a floatValue], [b floatValue]));
 
