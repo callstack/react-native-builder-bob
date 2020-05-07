@@ -172,7 +172,7 @@ Example:
 
 Enable generating type definitions with `tsc` if your source code is written in [TypeScript](http://www.typescriptlang.org/).
 
-By default, it'll use the `tsconfig.json` file in your project root. If you want to use a different config, you can specify it using the `project` option.
+By default, it'll use the `tsconfig.json` file in your project root. If you want to use a different config, you can specify it using the `project` option. Furthermore, the tsc binary will be resolved to ./node_modules/.bin/tsc. Use the `tsc` option to specify a different path.
 
 Example:
 
