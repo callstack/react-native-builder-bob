@@ -6,6 +6,7 @@
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
   "files": [
     "src",
     "lib",
@@ -81,6 +82,7 @@
       "prettier/prettier": [
         "error",
         {
+          "quoteProps": "consistent",
           "singleQuote": true,
           "tabWidth": 2,
           "trailingComma": "es5",
@@ -91,6 +93,7 @@
   },
   "eslintIgnore": ["node_modules/", "lib/"],
   "prettier": {
+    "quoteProps": "consistent",
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "es5",
