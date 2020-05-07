@@ -1,0 +1,72 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/project
+    environment:
+      YARN_CACHE_FOLDER: "~/.cache/yarn"
+
+jobs:
+  install-dependencies:
+    executor: default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - restore_cache:
+          keys:
+            - yarn-{{ checksum "package.json" }}
+            - yarn-
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --frozen-lockfile
+      - save_cache:
+          key: yarn-{{ checksum "package.json" }}
+          paths: ~/.cache/yarn
+      - persist_to_workspace:
+          root: .
+          paths: .
+  lint:
+      executor: default
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run:
+            name: Lint
+            command: |
+              yarn lint
+  typescript:
+      executor: default
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run:
+            name: Typecheck
+            command: |
+              yarn typescript
+  build-package:
+      executor: default
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run:
+            name: Compile
+            command: |
+              yarn prepare
+
+workflows:
+  build-and-test:
+    jobs:
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - typescript:
+          requires:
+            - install-dependencies
+      - build-package:
+          requires:
+            - install-dependencies

@@ -80,7 +80,8 @@ export default async function build({
 
     let tsc = options?.tsc
       ? path.resolve(root, options.tsc)
-      : path.join(root, 'node_modules') + (platform() === 'win32' ? '.cmd' : '');
+      : path.join(root, 'node_modules') +
+        (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
       tsc = spawn.sync('which', ['tsc']).stdout.toString().trim();
