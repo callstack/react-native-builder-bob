@@ -67,7 +67,7 @@ export default async function create(argv: yargs.Arguments<any>) {
           ? basename
           : `react-native-${basename}`
         : undefined,
-      validate: input =>
+      validate: (input) =>
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
@@ -75,21 +75,21 @@ export default async function create(argv: yargs.Arguments<any>) {
       type: 'input',
       name: 'description',
       message: 'What is the description for the package?',
-      validate: input => Boolean(input),
+      validate: (input) => Boolean(input),
     },
     {
       type: 'input',
       name: 'authorName',
       message: 'What is the name of package author?',
       default: name,
-      validate: input => Boolean(input),
+      validate: (input) => Boolean(input),
     },
     {
       type: 'input',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
       default: email,
-      validate: input =>
+      validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     {
@@ -107,7 +107,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
         return undefined;
       },
-      validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
+      validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
       type: 'input',
@@ -122,7 +122,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
         return undefined;
       },
-      validate: input => /^https?:\/\//.test(input) || 'Must be a valid URL',
+      validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
       type: 'confirm',
@@ -135,7 +135,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       name: 'useCpp',
       message: 'Do you want to use C++ code?',
       default: false,
-      when: response => response.useNative,
+      when: (response) => response.useNative,
     },
   ])) as {
     slug: string;

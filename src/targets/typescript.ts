@@ -83,10 +83,7 @@ export default async function build({
       (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
-      tsc = spawn
-        .sync('which', ['tsc'])
-        .stdout.toString()
-        .trim();
+      tsc = spawn.sync('which', ['tsc']).stdout.toString().trim();
 
       report.warn(
         `Using a global version of ${chalk.blue(

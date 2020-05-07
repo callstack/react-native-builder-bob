@@ -1,3 +1,3 @@
 declare module 'is-git-dirty' {
-  export default function(): boolean | null;
+  export default function (): boolean | null;
 }

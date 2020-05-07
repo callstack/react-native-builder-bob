@@ -53,7 +53,7 @@ yargs
       name: 'source',
       message: 'Where are your source files?',
       default: 'src',
-      validate: input => Boolean(input),
+      validate: (input) => Boolean(input),
     });
 
     let entryFile;
@@ -80,7 +80,7 @@ yargs
         name: 'output',
         message: 'Where do you want to generate the output files?',
         default: 'lib',
-        validate: input => Boolean(input),
+        validate: (input) => Boolean(input),
       },
       {
         type: 'checkbox',
@@ -88,7 +88,7 @@ yargs
         message: 'Which targets do you want to build?',
         // @ts-ignore
         choices: ['aar', 'commonjs', 'module', 'typescript'],
-        validate: input => Boolean(input.length),
+        validate: (input) => Boolean(input.length),
       },
     ];
 
@@ -280,7 +280,7 @@ yargs
 
     logger.success('Your project is configured!');
   })
-  .command('build', 'build files for publishing', {}, async argv => {
+  .command('build', 'build files for publishing', {}, async (argv) => {
     const result = explorer.search();
 
     if (!result?.config) {

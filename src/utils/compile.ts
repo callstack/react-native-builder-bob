@@ -36,7 +36,7 @@ export default async function compile({
   );
 
   await Promise.all(
-    files.map(async filepath => {
+    files.map(async (filepath) => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
         .replace(/\.(js|tsx?)$/, '.js');
