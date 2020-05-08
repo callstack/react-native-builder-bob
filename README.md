@@ -1,5 +1,9 @@
 # @react-native-community/bob
 
+[![Version][version-badge]][package]
+[![Build Status][build-badge]][build]
+[![MIT License][license-badge]][license]
+
 👷‍♂️ Simple CLI to scaffold and build React Native libraries for different targets.
 
 ## Features
@@ -203,3 +207,12 @@ Thanks to the authors of these libraries for inspiration:
 ## LICENSE
 
 MIT
+
+<!-- badges -->
+
+[version-badge]: https://img.shields.io/npm/v/@react-native-community/bob.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@react-native-community/bob
+[build-badge]: https://img.shields.io/circleci/project/github/react-native-community/bob/master.svg?style=flat-square
+[build]: https://circleci.com/gh/react-native-community/bob
+[license-badge]: https://img.shields.io/npm/l/@react-native-community/bob.svg?style=flat-square
+[license]: https://opensource.org/licenses/MIT
