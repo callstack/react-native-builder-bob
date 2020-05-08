@@ -80,7 +80,7 @@ export default async function build({
 
     let tsc = options?.tsc
       ? path.resolve(root, options.tsc)
-      : path.join(root, 'node_modules') +
+      : path.resolve(root, 'node_modules', '.bin', 'tsc') +
         (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
