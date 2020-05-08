@@ -56,8 +56,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     githubUrl: repo,
-    native,
-    cpp,
+    type,
   } = (await inquirer.prompt([
     {
       type: 'input',
@@ -126,17 +125,18 @@ export default async function create(argv: yargs.Arguments<any>) {
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
-      type: 'confirm',
-      name: 'native',
-      message: 'Do you want to use Java or Objective-C code?',
-      default: true,
-    },
-    {
-      type: 'confirm',
-      name: 'cpp',
-      message: 'Do you want to use C++ code?',
-      default: false,
-      when: (response) => response.native,
+      type: 'list',
+      name: 'type',
+      message: 'What type of package do you want to develop?',
+      choices: [
+        { name: 'Native module in Kotlin and Objective-C', value: 'native' },
+        { name: 'Native module with C++ code', value: 'cpp' },
+        {
+          name: 'JavaScript module with Web support using Expo',
+          value: 'expo',
+        },
+      ],
+      default: 'native',
     },
   ])) as {
     slug: string;
@@ -145,8 +145,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorEmail: string;
     authorUrl: string;
     githubUrl: string;
-    native: boolean;
-    cpp: boolean;
+    type: 'native' | 'cpp' | 'expo';
   };
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
@@ -165,8 +164,8 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native,
-      cpp,
+      native: type === 'native' || type === 'cpp',
+      cpp: type === 'cpp',
     },
     author: {
       name: authorName,
@@ -201,16 +200,16 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   await copyDir(COMMON_FILES, folder);
 
-  if (native) {
-    await copyDir(NATIVE_FILES, folder);
-  } else {
+  if (type === 'expo') {
     await copyDir(EXPO_FILES, folder);
-  }
-
-  if (cpp) {
-    await copyDir(CPP_FILES, folder);
   } else {
-    await copyDir(OBJC_FILES, folder);
+    await copyDir(NATIVE_FILES, folder);
+
+    if (type === 'cpp') {
+      await copyDir(CPP_FILES, folder);
+    } else {
+      await copyDir(OBJC_FILES, folder);
+    }
   }
 
   try {
@@ -226,7 +225,7 @@ export default async function create(argv: yargs.Arguments<any>) {
   const platforms = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },
-    ...(native ? null : { web: { name: 'Web', color: 'blue' } }),
+    ...(type === 'expo' ? { web: { name: 'Web', color: 'blue' } } : null),
   };
 
   console.log(
