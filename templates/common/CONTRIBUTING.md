@@ -57,7 +57,7 @@ yarn test
 <% if (project.native) { %>
 To edit the Objective-C files, open `example/ios/<%= project.name %>Example.xcworkspace` in XCode and find the source files at `Pods > Development Pods > <%= project.slug %>`.
 
-To edit the Java files, open `example/android` in Android studio and find the source files at `<%= project.package %>` under `Android`.
+To edit the Kotlin files, open `example/android` in Android studio and find the source files at `<%= project.package %>` under `Android`.
 <% } %>
 ### Commit message convention
 
