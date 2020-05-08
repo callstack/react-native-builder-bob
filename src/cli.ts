@@ -378,4 +378,5 @@ yargs
     }
   })
   .demandCommand()
+  .recommendCommands()
   .strict().argv;
