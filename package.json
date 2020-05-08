@@ -72,6 +72,7 @@
     "eslint": "^6.8.0",
     "eslint-config-satya164": "^3.1.6",
     "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
     "prettier": "^2.0.5",
     "release-it": "^13.5.8",
     "typescript": "^3.8.3"
@@ -79,8 +80,11 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
+      "pre-commit": "lint-staged && yarn typescript"
     }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --fix"
   },
   "release-it": {
     "git": {
