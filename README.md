@@ -41,14 +41,6 @@ Just as an example, this is a command we have in one of the packages: `babel --e
 
 Bob wraps tools such as `babel` and `typescript` to simplify these common tasks across multiple projects. It's tailored specifically to React Native projects to minimize the configuration required.
 
-## Installation
-
-Open a Terminal in your project, and run:
-
-```sh
-yarn add --dev @react-native-community/bob
-```
-
 ## Usage
 
 ### Creating a new project
@@ -64,6 +56,12 @@ This will ask you few questions about your project and generate a new project in
 The difference from [create-react-native-module](https://github.com/brodybits/create-react-native-module) is that the generated project with Bob is very opinionated and configured with additional tools.
 
 ### Configuring an existing project
+
+First, install Bob in your project. Open a Terminal in your project, and run:
+
+```sh
+yarn add --dev @react-native-community/bob
+```
 
 To configure your project to use Bob, open a Terminal and run `yarn bob init` for automatic configuration.
 
@@ -86,7 +84,7 @@ To configure your project manually, follow these steps:
 
    See options below for more details.
 
-1. Add `bob` to your `prepare` step:
+2. Add `bob` to your `prepare` step:
 
    ```js
    "scripts": {
@@ -94,7 +92,7 @@ To configure your project manually, follow these steps:
    }
    ```
 
-1. Configure the appropriate entry points:
+3. Configure the appropriate entry points:
 
    ```json
    "main": "lib/commonjs/index.js",
@@ -113,14 +111,14 @@ To configure your project manually, follow these steps:
 
    If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet.
 
-1. Add the output directory to `.gitignore` and `.eslintignore`
+4. Add the output directory to `.gitignore` and `.eslintignore`
 
    ```gitignore
    # generated files by bob
    lib/
    ```
 
-1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
+5. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
 
    ```json
    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
