@@ -18,6 +18,56 @@ const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
 
+type ArgName =
+  | 'slug'
+  | 'description'
+  | 'author-name'
+  | 'author-email'
+  | 'author-url'
+  | 'repo-url'
+  | 'type';
+
+type Answers = {
+  slug: string;
+  description: string;
+  authorName: string;
+  authorEmail: string;
+  authorUrl: string;
+  repoUrl: string;
+  type: 'native' | 'cpp' | 'expo';
+};
+
+export const args: Record<ArgName, yargs.Options> = {
+  'slug': {
+    description: 'Name of the npm package',
+    type: 'string',
+  },
+  'description': {
+    description: 'Description of the npm package',
+    type: 'string',
+  },
+  'author-name': {
+    description: 'Name of the package author',
+    type: 'string',
+  },
+  'author-email': {
+    description: 'Email address of the package author',
+    type: 'string',
+  },
+  'author-url': {
+    description: 'URL for the package author',
+    type: 'string',
+  },
+  'repo-url': {
+    description: 'URL for the repository',
+    type: 'string',
+  },
+  'type': {
+    description: 'Type package do you want to develop',
+    choices: ['native', 'cpp', 'expo'],
+  },
+};
+
 export default async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
 
@@ -49,18 +99,9 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   const basename = path.basename(argv.name);
 
-  const {
-    slug,
-    description,
-    authorName,
-    authorEmail,
-    authorUrl,
-    githubUrl: repo,
-    type,
-  } = (await inquirer.prompt([
-    {
+  const questions: Record<ArgName, inquirer.Question> = {
+    'slug': {
       type: 'input',
-      name: 'slug',
       message: 'What is the name of the npm package?',
       default: validateNpmPackage(basename).validForNewPackages
         ? /^(@|react-native)/.test(basename)
@@ -71,30 +112,26 @@ export default async function create(argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    {
+    'description': {
       type: 'input',
-      name: 'description',
       message: 'What is the description for the package?',
       validate: (input) => Boolean(input),
     },
-    {
+    'author-name': {
       type: 'input',
-      name: 'authorName',
       message: 'What is the name of package author?',
       default: name,
       validate: (input) => Boolean(input),
     },
-    {
+    'author-email': {
       type: 'input',
-      name: 'authorEmail',
       message: 'What is the email address for the package author?',
       default: email,
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
-    {
+    'author-url': {
       type: 'input',
-      name: 'authorUrl',
       message: 'What is the URL for the package author?',
       default: async (answers: any) => {
         try {
@@ -109,9 +146,8 @@ export default async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    {
+    'repo-url': {
       type: 'input',
-      name: 'githubUrl',
       message: 'What is the URL for the repository?',
       default: (answers: any) => {
         if (/^https?:\/\/github.com\/[^/]+/.test(answers.authorUrl)) {
@@ -124,10 +160,10 @@ export default async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    {
+    'type': {
       type: 'list',
-      name: 'type',
       message: 'What type of package do you want to develop?',
+      // @ts-ignore - seems types are wrong for inquirer
       choices: [
         { name: 'Native module in Kotlin and Objective-C', value: 'native' },
         { name: 'Native module with C++ code', value: 'cpp' },
@@ -138,15 +174,33 @@ export default async function create(argv: yargs.Arguments<any>) {
       ],
       default: 'native',
     },
-  ])) as {
-    slug: string;
-    description: string;
-    authorName: string;
-    authorEmail: string;
-    authorUrl: string;
-    githubUrl: string;
-    type: 'native' | 'cpp' | 'expo';
   };
+
+  const {
+    slug,
+    description,
+    authorName,
+    authorEmail,
+    authorUrl,
+    repoUrl,
+    type,
+  } = {
+    ...argv,
+    ...(await inquirer.prompt(
+      Object.entries(questions).map(([key, value]) => ({
+        ...value,
+        name: key.replace(/\b-([a-z])/g, (_, char) => char.toUpperCase()),
+        when: !(argv[key] && value.validate
+          ? value.validate(argv[key]) === true
+          : Boolean(argv[key])),
+        default:
+          typeof value.default === 'function'
+            ? (answers: Partial<Answers>) =>
+                value.default({ ...argv, ...answers })
+            : value.default,
+      }))
+    )),
+  } as Answers;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
@@ -172,7 +226,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       email: authorEmail,
       url: authorUrl,
     },
-    repo,
+    repo: repoUrl,
   };
 
   const copyDir = async (source: string, dest: string) => {
