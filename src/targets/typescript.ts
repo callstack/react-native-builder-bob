@@ -25,7 +25,7 @@ export default async function build({
 
   report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
 
-  const project = options?.project ? options.project : 'tsconfig.json';
+  const project = options?.project ? options.project : 'build.tsconfig.json';
   const tsconfig = path.join(root, project);
 
   try {
