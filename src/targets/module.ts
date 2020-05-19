@@ -32,7 +32,7 @@ export default async function build({
     modules: false,
     babelrc: options?.babelrc,
     configFile: options?.configFile,
-    copyFlow: options?.copyFlow ? true : false,
+    copyFlow: options?.copyFlow,
     report,
   });
 }

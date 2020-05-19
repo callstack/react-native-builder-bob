@@ -2,22 +2,23 @@ import path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import * as babel from '@babel/core';
+import browserslist from 'browserslist';
 import glob from 'glob';
 import { Input } from '../types';
 
 type Options = Input & {
-  babelrc?: boolean | null;
-  configFile?: string | false | null;
+  babelrc?: boolean | null | undefined;
+  configFile?: string | false | null | undefined;
   modules: 'commonjs' | false;
-  copyFlow: boolean;
+  copyFlow: boolean | undefined;
 };
 
 export default async function compile({
   root,
   source,
   output,
-  babelrc,
-  configFile,
+  babelrc = false,
+  configFile = false,
   modules,
   copyFlow,
   report,
@@ -62,7 +63,8 @@ export default async function compile({
                 [
                   require.resolve('@babel/preset-env'),
                   {
-                    targets: {
+                    // @ts-ignore
+                    targets: browserslist.findConfig(root) ?? {
                       browsers: [
                         '>1%',
                         'last 2 chrome versions',
