@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/bob",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:react-native-community/bob.git",
   "homepage": "https://github.com/react-native-community/bob/blob/master/README.md",
