@@ -212,15 +212,20 @@ yargs
       JSON.stringify(pkg.files.slice().sort()) !==
         JSON.stringify(files.slice().sort())
     ) {
-      const { replace } = await inquirer.prompt({
+      const { update } = await inquirer.prompt({
         type: 'confirm',
-        name: 'replace',
-        message: `Your package.json already has a 'files' field. Do you want to replace it?`,
+        name: 'update',
+        message: `Your package.json already has a 'files' field. Do you want to update it?`,
         default: true,
       });
 
-      if (replace) {
-        pkg.files = files;
+      if (update) {
+        pkg.files = [
+          ...files,
+          ...pkg.files.filter(
+            (file: string) => !files.includes(file.replace(/\/$/g, ''))
+          ),
+        ];
       }
     } else {
       pkg.files = files;
