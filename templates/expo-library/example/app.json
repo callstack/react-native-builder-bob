@@ -3,7 +3,7 @@
   "displayName": "<%= project.name %> Example",
   "expo": {
     "name": "<%= project.slug %>-example",
-    "slug": "<%= project.slug %>-example",
+    "slug": "<%= project.podspec %>-example",
     "description": "Example app for <%= project.slug %>",
     "privacy": "public",
     "version": "1.0.0",
