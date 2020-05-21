@@ -13,8 +13,9 @@
     "android",
     "ios",
     "cpp",
-    "!**/__tests__",
-    "<%= project.podspec %>.podspec"
+    "<%= project.podspec %>.podspec",
+    "!lib/typescript/example",
+    "!**/__tests__"
   ],
   "scripts": {
     "test": "jest",

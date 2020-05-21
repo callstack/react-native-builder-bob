@@ -170,7 +170,7 @@ yargs
     }
 
     const prepare = 'bob build';
-    const files = [source, output];
+    const files = [source, output, '!**/__tests__'];
 
     for (const key in entries) {
       const entry = entries[key];
