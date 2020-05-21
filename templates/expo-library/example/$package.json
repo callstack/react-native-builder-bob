@@ -3,7 +3,7 @@
   "description": "Example app for <%= project.slug %>",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "index",
   "scripts": {
     "android": "expo start --android",
     "ios": "expo start --ios",
