@@ -14,6 +14,7 @@ const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
+const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
@@ -34,7 +35,7 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  type: 'native' | 'cpp' | 'expo';
+  type: 'native' | 'js' | 'cpp' | 'expo';
 };
 
 export const args: Record<ArgName, yargs.Options> = {
@@ -64,7 +65,7 @@ export const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type package do you want to develop',
-    choices: ['native', 'cpp', 'expo'],
+    choices: ['native', 'js', 'cpp', 'expo'],
   },
 };
 
@@ -171,6 +172,10 @@ export default async function create(argv: yargs.Arguments<any>) {
           name: 'JavaScript module with Web support using Expo',
           value: 'expo',
         },
+        {
+          name: 'JavaScript module',
+          value: 'js',
+        },
       ],
       default: 'native',
     },
@@ -254,7 +259,9 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   await copyDir(COMMON_FILES, folder);
 
-  if (type === 'expo') {
+  if (type === 'js') {
+    await copyDir(JS_FILES, folder);
+  } else if (type === 'expo') {
     await copyDir(EXPO_FILES, folder);
   } else {
     await copyDir(NATIVE_FILES, folder);
