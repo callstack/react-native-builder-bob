@@ -65,7 +65,7 @@ export const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type package do you want to develop',
-    choices: ['native', 'swift-native', 'cpp', 'expo'],
+    choices: ['native', 'native-swift', 'cpp', 'expo'],
   },
 };
 
