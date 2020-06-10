@@ -220,7 +220,7 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native: type === 'native' || type === 'cpp' || 'swift-native',
+      native: type === 'native' || type === 'cpp' || 'native-swift',
       cpp: type === 'cpp',
       swift: type === 'native-swift',
     },
