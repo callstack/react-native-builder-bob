@@ -224,6 +224,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: type === 'native' || type === 'cpp',
       cpp: type === 'cpp',
+      type,
     },
     author: {
       name: authorName,
@@ -263,7 +264,15 @@ export default async function create(argv: yargs.Arguments<any>) {
   } else {
     await copyDir(NATIVE_FILES, folder);
 
-    if (type === 'cpp') {
+    if (type === 'js') {
+      await Promise.all(
+        [
+          `${folder}/android`,
+          `${folder}/ios`,
+          `${folder}/${options.project.podspec}.podspec`,
+        ].map(async (file) => await fs.remove(path.resolve(file)))
+      );
+    } else if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
     } else {
       await copyDir(OBJC_FILES, folder);
