@@ -87,6 +87,11 @@
       "pre-commit": "yarn lint && yarn typescript"
     }
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "release-it": {
     "git": {
       "commitMessage": "chore: release ${version}",
@@ -103,5 +108,23 @@
         "preset": "angular"
       }
     }
+  },
+  "eslintConfig": {
+    "extends": "satya164",
+    "env": {
+      "node": true
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "coverage/",
+    "lib/",
+    "templates/"
+  ],
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
   }
 }
