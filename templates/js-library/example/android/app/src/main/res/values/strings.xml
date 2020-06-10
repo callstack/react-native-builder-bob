@@ -1,3 +1,0 @@
-<resources>
-    <string name="app_name"><%= project.name %> Example</string>
-</resources>

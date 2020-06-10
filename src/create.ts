@@ -14,7 +14,6 @@ const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
-const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
@@ -259,9 +258,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   await copyDir(COMMON_FILES, folder);
 
-  if (type === 'js') {
-    await copyDir(JS_FILES, folder);
-  } else if (type === 'expo') {
+  if (type === 'expo') {
     await copyDir(EXPO_FILES, folder);
   } else {
     await copyDir(NATIVE_FILES, folder);
