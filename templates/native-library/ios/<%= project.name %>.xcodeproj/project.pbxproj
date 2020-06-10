@@ -10,6 +10,9 @@
 <% if (project.cpp) {%>
 		5E46D8CD2428F78900513E24 /* example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E46D8CB2428F78900513E24 /* example.cpp */; };
 <% } %>
+<% if (project.swift) {%>
+		F4FF95D7245B92E800C19C63 /*  <%= project.name %>.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  <%= project.name %>.swift */; };
+<% } %>
 		5E555C0D2413F4C50049A1A2 /* <%= project.name %>.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */; };
 /* End PBXBuildFile section */
 
@@ -31,8 +34,14 @@
 		5E46D8CB2428F78900513E24 /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = example.cpp; path = ../cpp/example.cpp; sourceTree = "<group>"; };
 		5E46D8CC2428F78900513E24 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = example.h; path = ../cpp/example.h; sourceTree = "<group>"; };
 <% } %>
+<% if (project.swift) {%>
+		B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = <%= project.name %>.m; sourceTree = "<group>"; };
+		F4FF95D5245B92E700C19C63 /* <%= project.name %>-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "<%= project.name %>-Bridging-Header.h"; sourceTree = "<group>"; };
+		F4FF95D6245B92E800C19C63 /* <%= project.name %>.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = <%= project.name %>.swift; sourceTree = "<group>"; };
+<% } else { %>
 		B3E7B5881CC2AC0600A0062D /* <%= project.name %>.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = <%= project.name %>.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = <%= project.name %>.mm; sourceTree = "<group>"; };
+<% } %>
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,8 +70,14 @@
 				5E46D8CB2428F78900513E24 /* example.cpp */,
 				5E46D8CC2428F78900513E24 /* example.h */,
 <% } %>
+<% if (project.swift) {%>
+				F4FF95D6245B92E800C19C63 /* <%= project.name %>.swift */,
+				B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */,
+				F4FF95D5245B92E700C19C63 /* <%= project.name %>-Bridging-Header.h */,
+<% } else {%>
 				B3E7B5881CC2AC0600A0062D /* <%= project.name %>.h */,
 				B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */,
+<% } %>
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,7 +142,12 @@
 <% if (project.cpp) {%>
 				5E46D8CD2428F78900513E24 /* example.cpp in Sources */,
 <% } %>
+<% if (project.swift) {%>
+				F4FF95D7245B92E800C19C63 /* <%= project.name %>.swift in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* <%= project.name %>.m in Sources */,
+<% } else { %>
 				5E555C0D2413F4C50049A1A2 /* <%= project.name %>.mm in Sources */,
+<% } %>
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +260,11 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = <%= project.name %>;
 				SKIP_INSTALL = YES;
+<% if (project.swift) {%>
+				SWIFT_OBJC_BRIDGING_HEADER = "<%= project.name %>-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+<% } %>
 			};
 			name = Debug;
 		};
@@ -256,6 +281,10 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = <%= project.name %>;
 				SKIP_INSTALL = YES;
+<% if (project.swift) {%>
+				SWIFT_OBJC_BRIDGING_HEADER = "<%= project.name %>-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+<% } %>
 			};
 			name = Release;
 		};
