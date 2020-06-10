@@ -15,7 +15,9 @@ Pod::Spec.new do |s|
 
   <% if(project.cpp){ %>
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp}"
-  <% } else{ %>
+  <% } else if(project.swift){ %>
+  s.source_files = "ios/**/*.{h,m,mm,swift}"
+  <% } else {%>
   s.source_files = "ios/**/*.{h,m,mm}"
   <% } %>
 

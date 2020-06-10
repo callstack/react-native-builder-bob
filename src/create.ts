@@ -17,6 +17,7 @@ const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
+const SWIFT_FILES = path.resolve(__dirname, '../templates/swift-library');
 
 type ArgName =
   | 'slug'
@@ -34,7 +35,7 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  type: 'native' | 'cpp' | 'expo';
+  type: 'native' | 'native-swift' | 'cpp' | 'expo';
 };
 
 export const args: Record<ArgName, yargs.Options> = {
@@ -64,7 +65,7 @@ export const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type package do you want to develop',
-    choices: ['native', 'cpp', 'expo'],
+    choices: ['native', 'native-swift', 'cpp', 'expo'],
   },
 };
 
@@ -166,6 +167,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       // @ts-ignore - seems types are wrong for inquirer
       choices: [
         { name: 'Native module in Kotlin and Objective-C', value: 'native' },
+        { name: 'Native module in Kotlin and Swift', value: 'native-swift' },
         { name: 'Native module with C++ code', value: 'cpp' },
         {
           name: 'JavaScript module with Web support using Expo',
@@ -218,8 +220,9 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native: type === 'native' || type === 'cpp',
+      native: type === 'native' || type === 'cpp' || 'native-swift',
       cpp: type === 'cpp',
+      swift: type === 'native-swift',
     },
     author: {
       name: authorName,
@@ -261,6 +264,8 @@ export default async function create(argv: yargs.Arguments<any>) {
 
     if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
+    } else if (type === 'native-swift') {
+      await copyDir(SWIFT_FILES, folder);
     } else {
       await copyDir(OBJC_FILES, folder);
     }
