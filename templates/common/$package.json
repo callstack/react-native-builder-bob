@@ -15,7 +15,9 @@
     "cpp",
     "<%= project.podspec %>.podspec",
     "!lib/typescript/example",
-    "!**/__tests__"
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
   ],
   "scripts": {
     "test": "jest",
