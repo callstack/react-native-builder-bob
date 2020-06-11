@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs-extra';
+import which from 'which';
 import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
@@ -84,7 +85,7 @@ export default async function build({
         (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
-      tsc = spawn.sync('which', ['tsc']).stdout.toString().trim();
+      tsc = await which('tsc');
 
       report.warn(
         `Using a global version of ${chalk.blue(

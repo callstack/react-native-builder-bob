@@ -51,6 +51,7 @@
     "is-git-dirty": "^1.0.0",
     "json5": "^2.1.3",
     "validate-npm-package-name": "^3.0.0",
+    "which": "^2.0.2",
     "yargs": "^15.3.1"
   },
   "optionalDependencies": {
@@ -72,6 +73,7 @@
     "@types/inquirer": "^6.5.0",
     "@types/json5": "^0.0.30",
     "@types/validate-npm-package-name": "^3.0.0",
+    "@types/which": "^1.3.2",
     "@types/yargs": "^15.0.4",
     "commitlint": "^8.3.5",
     "eslint": "^7.0.0",
