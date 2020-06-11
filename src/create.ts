@@ -270,10 +270,10 @@ export default async function create(argv: yargs.Arguments<any>) {
     if (type === 'js') {
       await Promise.all(
         [
-          `${folder}/android`,
-          `${folder}/ios`,
-          `${folder}/${options.project.podspec}.podspec`,
-        ].map(async (file) => await fs.remove(path.resolve(file)))
+          `android`,
+          `ios`,
+          `${options.project.podspec}.podspec`,
+        ].map((file) => fs.remove(path.join(folder, file)))
       );
     } else if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
