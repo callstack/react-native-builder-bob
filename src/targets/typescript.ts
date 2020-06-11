@@ -85,42 +85,24 @@ export default async function build({
         (platform() === 'win32' ? '.cmd' : '');
 
     if (!(await fs.pathExists(tsc))) {
-      tsc = await which('tsc');
+      try {
+        tsc = await which('tsc');
 
-      report.warn(
-        `Using a global version of ${chalk.blue(
-          'tsc'
-        )}. Consider adding ${chalk.blue('typescript')} to your ${chalk.blue(
-          'devDependencies'
-        )} or specifying the ${chalk.blue(
-          'tsc'
-        )} option for the typescript target.`
-      );
+        report.warn(
+          `Using a global version of ${chalk.blue(
+            'tsc'
+          )}. Consider adding ${chalk.blue('typescript')} to your ${chalk.blue(
+            'devDependencies'
+          )} or specifying the ${chalk.blue(
+            'tsc'
+          )} option for the typescript target.`
+        );
+      } catch (e) {
+        // Ignore
+      }
     }
 
-    if (await fs.pathExists(tsc)) {
-      spawn.sync(
-        tsc,
-        [
-          '--pretty',
-          '--declaration',
-          '--emitDeclarationOnly',
-          '--project',
-          project,
-          '--outDir',
-          output,
-        ],
-        { stdio: 'inherit' }
-      );
-
-      await del([
-        path.join(output, project.replace(/\.json$/, '.tsbuildinfo')),
-      ]);
-
-      report.success(
-        `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
-      );
-    } else {
+    if (!(await fs.pathExists(tsc))) {
       throw new Error(
         `The ${chalk.blue(
           'tsc'
@@ -132,6 +114,41 @@ export default async function build({
           'tsc'
         )} option for typescript.`
       );
+    }
+
+    const tsbuildinfo = path.join(
+      output,
+      project.replace(/\.json$/, '.tsbuildinfo')
+    );
+
+    try {
+      await del([tsbuildinfo]);
+    } catch (e) {
+      // Ignore
+    }
+
+    const result = spawn.sync(
+      tsc,
+      [
+        '--pretty',
+        '--declaration',
+        '--emitDeclarationOnly',
+        '--project',
+        project,
+        '--outDir',
+        output,
+      ],
+      { stdio: 'inherit' }
+    );
+
+    if (result.status === 0) {
+      await del([tsbuildinfo]);
+
+      report.success(
+        `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
+      );
+    } else {
+      throw new Error('Failed to build definition files.');
     }
   } catch (e) {
     if (e.stdout) {
