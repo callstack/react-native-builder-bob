@@ -14,6 +14,7 @@ const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
+const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
@@ -170,12 +171,12 @@ export default async function create(argv: yargs.Arguments<any>) {
         { name: 'Native module in Kotlin and Swift', value: 'native-swift' },
         { name: 'Native module with C++ code', value: 'cpp' },
         {
-          name: 'JavaScript module with Web support using Expo',
-          value: 'expo',
+          name: 'JavaScript module with native example',
+          value: 'js',
         },
         {
-          name: 'JavaScript module',
-          value: 'js',
+          name: 'JavaScript module with Web support using Expo',
+          value: 'expo',
         },
       ],
       default: 'native',
@@ -227,7 +228,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       native: type === 'native' || type === 'cpp' || 'native-swift',
       cpp: type === 'cpp',
       swift: type === 'native-swift',
-      type,
+      module: type !== 'js',
     },
     author: {
       name: authorName,
@@ -263,19 +264,18 @@ export default async function create(argv: yargs.Arguments<any>) {
   await copyDir(COMMON_FILES, folder);
 
   if (type === 'expo') {
+    await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
+  } else if (type === 'js') {
+    await copyDir(JS_FILES, folder);
+    await copyDir(
+      path.join(EXPO_FILES, 'example'),
+      path.join(folder, 'example')
+    );
   } else {
     await copyDir(NATIVE_FILES, folder);
 
-    if (type === 'js') {
-      await Promise.all(
-        [
-          `android`,
-          `ios`,
-          `${options.project.podspec}.podspec`,
-        ].map((file) => fs.remove(path.join(folder, file)))
-      );
-    } else if (type === 'cpp') {
+    if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
     } else if (type === 'native-swift') {
       await copyDir(SWIFT_FILES, folder);

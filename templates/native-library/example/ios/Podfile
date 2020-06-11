@@ -53,12 +53,12 @@ target '<%= project.name %>Example' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-<% if (project.type !== 'js') { -%>
+<% if (project.module) { -%>
   pod '<%= project.podspec %>', :path => '../..'
 <% } -%>
 
   use_native_modules!
-  
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

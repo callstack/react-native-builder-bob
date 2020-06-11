@@ -2,7 +2,7 @@ rootProject.name = '<%= project.name %>Example'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-<% if (project.type !== 'js') { -%>
+<% if (project.module) { -%>
 include ':<%= project.package %>'
 project(':<%= project.package %>').projectDir = new File(rootProject.projectDir, '../../android')
 <% } -%>
