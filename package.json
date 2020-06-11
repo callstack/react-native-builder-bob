@@ -23,7 +23,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "lint": "eslint --ext '.js,.ts,.tsx' .",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typescript": "tsc --noEmit",
     "build": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start",
     "watch": "yarn build --watch",

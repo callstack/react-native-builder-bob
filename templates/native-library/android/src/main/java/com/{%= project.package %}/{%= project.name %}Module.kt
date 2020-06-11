@@ -15,14 +15,14 @@ class <%= project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
     fun multiply(a: Int, b: Int, promise: Promise) {
-    <% if (project.cpp) {%>
+    <% if (project.cpp) { %>
       promise.resolve(nativeMultiply(a, b));
     <% } else { %>
       promise.resolve(a * b)
     <% } %>
     }
 
-    <% if (project.cpp) {%>
+    <% if (project.cpp) { %>
     external fun nativeMultiply(a: Int, b: Int): Int;
 
     companion object
