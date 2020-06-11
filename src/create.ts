@@ -35,7 +35,7 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  type: 'native' | 'native-swift' | 'cpp' | 'expo';
+  type: 'native' | 'native-swift' | 'js' | 'cpp' | 'expo';
 };
 
 export const args: Record<ArgName, yargs.Options> = {
@@ -65,7 +65,7 @@ export const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type package do you want to develop',
-    choices: ['native', 'native-swift', 'cpp', 'expo'],
+    choices: ['native', 'native-swift', 'js', 'cpp', 'expo'],
   },
 };
 
@@ -173,6 +173,10 @@ export default async function create(argv: yargs.Arguments<any>) {
           name: 'JavaScript module with Web support using Expo',
           value: 'expo',
         },
+        {
+          name: 'JavaScript module',
+          value: 'js',
+        },
       ],
       default: 'native',
     },
@@ -223,6 +227,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       native: type === 'native' || type === 'cpp' || 'native-swift',
       cpp: type === 'cpp',
       swift: type === 'native-swift',
+      type,
     },
     author: {
       name: authorName,
@@ -262,7 +267,15 @@ export default async function create(argv: yargs.Arguments<any>) {
   } else {
     await copyDir(NATIVE_FILES, folder);
 
-    if (type === 'cpp') {
+    if (type === 'js') {
+      await Promise.all(
+        [
+          `android`,
+          `ios`,
+          `${options.project.podspec}.podspec`,
+        ].map((file) => fs.remove(path.join(folder, file)))
+      );
+    } else if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
     } else if (type === 'native-swift') {
       await copyDir(SWIFT_FILES, folder);

@@ -209,7 +209,9 @@ dependencies {
         implementation jscFlavor
     }
 
+<% if (project.type !== 'js') { -%>
     implementation project(':<%= project.package %>')
+<% } -%>
 }
 
 // Run this once to be able to run the application with BUCK
