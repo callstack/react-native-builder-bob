@@ -75,7 +75,7 @@ export default async function build({
       }
     } else {
       throw new Error(
-        `Couldn't find a ${chalk.blue('tsc')} in the project root.`
+        `Couldn't find a ${chalk.blue('tsconfig.json')} in the project root.`
       );
     }
 
