@@ -4,7 +4,7 @@ import ejs from 'ejs';
 import dedent from 'dedent';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import yargs from 'yargs';
+import type yargs from 'yargs';
 import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';

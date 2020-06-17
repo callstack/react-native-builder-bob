@@ -6,7 +6,7 @@ import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
 import { platform } from 'os';
-import { Input } from '../types';
+import type { Input } from '../types';
 
 type Options = Input & {
   options?: { project?: string; tsc?: string };

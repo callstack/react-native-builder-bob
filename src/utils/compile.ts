@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import * as babel from '@babel/core';
 import browserslist from 'browserslist';
 import glob from 'glob';
-import { Input } from '../types';
+import type { Input } from '../types';
 
 type Options = Input & {
   babelrc?: boolean | null | undefined;

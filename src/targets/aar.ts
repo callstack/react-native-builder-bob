@@ -3,8 +3,8 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import del from 'del';
 import androidAssemble from '../utils/androidAssemble';
-import { Input } from '../types';
 import jetifier from '../utils/jetifier';
+import type { Input } from '../types';
 
 type TargetOptions = {
   androidPath: string;

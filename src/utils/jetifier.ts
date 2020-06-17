@@ -2,7 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import { execFileSync } from 'child_process';
 import fs from 'fs-extra';
-import { Report } from '../types';
+import type { Report } from '../types';
 
 type Options = {
   root: string;

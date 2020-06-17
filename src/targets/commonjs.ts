@@ -2,7 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import del from 'del';
 import compile from '../utils/compile';
-import { Input } from '../types';
+import type { Input } from '../types';
 
 type Options = Input & {
   options?: {

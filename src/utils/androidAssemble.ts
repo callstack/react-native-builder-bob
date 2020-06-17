@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import { execFileSync } from 'child_process';
 import { platform } from 'os';
-import { Report } from '../types';
+import type { Report } from '../types';
 
 type Options = {
   root: string;

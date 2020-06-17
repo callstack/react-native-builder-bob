@@ -11,7 +11,7 @@ import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import { Options } from './types';
+import type { Options } from './types';
 
 // eslint-disable-next-line import/no-commonjs
 const { name } = require('../package.json');
