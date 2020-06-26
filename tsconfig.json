@@ -1,19 +1,17 @@
+
 {
   "compilerOptions": {
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "alwaysStrict": true,
     "esModuleInterop": true,
     "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["esnext"],
+    "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "noImplicitUseStrict": false,
     "noStrictGenericChecks": false,
     "noUnusedLocals": true,
@@ -22,7 +20,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "plugins": [{ "name": "typescript-tslint-plugin" }]
   },
   "exclude": ["typings/**/*", "lib/**/*", "templates/**/*"]
 }
