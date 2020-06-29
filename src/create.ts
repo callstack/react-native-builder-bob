@@ -175,7 +175,7 @@ export default async function create(argv: yargs.Arguments<any>) {
           value: 'js',
         },
         {
-          name: 'JavaScript module with Web support using Expo',
+          name: 'JavaScript module with Expo example and Web support',
           value: 'expo',
         },
       ],
@@ -275,7 +275,7 @@ export default async function create(argv: yargs.Arguments<any>) {
   } else if (type === 'js') {
     await copyDir(JS_FILES, folder);
     await copyDir(
-      path.join(EXPO_FILES, 'example'),
+      path.join(NATIVE_FILES, 'example'),
       path.join(folder, 'example')
     );
   } else {
