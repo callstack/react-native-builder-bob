@@ -70,5 +70,8 @@ typings/
 # VSCode
 .history
 
+# WebStorm
+.idea/
+
 # generated files
 lib/
