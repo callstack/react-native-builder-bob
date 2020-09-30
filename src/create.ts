@@ -19,6 +19,7 @@ const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
 const SWIFT_FILES = path.resolve(__dirname, '../templates/swift-library');
+const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
 
 type ArgName =
   | 'slug'
@@ -275,10 +276,14 @@ export default async function create(argv: yargs.Arguments<any>) {
   } else if (type === 'js') {
     await copyDir(JS_FILES, folder);
     await copyDir(
-      path.join(NATIVE_FILES, 'example'),
+      path.join(EXAMPLE_FILES, 'example'),
       path.join(folder, 'example')
     );
   } else {
+    await copyDir(
+      path.join(EXAMPLE_FILES, 'example'),
+      path.join(folder, 'example')
+    );
     await copyDir(NATIVE_FILES, folder);
 
     if (type === 'cpp') {
