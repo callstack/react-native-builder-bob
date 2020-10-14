@@ -102,6 +102,7 @@
     }
   },
   "eslintConfig": {
+    "root": true,
     "extends": [
       "@react-native-community",
       "prettier"
