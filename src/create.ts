@@ -20,6 +20,10 @@ const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
 const SWIFT_FILES = path.resolve(__dirname, '../templates/swift-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
+const CONFIGURATION_FILES = path.resolve(
+  __dirname,
+  '../templates/configurations'
+);
 
 type ArgName =
   | 'slug'
