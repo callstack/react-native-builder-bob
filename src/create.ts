@@ -183,7 +183,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       ],
       default: 'packageJson',
     },
-    type: {
+    'type': {
       type: 'list',
       message: 'What type of package do you want to develop?',
       // @ts-ignore - seems types are wrong for inquirer
