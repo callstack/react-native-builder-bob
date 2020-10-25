@@ -1,5 +1,5 @@
 import path from 'path';
-import fs from 'fs-extra';
+import fs, { unlink, writeFile } from 'fs-extra';
 import ejs from 'ejs';
 import dedent from 'dedent';
 import chalk from 'chalk';
@@ -32,7 +32,8 @@ type ArgName =
   | 'author-email'
   | 'author-url'
   | 'repo-url'
-  | 'type';
+  | 'type'
+  | 'configurationType';
 
 type Answers = {
   slug: string;
@@ -42,6 +43,7 @@ type Answers = {
   authorUrl: string;
   repoUrl: string;
   type: 'native' | 'native-swift' | 'js' | 'cpp' | 'expo';
+  configurationType: 'packageJson' | 'files';
 };
 
 export const args: Record<ArgName, yargs.Options> = {
@@ -72,6 +74,10 @@ export const args: Record<ArgName, yargs.Options> = {
   'type': {
     description: 'Type package do you want to develop',
     choices: ['native', 'native-swift', 'js', 'cpp', 'expo'],
+  },
+  'configurationType': {
+    description: 'Type of the stored configurations',
+    choices: ['packageJson', 'files'],
   },
 };
 
@@ -167,7 +173,17 @@ export default async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'type': {
+    'configurationType': {
+      type: 'list',
+      message: 'Where do you want to store the configuration?',
+      // @ts-ignore - seems types are wrong for inquirer
+      choices: [
+        { name: 'package.json', value: 'packageJson' },
+        { name: 'configuration files', value: 'files' },
+      ],
+      default: 'packageJson',
+    },
+    type: {
       type: 'list',
       message: 'What type of package do you want to develop?',
       // @ts-ignore - seems types are wrong for inquirer
@@ -196,6 +212,7 @@ export default async function create(argv: yargs.Arguments<any>) {
     authorUrl,
     repoUrl,
     type,
+    configurationType,
   } = {
     ...argv,
     ...(await inquirer.prompt(
@@ -234,6 +251,7 @@ export default async function create(argv: yargs.Arguments<any>) {
       cpp: type === 'cpp',
       swift: type === 'native-swift',
       module: type !== 'js',
+      configurationType,
     },
     author: {
       name: authorName,
@@ -298,7 +316,40 @@ export default async function create(argv: yargs.Arguments<any>) {
       await copyDir(OBJC_FILES, folder);
     }
   }
+  if (configurationType === 'files') {
+    await copyDir(CONFIGURATION_FILES, folder);
+  } else {
+    const packageJsonPath = path.join(folder, 'package.json');
+    const eslintConfg = require(path.join(CONFIGURATION_FILES, '.eslintrc.js'));
+    let packageJson = require(packageJsonPath);
 
+    packageJson['jest'] = require(path.join(
+      CONFIGURATION_FILES,
+      'jest.config.js'
+    ));
+    packageJson['commitlint'] = require(path.join(
+      CONFIGURATION_FILES,
+      '.commitlintrc.js'
+    ));
+    packageJson['release-it'] = require(path.join(
+      CONFIGURATION_FILES,
+      '.release-it.js'
+    ));
+    packageJson['eslintConfig'] = {
+      ...eslintConfg,
+      ignorePatterns: undefined,
+    };
+    packageJson['eslintIgnore'] = eslintConfg.ignorePatterns;
+    packageJson['prettier'] = require(path.join(
+      CONFIGURATION_FILES,
+      'prettier.config.js'
+    ));
+    packageJson['@react-native-community/bob'] = require(path.join(
+      CONFIGURATION_FILES,
+      'bob.config.js'
+    ));
+    await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  }
   try {
     spawn.sync('git', ['init'], { cwd: folder });
     spawn.sync('git', ['add', '.'], { cwd: folder });
