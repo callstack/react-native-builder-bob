@@ -1,5 +1,5 @@
 import path from 'path';
-import fs, { unlink, writeFile } from 'fs-extra';
+import fs, { writeFile } from 'fs-extra';
 import ejs from 'ejs';
 import dedent from 'dedent';
 import chalk from 'chalk';
