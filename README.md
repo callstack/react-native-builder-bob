@@ -195,6 +195,39 @@ Example:
 ["aar", { "reverseJetify": true }]
 ```
 
+## Development workflow
+
+To get started with the project, run `yarn` in the root directory to install the required dependencies.
+
+```sh
+yarn
+```
+
+While developing, you can run watch mode to automatically rebuild the changes:
+
+```sh
+yarn watch
+```
+
+To test the CLI locally, you can point to the `bin/bob` executable:
+
+```sh
+../bob/bin/bob create test-project
+```
+
+Before sending a  pull rquest, make sure your code passes TypeScript and ESLint. Run the following to verify:
+
+```sh
+yarn typescript
+yarn lint
+```
+
+To fix formatting errors, run the following:
+
+```sh
+yarn lint --fix
+```
+
 ## Acknowledgements
 
 Thanks to the authors of these libraries for inspiration:

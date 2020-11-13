@@ -8,7 +8,7 @@
   "license": "MIT",
   "main": "src/index.js",
   "bin": {
-    "bob": "bin/bob.js"
+    "bob": "bin/bob"
   },
   "files": [
     "bin",
