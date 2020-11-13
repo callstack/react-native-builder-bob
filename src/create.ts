@@ -24,7 +24,7 @@ const NATIVE_FILES = (moduleType: ModuleType) => {
     case 'module':
       return path.resolve(__dirname, '../templates/native-library');
     case 'view':
-      return '';
+      return path.resolve(__dirname, '../templates/native-view-library');
   }
 };
 
@@ -34,7 +34,7 @@ const OBJC_FILES = (moduleType: ModuleType) => {
     case 'module':
       return path.resolve(__dirname, '../templates/objc-library');
     case 'view':
-      return '';
+      return path.resolve(__dirname, '../templates/objc-view-library');
   }
 };
 
@@ -42,9 +42,9 @@ const OBJC_FILES = (moduleType: ModuleType) => {
 const SWIFT_FILES = (moduleType: ModuleType) => {
   switch (moduleType) {
     case 'module':
-      return path.resolve(__dirname, '../templates/swift-library'); //Swift
+      return path.resolve(__dirname, '../templates/swift-library');
     case 'view':
-      return '';
+      return path.resolve(__dirname, '../templates/swift-view-library');
   }
 };
 
