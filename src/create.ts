@@ -251,6 +251,8 @@ export default async function create(argv: yargs.Arguments<any>) {
   } as Answers;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+  const moduleType: ModuleType =
+    type === 'native-view' || type === 'native-view-swift' ? 'view' : 'module';
 
   const options = {
     bob: {
@@ -266,10 +268,16 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native: type === 'native' || type === 'cpp' || 'native-swift',
+      native:
+        type === 'native' ||
+        type === 'cpp' ||
+        'native-swift' ||
+        'native-view' ||
+        'native-view-swift',
       cpp: type === 'cpp',
-      swift: type === 'native-swift',
+      swift: type === 'native-swift' || 'native-view-swift',
       module: type !== 'js',
+      moduleType,
     },
     author: {
       name: authorName,
@@ -324,10 +332,6 @@ export default async function create(argv: yargs.Arguments<any>) {
       path.join(EXAMPLE_FILES, 'example'),
       path.join(folder, 'example')
     );
-    const moduleType: ModuleType =
-      type === 'native-view' || type === 'native-view-swift'
-        ? 'view'
-        : 'module';
 
     await copyDir(NATIVE_FILES(moduleType), folder);
 
