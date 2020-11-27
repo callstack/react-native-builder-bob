@@ -9,7 +9,7 @@ module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
 
   config.module.rules.push({
-    test: /\.(js|ts|tsx)$/,
+    test: /\.(js|jsx|ts|tsx)$/,
     include: path.resolve(root, 'src'),
     use: 'babel-loader',
   });

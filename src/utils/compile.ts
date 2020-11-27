@@ -40,11 +40,11 @@ export default async function compile({
     files.map(async (filepath) => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
-        .replace(/\.(js|tsx?)$/, '.js');
+        .replace(/\.(jsx?|tsx?)$/, '.js');
 
       await fs.mkdirp(path.dirname(outputFilename));
 
-      if (!/\.(js|tsx?)$/.test(filepath)) {
+      if (!/\.(jsx?|tsx?)$/.test(filepath)) {
         // Copy files which aren't source code
         fs.copy(filepath, outputFilename);
         return;
