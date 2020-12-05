@@ -17,7 +17,7 @@ If you want to create your own React Native module, scaffolding the project can 
 - C++ support for native modules on Android and iOS
 - [Expo](https://expo.io/) support for libraries without native code and web support
 - Example React Native app to manually test your modules
-- [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Husky](https://github.com/typicode/husky)  and [Release It](https://github.com/release-it/release-it) pre-configured
+- [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Husky](https://github.com/typicode/husky) and [Release It](https://github.com/release-it/release-it) pre-configured
 - Bob pre-configured to compile your files
 - [CircleCI](https://circleci.com/) pre-configured to run tests on the CI
 
@@ -215,7 +215,7 @@ To test the CLI locally, you can point to the `bin/bob` executable:
 ../bob/bin/bob create test-project
 ```
 
-Before sending a  pull rquest, make sure your code passes TypeScript and ESLint. Run the following to verify:
+Before sending a pull rquest, make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
 yarn typescript
@@ -243,7 +243,7 @@ MIT
 
 [version-badge]: https://img.shields.io/npm/v/@react-native-community/bob.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@react-native-community/bob
-[build-badge]: https://img.shields.io/circleci/project/github/react-native-community/bob/master.svg?style=flat-square
-[build]: https://circleci.com/gh/react-native-community/bob
+[build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/master.svg?style=flat-square
+[build]: https://circleci.com/gh/callstack/react-native-builder-bob
 [license-badge]: https://img.shields.io/npm/l/@react-native-community/bob.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT
