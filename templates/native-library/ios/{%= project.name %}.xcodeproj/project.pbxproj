@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 <% if (project.cpp) { %>
 		5E46D8CD2428F78900513E24 /* example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E46D8CB2428F78900513E24 /* example.cpp */; };
-		5E555C0D2413F4C50049A1A2 /* <%= project.name %>.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */; };
+		5E555C0D2413F4C50049A1A2 /* <%= project.name %>.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */; };
 <% } else if (project.swift) { %>
 		5E555C0D2413F4C50049A1A2 /* <%= project.name %>.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */; };
 		F4FF95D7245B92E800C19C63 /*  <%= project.name %>.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  <%= project.name %>.swift */; };
@@ -35,7 +35,7 @@
 <% if (project.cpp) { %>
 		5E46D8CB2428F78900513E24 /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = example.cpp; path = ../cpp/example.cpp; sourceTree = "<group>"; };
 		5E46D8CC2428F78900513E24 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = example.h; path = ../cpp/example.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = <%= project.name %>.mm; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = <%= project.name %>.m; sourceTree = "<group>"; };
 <% } else if (project.swift) { %>
 		B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = <%= project.name %>.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* <%= project.name %>-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "<%= project.name %>-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 <% if (project.cpp) { %>
 				5E46D8CB2428F78900513E24 /* example.cpp */,
 				5E46D8CC2428F78900513E24 /* example.h */,
-				B3E7B5891CC2AC0600A0062D /* <%= project.name %>.mm */,
+				B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */,
 <% } else if (project.swift) { %>
 				F4FF95D6245B92E800C19C63 /* <%= project.name %>.swift */,
 				B3E7B5891CC2AC0600A0062D /* <%= project.name %>.m */,
@@ -143,7 +143,7 @@
 			files = (
 <% if (project.cpp) { %>
 				5E46D8CD2428F78900513E24 /* example.cpp in Sources */,
-				5E555C0D2413F4C50049A1A2 /* <%= project.name %>.mm in Sources */,
+				5E555C0D2413F4C50049A1A2 /* <%= project.name %>.m in Sources */,
 <% } else if (project.swift) { %>
 				F4FF95D7245B92E800C19C63 /* <%= project.name %>.swift in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* <%= project.name %>.m in Sources */,
