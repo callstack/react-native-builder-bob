@@ -317,7 +317,7 @@ export default async function create(argv: yargs.Arguments<any>) {
 
       {magenta {bold Get started} with the project}{gray :}
 
-        {gray $} yarn bootstrap
+        {gray $} yarn
       ${Object.entries(platforms)
         .map(
           ([script, { name, color }]) => chalk`
