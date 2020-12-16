@@ -206,17 +206,17 @@ export default async function create(argv: yargs.Arguments<any>) {
       message: 'What type of package do you want to develop?',
       // @ts-ignore - seems types are wrong for inquirer
       choices: [
-        { name: 'Native view in Kotlin and Objective-C', value: 'native-view' },
-        { name: 'Native view in Kotlin and Swift', value: 'native-view-swift' },
         { name: 'Native module in Kotlin and Objective-C', value: 'native' },
         { name: 'Native module in Kotlin and Swift', value: 'native-swift' },
         { name: 'Native module with C++ code', value: 'cpp' },
+        { name: 'Native view in Kotlin and Objective-C', value: 'native-view' },
+        { name: 'Native view in Kotlin and Swift', value: 'native-view-swift' },
         {
-          name: 'JavaScript module with native example',
+          name: 'JavaScript library with native example',
           value: 'js',
         },
         {
-          name: 'JavaScript module with Expo example and Web support',
+          name: 'JavaScript library with Expo example and Web support',
           value: 'expo',
         },
       ],
