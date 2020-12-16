@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "<%= project.slug %>": ["./src/index"]
+      "<%- project.slug %>": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
