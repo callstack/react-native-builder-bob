@@ -2,10 +2,10 @@ import path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import yargs from 'yargs';
-import inquirer from 'inquirer';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import create, { args as CreateArgs } from './create';
+import prompts, { PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
@@ -30,11 +30,11 @@ yargs
     const pak = path.join(root, 'package.json');
 
     if (isGitDirty()) {
-      const { shouldContinue } = await inquirer.prompt({
+      const { shouldContinue } = await prompts({
         type: 'confirm',
         name: 'shouldContinue',
         message: `The working directory is not clean. You should commit or stash your changes before configuring bob. Continue anyway?`,
-        default: false,
+        initial: false,
       });
 
       if (!shouldContinue) {
@@ -48,11 +48,11 @@ yargs
       );
     }
 
-    const { source } = await inquirer.prompt({
-      type: 'input',
+    const { source } = await prompts({
+      type: 'text',
       name: 'source',
       message: 'Where are your source files?',
-      default: 'src',
+      initial: 'src',
       validate: (input) => Boolean(input),
     });
 
@@ -74,21 +74,41 @@ yargs
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
-    const questions: inquirer.Question[] = [
+    const questions: PromptObject[] = [
       {
-        type: 'input',
+        type: 'text',
         name: 'output',
         message: 'Where do you want to generate the output files?',
-        default: 'lib',
-        validate: (input) => Boolean(input),
+        initial: 'lib',
+        validate: (input: string) => Boolean(input),
       },
       {
-        type: 'checkbox',
+        type: 'multiselect',
         name: 'targets',
         message: 'Which targets do you want to build?',
-        // @ts-ignore
-        choices: ['aar', 'commonjs', 'module', 'typescript'],
-        validate: (input) => Boolean(input.length),
+        choices: [
+          {
+            title: 'commonjs - for running in Node (tests, SSR etc.)',
+            value: 'commonjs',
+            selected: true,
+          },
+          {
+            title: 'module - for bundlers (metro, webpack etc.)',
+            value: 'module',
+            selected: true,
+          },
+          {
+            title: 'typescript - declaration files for typechecking',
+            value: 'typescript',
+            selected: /\.tsx?$/.test(entryFile),
+          },
+          {
+            title: 'aar - bundle android code to a binary',
+            value: 'aar',
+            selected: false,
+          },
+        ],
+        validate: (input: string) => Boolean(input.length),
       },
     ];
 
@@ -102,11 +122,11 @@ yargs
         type: 'confirm',
         name: 'flow',
         message: 'Do you want to publish definitions for flow?',
-        default: Object.keys(pkg.devDependencies || {}).includes('flow-bin'),
+        initial: Object.keys(pkg.devDependencies || {}).includes('flow-bin'),
       });
     }
 
-    const { output, targets, flow } = await inquirer.prompt(questions);
+    const { output, targets, flow } = await prompts(questions);
 
     const target =
       targets[0] === 'commonjs' || targets[0] === 'module'
@@ -128,11 +148,11 @@ yargs
       entries.types = path.join(output, 'typescript', source, 'index.d.ts');
 
       if (!(await fs.pathExists(path.join(root, 'tsconfig.json')))) {
-        const { tsconfig } = await inquirer.prompt({
+        const { tsconfig } = await prompts({
           type: 'confirm',
           name: 'tsconfig',
           message: `You have enabled 'typescript' compilation, but we couldn't find a 'tsconfig.json' in project root. Generate one?`,
-          default: true,
+          initial: true,
         });
 
         if (tsconfig) {
@@ -182,11 +202,11 @@ yargs
       const entry = entries[key];
 
       if (pkg[key] && pkg[key] !== entry) {
-        const { replace } = await inquirer.prompt({
+        const { replace } = await prompts({
           type: 'confirm',
           name: 'replace',
           message: `Your package.json has the '${key}' field set to '${pkg[key]}'. Do you want to replace it with '${entry}'?`,
-          default: true,
+          initial: true,
         });
 
         if (replace) {
@@ -198,11 +218,11 @@ yargs
     }
 
     if (pkg.scripts && pkg.scripts.prepare && pkg.scripts.prepare !== prepare) {
-      const { replace } = await inquirer.prompt({
+      const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
         message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'. Do you want to replace it with '${prepare}'?`,
-        default: true,
+        initial: true,
       });
 
       if (replace) {
@@ -218,11 +238,11 @@ yargs
       JSON.stringify(pkg.files.slice().sort()) !==
         JSON.stringify(files.slice().sort())
     ) {
-      const { update } = await inquirer.prompt({
+      const { update } = await prompts({
         type: 'confirm',
         name: 'update',
         message: `Your package.json already has a 'files' field. Do you want to update it?`,
-        default: true,
+        initial: true,
       });
 
       if (update) {

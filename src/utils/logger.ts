@@ -7,7 +7,7 @@ const logger = (type: string, color: Function) => (...messages: unknown[]) => {
 export const info = logger('ℹ', chalk.blue);
 export const warn = logger('⚠', chalk.yellow);
 export const error = logger('✖', chalk.red);
-export const success = logger('✓', chalk.green);
+export const success = logger('✔', chalk.green);
 
 export const exit = (...messages: unknown[]) => {
   error(...messages);

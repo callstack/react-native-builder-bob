@@ -3,11 +3,11 @@ import fs from 'fs-extra';
 import ejs from 'ejs';
 import dedent from 'dedent';
 import chalk from 'chalk';
-import inquirer from 'inquirer';
 import type yargs from 'yargs';
 import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
+import prompts, { PromptObject } from './utils/prompts';
 import pack from '../package.json';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
@@ -140,11 +140,17 @@ export default async function create(argv: yargs.Arguments<any>) {
 
   const basename = path.basename(argv.name);
 
-  const questions: Record<ArgName, inquirer.Question> = {
+  const questions: Record<
+    ArgName,
+    Omit<PromptObject<keyof Answers>, 'validate'> & {
+      validate?: (value: string) => boolean | string;
+    }
+  > = {
     'slug': {
-      type: 'input',
+      type: 'text',
+      name: 'slug',
       message: 'What is the name of the npm package?',
-      default: validateNpmPackage(basename).validForNewPackages
+      initial: validateNpmPackage(basename).validForNewPackages
         ? /^(@|react-native)/.test(basename)
           ? basename
           : `react-native-${basename}`
@@ -154,29 +160,34 @@ export default async function create(argv: yargs.Arguments<any>) {
         'Must be a valid npm package name',
     },
     'description': {
-      type: 'input',
+      type: 'text',
+      name: 'description',
       message: 'What is the description for the package?',
-      validate: (input) => Boolean(input),
+      validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     'author-name': {
-      type: 'input',
+      type: 'text',
+      name: 'authorName',
       message: 'What is the name of package author?',
-      default: name,
-      validate: (input) => Boolean(input),
+      initial: name,
+      validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     'author-email': {
-      type: 'input',
+      type: 'text',
+      name: 'authorEmail',
       message: 'What is the email address for the package author?',
-      default: email,
+      initial: email,
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     'author-url': {
-      type: 'input',
+      type: 'text',
+      name: 'authorUrl',
       message: 'What is the URL for the package author?',
-      default: async (answers: any) => {
+      // @ts-ignore: this is supported, but types are wrong
+      initial: async (previous: string) => {
         try {
-          const username = await githubUsername(answers.authorEmail);
+          const username = await githubUsername(previous);
 
           return `https://github.com/${username}`;
         } catch (e) {
@@ -188,39 +199,46 @@ export default async function create(argv: yargs.Arguments<any>) {
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     'repo-url': {
-      type: 'input',
+      type: 'text',
+      name: 'repoUrl',
       message: 'What is the URL for the repository?',
-      default: (answers: any) => {
+      // @ts-ignore: this is supported, but types are wrong
+      initial: (_: string, answers: Answers) => {
         if (/^https?:\/\/github.com\/[^/]+/.test(answers.authorUrl)) {
           return `${answers.authorUrl}/${answers.slug
             .replace(/^@/, '')
             .replace(/\//g, '-')}`;
         }
 
-        return undefined;
+        return '';
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     'type': {
-      type: 'list',
+      type: 'select',
+      name: 'type',
       message: 'What type of package do you want to develop?',
-      // @ts-ignore - seems types are wrong for inquirer
       choices: [
-        { name: 'Native module in Kotlin and Objective-C', value: 'native' },
-        { name: 'Native module in Kotlin and Swift', value: 'native-swift' },
-        { name: 'Native module with C++ code', value: 'cpp' },
-        { name: 'Native view in Kotlin and Objective-C', value: 'native-view' },
-        { name: 'Native view in Kotlin and Swift', value: 'native-view-swift' },
+        { title: 'Native module in Kotlin and Objective-C', value: 'native' },
+        { title: 'Native module in Kotlin and Swift', value: 'native-swift' },
+        { title: 'Native module with C++ code', value: 'cpp' },
         {
-          name: 'JavaScript library with native example',
+          title: 'Native view in Kotlin and Objective-C',
+          value: 'native-view',
+        },
+        {
+          title: 'Native view in Kotlin and Swift',
+          value: 'native-view-swift',
+        },
+        {
+          title: 'JavaScript library with native example',
           value: 'js',
         },
         {
-          name: 'JavaScript library with Expo example and Web support',
+          title: 'JavaScript library with Expo example and Web support',
           value: 'expo',
         },
       ],
-      default: 'native',
     },
   };
 
@@ -234,19 +252,15 @@ export default async function create(argv: yargs.Arguments<any>) {
     type,
   } = {
     ...argv,
-    ...(await inquirer.prompt(
-      Object.entries(questions).map(([key, value]) => ({
-        ...value,
-        name: key.replace(/\b-([a-z])/g, (_, char) => char.toUpperCase()),
-        when: !(argv[key] && value.validate
-          ? value.validate(argv[key]) === true
-          : Boolean(argv[key])),
-        default:
-          typeof value.default === 'function'
-            ? (answers: Partial<Answers>) =>
-                value.default({ ...argv, ...answers })
-            : value.default,
-      }))
+    ...(await prompts(
+      Object.entries(questions)
+        .filter(
+          ([k, v]) =>
+            !(argv[k] && v.validate
+              ? v.validate(argv[k]) === true
+              : Boolean(argv[k]))
+        )
+        .map(([, v]) => v)
     )),
   } as Answers;
 
