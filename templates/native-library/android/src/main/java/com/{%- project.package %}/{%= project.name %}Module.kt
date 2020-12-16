@@ -12,7 +12,7 @@ class <%- project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
     }
 
     // Example method
-    // See https://facebook.github.io/react-native/docs/native-modules-android
+    // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
     fun multiply(a: Int, b: Int, promise: Promise) {
     <% if (project.cpp) { %>

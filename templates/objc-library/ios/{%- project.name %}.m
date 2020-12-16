@@ -5,7 +5,7 @@
 RCT_EXPORT_MODULE()
 
 // Example method
-// See // https://facebook.github.io/react-native/docs/native-modules-ios
+// See // https://reactnative.dev/docs/native-modules-ios
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
                  withResolver:(RCTPromiseResolveBlock)resolve

@@ -12,19 +12,19 @@
     "test": "jest"
   },
   "dependencies": {
-    "expo": "^38.0.0",
-    "expo-splash-screen": "^0.3.1",
-    "react": "16.11.0",
-    "react-dom": "16.11.0",
-    "react-native": "0.62.2",
-    "react-native-unimodules": "~0.10.1",
-    "react-native-web": "^0.12.3"
+    "expo": "^40.0.0",
+    "expo-splash-screen": "~0.8.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-unimodules": "~0.12.0",
+    "react-native-web": "~0.14.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
+    "@babel/core": "~7.12.10",
     "@babel/runtime": "^7.9.6",
     "babel-plugin-module-resolver": "^4.0.0",
-    "babel-preset-expo": "^8.2.3",
-    "expo-cli": "^3.21.12"
+    "babel-preset-expo": "8.3.0",
+    "expo-cli": "^4.0.13"
   }
 }
