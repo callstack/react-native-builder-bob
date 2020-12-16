@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  <%= project.name %>Example
+//  <%- project.name %>Example
 //
 
 import Foundation

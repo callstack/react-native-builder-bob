@@ -20,8 +20,8 @@ def flipper_post_install(installer)
   end
 end
 
-target '<%= project.name %>Example' do
-  # Pods for <%= project.name %>Example
+target '<%- project.name %>Example' do
+  # Pods for <%- project.name %>Example
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -54,7 +54,7 @@ target '<%= project.name %>Example' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 <% if (project.module) { -%>
-  pod '<%= project.podspec %>', :path => '../..'
+  pod '<%- project.podspec %>', :path => '../..'
 <% } -%>
 
   use_native_modules!

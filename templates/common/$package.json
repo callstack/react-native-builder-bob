@@ -1,7 +1,7 @@
 {
-  "name": "<%= project.slug %>",
+  "name": "<%- project.slug %>",
   "version": "0.1.0",
-  "description": "<%= project.description %>",
+  "description": "<%- project.description %>",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "<%= project.podspec %>.podspec",
+    "<%- project.podspec %>.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -36,19 +36,19 @@
     "ios",
     "android"
   ],
-  "repository": "<%= repo %>",
-  "author": "<%= author.name %> <<%= author.email %>> (<%= author.url %>)",
+  "repository": "<%- repo %>",
+  "author": "<%- author.name %> <<%- author.email %>> (<%- author.url %>)",
   "license": "MIT",
   "bugs": {
-    "url": "<%= repo %>/issues"
+    "url": "<%- repo %>/issues"
   },
-  "homepage": "<%= repo %>#readme",
+  "homepage": "<%- repo %>#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
-    "@react-native-community/bob": "^<%= bob.version %>",
+    "@react-native-community/bob": "^<%- bob.version %>",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^1.1.4",
     "@types/jest": "^26.0.0",

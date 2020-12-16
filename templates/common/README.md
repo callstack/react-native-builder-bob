@@ -1,21 +1,21 @@
-# <%= project.slug %>
+# <%- project.slug %>
 
-<%= project.description %>
+<%- project.description %>
 
 ## Installation
 
 ```sh
-npm install <%= project.slug %>
+npm install <%- project.slug %>
 ```
 
 ## Usage
 
 ```js
-import <%= project.name %> from "<%= project.slug %>";
+import <%- project.name %> from "<%- project.slug %>";
 
 // ...
 
-const result = await <%= project.name %>.multiply(3, 7);
+const result = await <%- project.name %>.multiply(3, 7);
 ```
 
 ## Contributing

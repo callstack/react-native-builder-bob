@@ -1,6 +1,6 @@
 {
-  "name": "<%= project.slug %>-example",
-  "description": "Example app for <%= project.slug %>",
+  "name": "<%- project.slug %>-example",
+  "description": "Example app for <%- project.slug %>",
   "version": "0.0.1",
   "private": true,
   "main": "index",

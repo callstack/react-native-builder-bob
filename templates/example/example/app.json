@@ -1,4 +1,4 @@
 {
-  "name": "<%= project.name %>Example",
-  "displayName": "<%= project.name %> Example"
+  "name": "<%- project.name %>Example",
+  "displayName": "<%- project.name %> Example"
 }
