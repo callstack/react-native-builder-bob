@@ -2,11 +2,10 @@ import * as React from 'react';
 <% if (project.moduleType === "view") { %>
 import { StyleSheet, View } from 'react-native';
 import <%- project.name %>ViewManager from '<%- project.slug %>';
-<% } else {%>
+<% } else { %>
 import { StyleSheet, View, Text } from 'react-native';
 import <%- project.name %> from '<%- project.slug %>';
-<% }%>
-
+<% } %>
 <% if (project.moduleType === "view") { %>
 export default function App() {
   return (
@@ -15,7 +14,7 @@ export default function App() {
     </View>
   );
 }
-<% } else {%>
+<% } else { %>
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
@@ -29,8 +28,7 @@ export default function App() {
     </View>
   );
 }
-<% }%>
-
+<% } %>
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -217,7 +217,7 @@ yargs
       }
     }
 
-    if (pkg.scripts && pkg.scripts.prepare && pkg.scripts.prepare !== prepare) {
+    if (pkg.scripts?.prepare && pkg.scripts.prepare !== prepare) {
       const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
@@ -322,7 +322,7 @@ yargs
 
     const options: Options = result!.config;
 
-    if (!(options.targets && options.targets.length)) {
+    if (!options.targets?.length) {
       logger.exit(
         `No targets found in the configuration in '${path.relative(
           root,
