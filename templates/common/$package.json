@@ -43,6 +43,9 @@
     "url": "<%= repo %>/issues"
   },
   "homepage": "<%= repo %>#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
     "@react-native-community/bob": "^<%= bob.version %>",
