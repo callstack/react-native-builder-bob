@@ -1,4 +1,4 @@
-# @react-native-community/bob
+# react-native-builder-bob
 
 [![Version][version-badge]][package]
 [![Build Status][build-badge]][build]
@@ -48,7 +48,7 @@ Bob wraps tools such as `babel` and `typescript` to simplify these common tasks 
 To create new project with Bob, run the following:
 
 ```sh
-npx @react-native-community/bob create react-native-awesome-module
+npx react-native-builder-bob create react-native-awesome-module
 ```
 
 This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
@@ -60,7 +60,7 @@ The difference from [create-react-native-module](https://github.com/brodybits/cr
 First, install Bob in your project. Open a Terminal in your project, and run:
 
 ```sh
-yarn add --dev @react-native-community/bob
+yarn add --dev react-native-builder-bob
 ```
 
 To configure your project to use Bob, open a Terminal and run `yarn bob init` for automatic configuration.
@@ -70,7 +70,7 @@ To configure your project manually, follow these steps:
 1. In your `package.json`, specify the targets to build for:
 
    ```json
-   "@react-native-community/bob": {
+   "react-native-builder-bob": {
      "source": "src",
      "output": "lib",
      "targets": [
@@ -128,7 +128,7 @@ And we're done 🎉
 
 ## Options
 
-The options can be specified in the `package.json` file under the `@react-native-community/bob` property, or in a `bob.config.js` file in your project directory.
+The options can be specified in the `package.json` file under the `react-native-builder-bob` property, or in a `bob.config.js` file in your project directory.
 
 ### `source`
 
@@ -251,9 +251,9 @@ MIT
 
 <!-- badges -->
 
-[version-badge]: https://img.shields.io/npm/v/@react-native-community/bob.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@react-native-community/bob
-[build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/master.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/react-native-builder-bob.svg?style=flat-square
+[package]: https://www.npmjs.com/package/react-native-builder-bob
+[build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/main.svg?style=flat-square
 [build]: https://circleci.com/gh/callstack/react-native-builder-bob
-[license-badge]: https://img.shields.io/npm/l/@react-native-community/bob.svg?style=flat-square
+[license-badge]: https://img.shields.io/npm/l/react-native-builder-bob.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT

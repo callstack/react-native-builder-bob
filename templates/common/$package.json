@@ -48,7 +48,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
-    "@react-native-community/bob": "^<%- bob.version %>",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^1.1.4",
     "@types/jest": "^26.0.0",
@@ -64,6 +63,7 @@
     "prettier": "^2.0.5",
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-builder-bob": "^<%- bob.version %>",
     "release-it": "^13.5.8",
     "typescript": "^3.8.3"
   },
@@ -133,7 +133,7 @@
     "trailingComma": "es5",
     "useTabs": false
   },
-  "@react-native-community/bob": {
+  "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [

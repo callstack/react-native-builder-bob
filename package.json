@@ -1,9 +1,9 @@
 {
-  "name": "@react-native-community/bob",
+  "name": "react-native-builder-bob",
   "version": "0.16.2",
   "description": "CLI to build JavaScript files for React Native libraries",
-  "repository": "git@github.com:react-native-community/bob.git",
-  "homepage": "https://github.com/react-native-community/bob/blob/master/README.md",
+  "repository": "git@github.com:callstack/react-native-builder-bob.git",
+  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
