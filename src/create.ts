@@ -13,13 +13,40 @@ import pack from '../package.json';
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
-const NATIVE_FILES = path.resolve(__dirname, '../templates/native-library');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
-const OBJC_FILES = path.resolve(__dirname, '../templates/objc-library');
-const SWIFT_FILES = path.resolve(__dirname, '../templates/swift-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
+
+// Android
+const NATIVE_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/native-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/native-view-library');
+  }
+};
+
+// Objc
+const OBJC_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/objc-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/objc-view-library');
+  }
+};
+
+// Swift
+const SWIFT_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/swift-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/swift-view-library');
+  }
+};
 
 type ArgName =
   | 'slug'
@@ -30,6 +57,17 @@ type ArgName =
   | 'repo-url'
   | 'type';
 
+type ModuleType = 'module' | 'view';
+
+type LibraryType =
+  | 'native-view'
+  | 'native-view-swift'
+  | 'native'
+  | 'native-swift'
+  | 'js'
+  | 'cpp'
+  | 'expo';
+
 type Answers = {
   slug: string;
   description: string;
@@ -37,7 +75,7 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  type: 'native' | 'native-swift' | 'js' | 'cpp' | 'expo';
+  type: LibraryType;
 };
 
 export const args: Record<ArgName, yargs.Options> = {
@@ -168,6 +206,8 @@ export default async function create(argv: yargs.Arguments<any>) {
       message: 'What type of package do you want to develop?',
       // @ts-ignore - seems types are wrong for inquirer
       choices: [
+        { name: 'Native view in Kotlin and Objective-C', value: 'native-view' },
+        { name: 'Native view in Kotlin and Swift', value: 'native-view-swift' },
         { name: 'Native module in Kotlin and Objective-C', value: 'native' },
         { name: 'Native module in Kotlin and Swift', value: 'native-swift' },
         { name: 'Native module with C++ code', value: 'cpp' },
@@ -211,6 +251,8 @@ export default async function create(argv: yargs.Arguments<any>) {
   } as Answers;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+  const moduleType: ModuleType =
+    type === 'native-view' || type === 'native-view-swift' ? 'view' : 'module';
 
   const options = {
     bob: {
@@ -226,10 +268,16 @@ export default async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native: type === 'native' || type === 'cpp' || 'native-swift',
+      native:
+        type === 'native' ||
+        type === 'cpp' ||
+        'native-swift' ||
+        'native-view' ||
+        'native-view-swift',
       cpp: type === 'cpp',
-      swift: type === 'native-swift',
+      swift: type === 'native-swift' || 'native-view-swift',
       module: type !== 'js',
+      moduleType,
     },
     author: {
       name: authorName,
@@ -284,14 +332,15 @@ export default async function create(argv: yargs.Arguments<any>) {
       path.join(EXAMPLE_FILES, 'example'),
       path.join(folder, 'example')
     );
-    await copyDir(NATIVE_FILES, folder);
+
+    await copyDir(NATIVE_FILES(moduleType), folder);
 
     if (type === 'cpp') {
       await copyDir(CPP_FILES, folder);
     } else if (type === 'native-swift') {
-      await copyDir(SWIFT_FILES, folder);
+      await copyDir(SWIFT_FILES(moduleType), folder);
     } else {
-      await copyDir(OBJC_FILES, folder);
+      await copyDir(OBJC_FILES(moduleType), folder);
     }
   }
 
