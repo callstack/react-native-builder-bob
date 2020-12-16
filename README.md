@@ -195,6 +195,16 @@ Example:
 ["aar", { "reverseJetify": true }]
 ```
 
+## FAQ
+
+### How do I add a react-native library containing native code as a dependency in my library?
+
+If your library depends on another react-native library containing native code, you should do the following:
+
+- Add the native library to `peerDependencies`: This makes sure that there are no conflicts between the version you have specified and the version user has installed (in case they also want to use that library). By deferring the installation to the user, it also makes sure the package manager installs it in correct location and that autolinking can work properly.
+- Add the native library to `devDependencies`: This makes sure that you can use it for tests, and there are no other errors such as type errors due to the missing module.
+- Add the native library to `dependencies` under `example`: This is equivalent to the consumer of the library installing the dependency, and is needed so that this module is also available to the example app.
+
 ## Development workflow
 
 To get started with the project, run `yarn` in the root directory to install the required dependencies.
