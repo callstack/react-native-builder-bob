@@ -197,7 +197,7 @@ Example:
 
 ## FAQ
 
-## Why should I compile my project with Bob?
+### Why should I compile my project with Bob?
 
 We write our library code in non-standard syntaxes such as JSX, TypeScript etc. as well as proposed syntaxes which aren't part of the standard yet. This means that our code needs to be compiled to be able to run on JavaScript engines.
 
