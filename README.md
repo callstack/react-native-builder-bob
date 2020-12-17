@@ -57,15 +57,23 @@ The difference from [create-react-native-module](https://github.com/brodybits/cr
 
 ### Configuring an existing project
 
-First, install Bob in your project. Open a Terminal in your project, and run:
+#### Automatic configuration
 
-```sh
-yarn add --dev react-native-builder-bob
+To automatically configure your project to use Bob, open a Terminal and run:
+
+```js
+npx react-native-builder-bob init
 ```
 
-To configure your project to use Bob, open a Terminal and run `yarn bob init` for automatic configuration.
+#### Manual configuration
 
 To configure your project manually, follow these steps:
+
+1. First, install Bob in your project. Open a Terminal in your project, and run:
+
+  ```sh
+  yarn add --dev react-native-builder-bob
+  ```
 
 1. In your `package.json`, specify the targets to build for:
 
@@ -84,7 +92,7 @@ To configure your project manually, follow these steps:
 
    See options below for more details.
 
-2. Add `bob` to your `prepare` step:
+1. Add `bob` to your `prepare` step:
 
    ```js
    "scripts": {
@@ -92,7 +100,7 @@ To configure your project manually, follow these steps:
    }
    ```
 
-3. Configure the appropriate entry points:
+1. Configure the appropriate entry points:
 
    ```json
    "main": "lib/commonjs/index.js",
@@ -109,16 +117,16 @@ To configure your project manually, follow these steps:
 
    It's usually good to point to your source code with the `react-native` field to make debugging easier. Metro already supports compiling a lot of new syntaxes including JSX, Flow and TypeScript and it will use this field if present.
 
-   If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet.
+   If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory).
 
-4. Add the output directory to `.gitignore` and `.eslintignore`
+1. Add the output directory to `.gitignore` and `.eslintignore`
 
    ```gitignore
    # generated files by bob
    lib/
    ```
 
-5. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
+1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
 
    ```json
    "modulePathIgnorePatterns": ["<rootDir>/lib/"]

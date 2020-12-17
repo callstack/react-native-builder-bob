@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
+import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
@@ -14,7 +15,7 @@ import buildTypescript from './targets/typescript';
 import type { Options } from './types';
 
 // eslint-disable-next-line import/no-commonjs
-const { name } = require('../package.json');
+const { name, version } = require('../package.json');
 
 const root = process.cwd();
 const explorer = cosmiconfigSync(name, {
@@ -74,6 +75,14 @@ yargs
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
+
+    pkg.devDependencies = Object.fromEntries(
+      [
+        ...Object.entries(pkg.devDependencies || {}),
+        [name, `^${version}`],
+      ].sort(([a], [b]) => a.localeCompare(b))
+    );
+
     const questions: PromptObject[] = [
       {
         type: 'text',
@@ -309,7 +318,17 @@ yargs
       }
     }
 
-    logger.success('Your project is configured!');
+    console.log(
+      dedent(chalk`
+      Project {yellow ${pkg.name}} configured successfully!
+
+      {magenta {bold Perform last steps} by running}{gray :}
+
+        {gray $} yarn
+
+      {yellow Good luck!}
+    `)
+    );
   })
   .command('build', 'build files for publishing', {}, async (argv) => {
     const result = explorer.search();
