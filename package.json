@@ -1,6 +1,6 @@
 {
   "name": "react-native-builder-bob",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:callstack/react-native-builder-bob.git",
   "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
