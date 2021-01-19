@@ -27,6 +27,16 @@ const NATIVE_FILES = (moduleType: ModuleType) => {
   }
 };
 
+// Java
+const JAVA_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/java-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/java-view-library');
+  }
+};
+
 // Objc
 const OBJC_FILES = (moduleType: ModuleType) => {
   switch (moduleType) {
@@ -69,8 +79,12 @@ type ArgName =
 type ModuleType = 'module' | 'view';
 
 type LibraryType =
+  | 'native'
+  | 'native-swift'
   | 'native-kotlin'
   | 'native-kotlin-swift'
+  | 'native-view'
+  | 'native-view-swift'
   | 'native-view-kotlin'
   | 'native-view-kotlin-swift'
   | 'cpp'
@@ -115,8 +129,12 @@ const args: Record<ArgName, yargs.Options> = {
   'type': {
     description: 'Type package do you want to develop',
     choices: [
+      'native',
+      'native-swift',
       'native-kotlin',
       'native-kotlin-swift',
+      'native-view',
+      'native-view-swift',
       'native-view-kotlin',
       'native-view-kotlin-swift',
       'cpp',
@@ -236,6 +254,8 @@ async function create(argv: yargs.Arguments<any>) {
       name: 'type',
       message: 'What type of package do you want to develop?',
       choices: [
+        { title: 'Native module in Java and Objective-C', value: 'native' },
+        { title: 'Native module in Java and Swift', value: 'native-swift' },
         {
           title: 'Native module in Kotlin and Objective-C',
           value: 'native-kotlin',
@@ -243,6 +263,15 @@ async function create(argv: yargs.Arguments<any>) {
         {
           title: 'Native module in Kotlin and Swift',
           value: 'native-kotlin-swift',
+        },
+        { title: 'Native module with C++ code', value: 'cpp' },
+        {
+          title: 'Native view in Java and Objective-C',
+          value: 'native-view',
+        },
+        {
+          title: 'Native view in Java and Swift',
+          value: 'native-view-swift',
         },
         {
           title: 'Native view in Kotlin and Objective-C',
@@ -252,7 +281,6 @@ async function create(argv: yargs.Arguments<any>) {
           title: 'Native view in Kotlin and Swift',
           value: 'native-view-kotlin-swift',
         },
-        { title: 'Native module with C++ code', value: 'cpp' },
         {
           title: 'JavaScript library with native example',
           value: 'js',
@@ -289,7 +317,10 @@ async function create(argv: yargs.Arguments<any>) {
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   const moduleType: ModuleType =
-    type === 'native-view-kotlin' || type === 'native-view-kotlin-swift'
+    type === 'native-view' ||
+    type === 'native-view-swift' ||
+    type === 'native-view-kotlin' ||
+    type === 'native-view-kotlin-swift'
       ? 'view'
       : 'module';
 
@@ -335,12 +366,25 @@ async function create(argv: yargs.Arguments<any>) {
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native:
         type === 'cpp' ||
+        type === 'native' ||
+        type === 'native-swift' ||
+        type === 'native-kotlin' ||
+        type === 'native-kotlin-swift' ||
+        type === 'native-view' ||
+        type === 'native-view-swift' ||
+        type === 'native-view-kotlin' ||
+        type === 'native-view-kotlin-swift',
+      cpp: type === 'cpp',
+      kotlin:
         type === 'native-kotlin' ||
         type === 'native-kotlin-swift' ||
         type === 'native-view-kotlin' ||
         type === 'native-view-kotlin-swift',
-      cpp: type === 'cpp',
-      swift: type === 'native-kotlin-swift' || 'native-view-kotlin-swift',
+      swift:
+        type === 'native-swift' ||
+        type === 'native-kotlin-swift' ||
+        type === 'native-view-swift' ||
+        type === 'native-view-kotlin-swift',
       module: type !== 'js',
       moduleType,
     },
@@ -405,11 +449,14 @@ async function create(argv: yargs.Arguments<any>) {
     }
 
     if (options.project.swift) {
-      await copyDir(KOTLIN_FILES(moduleType), folder);
       await copyDir(SWIFT_FILES(moduleType), folder);
     } else {
-      await copyDir(KOTLIN_FILES(moduleType), folder);
       await copyDir(OBJC_FILES(moduleType), folder);
+    }
+    if (options.project.kotlin) {
+      await copyDir(KOTLIN_FILES(moduleType), folder);
+    } else {
+      await copyDir(JAVA_FILES(moduleType), folder);
     }
   }
 

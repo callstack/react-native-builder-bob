@@ -1,0 +1,71 @@
+buildscript {
+    if (project == rootProject) {
+        repositories {
+            google()
+            jcenter()
+        }
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.5.3'
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+android {
+    compileSdkVersion safeExtGet('<%- project.name %>_compileSdkVersion', 29)
+    buildToolsVersion safeExtGet('<%- project.name %>_buildToolsVersion', '29.0.2')
+    defaultConfig {
+        minSdkVersion safeExtGet('<%- project.name %>_minSdkVersion', 16)
+        targetSdkVersion safeExtGet('<%- project.name %>_targetSdkVersion', 29)
+        versionCode 1
+        versionName "1.0"
+<% if (project.cpp) { %>
+        externalNativeBuild {
+            cmake {
+                cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            }
+        }
+<% } %>
+    }
+<% if (project.cpp) { %>
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+<% } %>
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    lintOptions {
+        disable 'GradleCompatible'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url("$rootDir/../node_modules/react-native/android")
+    }
+    google()
+    jcenter()
+}
+
+dependencies {
+    //noinspection GradleDynamicVersion
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+}
