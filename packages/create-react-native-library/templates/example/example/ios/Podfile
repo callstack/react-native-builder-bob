@@ -7,10 +7,10 @@ target '<%- project.name %>Example' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
+<% if (project.module) { -%>
 
-  <% if (project.module) { -%>
-    pod '<%- project.podspec %>', :path => '../..'
-  <% } -%>
+  pod '<%- project.podspec %>', :path => '../..'
+<% } -%>
 
   # Enables Flipper.
   #

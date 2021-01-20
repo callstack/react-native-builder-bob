@@ -5,7 +5,6 @@ type <%- project.name %>Props = {
   style: ViewStyle;
 };
 
-
 export const <%- project.name %>ViewManager = requireNativeComponent<<%- project.name %>Props>(
   '<%- project.name %>View'
 );
