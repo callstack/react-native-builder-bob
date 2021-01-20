@@ -16,16 +16,10 @@ const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
-
-// Common native library template files
-const NATIVE_FILES = (moduleType: ModuleType) => {
-  switch (moduleType) {
-    case 'module':
-      return path.resolve(__dirname, '../templates/native-library');
-    case 'view':
-      return path.resolve(__dirname, '../templates/native-view-library');
-  }
-};
+const NATIVE_COMMON_FILES = path.resolve(
+  __dirname,
+  '../templates/native-common'
+);
 
 // Java
 const JAVA_FILES = (moduleType: ModuleType) => {
@@ -442,7 +436,7 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
-    await copyDir(NATIVE_FILES(moduleType), folder);
+    await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
