@@ -13,13 +13,13 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "10.0" }
   s.source       = { :git => "<%- repo %>.git", :tag => "#{s.version}" }
 
-  <% if (project.cpp) { %>
+<% if (project.cpp) { -%>
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp}"
-  <% } else if (project.swift) { %>
+<% } else if (project.swift) { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-  <% } else { %>
+<% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm}"
-  <% } %>
+<% } -%>
 
   s.dependency "React-Core"
 end
