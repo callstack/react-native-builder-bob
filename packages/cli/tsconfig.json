@@ -1,0 +1,15 @@
+{
+  "extends": "../../base.tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "react-native-builder-bob": ["../builder/src/"]
+    }
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

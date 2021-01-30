@@ -5,7 +5,7 @@ import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
-import create, { args as CreateArgs } from './create';
+import create, { args as CreateArgs } from 'react-native-builder-bob';
 import prompts, { PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
