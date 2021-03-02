@@ -10,7 +10,7 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
-          extensions: ['.js', '.ts', '.json', '.jsx', '.tsx'],
+          extensions: ['.tsx', '.ts', '.js', '.json'],
           alias: {
             // For development, we want to alias the library to the source
             [pak.name]: path.join(__dirname, '..', pak.source),
