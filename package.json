@@ -12,9 +12,9 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "lint": "eslint \"packages/**/*.{js,ts,tsx}\"",
-    "typescript": "lerna run typescript",
-    "build": "lerna run build"
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "typescript": "tsc --noEmit",
+    "watch": "concurrently 'yarn typescript --watch' 'lerna run --parallel prepare -- --watch'"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
@@ -32,6 +32,7 @@
     "@commitlint/config-conventional": "^11.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "commitlint": "^11.0.0",
+    "concurrently": "^5.3.0",
     "eslint": "^7.15.0",
     "eslint-config-satya164": "^3.1.8",
     "husky": "^4.3.6",
@@ -61,9 +62,8 @@
   "eslintIgnore": [
     "node_modules/",
     "coverage/",
-    "packages/cli/lib/",
-    "packages/builder/lib/",
-    "packages/builder/templates/"
+    "packages/*/lib/",
+    "packages/create-react-native-library/templates/"
   ],
   "prettier": {
     "singleQuote": true,

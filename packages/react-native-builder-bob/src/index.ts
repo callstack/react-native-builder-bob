@@ -5,7 +5,6 @@ import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
-import create, { args as CreateArgs } from 'react-native-builder-bob';
 import prompts, { PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
@@ -26,7 +25,19 @@ const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
 // eslint-disable-next-line babel/no-unused-expressions
 yargs
-  .command('create <name>', 'create a react native library', CreateArgs, create)
+  .command('create <name>', 'create a react native library', {}, (argv) => {
+    console.log(
+      dedent(chalk`
+        The {magenta create} command has been moved to {magenta create-react-native-library}!
+
+        Please run:
+
+          {gray $} npx create-react-native-library ${argv.name}
+
+        Good luck!
+      `)
+    );
+  })
   .command('init', 'configure the package to use bob', {}, async () => {
     const pak = path.join(root, 'package.json');
 

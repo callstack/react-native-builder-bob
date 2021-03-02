@@ -1,5 +1,5 @@
 {
-  "name": "react-native-builder-bob",
+  "name": "create-react-native-library",
   "version": "0.17.1",
   "description": "CLI to build JavaScript files for React Native libraries",
   "repository": "git@github.com:callstack/react-native-builder-bob.git",
@@ -7,6 +7,9 @@
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
+  "bin": {
+    "create-react-native-library": "bin/create-react-native-library"
+  },
   "files": [
     "lib",
     "templates"
@@ -19,12 +22,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typescript": "tsc --noEmit",
-    "build": "babel --root-mode upward --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start",
-    "watch": "concurrently 'yarn typescript --watch' 'yarn build --watch'",
-    "prepare": "yarn build",
-    "release": "release-it"
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start"
   },
   "dependencies": {
     "chalk": "^4.1.0",
@@ -43,7 +41,6 @@
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@commitlint/config-conventional": "^11.0.0",
-    "@release-it/conventional-changelog": "^2.0.0",
     "@types/chalk": "^2.2.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "^0.7.0",
@@ -51,25 +48,6 @@
     "@types/fs-extra": "^9.0.5",
     "@types/prompts": "^2.0.9",
     "@types/validate-npm-package-name": "^3.0.2",
-    "@types/yargs": "^15.0.12",
-    "concurrently": "^5.3.0",
-    "release-it": "^14.2.2"
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
+    "@types/yargs": "^15.0.12"
   }
 }
