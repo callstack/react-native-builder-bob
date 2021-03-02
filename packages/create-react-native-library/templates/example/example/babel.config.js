@@ -7,6 +7,7 @@ module.exports = {
     [
       'module-resolver',
       {
+        extensions: ['.js', '.ts', '.json', '.jsx', '.tsx'],
         alias: {
           [pak.name]: path.join(__dirname, '..', pak.source),
         },
