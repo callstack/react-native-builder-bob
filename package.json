@@ -62,8 +62,8 @@
   "eslintIgnore": [
     "node_modules/",
     "coverage/",
-    "packages/*/lib/",
-    "packages/create-react-native-library/templates/"
+    "lib/",
+    "templates/"
   ],
   "prettier": {
     "singleQuote": true,
