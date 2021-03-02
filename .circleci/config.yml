@@ -35,30 +35,21 @@ jobs:
           root: .
           paths: .
 
-  lint-and-typecheck:
+  lint:
     executor: default
     steps:
       - attach_project
       - run:
           name: Lint files
           command: yarn lint
-      - run:
-          name: Typecheck files
-          command: yarn typescript
 
-  unit-tests:
+  typescript:
     executor: default
     steps:
       - attach_project
       - run:
-          name: Run unit tests
-          command: yarn test --maxWorkers=2 --coverage
-      - run:
-          name: Upload test coverage
-          command: yarn codecov
-      - store_artifacts:
-          path: coverage
-          destination: coverage
+          name: Typecheck files
+          command: yarn typescript
 
   build-packages:
     executor: default
@@ -75,10 +66,10 @@ workflows:
   build-and-test:
     jobs:
       - install-dependencies
-      - lint-and-typecheck:
+      - lint:
           requires:
             - install-dependencies
-      - unit-tests:
+      - typescript:
           requires:
             - install-dependencies
       - build-packages:
