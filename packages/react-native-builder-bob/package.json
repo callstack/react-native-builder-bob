@@ -1,0 +1,78 @@
+{
+  "name": "react-native-builder-bob",
+  "version": "0.17.1",
+  "description": "CLI to build JavaScript files for React Native libraries",
+  "keywords": [
+    "react-native",
+    "library",
+    "build"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callstack/react-native-builder-bob.git",
+    "directory": "packages/react-native-builder-bob"
+  },
+  "bugs": {
+    "url": "https://github.com/callstack/react-native-builder-bob/issues"
+  },
+  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
+  "main": "lib/index.js",
+  "bin": {
+    "bob": "bin/bob"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-flow": "^7.12.1",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/preset-typescript": "^7.12.7",
+    "browserslist": "^4.16.0",
+    "chalk": "^4.1.0",
+    "cosmiconfig": "^7.0.0",
+    "cross-spawn": "^7.0.3",
+    "dedent": "^0.7.0",
+    "del": "^6.0.0",
+    "fs-extra": "^9.0.1",
+    "glob": "^7.1.6",
+    "is-git-dirty": "^2.0.1",
+    "json5": "^2.1.3",
+    "prompts": "^2.4.0",
+    "which": "^2.0.2",
+    "yargs": "^16.2.0"
+  },
+  "optionalDependencies": {
+    "jetifier": "^1.6.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@types/babel__core": "^7.1.12",
+    "@types/browserslist": "^4.8.0",
+    "@types/chalk": "^2.2.0",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/dedent": "^0.7.0",
+    "@types/del": "^4.0.0",
+    "@types/fs-extra": "^9.0.5",
+    "@types/glob": "^7.1.3",
+    "@types/json5": "^0.0.30",
+    "@types/prompts": "^2.0.9",
+    "@types/which": "^1.3.2",
+    "@types/yargs": "^15.0.12",
+    "concurrently": "^5.3.0"
+  }
+}
