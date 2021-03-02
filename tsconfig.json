@@ -1,6 +1,14 @@
-
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "create-react-native-library": [
+        "./packages/create-react-native-library/src"
+      ],
+      "react-native-builder-bob": ["./packages/react-native-builder-bob/src"]
+    },
+    "outDir": "./typescript",
+    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -19,7 +27,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
+    "target": "esnext"
   },
-  "exclude": ["typings/**/*", "lib/**/*", "templates/**/*"]
+  "exclude": ["lib", "packages/create-react-native-library/templates"]
 }

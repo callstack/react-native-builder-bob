@@ -1,6 +1,7 @@
 # react-native-builder-bob
 
-[![Version][version-badge]][package]
+[![create-react-native-library][create-react-native-library-version-badge]][package]
+[![react-native-builder-bob][react-native-builder-bob-version-badge]][package]
 [![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
 
@@ -40,7 +41,7 @@ Bob can build code for following targets:
 To create new project with Bob, run the following:
 
 ```sh
-npx react-native-builder-bob create react-native-awesome-module
+npx create-react-native-library react-native-awesome-module
 ```
 
 This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
@@ -234,10 +235,10 @@ yarn watch
 To test the CLI locally, you can point to the `bin/bob` executable:
 
 ```sh
-../bob/bin/bob create test-project
+../bob/packages/create-react-native-library/bin/create-react-native-library
 ```
 
-Before sending a pull rquest, make sure your code passes TypeScript and ESLint. Run the following to verify:
+Before sending a pull request, make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
 yarn typescript
@@ -263,7 +264,8 @@ MIT
 
 <!-- badges -->
 
-[version-badge]: https://img.shields.io/npm/v/react-native-builder-bob.svg?style=flat-square
+[create-react-native-library-version-badge]: https://img.shields.io/npm/v/create-react-native-library?label=create-react-native-library&style=flat-square
+[react-native-builder-bob-version-badge]: https://img.shields.io/npm/v/react-native-builder-bob?label=react-native-builder-bob&style=flat-square
 [package]: https://www.npmjs.com/package/react-native-builder-bob
 [build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/main.svg?style=flat-square
 [build]: https://circleci.com/gh/callstack/react-native-builder-bob

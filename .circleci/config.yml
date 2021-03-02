@@ -8,54 +8,59 @@ executors:
     environment:
       YARN_CACHE_FOLDER: "~/.cache/yarn"
 
+commands:
+  attach_project:
+    steps:
+      - attach_workspace:
+          at: ~/project
+
 jobs:
   install-dependencies:
     executor: default
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/project
+      - attach_project
       - restore_cache:
           keys:
-            - yarn-{{ checksum "package.json" }}
-            - yarn-
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
-          name: Install dependencies
-          command: |
-            yarn install --frozen-lockfile
+          name: Install project dependencies
+          command: yarn install --frozen-lockfile
       - save_cache:
-          key: yarn-{{ checksum "package.json" }}
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: ~/.cache/yarn
       - persist_to_workspace:
           root: .
           paths: .
+
   lint:
-      executor: default
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run:
-            name: Lint
-            command: |
-              yarn lint
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Lint files
+          command: yarn lint
+
   typescript:
-      executor: default
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run:
-            name: Typecheck
-            command: |
-              yarn typescript
-  build-package:
-      executor: default
-      steps:
-        - attach_workspace:
-            at: ~/project
-        - run:
-            name: Compile
-            command: |
-              yarn prepare
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Typecheck files
+          command: yarn typescript
+
+  build-packages:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Build packages in the monorepo
+          command: yarn lerna run prepare
+      - run:
+          name: Verify built type definitions are correct
+          command: yarn typescript
 
 workflows:
   build-and-test:
@@ -67,6 +72,6 @@ workflows:
       - typescript:
           requires:
             - install-dependencies
-      - build-package:
+      - build-packages:
           requires:
             - install-dependencies

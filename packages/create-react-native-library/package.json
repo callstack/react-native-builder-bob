@@ -1,0 +1,72 @@
+{
+  "name": "create-react-native-library",
+  "version": "0.17.1",
+  "description": "CLI to scaffold React Native libraries",
+  "keywords": [
+    "react-native",
+    "library",
+    "module",
+    "view",
+    "component",
+    "ios",
+    "android",
+    "web",
+    "expo"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callstack/react-native-builder-bob.git",
+    "directory": "packages/create-react-native-library"
+  },
+  "bugs": {
+    "url": "https://github.com/callstack/react-native-builder-bob/issues"
+  },
+  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
+  "main": "lib/index.js",
+  "bin": {
+    "create-react-native-library": "bin/create-react-native-library"
+  },
+  "files": [
+    "lib",
+    "templates"
+  ],
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cross-spawn": "^7.0.3",
+    "dedent": "^0.7.0",
+    "ejs": "^3.1.5",
+    "fs-extra": "^9.0.1",
+    "github-username": "^5.0.1",
+    "prompts": "^2.4.0",
+    "validate-npm-package-name": "^3.0.0",
+    "yargs": "^16.2.0"
+  },
+  "optionalDependencies": {
+    "jetifier": "^1.6.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/chalk": "^2.2.0",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/dedent": "^0.7.0",
+    "@types/ejs": "^3.0.5",
+    "@types/fs-extra": "^9.0.5",
+    "@types/prompts": "^2.0.9",
+    "@types/validate-npm-package-name": "^3.0.2",
+    "@types/yargs": "^15.0.12"
+  }
+}
