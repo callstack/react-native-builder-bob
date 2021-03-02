@@ -1,6 +1,7 @@
 # react-native-builder-bob
 
-[![Version][version-badge]][package]
+[![create-react-native-library][create-react-native-library-version-badge]][package]
+[![react-native-builder-bob][react-native-builder-bob-version-badge]][package]
 [![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
 
@@ -263,7 +264,8 @@ MIT
 
 <!-- badges -->
 
-[version-badge]: https://img.shields.io/npm/v/react-native-builder-bob.svg?style=flat-square
+[create-react-native-library-version-badge]: https://img.shields.io/npm/v/create-react-native-library?label=create-react-native-library&style=flat-square
+[react-native-builder-bob-version-badge]: https://img.shields.io/npm/v/react-native-builder-bob?label=react-native-builder-bob&style=flat-square
 [package]: https://www.npmjs.com/package/react-native-builder-bob
 [build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/main.svg?style=flat-square
 [build]: https://circleci.com/gh/callstack/react-native-builder-bob
