@@ -3,12 +3,14 @@ import fs from 'fs-extra';
 import ejs from 'ejs';
 import dedent from 'dedent';
 import chalk from 'chalk';
-import type yargs from 'yargs';
+import yargs from 'yargs';
 import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
-import pack from '../package.json';
+
+// eslint-disable-next-line import/no-commonjs
+const pack = require('../package.json');
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
@@ -78,7 +80,7 @@ type Answers = {
   type: LibraryType;
 };
 
-export const args: Record<ArgName, yargs.Options> = {
+const args: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
     type: 'string',
@@ -109,7 +111,7 @@ export const args: Record<ArgName, yargs.Options> = {
   },
 };
 
-export default async function create(argv: yargs.Arguments<any>) {
+async function create(argv: yargs.Arguments<any>) {
   const folder = path.join(process.cwd(), argv.name);
 
   if (await fs.pathExists(folder)) {
@@ -394,3 +396,9 @@ export default async function create(argv: yargs.Arguments<any>) {
     `)
   );
 }
+// eslint-disable-next-line babel/no-unused-expressions
+yargs
+  .command('$0 <name>', 'create a react native library', args, create)
+  .demandCommand()
+  .recommendCommands()
+  .strict().argv;
