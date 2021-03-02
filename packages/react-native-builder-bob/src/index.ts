@@ -25,19 +25,6 @@ const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
 // eslint-disable-next-line babel/no-unused-expressions
 yargs
-  .command('create <name>', 'create a react native library', {}, (argv) => {
-    console.log(
-      dedent(chalk`
-        The {magenta create} command has been moved to {magenta create-react-native-library}!
-
-        Please run:
-
-          {gray $} npx create-react-native-library ${argv.name}
-
-        Good luck!
-      `)
-    );
-  })
   .command('init', 'configure the package to use bob', {}, async () => {
     const pak = path.join(root, 'package.json');
 
@@ -438,6 +425,24 @@ yargs
       }
     }
   })
+  .command(
+    'create <name>',
+    'create a react native library (deprecated)',
+    {},
+    (argv) => {
+      console.log(
+        dedent(chalk`
+        The {magenta create} command has been moved to {magenta create-react-native-library}!
+
+        Please run:
+
+          {gray $} npx create-react-native-library ${argv.name}
+
+        Good luck!
+      `)
+      );
+    }
+  )
   .demandCommand()
   .recommendCommands()
   .strict().argv;

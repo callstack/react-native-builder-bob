@@ -2,10 +2,21 @@
   "name": "react-native-builder-bob",
   "version": "0.17.1",
   "description": "CLI to build JavaScript files for React Native libraries",
-  "repository": "git@github.com:callstack/react-native-builder-bob.git",
-  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
-  "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
+  "keywords": [
+    "react-native",
+    "library",
+    "build"
+  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callstack/react-native-builder-bob.git",
+    "directory": "packages/react-native-builder-bob"
+  },
+  "bugs": {
+    "url": "https://github.com/callstack/react-native-builder-bob/issues"
+  },
+  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
   "main": "lib/index.js",
   "bin": {
     "bob": "bin/bob"
