@@ -237,7 +237,7 @@ To test the CLI locally, you can point to the `bin/bob` executable:
 ../bob/packages/create-react-native-library/bin/create-react-native-library
 ```
 
-Before sending a pull rquest, make sure your code passes TypeScript and ESLint. Run the following to verify:
+Before sending a pull request, make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
 yarn typescript
