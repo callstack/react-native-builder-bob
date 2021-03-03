@@ -1,4 +1,4 @@
-# create-react-native-library
+# react-native-builder-bob
 
 CLI to build JavaScript files for React Native libraries.
 
