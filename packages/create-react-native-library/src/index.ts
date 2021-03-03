@@ -9,9 +9,6 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
 
-// eslint-disable-next-line import/no-commonjs
-const pack = require('../package.json');
-
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
@@ -270,9 +267,35 @@ async function create(argv: yargs.Arguments<any>) {
   const moduleType: ModuleType =
     type === 'native-view' || type === 'native-view-swift' ? 'view' : 'module';
 
+  // Get latest version of Bob from NPM
+  let version: string;
+
+  try {
+    version = await Promise.race([
+      new Promise<string>((resolve) =>
+        setTimeout(() => resolve(version), 1000)
+      ),
+      new Promise<string>((resolve, reject) => {
+        const npm = spawn('npm', [
+          'view',
+          'react-native-builder-bob',
+          'dist-tags.latest',
+        ]);
+
+        npm.stdout?.on('data', (data) => resolve(data.toString().trim()));
+        npm.stderr?.on('data', (data) => reject(data.toString().trim()));
+
+        npm.on('error', (err) => reject(err));
+      }),
+    ]);
+  } catch (e) {
+    // Fallback to a known version if we couldn't fetch
+    version = '0.18.0';
+  }
+
   const options = {
     bob: {
-      version: pack.version,
+      version,
     },
     project: {
       slug,
