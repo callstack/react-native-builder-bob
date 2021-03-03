@@ -1,17 +1,15 @@
-# react-native-builder-bob
+# Bob
 
 [![create-react-native-library][create-react-native-library-version-badge]][package]
 [![react-native-builder-bob][react-native-builder-bob-version-badge]][package]
 [![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
 
-👷‍♂️ Simple CLI to scaffold and build React Native libraries for different targets.
+👷‍♂️ Simple set of CLIs to scaffold and build React Native libraries for different targets.
 
-## Features
+## Scaffold React Native libraries
 
-### Scaffold new projects
-
-If you want to create your own React Native module, scaffolding the project can be a daunting task. Bob can scaffold a new project for you with the following things:
+If you want to create your own React Native module, scaffolding the project can be a daunting task. `create-react-native-library` can scaffold a new project for you with the following things:
 
 - Simple example modules for Android and iOS which you can build upon
 - [Kotlin](https://kotlinlang.org/) configured for building the module on Android
@@ -19,26 +17,10 @@ If you want to create your own React Native module, scaffolding the project can 
 - [Expo](https://expo.io/) support for libraries without native code and web support
 - Example React Native app to manually test your modules
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Husky](https://github.com/typicode/husky) and [Release It](https://github.com/release-it/release-it) pre-configured
-- Bob pre-configured to compile your files
+- `react-native-builder-bob` pre-configured to compile your files
 - [CircleCI](https://circleci.com/) pre-configured to run tests on the CI
 
-<img src="assets/bob-create.gif" width="500px" height="auto">
-
-### Build your projects
-
-Bob can build code for following targets:
-
-- Generic CommonJS build
-- ES modules build for bundlers such as webpack
-- Flow definitions (copies .js files to .flow files)
-- TypeScript definitions (uses `tsc` to generate declaration files)
-- Android AAR files
-
-## Usage
-
-### Creating a new project
-
-To create new project with Bob, run the following:
+To create new project, run the following:
 
 ```sh
 npx create-react-native-library react-native-awesome-module
@@ -46,23 +28,33 @@ npx create-react-native-library react-native-awesome-module
 
 This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
 
-The difference from [create-react-native-module](https://github.com/brodybits/create-react-native-module) is that the generated project with Bob is very opinionated and configured with additional tools.
+<img src="assets/create-react-native-library.gif" width="500px" height="auto">
 
-### Configuring an existing project
+The difference from [create-react-native-module](https://github.com/brodybits/create-react-native-module) is that the generated project with `create-react-native-library` is very opinionated and configured with additional tools.
 
-#### Automatic configuration
+## Build your React Native libraries
 
-To automatically configure your project to use Bob, open a Terminal and run:
+`react-native-builder-bob` can build code in your React Native library for following targets:
+
+- Generic CommonJS build
+- ES modules build for bundlers such as webpack
+- Flow definitions (copies .js files to .flow files)
+- TypeScript definitions (uses `tsc` to generate declaration files)
+- Android AAR files
+
+### Automatic configuration
+
+To automatically configure your project to use `react-native-builder-bob`, open a Terminal and run:
 
 ```js
 npx react-native-builder-bob init
 ```
 
-#### Manual configuration
+### Manual configuration
 
 To configure your project manually, follow these steps:
 
-1. First, install Bob in your project. Open a Terminal in your project, and run:
+1. First, install `react-native-builder-bob` in your project. Open a Terminal in your project, and run:
 
   ```sh
   yarn add --dev react-native-builder-bob
@@ -127,23 +119,23 @@ To configure your project manually, follow these steps:
 
 And we're done 🎉
 
-## Options
+### Options
 
 The options can be specified in the `package.json` file under the `react-native-builder-bob` property, or in a `bob.config.js` file in your project directory.
 
-### `source`
+#### `source`
 
 The name of the folder with the source code which should be compiled. The folder should include an `index` file.
 
-### `output`
+#### `output`
 
 The name of the folder where the compiled files should be output to. It will contain separate folder for each target.
 
-### `targets`
+#### `targets`
 
 Various targets to build for. The available targets are:
 
-#### `commonjs`
+##### `commonjs`
 
 Enable compiling source files with Babel and use commonjs module system.
 
@@ -159,7 +151,7 @@ Example:
 ["commonjs", { "babelrc": true, "copyFlow": true }]
 ```
 
-#### `module`
+##### `module`
 
 Enable compiling source files with Babel and use ES module system. This is essentially same as the `commonjs` target and accepts the same options, but leaves the `import`/`export` statements in your code.
 
@@ -171,7 +163,7 @@ Example:
 ["module", { "babelrc": true, "copyFlow": true }]
 ```
 
-#### `typescript`
+##### `typescript`
 
 Enable generating type definitions with `tsc` if your source code is written in [TypeScript](http://www.typescriptlang.org/).
 
@@ -183,7 +175,7 @@ Example:
 ["typescript", { "project": "tsconfig.build.json" }]
 ```
 
-#### `aar`
+##### `aar`
 
 Enable assembling Android AAR files for a library for React Native modules including native code.
 
@@ -198,7 +190,7 @@ Example:
 
 ## FAQ
 
-### Why should I compile my project with Bob?
+### Why should I compile my project with `react-native-builder-bob`?
 
 We write our library code in non-standard syntaxes such as JSX, TypeScript etc. as well as proposed syntaxes which aren't part of the standard yet. This means that our code needs to be compiled to be able to run on JavaScript engines.
 
@@ -208,7 +200,7 @@ Currently, to handle such multiple targets, we need to have multiple babel confi
 
 Just as an example, this is a command we have in one of the packages: `babel --extensions '.js,.ts,.tsx' --no-babelrc --config-file=./babel.config.publish.js src --ignore '**/__tests__/**' --copy-files --source-maps --delete-dir-on-start --out-dir dist && del-cli 'dist/**/__tests__' && yarn tsc --emitDeclarationOnly`. This isn't all, there's even a separate `babel.config.publish.js` file. And this only works for webpack and Metro, and will fail on Node due to ESM usage.
 
-Bob wraps tools such as `babel` and `typescript` to simplify these common tasks across multiple projects. It's tailored specifically to React Native projects to minimize the configuration required.
+`react-native-builder-bob` wraps tools such as `babel` and `typescript` to simplify these common tasks across multiple projects. It's tailored specifically to React Native projects to minimize the configuration required.
 
 ### How do I add a react-native library containing native code as a dependency in my library?
 
