@@ -30,9 +30,7 @@ This will ask you few questions about your project and generate a new project in
 
 <img src="assets/create-react-native-library.gif" width="500px" height="auto">
 
-The difference from [create-react-native-module](https://github.com/brodybits/create-react-native-module) is that the generated project with `create-react-native-library` is very opinionated and configured with additional tools.
-
-## Build your React Native libraries
+## Build React Native libraries
 
 `react-native-builder-bob` can build code in your React Native library for following targets:
 
@@ -249,6 +247,12 @@ Thanks to the authors of these libraries for inspiration:
 
 - [create-react-native-module](https://github.com/brodybits/create-react-native-module)
 - [react-native-webview](https://github.com/react-native-community/react-native-webview)
+
+## Alternatives
+
+There are other similar tools to scaffold React Native libraries. The difference is that the generated project with `create-react-native-library` is very opinionated and configured with additional tools.
+
+- [react-native-module-init](https://github.com/brodybits/react-native-module-init)
 
 ## LICENSE
 
