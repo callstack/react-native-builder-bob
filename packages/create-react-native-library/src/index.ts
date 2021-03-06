@@ -16,14 +16,18 @@ const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
+const NATIVE_COMMON_FILES = path.resolve(
+  __dirname,
+  '../templates/native-common'
+);
 
-// Android
-const NATIVE_FILES = (moduleType: ModuleType) => {
+// Java
+const JAVA_FILES = (moduleType: ModuleType) => {
   switch (moduleType) {
     case 'module':
-      return path.resolve(__dirname, '../templates/native-library');
+      return path.resolve(__dirname, '../templates/java-library');
     case 'view':
-      return path.resolve(__dirname, '../templates/native-view-library');
+      return path.resolve(__dirname, '../templates/java-view-library');
   }
 };
 
@@ -34,6 +38,16 @@ const OBJC_FILES = (moduleType: ModuleType) => {
       return path.resolve(__dirname, '../templates/objc-library');
     case 'view':
       return path.resolve(__dirname, '../templates/objc-view-library');
+  }
+};
+
+// Kotlin
+const KOTLIN_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/kotlin-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/kotlin-view-library');
   }
 };
 
@@ -59,12 +73,16 @@ type ArgName =
 type ModuleType = 'module' | 'view';
 
 type LibraryType =
-  | 'native-view'
-  | 'native-view-swift'
   | 'native'
   | 'native-swift'
-  | 'js'
+  | 'native-kotlin'
+  | 'native-kotlin-swift'
+  | 'native-view'
+  | 'native-view-swift'
+  | 'native-view-kotlin'
+  | 'native-view-kotlin-swift'
   | 'cpp'
+  | 'js'
   | 'expo';
 
 type Answers = {
@@ -104,7 +122,19 @@ const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type package do you want to develop',
-    choices: ['native', 'native-swift', 'js', 'cpp', 'expo'],
+    choices: [
+      'native',
+      'native-swift',
+      'native-kotlin',
+      'native-kotlin-swift',
+      'native-view',
+      'native-view-swift',
+      'native-view-kotlin',
+      'native-view-kotlin-swift',
+      'cpp',
+      'js',
+      'expo',
+    ],
   },
 };
 
@@ -218,16 +248,32 @@ async function create(argv: yargs.Arguments<any>) {
       name: 'type',
       message: 'What type of package do you want to develop?',
       choices: [
-        { title: 'Native module in Kotlin and Objective-C', value: 'native' },
-        { title: 'Native module in Kotlin and Swift', value: 'native-swift' },
+        { title: 'Native module in Java and Objective-C', value: 'native' },
+        { title: 'Native module in Java and Swift', value: 'native-swift' },
+        {
+          title: 'Native module in Kotlin and Objective-C',
+          value: 'native-kotlin',
+        },
+        {
+          title: 'Native module in Kotlin and Swift',
+          value: 'native-kotlin-swift',
+        },
         { title: 'Native module with C++ code', value: 'cpp' },
         {
-          title: 'Native view in Kotlin and Objective-C',
+          title: 'Native view in Java and Objective-C',
           value: 'native-view',
         },
         {
-          title: 'Native view in Kotlin and Swift',
+          title: 'Native view in Java and Swift',
           value: 'native-view-swift',
+        },
+        {
+          title: 'Native view in Kotlin and Objective-C',
+          value: 'native-view-kotlin',
+        },
+        {
+          title: 'Native view in Kotlin and Swift',
+          value: 'native-view-kotlin-swift',
         },
         {
           title: 'JavaScript library with native example',
@@ -265,7 +311,12 @@ async function create(argv: yargs.Arguments<any>) {
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   const moduleType: ModuleType =
-    type === 'native-view' || type === 'native-view-swift' ? 'view' : 'module';
+    type === 'native-view' ||
+    type === 'native-view-swift' ||
+    type === 'native-view-kotlin' ||
+    type === 'native-view-kotlin-swift'
+      ? 'view'
+      : 'module';
 
   // Get latest version of Bob from NPM
   let version: string;
@@ -308,13 +359,26 @@ async function create(argv: yargs.Arguments<any>) {
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native:
-        type === 'native' ||
         type === 'cpp' ||
-        'native-swift' ||
-        'native-view' ||
-        'native-view-swift',
+        type === 'native' ||
+        type === 'native-swift' ||
+        type === 'native-kotlin' ||
+        type === 'native-kotlin-swift' ||
+        type === 'native-view' ||
+        type === 'native-view-swift' ||
+        type === 'native-view-kotlin' ||
+        type === 'native-view-kotlin-swift',
       cpp: type === 'cpp',
-      swift: type === 'native-swift' || 'native-view-swift',
+      kotlin:
+        type === 'native-kotlin' ||
+        type === 'native-kotlin-swift' ||
+        type === 'native-view-kotlin' ||
+        type === 'native-view-kotlin-swift',
+      swift:
+        type === 'native-swift' ||
+        type === 'native-kotlin-swift' ||
+        type === 'native-view-swift' ||
+        type === 'native-view-kotlin-swift',
       module: type !== 'js',
       moduleType,
     },
@@ -372,14 +436,21 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
-    await copyDir(NATIVE_FILES(moduleType), folder);
+    await copyDir(NATIVE_COMMON_FILES, folder);
 
-    if (type === 'cpp') {
+    if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
-    } else if (type === 'native-swift') {
+    }
+
+    if (options.project.swift) {
       await copyDir(SWIFT_FILES(moduleType), folder);
     } else {
       await copyDir(OBJC_FILES(moduleType), folder);
+    }
+    if (options.project.kotlin) {
+      await copyDir(KOTLIN_FILES(moduleType), folder);
+    } else {
+      await copyDir(JAVA_FILES(moduleType), folder);
     }
   }
 
