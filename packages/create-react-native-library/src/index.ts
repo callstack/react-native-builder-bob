@@ -343,7 +343,6 @@ async function create(argv: yargs.Arguments<any>) {
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
-    version = FALLBACK_BOB_VERSION;
   }
 
   const options = {
