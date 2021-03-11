@@ -21,6 +21,8 @@ const NATIVE_COMMON_FILES = path.resolve(
   '../templates/native-common'
 );
 
+const FALLBACK_BOB_VERSION = '0.18.0';
+
 // Java
 const JAVA_FILES = (moduleType: ModuleType) => {
   switch (moduleType) {
@@ -319,7 +321,7 @@ async function create(argv: yargs.Arguments<any>) {
       : 'module';
 
   // Get latest version of Bob from NPM
-  let version: string;
+  let version: string = FALLBACK_BOB_VERSION;
 
   try {
     version = await Promise.race([
@@ -341,7 +343,7 @@ async function create(argv: yargs.Arguments<any>) {
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
-    version = '0.18.0';
+    version = FALLBACK_BOB_VERSION;
   }
 
   const options = {
