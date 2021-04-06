@@ -10,7 +10,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-<% if (project.module) { -%>
+<% if (project.native) { -%>
 import com.<%- project.package %>.<%- project.name %>Package;
 <% } -%>
 
@@ -29,7 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for <%- project.name %>Example:
           // packages.add(new MyReactNativePackage());
-          <% if (project.module) { -%>packages.add(new <%- project.name %>Package());<% } -%>
+          <% if (project.native) { -%>packages.add(new <%- project.name %>Package());<% } -%>
 
           return packages;
         }

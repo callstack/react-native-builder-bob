@@ -204,7 +204,7 @@ dependencies {
         implementation jscFlavor
     }
 
-<% if (project.module) { -%>
+<% if (project.native) { -%>
     implementation project(':<%- project.package %>')
 <% } -%>
 }

@@ -70,22 +70,11 @@ type ArgName =
   | 'author-email'
   | 'author-url'
   | 'repo-url'
-  | 'type';
+  | 'languages'
+  | 'type'
+  | 'example';
 
 type ModuleType = 'module' | 'view';
-
-type LibraryType =
-  | 'native'
-  | 'native-swift'
-  | 'native-kotlin'
-  | 'native-kotlin-swift'
-  | 'native-view'
-  | 'native-view-swift'
-  | 'native-view-kotlin'
-  | 'native-view-kotlin-swift'
-  | 'cpp'
-  | 'js'
-  | 'expo';
 
 type Answers = {
   slug: string;
@@ -94,7 +83,15 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  type: LibraryType;
+  languages:
+    | 'java-objc'
+    | 'java-swift'
+    | 'kotlin-objc'
+    | 'kotlin-swift'
+    | 'cpp'
+    | 'js';
+  type?: 'module' | 'view';
+  example?: 'expo' | 'native';
 };
 
 const args: Record<ArgName, yargs.Options> = {
@@ -122,21 +119,24 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'URL for the repository',
     type: 'string',
   },
-  'type': {
-    description: 'Type package do you want to develop',
+  'languages': {
+    description: 'Languages you want to use',
     choices: [
-      'native',
-      'native-swift',
-      'native-kotlin',
-      'native-kotlin-swift',
-      'native-view',
-      'native-view-swift',
-      'native-view-kotlin',
-      'native-view-kotlin-swift',
+      'java-objc',
+      'java-swift',
+      'kotlin-objc',
+      'kotlin-swift',
       'cpp',
       'js',
-      'expo',
     ],
+  },
+  'type': {
+    description: 'Type of library you want to develop',
+    choices: ['module', 'view'],
+  },
+  'example': {
+    description: 'Type of example app',
+    choices: ['expo', 'native'],
   },
 };
 
@@ -245,45 +245,42 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'type': {
+    'languages': {
       type: 'select',
-      name: 'type',
-      message: 'What type of package do you want to develop?',
+      name: 'languages',
+      message: 'Which languages do you want to use?',
       choices: [
-        { title: 'Native module in Java and Objective-C', value: 'native' },
-        { title: 'Native module in Java and Swift', value: 'native-swift' },
+        { title: 'Java & Objective-C', value: 'java-objc' },
+        { title: 'Java & Swift', value: 'java-swift' },
+        { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
+        { title: 'Kotlin & Swift', value: 'kotlin-swift' },
+        { title: 'C++ for both iOS & Android', value: 'cpp' },
+        { title: 'JavaScript only', value: 'js' },
+      ],
+    },
+    'type': {
+      type: (prev: string) =>
+        ['java-objc', 'java-swift', 'kotlin-objc', 'kotlin-swift'].includes(
+          prev
+        )
+          ? 'select'
+          : null,
+      name: 'type',
+      message: 'What type of library do you want to develop?',
+      choices: [
+        { title: 'Native module (to expose native APIs)', value: 'module' },
+        { title: 'Native view (to use as a component)', value: 'view' },
+      ],
+    },
+    'example': {
+      type: (prev: string) => (prev === 'js' ? 'select' : null),
+      name: 'example',
+      message: 'What type of example app do you want to generate?',
+      choices: [
+        { title: 'JavaScript only (with Expo and Web support)', value: 'expo' },
         {
-          title: 'Native module in Kotlin and Objective-C',
-          value: 'native-kotlin',
-        },
-        {
-          title: 'Native module in Kotlin and Swift',
-          value: 'native-kotlin-swift',
-        },
-        { title: 'Native module with C++ code', value: 'cpp' },
-        {
-          title: 'Native view in Java and Objective-C',
-          value: 'native-view',
-        },
-        {
-          title: 'Native view in Java and Swift',
-          value: 'native-view-swift',
-        },
-        {
-          title: 'Native view in Kotlin and Objective-C',
-          value: 'native-view-kotlin',
-        },
-        {
-          title: 'Native view in Kotlin and Swift',
-          value: 'native-view-kotlin-swift',
-        },
-        {
-          title: 'JavaScript library with native example',
-          value: 'js',
-        },
-        {
-          title: 'JavaScript library with Expo example and Web support',
-          value: 'expo',
+          title: 'Native (to use other libraries with native code)',
+          value: 'native',
         },
       ],
     },
@@ -296,7 +293,9 @@ async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     repoUrl,
-    type,
+    languages,
+    type = 'module',
+    example = 'native',
   } = {
     ...argv,
     ...(await prompts(
@@ -312,13 +311,6 @@ async function create(argv: yargs.Arguments<any>) {
   } as Answers;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
-  const moduleType: ModuleType =
-    type === 'native-view' ||
-    type === 'native-view-swift' ||
-    type === 'native-view-kotlin' ||
-    type === 'native-view-kotlin-swift'
-      ? 'view'
-      : 'module';
 
   // Get latest version of Bob from NPM
   let version: string;
@@ -360,29 +352,12 @@ async function create(argv: yargs.Arguments<any>) {
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native:
-        type === 'cpp' ||
-        type === 'native' ||
-        type === 'native-swift' ||
-        type === 'native-kotlin' ||
-        type === 'native-kotlin-swift' ||
-        type === 'native-view' ||
-        type === 'native-view-swift' ||
-        type === 'native-view-kotlin' ||
-        type === 'native-view-kotlin-swift',
-      cpp: type === 'cpp',
-      kotlin:
-        type === 'native-kotlin' ||
-        type === 'native-kotlin-swift' ||
-        type === 'native-view-kotlin' ||
-        type === 'native-view-kotlin-swift',
-      swift:
-        type === 'native-swift' ||
-        type === 'native-kotlin-swift' ||
-        type === 'native-view-swift' ||
-        type === 'native-view-kotlin-swift',
-      module: type !== 'js',
-      moduleType,
+      native: languages !== 'js',
+      cpp: languages === 'cpp',
+      kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
+      swift: languages === 'java-swift' || languages === 'kotlin-swift',
+      module: languages !== 'js',
+      moduleType: type,
     },
     author: {
       name: authorName,
@@ -423,15 +398,17 @@ async function create(argv: yargs.Arguments<any>) {
 
   await copyDir(COMMON_FILES, folder);
 
-  if (type === 'expo') {
+  if (languages === 'js') {
     await copyDir(JS_FILES, folder);
-    await copyDir(EXPO_FILES, folder);
-  } else if (type === 'js') {
-    await copyDir(JS_FILES, folder);
-    await copyDir(
-      path.join(EXAMPLE_FILES, 'example'),
-      path.join(folder, 'example')
-    );
+
+    if (example === 'expo') {
+      await copyDir(EXPO_FILES, folder);
+    } else {
+      await copyDir(
+        path.join(EXAMPLE_FILES, 'example'),
+        path.join(folder, 'example')
+      );
+    }
   } else {
     await copyDir(
       path.join(EXAMPLE_FILES, 'example'),
@@ -445,14 +422,14 @@ async function create(argv: yargs.Arguments<any>) {
     }
 
     if (options.project.swift) {
-      await copyDir(SWIFT_FILES(moduleType), folder);
+      await copyDir(SWIFT_FILES(type), folder);
     } else {
-      await copyDir(OBJC_FILES(moduleType), folder);
+      await copyDir(OBJC_FILES(type), folder);
     }
     if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES(moduleType), folder);
+      await copyDir(KOTLIN_FILES(type), folder);
     } else {
-      await copyDir(JAVA_FILES(moduleType), folder);
+      await copyDir(JAVA_FILES(type), folder);
     }
   }
 
@@ -466,10 +443,10 @@ async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
-  const platforms = {
+  const platforms: Record<string, { name: string; color: string }> = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },
-    ...(type === 'expo' ? { web: { name: 'Web', color: 'blue' } } : null),
+    ...(example === 'expo' ? { web: { name: 'Web', color: 'blue' } } : null),
   };
 
   console.log(
