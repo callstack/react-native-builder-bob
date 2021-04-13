@@ -93,7 +93,7 @@ jobs:
             yarn --cwd example detox:ios:test:release
           name: test detox
       - store_artifacts:
-          path: ./example/artifacts
+          path: example/artifacts
 
   e2e-release-android:
     executor:
