@@ -113,7 +113,7 @@ jobs:
           command: yarn --cwd example detox:android:test:release
           name: test detox
       - store_artifacts:
-          path: ./example/artifacts
+          path: example/artifacts
 
   build-package:
     executor: default
