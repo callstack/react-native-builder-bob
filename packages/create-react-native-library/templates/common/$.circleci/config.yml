@@ -71,6 +71,49 @@ jobs:
           path: coverage
           destination: coverage
 
+  e2e_release_ios:
+    executor:
+      name: rn/macos
+      xcode_version: '11.4.0'
+    steps:
+      - attach_workspace:
+          at: .
+      - rn/setup_macos_executor:
+          node_version: '12.10.0'
+      - rn/ios_simulator_start:
+          device: 'iPhone 11'
+      - rn/pod_install:
+          pod_install_directory: 'example/ios'
+      - run:
+          command: yarn --cwd example detox:ios:build:release
+          name: build for detox
+      - run:
+          command: detox clean-framework-cache && detox build-framework-cache && yarn --cwd example detox:ios:test:release
+          name: test detox
+      - store_artifacts:
+          path: ./example/artifacts
+
+  e2e_release_android:
+    executor:
+      name: rn/macos
+      xcode_version: '11.4.0'
+    steps:
+      - attach_workspace:
+          at: .
+      - rn/setup_macos_executor:
+          node_version: '12.10.0'
+      - rn/android_emulator_start:
+          logcat_grep: 'com.example.reactnativepagerview'
+          platform_version: 'android-29'
+      - run:
+          command: yarn --cwd example detox:android:build:release
+          name: build for detox
+      - run:
+          command: yarn --cwd example detox:android:test:release
+          name: test detox
+      - store_artifacts:
+          path: ./example/artifacts
+
   build-package:
     executor: default
     steps:
@@ -91,6 +134,12 @@ workflows:
           requires:
             - install-dependencies
       - unit-tests:
+          requires:
+            - install-dependencies
+      - e2e_release_ios:
+          requires:
+            - install-dependencies
+      - e2e_release_android:
           requires:
             - install-dependencies
       - build-package:
