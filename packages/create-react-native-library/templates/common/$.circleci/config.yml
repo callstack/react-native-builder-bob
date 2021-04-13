@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     working_directory: ~/project
 
 commands:
@@ -71,13 +71,12 @@ jobs:
           path: coverage
           destination: coverage
 
-  e2e_release_ios:
+  e2e-release-ios:
     executor:
       name: rn/macos
       xcode_version: '11.4.0'
     steps:
-      - attach_workspace:
-          at: .
+      - attach_project
       - rn/setup_macos_executor:
           node_version: '12.10.0'
       - rn/ios_simulator_start:
@@ -88,22 +87,24 @@ jobs:
           command: yarn --cwd example detox:ios:build:release
           name: build for detox
       - run:
-          command: detox clean-framework-cache && detox build-framework-cache && yarn --cwd example detox:ios:test:release
+         command: |
+            detox clean-framework-cache 
+            detox build-framework-cache
+            yarn --cwd example detox:ios:test:release
           name: test detox
       - store_artifacts:
           path: ./example/artifacts
 
-  e2e_release_android:
+  e2e-release-android:
     executor:
       name: rn/macos
       xcode_version: '11.4.0'
     steps:
-      - attach_workspace:
-          at: .
+      - attach_project
       - rn/setup_macos_executor:
           node_version: '12.10.0'
       - rn/android_emulator_start:
-          logcat_grep: 'com.example.reactnativepagerview'
+          logcat_grep: 'com.example.<%- project.package %>'
           platform_version: 'android-29'
       - run:
           command: yarn --cwd example detox:android:build:release
@@ -136,10 +137,10 @@ workflows:
       - unit-tests:
           requires:
             - install-dependencies
-      - e2e_release_ios:
+      - e2e-release-ios:
           requires:
             - install-dependencies
-      - e2e_release_android:
+      - e2e-release-android:
           requires:
             - install-dependencies
       - build-package:
