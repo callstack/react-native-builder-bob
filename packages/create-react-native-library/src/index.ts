@@ -256,13 +256,20 @@ async function create(argv: yargs.Arguments<any>) {
         { title: 'Kotlin & Swift', value: 'kotlin-swift' },
         { title: 'C++ for both iOS & Android', value: 'cpp' },
         { title: 'JavaScript only', value: 'js' },
+        { title: 'Windows with C++', value: 'windows-cpp' },
+        { title: 'Windows with C#', value: 'windows-csharp' },
       ],
     },
     'type': {
       type: (prev: string) =>
-        ['java-objc', 'java-swift', 'kotlin-objc', 'kotlin-swift'].includes(
-          prev
-        )
+        [
+          'java-objc',
+          'java-swift',
+          'kotlin-objc',
+          'kotlin-swift',
+          'windows-cpp',
+          'windows-csharp',
+        ].includes(prev)
           ? 'select'
           : null,
       name: 'type',
