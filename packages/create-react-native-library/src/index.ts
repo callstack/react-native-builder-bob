@@ -63,6 +63,26 @@ const SWIFT_FILES = (moduleType: ModuleType) => {
   }
 };
 
+// Windows Csharp
+const WINDOWS_CSHARP_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/windows-csharp-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/windows-csharp-view-library');
+  }
+};
+
+// Windows Cpp
+const WINDOWS_CPP_FILES = (moduleType: ModuleType) => {
+  switch (moduleType) {
+    case 'module':
+      return path.resolve(__dirname, '../templates/windows-cpp-library');
+    case 'view':
+      return path.resolve(__dirname, '../templates/windows-cpp-view-library');
+  }
+};
+
 type ArgName =
   | 'slug'
   | 'description'
@@ -89,6 +109,8 @@ type Answers = {
     | 'kotlin-objc'
     | 'kotlin-swift'
     | 'cpp'
+    | 'windows-cpp'
+    | 'windows-csharp'
     | 'js';
   type?: 'module' | 'view';
   example?: 'expo' | 'native';
@@ -363,6 +385,7 @@ async function create(argv: yargs.Arguments<any>) {
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
+      windows: languages === 'windows-cpp' || languages == 'windows-csharp',
       module: languages !== 'js',
       moduleType: type,
     },
@@ -426,6 +449,11 @@ async function create(argv: yargs.Arguments<any>) {
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
+    }
+
+    if (options.project.windows) {
+      const WINDOWS_FILES = languages === 'windows-csharp' ? WINDOWS_CSHARP_FILES : WINDOWS_CPP_FILES;
+      await copyDir(WINDOWS_FILES(type), folder);
     }
 
     if (options.project.swift) {
