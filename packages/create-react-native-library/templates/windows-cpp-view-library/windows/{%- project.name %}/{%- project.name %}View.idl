@@ -1,0 +1,8 @@
+namespace <%- project.name %>
+{
+    [default_interface]
+    runtimeclass <%- project.name %>View : Windows.UI.Xaml.FrameworkElement
+    {
+        <%- project.name %>View( Microsoft.ReactNative.IReactContext context );
+    }
+}
