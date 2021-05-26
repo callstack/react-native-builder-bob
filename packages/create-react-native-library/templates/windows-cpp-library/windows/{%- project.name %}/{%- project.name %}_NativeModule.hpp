@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "pch.h"
 #include "NativeModules.h"
+#include "winrt/Microsoft.ReactNative.h"
 
 namespace winrt::<%- project.name %>::implementation
 {
@@ -14,10 +14,7 @@ namespace winrt::<%- project.name %>::implementation
             context = reactContext;
         }
 
-
-
     private:
         winrt::Microsoft::ReactNative::ReactContext context;
-
     };
 }

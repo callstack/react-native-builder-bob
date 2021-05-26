@@ -1,13 +1,21 @@
-#pragma once
+﻿#pragma once
 
+#include "ReactPackageProvider.g.h"
 #include "winrt/Microsoft.ReactNative.h"
 
 namespace winrt::<%- project.name %>::implementation
 {
-    struct ReactPackageProvider : winrt::implements<ReactPackageProvider, winrt::Microsoft::ReactNative::IReactPackageProvider>
+    struct ReactPackageProvider : ReactPackageProviderT<ReactPackageProvider>
     {
-    public: // IReactPackageProvider
-        void CreatePackage(winrt::Microsoft::ReactNative::IReactPackageBuilder const &packageBuilder) noexcept;
-    };
-} // namespace winrt::<%- project.name %>::implementation
+        ReactPackageProvider() = default;
 
+        void CreatePackage( const winrt::Microsoft::ReactNative::IReactPackageBuilder& packageBuilder ) noexcept;
+    };
+}
+
+namespace winrt::<%- project.name %>::factory_implementation
+{
+    struct ReactPackageProvider : ReactPackageProviderT<ReactPackageProvider, implementation::ReactPackageProvider>
+    {
+    };
+}

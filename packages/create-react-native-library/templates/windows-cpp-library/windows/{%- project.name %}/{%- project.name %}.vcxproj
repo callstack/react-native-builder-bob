@@ -3,10 +3,10 @@
   <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.210122.3\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.210122.3\build\native\Microsoft.Windows.CppWinRT.props')" />
   <PropertyGroup Label="Globals">
     <CppWinRTOptimized>true</CppWinRTOptimized>
-    <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
+    <CppWinRTRootNamespaceAutoMerge>false</CppWinRTRootNamespaceAutoMerge>
     <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
     <MinimalCoreWin>true</MinimalCoreWin>
-    <ProjectGuid>{c5b2449b-b4f0-4348-8b65-59adc7de13b8}</ProjectGuid>
+    <ProjectGuid>{84a4a23f-de1b-450f-a171-b3159f276112}</ProjectGuid>
     <ProjectName><%- project.name %></ProjectName>
     <RootNamespace><%- project.name %></RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -88,41 +88,42 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
+    <OutDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\Build\$(SolutionName)\$(ProjectName)\$(Configuration)-$(Platform)\Intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level4</WarningLevel>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
@@ -143,6 +144,18 @@
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+    </Link>
+    <Link>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+    </Link>
+    <Link>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+    </Link>
+    <Link>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -151,25 +164,26 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
+      <WindowsMetadataFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)$(ProjectName).winmd</WindowsMetadataFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ReactPackageProvider.h">
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ReactPackageProvider.h">
       <DependentUpon>ReactPackageProvider.idl</DependentUpon>
       <SubType>Code</SubType>
-    </ClCompile>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="<%- project.name %>_NativeModule.hpp"/>
+    </ClInclude>
+    <ClInclude Include="<%- project.name %>_NativeModule.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="ReactPackageProvider.cpp">
       <DependentUpon>ReactPackageProvider.idl</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="ReactPackageProvider.idl">

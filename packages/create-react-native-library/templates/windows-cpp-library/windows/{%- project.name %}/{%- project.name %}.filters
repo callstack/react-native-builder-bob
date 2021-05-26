@@ -10,13 +10,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <CICompile Include="ReactPackageProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ReactPackageProvider.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="<%- project.name %>_NativeModule.hpp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Class.idl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="<%- project.name %>.def" />
