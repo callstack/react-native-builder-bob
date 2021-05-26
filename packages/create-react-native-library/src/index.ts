@@ -69,7 +69,10 @@ const WINDOWS_CSHARP_FILES = (moduleType: ModuleType) => {
     case 'module':
       return path.resolve(__dirname, '../templates/windows-csharp-library');
     case 'view':
-      return path.resolve(__dirname, '../templates/windows-csharp-view-library');
+      return path.resolve(
+        __dirname,
+        '../templates/windows-csharp-view-library'
+      );
   }
 };
 
@@ -385,7 +388,7 @@ async function create(argv: yargs.Arguments<any>) {
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
-      windows: languages === 'windows-cpp' || languages == 'windows-csharp',
+      windows: languages === 'windows-cpp' || languages === 'windows-csharp',
       module: languages !== 'js',
       moduleType: type,
     },
@@ -452,7 +455,10 @@ async function create(argv: yargs.Arguments<any>) {
     }
 
     if (options.project.windows) {
-      const WINDOWS_FILES = languages === 'windows-csharp' ? WINDOWS_CSHARP_FILES : WINDOWS_CPP_FILES;
+      const WINDOWS_FILES =
+        languages === 'windows-csharp'
+          ? WINDOWS_CSHARP_FILES
+          : WINDOWS_CPP_FILES;
       await copyDir(WINDOWS_FILES(type), folder);
     }
 
