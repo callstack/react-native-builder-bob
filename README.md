@@ -12,10 +12,11 @@
 If you want to create your own React Native module, scaffolding the project can be a daunting task. `create-react-native-library` can scaffold a new project for you with the following things:
 
 - Simple example modules for Android and iOS which you can build upon
+- Simple example modules for Windows using both C++/WinRT and C#
 - [Kotlin](https://kotlinlang.org/) configured for building the module on Android
 - C++ support for native modules on Android and iOS
 - [Expo](https://expo.io/) support for libraries without native code and web support
-- Example React Native app to manually test your modules
+- Example React Native app (including Windows) to manually test your modules
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Husky](https://github.com/typicode/husky) and [Release It](https://github.com/release-it/release-it) pre-configured
 - `react-native-builder-bob` pre-configured to compile your files
 - [CircleCI](https://circleci.com/) pre-configured to run tests on the CI
