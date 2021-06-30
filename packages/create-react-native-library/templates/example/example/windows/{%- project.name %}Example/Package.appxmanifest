@@ -8,14 +8,14 @@
 
   <Identity
     Name="cb1b1ded-2f74-4bf4-89cd-ab411a2b6aa9"
-    Publisher="CN=Bartosz Klonowski"
+    Publisher="CN=<%- author.name %>"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="cb1b1ded-2f74-4bf4-89cd-ab411a2b6aa9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName><%- project.name %>Example</DisplayName>
-    <PublisherDisplayName>Bartosz Klonowski</PublisherDisplayName>
+    <PublisherDisplayName><%- author.name %></PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
