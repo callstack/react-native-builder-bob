@@ -82,7 +82,10 @@ const WINDOWS_CPP_FILES = (moduleType: ModuleType) => {
     case 'module':
       return path.resolve(__dirname, '../templates/windows-uwp-cpp-library');
     case 'view':
-      return path.resolve(__dirname, '../templates/windows-uwp-cpp-view-library');
+      return path.resolve(
+        __dirname,
+        '../templates/windows-uwp-cpp-view-library'
+      );
   }
 };
 
@@ -388,7 +391,8 @@ async function create(argv: yargs.Arguments<any>) {
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
-      windows: languages === 'windows-uwp-cpp' || languages === 'windows-uwp-csharp',
+      windows:
+        languages === 'windows-uwp-cpp' || languages === 'windows-uwp-csharp',
       module: languages !== 'js',
       moduleType: type,
     },
