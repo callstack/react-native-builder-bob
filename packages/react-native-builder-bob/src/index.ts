@@ -377,6 +377,8 @@ yargs
       success: logger.success,
     };
 
+    let builds = [];
+
     for (const target of options.targets!) {
       const targetName = Array.isArray(target) ? target[0] : target;
       const targetOptions = Array.isArray(target) ? target[1] : undefined;
@@ -385,43 +387,66 @@ yargs
 
       switch (targetName) {
         case 'aar':
-          await buildAAR({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'aar'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildAAR({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'aar'),
+              options: targetOptions,
+              report,
+            })
+          );
           break;
         case 'commonjs':
-          await buildCommonJS({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'commonjs'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildCommonJS({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'commonjs'),
+              options: targetOptions,
+              report,
+            })
+          );
           break;
         case 'module':
-          await buildModule({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'module'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildModule({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'module'),
+              options: targetOptions,
+              report,
+            })
+          );
           break;
         case 'typescript':
-          await buildTypescript({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'typescript'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildTypescript({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'typescript'),
+              options: targetOptions,
+              report,
+            })
+          );
           break;
         default:
           logger.exit(`Invalid target ${chalk.blue(targetName)}.`);
+      }
+    }
+
+    if (options.concurrent) {
+      const promises = builds.map((build) => build());
+      await (options.failFast
+        ? Promise.all(promises)
+        : Promise.allSettled(promises));
+    } else {
+      if (options.failFast) {
+        logger.warn('Concurrency is disabled. Ignoring failFast.');
+      }
+
+      for (const build of builds) {
+        await build();
       }
     }
   })

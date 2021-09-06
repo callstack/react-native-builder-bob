@@ -64,6 +64,8 @@ To configure your project manually, follow these steps:
    "react-native-builder-bob": {
      "source": "src",
      "output": "lib",
+     "concurrent": false,
+     "failFast": false,
      "targets": [
        ["aar", {"reverseJetify": true}],
        ["commonjs", {"copyFlow": true}],
@@ -185,6 +187,14 @@ Example:
 ```json
 ["aar", { "reverseJetify": true }]
 ```
+
+#### `concurrent`
+
+Set to `true` to run all build stages concurrently.
+
+#### `failFast`
+
+If the `concurrent` option is `true`, setting this option to `true` will exit all builds immediately if any build fails. Ignored if `concurrent` is `false`.
 
 ## FAQ
 

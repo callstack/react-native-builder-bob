@@ -16,6 +16,8 @@ export type Input = {
 export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';
 
 export type Options = {
+  concurrent?: boolean;
+  failFast?: boolean;
   source?: string;
   output?: string;
   targets?: (Target | [Target, object])[];
