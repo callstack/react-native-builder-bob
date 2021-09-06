@@ -15,8 +15,29 @@ export type Input = {
 
 export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';
 
+export type ModuleTargetOptions = {
+  babelrc?: boolean;
+  configFile?: string | false;
+  copyFlow?: boolean;
+};
+
+export type CJSTargetOptions = ModuleTargetOptions;
+
+export type TSTargetOptions = {
+  project?: string;
+  tsc?: string;
+};
+
+export type AARTargetOptions = {
+  androidPath: string;
+  androidBundleName: string;
+  reverseJetify: boolean;
+};
+
+export type TargetOptions = ModuleTargetOptions | TSTargetOptions;
+
 export type Options = {
   source?: string;
   output?: string;
-  targets?: (Target | [Target, object])[];
+  targets?: (Target | [Target, TargetOptions])[];
 };

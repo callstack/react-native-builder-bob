@@ -11,7 +11,13 @@ import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import type { Options } from './types';
+import type {
+  AARTargetOptions,
+  CJSTargetOptions,
+  ModuleTargetOptions,
+  Options,
+  TSTargetOptions,
+} from './types';
 
 // eslint-disable-next-line import/no-commonjs
 const { name, version } = require('../package.json');
@@ -379,46 +385,56 @@ yargs
 
     for (const target of options.targets!) {
       const targetName = Array.isArray(target) ? target[0] : target;
-      const targetOptions = Array.isArray(target) ? target[1] : undefined;
+      const targetOptions = Array.isArray(target) ? target[1] : {};
 
       report.info(`Building target ${chalk.blue(targetName)}`);
 
+      let builds = [];
+
       switch (targetName) {
         case 'aar':
-          await buildAAR({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'aar'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildAAR({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'aar'),
+              options: targetOptions as Partial<AARTargetOptions>,
+              report,
+            })
+          );
           break;
         case 'commonjs':
-          await buildCommonJS({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'commonjs'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildCommonJS({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'commonjs'),
+              options: targetOptions as CJSTargetOptions,
+              report,
+            })
+          );
           break;
         case 'module':
-          await buildModule({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'module'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildModule({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'module'),
+              options: targetOptions as ModuleTargetOptions,
+              report,
+            })
+          );
           break;
         case 'typescript':
-          await buildTypescript({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'typescript'),
-            options: targetOptions,
-            report,
-          });
+          builds.push(() =>
+            buildTypescript({
+              root,
+              source: path.resolve(root, source as string),
+              output: path.resolve(root, output as string, 'typescript'),
+              options: targetOptions as TSTargetOptions,
+              report,
+            })
+          );
           break;
         default:
           logger.exit(`Invalid target ${chalk.blue(targetName)}.`);

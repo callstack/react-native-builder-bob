@@ -6,10 +6,10 @@ import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
 import { platform } from 'os';
-import type { Input } from '../types';
+import type { Input, TSTargetOptions } from '../types';
 
 type Options = Input & {
-  options?: { project?: string; tsc?: string };
+  options?: TSTargetOptions;
 };
 
 export default async function build({

@@ -2,14 +2,10 @@ import path from 'path';
 import chalk from 'chalk';
 import del from 'del';
 import compile from '../utils/compile';
-import type { Input } from '../types';
+import type { Input, ModuleTargetOptions } from '../types';
 
 type Options = Input & {
-  options?: {
-    babelrc?: boolean | null;
-    configFile?: string | false | null;
-    copyFlow?: boolean;
-  };
+  options?: ModuleTargetOptions;
 };
 
 export default async function build({
