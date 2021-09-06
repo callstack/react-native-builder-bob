@@ -79,7 +79,8 @@ To configure your project manually, follow these steps:
 
    ```js
    "scripts": {
-     "prepare": "bob build"
+     "prepare": "bob build",
+     "dev": "bob watch"
    }
    ```
 

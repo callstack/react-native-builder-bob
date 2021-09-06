@@ -3,29 +3,15 @@ import fs from 'fs-extra';
 import chalk from 'chalk';
 import dedent from 'dedent';
 import yargs from 'yargs';
-import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import prompts, { PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
-import buildAAR from './targets/aar';
-import buildCommonJS from './targets/commonjs';
-import buildModule from './targets/module';
-import buildTypescript from './targets/typescript';
-import type {
-  AARTargetOptions,
-  CJSTargetOptions,
-  ModuleTargetOptions,
-  Options,
-  TSTargetOptions,
-} from './types';
+import { build } from './build';
 
 // eslint-disable-next-line import/no-commonjs
 const { name, version } = require('../package.json');
 
 const root = process.cwd();
-const explorer = cosmiconfigSync(name, {
-  searchPlaces: ['package.json', `bob.config.js`],
-});
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -334,113 +320,12 @@ yargs
     `)
     );
   })
-  .command('build', 'build files for publishing', {}, async (argv) => {
-    const result = explorer.search();
-
-    if (!result?.config) {
-      logger.exit(
-        `No configuration found. Run '${argv.$0} init' to create one automatically.`
-      );
-    }
-
-    const options: Options = result!.config;
-
-    if (!options.targets?.length) {
-      logger.exit(
-        `No targets found in the configuration in '${path.relative(
-          root,
-          result!.filepath
-        )}'.`
-      );
-    }
-
-    const source = options.source;
-
-    if (!source) {
-      logger.exit(
-        `No source option found in the configuration in '${path.relative(
-          root,
-          result!.filepath
-        )}'.`
-      );
-    }
-
-    const output = options.output;
-
-    if (!output) {
-      logger.exit(
-        `No source option found in the configuration in '${path.relative(
-          root,
-          result!.filepath
-        )}'.`
-      );
-    }
-
-    const report = {
-      info: logger.info,
-      warn: logger.warn,
-      error: logger.error,
-      success: logger.success,
-    };
-
-    for (const target of options.targets!) {
-      const targetName = Array.isArray(target) ? target[0] : target;
-      const targetOptions = Array.isArray(target) ? target[1] : {};
-
-      report.info(`Building target ${chalk.blue(targetName)}`);
-
-      let builds = [];
-
-      switch (targetName) {
-        case 'aar':
-          builds.push(() =>
-            buildAAR({
-              root,
-              source: path.resolve(root, source as string),
-              output: path.resolve(root, output as string, 'aar'),
-              options: targetOptions as Partial<AARTargetOptions>,
-              report,
-            })
-          );
-          break;
-        case 'commonjs':
-          builds.push(() =>
-            buildCommonJS({
-              root,
-              source: path.resolve(root, source as string),
-              output: path.resolve(root, output as string, 'commonjs'),
-              options: targetOptions as CJSTargetOptions,
-              report,
-            })
-          );
-          break;
-        case 'module':
-          builds.push(() =>
-            buildModule({
-              root,
-              source: path.resolve(root, source as string),
-              output: path.resolve(root, output as string, 'module'),
-              options: targetOptions as ModuleTargetOptions,
-              report,
-            })
-          );
-          break;
-        case 'typescript':
-          builds.push(() =>
-            buildTypescript({
-              root,
-              source: path.resolve(root, source as string),
-              output: path.resolve(root, output as string, 'typescript'),
-              options: targetOptions as TSTargetOptions,
-              report,
-            })
-          );
-          break;
-        default:
-          logger.exit(`Invalid target ${chalk.blue(targetName)}.`);
-      }
-    }
-  })
+  .command('build', 'build files for publishing', {}, (argv) =>
+    build({ argv, root })
+  )
+  .command('watch', 'build and watch files', {}, (argv) =>
+    build({ argv, root, watch: true })
+  )
   .command(
     'create <name>',
     'create a react native library (deprecated)',

@@ -17,6 +17,7 @@ export default async function build({
   output,
   report,
   options,
+  watch,
 }: Options) {
   report.info(
     `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
@@ -127,19 +128,21 @@ export default async function build({
       // Ignore
     }
 
-    const result = spawn.sync(
-      tsc,
-      [
-        '--pretty',
-        '--declaration',
-        '--emitDeclarationOnly',
-        '--project',
-        project,
-        '--outDir',
-        output,
-      ],
-      { stdio: 'inherit' }
-    );
+    const args = [
+      '--pretty',
+      '--declaration',
+      '--emitDeclarationOnly',
+      '--project',
+      project,
+      '--outDir',
+      output,
+    ];
+
+    if (watch) {
+      args.push('--watch', '--preserveWatchOutput');
+    }
+
+    const result = spawn.sync(tsc, args, { stdio: 'inherit' });
 
     if (result.status === 0) {
       await del([tsbuildinfo]);

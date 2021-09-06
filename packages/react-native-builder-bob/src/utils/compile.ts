@@ -4,7 +4,10 @@ import chalk from 'chalk';
 import * as babel from '@babel/core';
 import browserslist from 'browserslist';
 import glob from 'glob';
+import { watch } from 'chokidar';
 import type { Input } from '../types';
+import * as logger from './logger';
+import { debounce } from './debounce';
 
 type Options = Input & {
   babelrc?: boolean | null | undefined;
@@ -13,23 +16,19 @@ type Options = Input & {
   copyFlow: boolean | undefined;
 };
 
-export default async function compile({
-  root,
-  source,
-  output,
-  babelrc = false,
-  configFile = false,
-  modules,
-  copyFlow,
-  report,
-}: Options) {
-  const files = glob.sync('**/*', {
-    cwd: source,
-    absolute: true,
-    nodir: true,
-    ignore: '**/{__tests__,__fixtures__,__mocks__}/**',
-  });
-
+export async function compileFiles(
+  files: string[],
+  {
+    root,
+    source,
+    output,
+    babelrc = false,
+    configFile = false,
+    modules,
+    copyFlow,
+    report,
+  }: Options
+) {
   report.info(
     `Compiling ${chalk.blue(String(files.length))} files in ${chalk.blue(
       path.relative(root, source)
@@ -115,4 +114,36 @@ export default async function compile({
   );
 
   report.success(`Wrote files to ${chalk.blue(path.relative(root, output))}`);
+}
+
+export default async function compile(options: Options) {
+  const files = glob.sync('**/*', {
+    cwd: options.source,
+    absolute: true,
+    nodir: true,
+    ignore: '**/{__tests__,__fixtures__,__mocks__}/**',
+  });
+
+  await compileFiles(files, options);
+
+  if (options.watch) {
+    logger.info('Watching for changes...');
+    const watcher = watch(options.source, {
+      ignored: /.*\/?__(tests|fixtures|mocks)__\/.*/,
+    });
+
+    let paths: string[] = [];
+    const debouncedCompile = debounce(() => {
+      compileFiles(paths, options);
+      paths = [];
+    }, 250);
+
+    watcher.on('change', async (path) => {
+      if (!path) return;
+
+      paths.push(path);
+
+      debouncedCompile(paths);
+    });
+  }
 }

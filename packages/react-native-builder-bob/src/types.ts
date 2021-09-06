@@ -11,6 +11,7 @@ export type Input = {
   source: string;
   output: string;
   report: Report;
+  watch?: boolean;
 };
 
 export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';

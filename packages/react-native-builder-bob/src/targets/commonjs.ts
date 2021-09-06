@@ -14,6 +14,7 @@ export default async function build({
   output,
   options,
   report,
+  watch,
 }: Options) {
   report.info(
     `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
@@ -29,6 +30,7 @@ export default async function build({
     babelrc: options?.babelrc,
     configFile: options?.configFile,
     copyFlow: options?.copyFlow,
+    watch,
     report,
   });
 }
