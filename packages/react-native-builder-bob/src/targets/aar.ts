@@ -4,22 +4,16 @@ import fs from 'fs-extra';
 import del from 'del';
 import androidAssemble from '../utils/androidAssemble';
 import jetifier from '../utils/jetifier';
-import type { Input } from '../types';
+import type { AARTargetOptions, Input } from '../types';
 
-type TargetOptions = {
-  androidPath: string;
-  androidBundleName: string;
-  reverseJetify: boolean;
-};
-
-const defaultOptions: TargetOptions = {
+const defaultOptions: AARTargetOptions = {
   androidPath: 'android',
   androidBundleName: 'android.aar',
   reverseJetify: false,
 };
 
 type Options = Input & {
-  options?: Partial<TargetOptions>;
+  options?: Partial<AARTargetOptions>;
 };
 
 async function createGradleFile(file: string) {
