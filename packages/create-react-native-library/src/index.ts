@@ -417,15 +417,17 @@ async function create(argv: yargs.Arguments<any>) {
 
     await copyDir(NATIVE_COMMON_FILES, folder);
 
-    if (options.project.cpp) {
-      await copyDir(CPP_FILES, folder);
-    }
-
     if (options.project.swift) {
       await copyDir(SWIFT_FILES(type), folder);
     } else {
       await copyDir(OBJC_FILES(type), folder);
     }
+
+    if (options.project.cpp) {
+      await copyDir(CPP_FILES, folder);
+      await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
+    }
+
     if (options.project.kotlin) {
       await copyDir(KOTLIN_FILES(type), folder);
     } else {
