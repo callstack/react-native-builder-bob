@@ -1,4 +1,5 @@
 #import "<%- project.name %>.h"
+#import "example.h"
 
 @implementation <%- project.name %>
 
