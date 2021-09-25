@@ -351,7 +351,7 @@ async function create(argv: yargs.Arguments<any>) {
         .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
-      podspec: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
+      identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
@@ -417,15 +417,17 @@ async function create(argv: yargs.Arguments<any>) {
 
     await copyDir(NATIVE_COMMON_FILES, folder);
 
-    if (options.project.cpp) {
-      await copyDir(CPP_FILES, folder);
-    }
-
     if (options.project.swift) {
       await copyDir(SWIFT_FILES(type), folder);
     } else {
       await copyDir(OBJC_FILES(type), folder);
     }
+
+    if (options.project.cpp) {
+      await copyDir(CPP_FILES, folder);
+      await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
+    }
+
     if (options.project.kotlin) {
       await copyDir(KOTLIN_FILES(type), folder);
     } else {

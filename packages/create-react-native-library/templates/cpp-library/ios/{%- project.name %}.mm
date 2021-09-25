@@ -1,4 +1,5 @@
 #import "<%- project.name %>.h"
+#import "<%- project.identifier %>.h"
 
 @implementation <%- project.name %>
 
