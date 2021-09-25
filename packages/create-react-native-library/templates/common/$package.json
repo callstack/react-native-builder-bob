@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "<%- project.podspec %>.podspec",
+    "<%- project.identifier %>.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
