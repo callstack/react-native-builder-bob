@@ -9,6 +9,8 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
 
+const FALLBACK_BOB_VERSION = '0.18.0';
+
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
@@ -21,46 +23,29 @@ const NATIVE_COMMON_FILES = path.resolve(
   '../templates/native-common'
 );
 
-const FALLBACK_BOB_VERSION = '0.18.0';
-
-// Java
-const JAVA_FILES = (moduleType: ModuleType) => {
-  switch (moduleType) {
-    case 'module':
-      return path.resolve(__dirname, '../templates/java-library');
-    case 'view':
-      return path.resolve(__dirname, '../templates/java-view-library');
-  }
+const NATIVE_FILES = {
+  module: path.resolve(__dirname, '../templates/native-library'),
+  view: path.resolve(__dirname, '../templates/native-view-library'),
 };
 
-// Objc
-const OBJC_FILES = (moduleType: ModuleType) => {
-  switch (moduleType) {
-    case 'module':
-      return path.resolve(__dirname, '../templates/objc-library');
-    case 'view':
-      return path.resolve(__dirname, '../templates/objc-view-library');
-  }
+const JAVA_FILES = {
+  module: path.resolve(__dirname, '../templates/java-library'),
+  view: path.resolve(__dirname, '../templates/java-view-library'),
 };
 
-// Kotlin
-const KOTLIN_FILES = (moduleType: ModuleType) => {
-  switch (moduleType) {
-    case 'module':
-      return path.resolve(__dirname, '../templates/kotlin-library');
-    case 'view':
-      return path.resolve(__dirname, '../templates/kotlin-view-library');
-  }
+const OBJC_FILES = {
+  module: path.resolve(__dirname, '../templates/objc-library'),
+  view: path.resolve(__dirname, '../templates/objc-view-library'),
 };
 
-// Swift
-const SWIFT_FILES = (moduleType: ModuleType) => {
-  switch (moduleType) {
-    case 'module':
-      return path.resolve(__dirname, '../templates/swift-library');
-    case 'view':
-      return path.resolve(__dirname, '../templates/swift-view-library');
-  }
+const KOTLIN_FILES = {
+  module: path.resolve(__dirname, '../templates/kotlin-library'),
+  view: path.resolve(__dirname, '../templates/kotlin-view-library'),
+};
+
+const SWIFT_FILES = {
+  module: path.resolve(__dirname, '../templates/swift-library'),
+  view: path.resolve(__dirname, '../templates/swift-view-library'),
 };
 
 type ArgName =
@@ -73,8 +58,6 @@ type ArgName =
   | 'languages'
   | 'type'
   | 'example';
-
-type ModuleType = 'module' | 'view';
 
 type Answers = {
   slug: string;
@@ -416,22 +399,23 @@ async function create(argv: yargs.Arguments<any>) {
     );
 
     await copyDir(NATIVE_COMMON_FILES, folder);
+    await copyDir(NATIVE_FILES[type], folder);
 
     if (options.project.swift) {
-      await copyDir(SWIFT_FILES(type), folder);
+      await copyDir(SWIFT_FILES[type], folder);
     } else {
-      await copyDir(OBJC_FILES(type), folder);
+      await copyDir(OBJC_FILES[type], folder);
+    }
+
+    if (options.project.kotlin) {
+      await copyDir(KOTLIN_FILES[type], folder);
+    } else {
+      await copyDir(JAVA_FILES[type], folder);
     }
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
       await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
-    }
-
-    if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES(type), folder);
-    } else {
-      await copyDir(JAVA_FILES(type), folder);
     }
   }
 
