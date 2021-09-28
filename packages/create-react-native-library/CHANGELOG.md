@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.19.0...create-react-native-library@0.20.0) (2021-09-28)
+
+
+### Bug Fixes
+
+* **android:** prefer downloading dependencies from Maven Central ([#198](https://github.com/callstack/react-native-builder-bob/issues/198)) ([ecea932](https://github.com/callstack/react-native-builder-bob/commit/ecea932b52011378db35a223023097fa11ed651e))
+* can't run yarn command under Windows ([8bac4d4](https://github.com/callstack/react-native-builder-bob/commit/8bac4d4690a0ba2576e9b83b00be92061ba796e3))
+* fix generating cpp project on iOS ([75a4a3c](https://github.com/callstack/react-native-builder-bob/commit/75a4a3cf1b7d5f3c2b14f2f3a20c0be72250a119))
+* wrong package name of ReactNativeFlipper ([#161](https://github.com/callstack/react-native-builder-bob/issues/161)) ([981448d](https://github.com/callstack/react-native-builder-bob/commit/981448db9970e42521661a5b6e54fd71fe3390ef))
+
+
+### Features
+
+* print an error when library is not linked ([#202](https://github.com/callstack/react-native-builder-bob/issues/202)) ([956ffd6](https://github.com/callstack/react-native-builder-bob/commit/956ffd60a6b4132a81494e1599b52e5aee232111))
+* update expo sdk version to 42 ([#192](https://github.com/callstack/react-native-builder-bob/issues/192)) ([6276f59](https://github.com/callstack/react-native-builder-bob/commit/6276f59001cb92840a421de6bd01b41697ef1222))
+* upgrade husky to v6 ([a78b9d1](https://github.com/callstack/react-native-builder-bob/commit/a78b9d147a2a2d1c42f050c60f808855bb97bc24))
+
+
+
+
+
 # [0.19.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.18.1...create-react-native-library@0.19.0) (2021-04-06)
 
 
