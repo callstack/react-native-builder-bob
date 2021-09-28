@@ -2,10 +2,10 @@ import * as React from 'react';
 
 <% if (project.moduleType === "view") { -%>
 import { StyleSheet, View } from 'react-native';
-import <%- project.name %>ViewManager from '<%- project.slug %>';
+import { <%- project.name %>View } from '<%- project.slug %>';
 <% } else { -%>
 import { StyleSheet, View, Text } from 'react-native';
-import <%- project.name %> from '<%- project.slug %>';
+import { multiply } from '<%- project.slug %>';
 <% } -%>
 
 <% if (project.moduleType === "view") { -%>
@@ -21,7 +21,7 @@ export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
-    <%- project.name %>.multiply(3, 7).then(setResult);
+    multiply(3, 7).then(setResult);
   }, []);
 
   return (

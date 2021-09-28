@@ -10,13 +10,23 @@ npm install <%- project.slug %>
 
 ## Usage
 
+<% if (project.moduleType === "view") { -%>
 ```js
-import <%- project.name %> from "<%- project.slug %>";
+import { <%- project.name %>View } from "<%- project.slug %>";
 
 // ...
 
-const result = await <%- project.name %>.multiply(3, 7);
+<<%- project.name %>View color="tomato" />
 ```
+<% } else { -%>
+```js
+import { multiply } from "<%- project.slug %>";
+
+// ...
+
+const result = await multiply(3, 7);
+```
+<% } -%>
 
 ## Contributing
 
