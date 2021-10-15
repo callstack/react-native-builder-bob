@@ -1,4 +1,4 @@
-#include "example.h"
+#include "<%- project.identifier %>.h"
 
 namespace example {
 	int multiply(float a, float b) {

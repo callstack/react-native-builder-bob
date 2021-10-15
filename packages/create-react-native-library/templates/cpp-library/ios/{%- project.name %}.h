@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 
-#import "example.h"
+#import "<%- project.identifier %>.h"
 
 #endif
 
