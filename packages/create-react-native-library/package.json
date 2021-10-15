@@ -1,6 +1,6 @@
 {
   "name": "create-react-native-library",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "description": "CLI to scaffold React Native libraries",
   "keywords": [
     "react-native",
