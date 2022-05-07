@@ -28,6 +28,15 @@ export default async function build({
 
   const project = options?.project ? options.project : 'tsconfig.json';
   const tsconfig = path.join(root, project);
+  let tscSpawnSyncOptions = [
+    '--pretty',
+    '--declaration',
+    '--emitDeclarationOnly',
+    '--project',
+    project,
+    '--outDir',
+    output,
+  ];
 
   try {
     if (await fs.pathExists(tsconfig)) {
@@ -38,11 +47,17 @@ export default async function build({
           const conflicts: string[] = [];
 
           if (config.compilerOptions.noEmit !== undefined) {
-            conflicts.push('compilerOptions.noEmit');
+            tscSpawnSyncOptions.splice(
+              0,
+              tscSpawnSyncOptions.indexOf('--noEmit')
+            );
           }
 
           if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-            conflicts.push('compilerOptions.emitDeclarationOnly');
+            tscSpawnSyncOptions.splice(
+              0,
+              tscSpawnSyncOptions.indexOf('--emitDeclarationOnly')
+            );
           }
 
           if (config.compilerOptions.declarationDir) {
@@ -127,19 +142,7 @@ export default async function build({
       // Ignore
     }
 
-    const result = spawn.sync(
-      tsc,
-      [
-        '--pretty',
-        '--declaration',
-        '--emitDeclarationOnly',
-        '--project',
-        project,
-        '--outDir',
-        output,
-      ],
-      { stdio: 'inherit' }
-    );
+    const result = spawn.sync(tsc, tscSpawnSyncOptions, { stdio: 'inherit' });
 
     if (result.status === 0) {
       await del([tsbuildinfo]);

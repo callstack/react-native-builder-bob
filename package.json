@@ -13,7 +13,7 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "typescript": "tsc --noEmit",
     "watch": "concurrently 'yarn typescript --watch' 'lerna run --parallel prepare -- --watch'"
   },
