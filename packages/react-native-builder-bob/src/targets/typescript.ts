@@ -47,19 +47,28 @@ export default async function build({
           const conflicts: string[] = [];
 
           if (config.compilerOptions.noEmit !== undefined) {
-            tscSpawnSyncOptions.splice( tscSpawnSyncOptions.indexOf('--noEmit'), 1);
+            tscSpawnSyncOptions.splice(
+              tscSpawnSyncOptions.indexOf('--noEmit'),
+              1
+            );
           }
 
           if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-            tscSpawnSyncOptions.splice(tscSpawnSyncOptions.indexOf('--emitDeclarationOnly'), 1);
+            tscSpawnSyncOptions.splice(
+              tscSpawnSyncOptions.indexOf('--emitDeclarationOnly'),
+              1
+            );
           }
 
           if (config.compilerOptions.declarationDir) {
             conflicts.push('compilerOptions.declarationDir');
           }
 
-          if (config.compilerOptions.declaration) {
-            tscSpawnSyncOptions.splice(tscSpawnSyncOptions.indexOf('--declaration'), 1);
+          if (config.compilerOptions.declaration !== undefined) {
+            tscSpawnSyncOptions.splice(
+              tscSpawnSyncOptions.indexOf('--declaration'),
+              1
+            );
           }
 
           if (
