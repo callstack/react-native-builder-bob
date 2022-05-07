@@ -47,25 +47,17 @@ export default async function build({
           const conflicts: string[] = [];
 
           if (config.compilerOptions.noEmit !== undefined) {
-            if (config.compilerOptions.noEmit === true) {
-              tscSpawnSyncOptions.splice(
-                0,
-                tscSpawnSyncOptions.indexOf('--noEmit')
-              );
-            } else {
-              conflicts.push('compilerOptions.noEmit');
-            }
+            tscSpawnSyncOptions.splice(
+              0,
+              tscSpawnSyncOptions.indexOf('--noEmit')
+            );
           }
 
           if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-            if (config.compilerOptions.emitDeclarationOnly === true) {
               tscSpawnSyncOptions.splice(
                 0,
                 tscSpawnSyncOptions.indexOf('--emitDeclarationOnly')
               );
-            } else {
-              conflicts.push('compilerOptions.emitDeclarationOnly');
-            }
           }
 
           if (config.compilerOptions.declarationDir) {
