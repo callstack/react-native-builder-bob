@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
@@ -317,14 +317,16 @@ yargs
     }
 
     console.log(
-      dedent(chalk`
-      Project {yellow ${pkg.name}} configured successfully!
+      dedent(`
+      Project ${kleur.yellow(pkg.name)} configured successfully!
 
-      {magenta {bold Perform last steps} by running}{gray :}
+      ${kleur.magenta(
+        `${kleur.bold('Perform last steps')} by running`
+      )}${kleur.gray(':')}
 
-        {gray $} yarn
+        ${kleur.gray(':')} yarn
 
-      {yellow Good luck!}
+      ${kleur.yellow('Good luck!')}
     `)
     );
   })
@@ -381,7 +383,7 @@ yargs
       const targetName = Array.isArray(target) ? target[0] : target;
       const targetOptions = Array.isArray(target) ? target[1] : undefined;
 
-      report.info(`Building target ${chalk.blue(targetName)}`);
+      report.info(`Building target ${kleur.blue(targetName)}`);
 
       switch (targetName) {
         case 'aar':
@@ -421,28 +423,10 @@ yargs
           });
           break;
         default:
-          logger.exit(`Invalid target ${chalk.blue(targetName)}.`);
+          logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
       }
     }
   })
-  .command(
-    'create <name>',
-    'create a react native library (deprecated)',
-    {},
-    (argv) => {
-      console.log(
-        dedent(chalk`
-        The {magenta create} command has been moved to {magenta create-react-native-library}!
-
-        Please run:
-
-          {gray $} npx create-react-native-library ${argv.name}
-
-        Good luck!
-      `)
-      );
-    }
-  )
   .demandCommand()
   .recommendCommands()
   .strict().argv;

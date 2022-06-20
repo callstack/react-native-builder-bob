@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import kleur from 'kleur';
 import path from 'path';
 import fs from 'fs-extra';
 import which from 'which';
@@ -19,12 +19,12 @@ export default async function build({
   options,
 }: Options) {
   report.info(
-    `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
+    `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
   await del([output]);
 
-  report.info(`Generating type definitions with ${chalk.blue('tsc')}`);
+  report.info(`Generating type definitions with ${kleur.blue('tsc')}`);
 
   const project = options?.project ? options.project : 'tsconfig.json';
   const tsconfig = path.join(root, project);
@@ -58,11 +58,11 @@ export default async function build({
 
           if (conflicts.length) {
             report.warn(
-              `Found following options in the config file which can conflict with the CLI options. Please remove them from ${chalk.blue(
+              `Found following options in the config file which can conflict with the CLI options. Please remove them from ${kleur.blue(
                 project
               )}:${conflicts.reduce(
                 (acc, curr) =>
-                  acc + `\n${chalk.gray('-')} ${chalk.yellow(curr)}`,
+                  acc + `\n${kleur.gray('-')} ${kleur.yellow(curr)}`,
                 ''
               )}`
             );
@@ -75,7 +75,7 @@ export default async function build({
       }
     } else {
       throw new Error(
-        `Couldn't find a ${chalk.blue('tsconfig.json')} in the project root.`
+        `Couldn't find a ${kleur.blue('tsconfig.json')} in the project root.`
       );
     }
 
@@ -89,11 +89,11 @@ export default async function build({
         tsc = await which('tsc');
 
         report.warn(
-          `Using a global version of ${chalk.blue(
+          `Using a global version of ${kleur.blue(
             'tsc'
-          )}. Consider adding ${chalk.blue('typescript')} to your ${chalk.blue(
+          )}. Consider adding ${kleur.blue('typescript')} to your ${kleur.blue(
             'devDependencies'
-          )} or specifying the ${chalk.blue(
+          )} or specifying the ${kleur.blue(
             'tsc'
           )} option for the typescript target.`
         );
@@ -104,13 +104,13 @@ export default async function build({
 
     if (!(await fs.pathExists(tsc))) {
       throw new Error(
-        `The ${chalk.blue(
+        `The ${kleur.blue(
           'tsc'
-        )} binary doesn't seem to be installed under ${chalk.blue(
+        )} binary doesn't seem to be installed under ${kleur.blue(
           'node_modules'
-        )} or present in $PATH. Make sure you have added ${chalk.blue(
+        )} or present in $PATH. Make sure you have added ${kleur.blue(
           'typescript'
-        )} to your ${chalk.blue('devDependencies')} or specify the ${chalk.blue(
+        )} to your ${kleur.blue('devDependencies')} or specify the ${kleur.blue(
           'tsc'
         )} option for typescript.`
       );
@@ -145,7 +145,7 @@ export default async function build({
       await del([tsbuildinfo]);
 
       report.success(
-        `Wrote definition files to ${chalk.blue(path.relative(root, output))}`
+        `Wrote definition files to ${kleur.blue(path.relative(root, output))}`
       );
     } else {
       throw new Error('Failed to build definition files.');

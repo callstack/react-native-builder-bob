@@ -43,7 +43,6 @@
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
     "browserslist": "^4.20.4",
-    "chalk": "^4.1.2",
     "cosmiconfig": "^7.0.1",
     "cross-spawn": "^7.0.3",
     "dedent": "^0.7.0",
@@ -52,6 +51,7 @@
     "glob": "^8.0.3",
     "is-git-dirty": "^2.0.1",
     "json5": "^2.2.1",
+    "kleur": "^4.1.4",
     "prompts": "^2.4.2",
     "which": "^2.0.2",
     "yargs": "^17.5.1"
@@ -63,7 +63,6 @@
     "@babel/cli": "^7.17.10",
     "@types/babel__core": "^7.1.19",
     "@types/browserslist": "^4.15.0",
-    "@types/chalk": "^2.2.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "^0.7.0",
     "@types/del": "^4.0.0",

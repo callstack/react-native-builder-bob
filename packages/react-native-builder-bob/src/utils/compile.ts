@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import * as babel from '@babel/core';
 import browserslist from 'browserslist';
 import glob from 'glob';
@@ -31,9 +31,9 @@ export default async function compile({
   });
 
   report.info(
-    `Compiling ${chalk.blue(String(files.length))} files in ${chalk.blue(
+    `Compiling ${kleur.blue(String(files.length))} files in ${kleur.blue(
       path.relative(root, source)
-    )} with ${chalk.blue('babel')}`
+    )} with ${kleur.blue('babel')}`
   );
 
   await Promise.all(
@@ -114,5 +114,5 @@ export default async function compile({
     })
   );
 
-  report.success(`Wrote files to ${chalk.blue(path.relative(root, output))}`);
+  report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
 }

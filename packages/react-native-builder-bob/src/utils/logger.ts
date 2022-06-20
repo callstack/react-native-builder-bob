@@ -1,15 +1,15 @@
-import chalk from 'chalk';
+import kleur from 'kleur';
 
 const logger =
   (type: string, color: Function) =>
   (...messages: unknown[]) => {
-    console.log(color(chalk.bold(type)), ...messages);
+    console.log(color(kleur.bold(type)), ...messages);
   };
 
-export const info = logger('ℹ', chalk.blue);
-export const warn = logger('⚠', chalk.yellow);
-export const error = logger('✖', chalk.red);
-export const success = logger('✔', chalk.green);
+export const info = logger('ℹ', kleur.blue);
+export const warn = logger('⚠', kleur.yellow);
+export const error = logger('✖', kleur.red);
+export const success = logger('✔', kleur.green);
 
 export const exit = (...messages: unknown[]) => {
   error(...messages);

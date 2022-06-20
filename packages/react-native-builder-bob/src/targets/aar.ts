@@ -1,5 +1,5 @@
 import path from 'path';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import fs from 'fs-extra';
 import del from 'del';
 import androidAssemble from '../utils/androidAssemble';
@@ -42,7 +42,7 @@ export default async function build({
   };
 
   report.info(
-    `Cleaning up previous build at ${chalk.blue(path.relative(root, output))}`
+    `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
   await del([output]);
@@ -54,7 +54,7 @@ export default async function build({
   });
 
   report.info(
-    `Creating new output directory at ${chalk.blue(
+    `Creating new output directory at ${kleur.blue(
       path.relative(root, output)
     )}`
   );
@@ -70,22 +70,22 @@ export default async function build({
   const targetAar = path.join(output, targetOptions.androidBundleName);
 
   report.info(
-    `Copying AAR from ${chalk.blue(
+    `Copying AAR from ${kleur.blue(
       path.relative(root, sourceAar)
-    )} to ${chalk.blue(path.relative(root, targetAar))}`
+    )} to ${kleur.blue(path.relative(root, targetAar))}`
   );
   await fs.copyFile(sourceAar, targetAar);
 
   const gradleFile = path.join(output, 'build.gradle');
   report.info(
-    `Creating AAR Gradle file at ${chalk.blue(path.relative(root, gradleFile))}`
+    `Creating AAR Gradle file at ${kleur.blue(path.relative(root, gradleFile))}`
   );
   await createGradleFile(gradleFile);
 
   if (targetOptions.reverseJetify) {
     const supportOutputPath = path.join(output, 'support');
     report.info(
-      `Creating new support output directory at ${chalk.blue(
+      `Creating new support output directory at ${kleur.blue(
         path.relative(root, supportOutputPath)
       )}`
     );
@@ -96,7 +96,7 @@ export default async function build({
       targetOptions.androidBundleName
     );
     report.info(
-      `Using Jetifier to convert AAR from AndroidX to Support AAR at ${chalk.blue(
+      `Using Jetifier to convert AAR from AndroidX to Support AAR at ${kleur.blue(
         path.relative(root, supportAar)
       )}`
     );
@@ -111,12 +111,12 @@ export default async function build({
 
     const supportGradleFile = path.join(supportOutputPath, 'build.gradle');
     report.info(
-      `Creating Support AAR Gradle file at ${chalk.blue(
+      `Creating Support AAR Gradle file at ${kleur.blue(
         path.relative(root, supportGradleFile)
       )}`
     );
     await createGradleFile(supportGradleFile);
   }
 
-  report.success(`Wrote files to ${chalk.blue(path.relative(root, output))}`);
+  report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
 }

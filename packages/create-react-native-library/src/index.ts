@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
 import dedent from 'dedent';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import yargs from 'yargs';
 import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
@@ -128,7 +128,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   if (await fs.pathExists(folder)) {
     console.log(
-      `A folder already exists at ${chalk.blue(
+      `A folder already exists at ${kleur.blue(
         folder
       )}! Please specify another folder name or delete the existing one.`
     );
@@ -427,29 +427,35 @@ async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
-  const platforms: Record<string, { name: string; color: string }> = {
+  const platforms = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },
-    ...(example === 'expo' ? { web: { name: 'Web', color: 'blue' } } : null),
-  };
+    ...(example === 'expo'
+      ? ({ web: { name: 'Web', color: 'blue' } } as const)
+      : null),
+  } as const;
 
   console.log(
-    dedent(chalk`
-      Project created successfully at {yellow ${argv.name}}!
+    dedent(`
+      Project created successfully at ${kleur.yellow(argv.name)}!
 
-      {magenta {bold Get started} with the project}{gray :}
+      ${kleur.magenta(
+        `${kleur.bold('Get started')} with the project`
+      )}${kleur.gray(':')}
 
-        {gray $} yarn
+        ${kleur.gray('$')} yarn
       ${Object.entries(platforms)
         .map(
-          ([script, { name, color }]) => chalk`
-      {${color} Run the example app on {bold ${name}}}{gray :}
+          ([script, { name, color }]) => `
+      ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
+            ':'
+          )}
 
-        {gray $} yarn example ${script}`
+        ${kleur.gray('$')} yarn example ${script}`
         )
         .join('\n')}
 
-      {yellow Good luck!}
+      ${kleur.yellow('Good luck!')}
     `)
   );
 }

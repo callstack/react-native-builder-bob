@@ -1,5 +1,5 @@
 import path from 'path';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import fs from 'fs-extra';
 import { execFileSync } from 'child_process';
 import { platform } from 'os';
@@ -19,7 +19,7 @@ export default async function androidAssemble({
   const cwd = path.relative(root, androidPath);
 
   report.info(
-    `Assembling Android project in ${chalk.blue(cwd)} with ${chalk.blue(
+    `Assembling Android project in ${kleur.blue(cwd)} with ${kleur.blue(
       'gradle'
     )}`
   );
@@ -29,11 +29,11 @@ export default async function androidAssemble({
     execFileSync(gradleWrapper, ['assemble'], { cwd: androidPath });
   } else {
     throw new Error(
-      `The ${chalk.blue(
+      `The ${kleur.blue(
         'gradlew'
-      )} script doesn't seem to present in ${chalk.blue(
+      )} script doesn't seem to present in ${kleur.blue(
         androidPath
-      )}. Make sure you have added it by running ${chalk.blue(
+      )}. Make sure you have added it by running ${kleur.blue(
         'gradle wrapper'
       )} in that directory.`
     );

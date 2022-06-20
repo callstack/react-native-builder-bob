@@ -1,5 +1,5 @@
 import path from 'path';
-import chalk from 'chalk';
+import kleur from 'kleur';
 import { execFileSync } from 'child_process';
 import fs from 'fs-extra';
 import type { Report } from '../types';
@@ -34,13 +34,13 @@ export default async function jetifier({
     execFileSync(jetifierStandalone, args);
   } else {
     throw new Error(
-      `The ${chalk.blue(
+      `The ${kleur.blue(
         'jetifier'
-      )} binary doesn't seem to be installed under ${chalk.blue(
+      )} binary doesn't seem to be installed under ${kleur.blue(
         'node_modules'
-      )}. Make sure you have added ${chalk.blue(
+      )}. Make sure you have added ${kleur.blue(
         'jetifier'
-      )} to your ${chalk.blue('devDependencies')}.`
+      )} to your ${kleur.blue('devDependencies')}.`
     );
   }
 }

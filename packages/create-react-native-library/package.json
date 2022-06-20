@@ -42,12 +42,12 @@
     "prepare": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
     "cross-spawn": "^7.0.3",
     "dedent": "^0.7.0",
     "ejs": "^3.1.8",
     "fs-extra": "^10.1.0",
     "github-username": "^6.0.0",
+    "kleur": "^4.1.4",
     "prompts": "^2.4.2",
     "validate-npm-package-name": "^4.0.0",
     "yargs": "^17.5.1"
@@ -61,7 +61,6 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
     "@commitlint/config-conventional": "^17.0.2",
-    "@types/chalk": "^2.2.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "^0.7.0",
     "@types/ejs": "^3.1.1",
