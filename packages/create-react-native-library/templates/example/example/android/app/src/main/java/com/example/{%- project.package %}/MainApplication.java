@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
+import com.example.<%- project.package %>.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 <% if (project.native) { -%>
@@ -27,10 +29,9 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for <%- project.name %>Example:
+          // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           <% if (project.native) { -%>packages.add(new <%- project.name %>Package());<% } -%>
-
           return packages;
         }
 
@@ -40,24 +41,36 @@ public class MainApplication extends Application implements ReactApplication {
         }
       };
 
+  private final ReactNativeHost mNewArchitectureNativeHost =
+      new MainApplicationReactNativeHost(this);
+
   @Override
   public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      return mNewArchitectureNativeHost;
+    } else {
+      return mReactNativeHost;
+    }
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+    // If you opted-in for the New Architecture, we enable the TurboModule system
+    ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
-    initializeFlipper(this, getReactNativeHost().getReactInstanceManager()); // Remove this line if you don't want Flipper enabled
+    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
   /**
-   * Loads Flipper in React Native templates.
+   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
+   * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
    *
    * @param context
+   * @param reactInstanceManager
    */
-  private static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
+  private static void initializeFlipper(
+      Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
       try {
         /*

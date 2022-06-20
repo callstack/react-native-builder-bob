@@ -1,4 +1,0 @@
-{
-  "name": "<%- project.name %>Example",
-  "displayName": "<%- project.name %> Example"
-}

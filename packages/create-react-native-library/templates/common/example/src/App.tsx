@@ -12,7 +12,7 @@ import { multiply } from '<%- project.slug %>';
 export default function App() {
   return (
     <View style={styles.container}>
-      <<%- project.name %>ViewManager color="#32a852" style={styles.box} />
+      <<%- project.name %>View color="#32a852" style={styles.box} />
     </View>
   );
 }
