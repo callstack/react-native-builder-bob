@@ -77,7 +77,7 @@ export default async function compile({
                         'not android <= 4.4',
                         'not samsung <= 4',
                       ],
-                      node: '10',
+                      node: '16',
                     },
                     useBuiltIns: false,
                     modules,
