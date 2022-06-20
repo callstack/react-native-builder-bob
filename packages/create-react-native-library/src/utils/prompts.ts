@@ -12,6 +12,5 @@ export default function prompts(
   });
 }
 
-export type PromptObject<
-  T extends string = string
-> = promptsModule.PromptObject<T>;
+export type PromptObject<T extends string = string> =
+  promptsModule.PromptObject<T>;

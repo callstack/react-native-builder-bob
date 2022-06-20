@@ -18,15 +18,15 @@
     "watch": "concurrently 'yarn typescript --watch' 'lerna run --parallel prepare -- --watch'"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^11.0.0",
-    "commitlint": "^11.0.0",
-    "concurrently": "^5.3.0",
-    "eslint": "^7.15.0",
-    "eslint-config-satya164": "^3.1.8",
-    "husky": "^4.3.6",
-    "lerna": "^3.22.1",
-    "prettier": "^2.2.1",
-    "typescript": "^4.1.3"
+    "@commitlint/config-conventional": "^17.0.2",
+    "commitlint": "^17.0.2",
+    "concurrently": "^7.2.2",
+    "eslint": "^8.18.0",
+    "eslint-config-satya164": "^3.1.11",
+    "husky": "^8.0.1",
+    "lerna": "^5.1.4",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   },
   "husky": {
     "hooks": {

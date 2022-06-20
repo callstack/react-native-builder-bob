@@ -150,7 +150,7 @@ export default async function build({
     } else {
       throw new Error('Failed to build definition files.');
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.stdout) {
       report.error(
         `Errors found when building definition files:\n${e.stdout.toString()}`

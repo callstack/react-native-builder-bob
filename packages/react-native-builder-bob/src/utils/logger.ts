@@ -1,8 +1,10 @@
 import chalk from 'chalk';
 
-const logger = (type: string, color: Function) => (...messages: unknown[]) => {
-  console.log(color(chalk.bold(type)), ...messages);
-};
+const logger =
+  (type: string, color: Function) =>
+  (...messages: unknown[]) => {
+    console.log(color(chalk.bold(type)), ...messages);
+  };
 
 export const info = logger('ℹ', chalk.blue);
 export const warn = logger('⚠', chalk.yellow);

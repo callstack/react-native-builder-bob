@@ -328,9 +328,7 @@ async function create(argv: yargs.Arguments<any>) {
     project: {
       slug,
       description,
-      name: `${project
-        .charAt(0)
-        .toUpperCase()}${project
+      name: `${project.charAt(0).toUpperCase()}${project
         .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
         .slice(1)}`,
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
