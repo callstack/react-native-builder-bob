@@ -1,5 +1,5 @@
 #include <jni.h>
-#include "example.h"
+#include "<%- project.identifier %>.h"
 
 extern "C"
 JNIEXPORT jint JNICALL
