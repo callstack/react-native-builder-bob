@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": true
     },
+    "jsEngine": "hermes",
     "assetBundlePatterns": [
       "**/*"
     ]
