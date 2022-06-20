@@ -10,6 +10,11 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
+"@arkweid/lefthook@^0.7.7":
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/@arkweid/lefthook/-/lefthook-0.7.7.tgz#12951b09b955d8054885ffe929aa07a49f39027c"
+  integrity sha512-Eq30OXKmjxIAIsTtbX2fcF3SNZIXS8yry1u8yty7PQFYRctx04rVlhOJCEB2UmfTh8T2vrOMC9IHHUvvo5zbaQ==
+
 "@babel/cli@^7.17.10":
   version "7.17.10"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.17.10.tgz#5ea0bf6298bb78f3b59c7c06954f9bd1c79d5943"
@@ -4827,11 +4832,6 @@ humanize-ms@^1.2.1:
   integrity sha1-xG4xWaKT9riW2ikxbYtv6Lt5u+0=
   dependencies:
     ms "^2.0.0"
-
-husky@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.1.tgz#511cb3e57de3e3190514ae49ed50f6bc3f50b3e9"
-  integrity sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==
 
 iconv-lite@^0.4.24:
   version "0.4.24"

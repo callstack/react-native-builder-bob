@@ -18,21 +18,15 @@
     "watch": "concurrently 'yarn typescript --watch' 'lerna run --parallel prepare -- --watch'"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.7.7",
     "@commitlint/config-conventional": "^17.0.2",
     "commitlint": "^17.0.2",
     "concurrently": "^7.2.2",
     "eslint": "^8.18.0",
     "eslint-config-satya164": "^3.1.11",
-    "husky": "^8.0.1",
     "lerna": "^5.1.4",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn lint && yarn typescript"
-    }
   },
   "commitlint": {
     "extends": [

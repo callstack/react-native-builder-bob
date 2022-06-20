@@ -16,7 +16,7 @@ If you want to create your own React Native module, scaffolding the project can 
 - C++ support for native modules on Android and iOS
 - [Expo](https://expo.io/) support for libraries without native code and web support
 - Example React Native app to manually test your modules
-- [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Husky](https://github.com/typicode/husky) and [Release It](https://github.com/release-it/release-it) pre-configured
+- [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Lefthook](https://github.com/evilmartians/lefthook) and [Release It](https://github.com/release-it/release-it) pre-configured
 - `react-native-builder-bob` pre-configured to compile your files
 - [CircleCI](https://circleci.com/) pre-configured to run tests on the CI
 
