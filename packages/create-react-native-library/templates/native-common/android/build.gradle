@@ -1,22 +1,27 @@
 buildscript {
+<% if (project.kotlin) { %>
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['<%- project.name %>_kotlinVersion']
+<% } %>
 
   repositories {
-    google()
-    mavenCentral()
-    jcenter()
+      google()
+      mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:3.5.3'
+<% if (project.kotlin) { %>
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+<% } %>
   }
 }
 
 apply plugin: 'com.android.library'
+<% if (project.kotlin) { %>
 apply plugin: 'kotlin-android'
+<% } %>
 
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['<%- project.name %>_' + name]
@@ -27,28 +32,32 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
+<% if (project.cpp) { %>
+  ndkVersion getExtOrDefault('ndkVersion')
+<% } %>
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+
   defaultConfig {
-    minSdkVersion 16
+    minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
-    versionCode 1
-    versionName "1.0"
-    <% if (project.cpp) { %>
-    externalNativeBuild {
+      versionCode 1
+      versionName "1.0"
+<% if (project.cpp) { %>
+      externalNativeBuild {
         cmake {
-            cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
-            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+          cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+          abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
         }
-    }
-    <% } %>
-  }
-  <% if (project.cpp) { %>
-  externalNativeBuild {
-      cmake {
-          path "CMakeLists.txt"
       }
+<% } %>
   }
-  <% } %>
+<% if (project.cpp) { %>
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
+  }
+<% } %>
   buildTypes {
     release {
       minifyEnabled false
@@ -65,7 +74,6 @@ android {
 
 repositories {
   mavenCentral()
-  jcenter()
   google()
 
   def found = false
@@ -76,8 +84,8 @@ repositories {
     defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
   } else {
     defaultDir = new File(
-            projectDir,
-            '/../../../node_modules/react-native/android'
+      projectDir,
+      '/../../../node_modules/react-native/android'
     )
   }
 
@@ -97,13 +105,13 @@ repositories {
       parentDir = parentDir.parentFile
 
       def androidSourcesDir = new File(
-              parentDir,
-              'node_modules/react-native'
+        parentDir,
+        'node_modules/react-native'
       )
 
       def androidPrebuiltBinaryDir = new File(
-              parentDir,
-              'node_modules/react-native/android'
+        parentDir,
+        'node_modules/react-native/android'
       )
 
       if (androidPrebuiltBinaryDir.exists()) {
@@ -128,16 +136,20 @@ repositories {
 
   if (!found) {
     throw new GradleException(
-            "${project.name}: unable to locate React Native android sources. " +
-                    "Ensure you have you installed React Native as a dependency in your project and try again."
+      "${project.name}: unable to locate React Native android sources. " +
+      "Ensure you have you installed React Native as a dependency in your project and try again."
     )
   }
 }
 
+<% if (project.kotlin) { %>
 def kotlin_version = getExtOrDefault('kotlinVersion')
+<% } %>
 
 dependencies {
-  // noinspection GradleDynamicVersion
-  api 'com.facebook.react:react-native:+'
+    //noinspection GradleDynamicVersion
+  implementation "com.facebook.react:react-native:+"
+<% if (project.kotlin) { %>
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+<% } %>// From node_modules
 }
