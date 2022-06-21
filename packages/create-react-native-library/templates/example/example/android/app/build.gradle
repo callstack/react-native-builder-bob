@@ -287,10 +287,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-<% if (project.native) { -%>
-    implementation project(':<%- project.package %>')
-<% } -%>
 }
 
 if (isNewArchitectureEnabled()) {
