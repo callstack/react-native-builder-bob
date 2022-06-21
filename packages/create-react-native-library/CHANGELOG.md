@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.20.1...create-react-native-library@0.21.0) (2022-06-21)
+
+
+### Bug Fixes
+
+* consolidate gradle files ([af0ae13](https://github.com/callstack/react-native-builder-bob/commit/af0ae134d4a122f2ec0d08bda0572718e2f72174))
+* fix requiresMainQueueSetup warning for swift modules ([31cf29f](https://github.com/callstack/react-native-builder-bob/commit/31cf29fa6998563fe7f39c057039220249922998))
+* fixed lint throw error without semicolon ([#232](https://github.com/callstack/react-native-builder-bob/issues/232)) ([45c138b](https://github.com/callstack/react-native-builder-bob/commit/45c138bd0ed0e950fbfc2dd15a4f7d601bbab7ee))
+* include header with project identifier for cpp ([#246](https://github.com/callstack/react-native-builder-bob/issues/246)) ([2aba2be](https://github.com/callstack/react-native-builder-bob/commit/2aba2be319a2ab3b6e618886306f7e5712bc8b9f))
+* remove double-quoted imports from React-Core ([#220](https://github.com/callstack/react-native-builder-bob/issues/220)) ([0de461d](https://github.com/callstack/react-native-builder-bob/commit/0de461d32bf5a74a3c91f0d2aa860f429f369d54))
+* use react-native.config.js for linking the library ([1000cd7](https://github.com/callstack/react-native-builder-bob/commit/1000cd7c4d99647f4ad2e90cfcc5874697e270aa))
+
+
+### Features
+
+* enable hermes by default ([194e279](https://github.com/callstack/react-native-builder-bob/commit/194e2793244f92a3cf2a606e6077a9978a0679e1))
+* migrate to lefthook instead of husky ([c3e4bfb](https://github.com/callstack/react-native-builder-bob/commit/c3e4bfb9c6db97b8fbbdc24aa2d10a0b41c9de4d))
+* upgrade templates to latest react & react-native ([9bb2a22](https://github.com/callstack/react-native-builder-bob/commit/9bb2a223b0957239db3cc09fc89269ab68fefc0b))
+
+
+
+
+
 ## [0.20.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.20.0...create-react-native-library@0.20.1) (2021-10-15)
 
 
