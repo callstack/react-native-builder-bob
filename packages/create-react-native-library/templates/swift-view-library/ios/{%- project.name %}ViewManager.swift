@@ -4,6 +4,10 @@ class <%- project.name %>ViewManager: RCTViewManager {
   override func view() -> (<%- project.name %>View) {
     return <%- project.name %>View()
   }
+
+  @objc override static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
 }
 
 class <%- project.name %>View : UIView {
