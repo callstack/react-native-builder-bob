@@ -1,4 +1,4 @@
-package com.example.<%- project.package %>;
+package com.example.<%- project.package -%>;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

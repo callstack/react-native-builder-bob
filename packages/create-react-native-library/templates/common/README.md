@@ -1,26 +1,26 @@
-# <%- project.slug %>
+# <%- project.slug -%>
 
-<%- project.description %>
+<%- project.description -%>
 
 ## Installation
 
 ```sh
-npm install <%- project.slug %>
+npm install <%- project.slug -%>
 ```
 
 ## Usage
 
-<% if (project.moduleType === "view") { -%>
+<% if (project.view) { -%>
 ```js
-import { <%- project.name %>View } from "<%- project.slug %>";
+import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 // ...
 
-<<%- project.name %>View color="tomato" />
+<<%- project.name -%>View color="tomato" />
 ```
 <% } else { -%>
 ```js
-import { multiply } from "<%- project.slug %>";
+import { multiply } from "<%- project.slug -%>";
 
 // ...
 

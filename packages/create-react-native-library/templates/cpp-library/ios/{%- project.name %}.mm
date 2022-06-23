@@ -1,7 +1,7 @@
-#import "<%- project.name %>.h"
-#import "<%- project.identifier %>.h"
+#import "<%- project.name -%>.h"
+#import "<%- project.identifier -%>.h"
 
-@implementation <%- project.name %>
+@implementation <%- project.name -%>
 
 RCT_EXPORT_MODULE()
 

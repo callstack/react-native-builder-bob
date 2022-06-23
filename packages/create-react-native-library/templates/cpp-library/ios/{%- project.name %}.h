@@ -2,10 +2,10 @@
 
 #ifdef __cplusplus
 
-#import "<%- project.identifier %>.h"
+#import "<%- project.identifier -%>.h"
 
 #endif
 
-@interface <%- project.name %> : NSObject <RCTBridgeModule>
+@interface <%- project.name -%> : NSObject <RCTBridgeModule>
 
 @end

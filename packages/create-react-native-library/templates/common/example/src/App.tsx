@@ -1,18 +1,18 @@
 import * as React from 'react';
 
-<% if (project.moduleType === "view") { -%>
+<% if (project.view) { -%>
 import { StyleSheet, View } from 'react-native';
-import { <%- project.name %>View } from '<%- project.slug %>';
+import { <%- project.name -%>View } from '<%- project.slug -%>';
 <% } else { -%>
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from '<%- project.slug %>';
+import { multiply } from '<%- project.slug -%>';
 <% } -%>
 
-<% if (project.moduleType === "view") { -%>
+<% if (project.view) { -%>
 export default function App() {
   return (
     <View style={styles.container}>
-      <<%- project.name %>View color="#32a852" style={styles.box} />
+      <<%- project.name -%>View color="#32a852" style={styles.box} />
     </View>
   );
 }

@@ -1,7 +1,7 @@
-#include "<%- project.identifier %>.h"
+#include "<%- project.identifier -%>.h"
 
 namespace example {
-	int multiply(float a, float b) {
+	int multiply(double a, double b) {
 		return a * b;
 	}
 }

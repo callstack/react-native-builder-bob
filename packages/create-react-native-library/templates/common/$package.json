@@ -1,5 +1,5 @@
 {
-  "name": "<%- project.slug %>",
+  "name": "<%- project.slug -%>",
   "version": "0.1.0",
   "description": "test",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "<%- project.identifier %>.podspec",
+    "<%- project.identifier -%>.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -28,7 +28,7 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
+    "pods": "cd example && RCT_NEW_ARCH_ENABLED=<%- project.turbomodule ? 1 : 0 -%> pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods"
   },
   "keywords": [
@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "<%- repo %>",
-  "author": "<%- author.name %> <<%- author.email %>> (<%- author.url %>)",
+  "repository": "<%- repo -%>",
+  "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "MIT",
   "bugs": {
-    "url": "<%- repo %>/issues"
+    "url": "<%- repo -%>/issues"
   },
-  "homepage": "<%- repo %>#readme",
+  "homepage": "<%- repo -%>#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -54,7 +54,7 @@
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
-    "@types/react-native": "0.67.9",
+    "@types/react-native": "0.68.0",
     "commitlint": "^17.0.2",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
@@ -148,5 +148,16 @@
         }
       ]
     ]
+<% if (project.turbomodule) { -%>
+  },
+  "codegenConfig": {
+    "libraries": [
+      {
+        "name": "RN<%- project.name -%>Spec",
+        "type": "modules",
+        "jsSrcsDir": "src"
+      }
+    ]
+<% } -%>
   }
 }

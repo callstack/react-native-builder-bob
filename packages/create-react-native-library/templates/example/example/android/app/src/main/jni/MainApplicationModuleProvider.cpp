@@ -1,6 +1,9 @@
 #include "MainApplicationModuleProvider.h"
 
 #include <rncore.h>
+<% if (project.turbomodule) { -%>
+#include <<%- project.name -%>.h>
+<% } -%>
 
 namespace facebook {
 namespace react {
@@ -17,6 +20,15 @@ std::shared_ptr<TurboModule> MainApplicationModuleProvider(
   //    return module;
   // }
   // return rncore_ModuleProvider(moduleName, params);
+
+<% if (project.turbomodule) { -%>
+  auto module = <%- project.name -%>_ModuleProvider(moduleName, params);
+
+  if (module != nullptr) {
+    return module;
+  }
+<% } -%>
+
   return rncore_ModuleProvider(moduleName, params);
 }
 

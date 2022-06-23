@@ -1,8 +1,8 @@
-@objc(<%- project.name %>ViewManager)
-class <%- project.name %>ViewManager: RCTViewManager {
+@objc(<%- project.name -%>ViewManager)
+class <%- project.name -%>ViewManager: RCTViewManager {
 
-  override func view() -> (<%- project.name %>View) {
-    return <%- project.name %>View()
+  override func view() -> (<%- project.name -%>View) {
+    return <%- project.name -%>View()
   }
 
   @objc override static func requiresMainQueueSetup() -> Bool {
@@ -10,7 +10,7 @@ class <%- project.name %>ViewManager: RCTViewManager {
   }
 }
 
-class <%- project.name %>View : UIView {
+class <%- project.name -%>View : UIView {
 
   @objc var color: String = "" {
     didSet {

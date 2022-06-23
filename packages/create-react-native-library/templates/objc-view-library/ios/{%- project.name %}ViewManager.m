@@ -1,11 +1,11 @@
 #import <React/RCTViewManager.h>
 
-@interface <%- project.name %>ViewManager : RCTViewManager
+@interface <%- project.name -%>ViewManager : RCTViewManager
 @end
 
-@implementation <%- project.name %>ViewManager
+@implementation <%- project.name -%>ViewManager
 
-RCT_EXPORT_MODULE(<%- project.name %>View)
+RCT_EXPORT_MODULE(<%- project.name -%>View)
 
 - (UIView *)view
 {

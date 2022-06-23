@@ -1,4 +1,4 @@
-package com.<%- project.package %>;
+package com.<%- project.package -%>;
 
 import android.graphics.Color;
 import android.view.View;
@@ -9,8 +9,8 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-public class <%- project.name %>ViewManager extends SimpleViewManager<View> {
-    public static final String REACT_CLASS = "<%- project.name %>View";
+public class <%- project.name -%>ViewManager extends SimpleViewManager<View> {
+    public static final String REACT_CLASS = "<%- project.name -%>View";
 
     @Override
     @NonNull

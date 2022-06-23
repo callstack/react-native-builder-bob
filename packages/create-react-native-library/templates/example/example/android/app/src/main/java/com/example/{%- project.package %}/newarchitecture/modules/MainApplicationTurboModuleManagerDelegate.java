@@ -1,4 +1,4 @@
-package com.example.<%- project.package %>.newarchitecture.modules;
+package com.example.<%- project.package -%>.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

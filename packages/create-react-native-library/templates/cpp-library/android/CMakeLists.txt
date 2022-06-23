@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 add_library(cpp
             SHARED
-            ../cpp/<%- project.identifier %>.cpp
+            ../cpp/<%- project.identifier -%>.cpp
             cpp-adapter.cpp
 )
 

@@ -1,28 +1,28 @@
-package com.<%- project.package %>
+package com.<%- project.package -%>
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 
-class <%- project.name %>Module(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class <%- project.name -%>Module(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
     override fun getName(): String {
-        return "<%- project.name %>"
+        return "<%- project.name -%>"
     }
 
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
     fun multiply(a: Int, b: Int, promise: Promise) {
-    <% if (project.cpp) { %>
+    <% if (project.cpp) { -%>
       promise.resolve(nativeMultiply(a, b));
-    <% } else { %>
+    <% } else { -%>
       promise.resolve(a * b)
-    <% } %>
+    <% } -%>
     }
 
-    <% if (project.cpp) { %>
+    <% if (project.cpp) { -%>
     external fun nativeMultiply(a: Int, b: Int): Int;
 
     companion object
@@ -34,5 +34,5 @@ class <%- project.name %>Module(reactContext: ReactApplicationContext) : ReactCo
             System.loadLibrary("cpp")
         }
     }
-    <% } %>
+    <% } -%>
 }

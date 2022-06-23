@@ -1,4 +1,4 @@
-package com.<%- project.package %>;
+package com.<%- project.package -%>;
 
 import androidx.annotation.NonNull;
 
@@ -8,11 +8,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
-@ReactModule(name = <%- project.name %>Module.NAME)
-public class <%- project.name %>Module extends ReactContextBaseJavaModule {
-    public static final String NAME = "<%- project.name %>";
+@ReactModule(name = <%- project.name -%>Module.NAME)
+public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
+    public static final String NAME = "<%- project.name -%>";
 
-    public <%- project.name %>Module(ReactApplicationContext reactContext) {
+    public <%- project.name -%>Module(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
@@ -35,7 +35,7 @@ public class <%- project.name %>Module extends ReactContextBaseJavaModule {
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
-    public void multiply(int a, int b, Promise promise) {
+    public void multiply(double a, double b, Promise promise) {
 <% if (project.cpp) { -%>
         promise.resolve(nativeMultiply(a, b));
 <% } else { -%>
@@ -43,5 +43,7 @@ public class <%- project.name %>Module extends ReactContextBaseJavaModule {
 <% } -%>
     }
 
-    public static native int nativeMultiply(int a, int b);
+<% if (project.cpp) { -%>
+    public static native double nativeMultiply(double a, double b);
+<% } -%>
 }

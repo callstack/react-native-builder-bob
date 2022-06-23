@@ -1,4 +1,4 @@
-package com.example.<%- project.package %>.newarchitecture.components;
+package com.example.<%- project.package -%>.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

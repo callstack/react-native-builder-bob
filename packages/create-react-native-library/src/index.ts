@@ -18,18 +18,26 @@ const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
+const EXAMPLE_TURBO_FILES = path.resolve(
+  __dirname,
+  '../templates/example-turbo'
+);
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
 );
 
 const NATIVE_FILES = {
-  module: path.resolve(__dirname, '../templates/native-library'),
+  module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
+  module_turbo: path.resolve(__dirname, '../templates/native-library-turbo'),
+  module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view: path.resolve(__dirname, '../templates/native-view-library'),
 };
 
 const JAVA_FILES = {
-  module: path.resolve(__dirname, '../templates/java-library'),
+  module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
+  module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
+  module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view: path.resolve(__dirname, '../templates/java-view-library'),
 };
 
@@ -71,9 +79,8 @@ type Answers = {
     | 'java-swift'
     | 'kotlin-objc'
     | 'kotlin-swift'
-    | 'cpp'
-    | 'js';
-  type?: 'module' | 'view';
+    | 'cpp';
+  type?: 'module-legacy' | 'module-turbo' | 'module-mixed' | 'view' | 'library';
   example?: 'expo' | 'native';
 };
 
@@ -228,8 +235,38 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'languages': {
+    'type': {
       type: 'select',
+      name: 'type',
+      message: 'What type of library do you want to develop?',
+      choices: [
+        ...(process.env.EXPERIMENTAL_TURBO_MODULES === '1'
+          ? [
+              {
+                title: 'Turbo module (backward compatible)',
+                value: 'module-mixed',
+              },
+              {
+                title: 'Turbo module',
+                value: 'module-turbo',
+              },
+            ]
+          : []),
+        {
+          title: 'Native module',
+          value: 'module-legacy',
+        },
+        { title: 'Native view', value: 'view' },
+        { title: 'JavaScript library', value: 'library' },
+      ],
+    },
+    'languages': {
+      type: (_, values) =>
+        values.type === 'js' ||
+        values.type === 'module-turbo' ||
+        values.type === 'module-mixed'
+          ? null
+          : 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: [
@@ -238,25 +275,10 @@ async function create(argv: yargs.Arguments<any>) {
         { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
         { title: 'Kotlin & Swift', value: 'kotlin-swift' },
         { title: 'C++ for both iOS & Android', value: 'cpp' },
-        { title: 'JavaScript only', value: 'js' },
-      ],
-    },
-    'type': {
-      type: (prev: string) =>
-        ['java-objc', 'java-swift', 'kotlin-objc', 'kotlin-swift'].includes(
-          prev
-        )
-          ? 'select'
-          : null,
-      name: 'type',
-      message: 'What type of library do you want to develop?',
-      choices: [
-        { title: 'Native module (to expose native APIs)', value: 'module' },
-        { title: 'Native view (to use as a component)', value: 'view' },
       ],
     },
     'example': {
-      type: (prev: string) => (prev === 'js' ? 'select' : null),
+      type: (_, values) => (values.type === 'js' ? 'select' : null),
       name: 'example',
       message: 'What type of example app do you want to generate?',
       choices: [
@@ -276,8 +298,8 @@ async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     repoUrl,
-    languages,
-    type = 'module',
+    type = 'module-mixed',
+    languages = type === 'library' ? 'js' : 'java-objc',
     example = 'native',
   } = {
     ...argv,
@@ -321,6 +343,17 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
+  const moduleType = type === 'view' ? 'view' : 'module';
+
+  const architecture =
+    type === 'module-turbo'
+      ? 'turbo'
+      : type === 'module-mixed'
+      ? 'mixed'
+      : 'legacy';
+
+  const turbomodule = architecture === 'turbo' || architecture === 'mixed';
+
   const options = {
     bob: {
       version: version || FALLBACK_BOB_VERSION,
@@ -334,11 +367,12 @@ async function create(argv: yargs.Arguments<any>) {
       package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
+      architecture,
+      turbomodule,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
-      module: languages !== 'js',
-      moduleType: type,
+      view: type === 'view',
     },
     author: {
       name: authorName,
@@ -396,19 +430,35 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
+    if (turbomodule) {
+      await copyDir(
+        path.join(EXAMPLE_TURBO_FILES, 'example'),
+        path.join(folder, 'example')
+      );
+    }
+
     await copyDir(NATIVE_COMMON_FILES, folder);
-    await copyDir(NATIVE_FILES[type], folder);
+
+    if (moduleType === 'module') {
+      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
+    } else {
+      await copyDir(NATIVE_FILES[moduleType], folder);
+    }
 
     if (options.project.swift) {
-      await copyDir(SWIFT_FILES[type], folder);
+      await copyDir(SWIFT_FILES[moduleType], folder);
     } else {
-      await copyDir(OBJC_FILES[type], folder);
+      await copyDir(OBJC_FILES[moduleType], folder);
     }
 
     if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES[type], folder);
+      await copyDir(KOTLIN_FILES[moduleType], folder);
     } else {
-      await copyDir(JAVA_FILES[type], folder);
+      if (moduleType === 'module') {
+        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
+      } else {
+        await copyDir(JAVA_FILES[moduleType], folder);
+      }
     }
 
     if (options.project.cpp) {

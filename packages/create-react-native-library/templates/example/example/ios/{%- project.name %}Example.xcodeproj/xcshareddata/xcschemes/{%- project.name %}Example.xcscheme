@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "<%- project.name %>Example.app"
-               BlueprintName = "<%- project.name %>Example"
-               ReferencedContainer = "container:<%- project.name %>Example.xcodeproj">
+               BuildableName = "<%- project.name -%>Example.app"
+               BlueprintName = "<%- project.name -%>Example"
+               ReferencedContainer = "container:<%- project.name -%>Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,9 +37,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "<%- project.name %>Example.app"
-            BlueprintName = "<%- project.name %>Example"
-            ReferencedContainer = "container:<%- project.name %>Example.xcodeproj">
+            BuildableName = "<%- project.name -%>Example.app"
+            BlueprintName = "<%- project.name -%>Example"
+            ReferencedContainer = "container:<%- project.name -%>Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -54,9 +54,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "<%- project.name %>Example.app"
-            BlueprintName = "<%- project.name %>Example"
-            ReferencedContainer = "container:<%- project.name %>Example.xcodeproj">
+            BuildableName = "<%- project.name -%>Example.app"
+            BlueprintName = "<%- project.name -%>Example"
+            ReferencedContainer = "container:<%- project.name -%>Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
