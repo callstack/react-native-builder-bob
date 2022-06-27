@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.21.1...create-react-native-library@0.22.0) (2022-06-27)
+
+
+### Features
+
+* add a template for turbo module (experimental) ([cc95a72](https://github.com/callstack/react-native-builder-bob/commit/cc95a726f8019e016cebde76c0de15986eb79c64))
+
+
+
+
+
 ## [0.21.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.21.0...create-react-native-library@0.21.1) (2022-06-22)
 
 
