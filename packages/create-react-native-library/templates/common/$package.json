@@ -28,8 +28,7 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "pods": "cd example && RCT_NEW_ARCH_ENABLED=<%- project.turbomodule ? 1 : 0 -%> pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn example pods"
   },
   "keywords": [
     "react-native",
