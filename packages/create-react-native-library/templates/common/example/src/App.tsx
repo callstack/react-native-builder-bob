@@ -16,6 +16,16 @@ export default function App() {
     </View>
   );
 }
+<% } else if (project.architecture == 'turbo') { -%>
+const result = multiply(3, 7);
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Result: {result}</Text>
+    </View>
+  );
+}
 <% } else { -%>
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();

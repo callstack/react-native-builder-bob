@@ -31,6 +31,7 @@ To run the example app on iOS:
 ```sh
 yarn example ios
 ```
+
 <% if (!project.native) { -%>
 To run the example app on Web:
 
@@ -38,6 +39,7 @@ To run the example app on Web:
 yarn example web
 ```
 <% } -%>
+
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh

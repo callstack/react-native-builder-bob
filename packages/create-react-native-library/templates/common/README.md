@@ -5,7 +5,7 @@
 ## Installation
 
 ```sh
-npm install <%- project.slug -%>
+npm install <%- project.slug %>
 ```
 
 ## Usage
@@ -17,6 +17,14 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 // ...
 
 <<%- project.name -%>View color="tomato" />
+```
+<% } else if (project.architecture == 'turbo') { -%>
+```js
+import { multiply } from "<%- project.slug -%>";
+
+// ...
+
+const result = multiply(3, 7);
 ```
 <% } else { -%>
 ```js

@@ -23,8 +23,8 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
 
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
-    @ReactMethod
-    public void multiply(double a, double b, Promise promise) {
-        promise.resolve(a * b);
+    @Override
+    public double multiply(double a, double b) {
+        return a * b;
     }
 }

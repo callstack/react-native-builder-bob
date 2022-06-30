@@ -7,7 +7,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "pods": "RCT_NEW_ARCH_ENABLED=<%- project.turbomodule ? 1 : 0 -%> pod-install --quiet",
+    "pods": "pod-install --quiet",
     "postinstall": "patch-package"
   },
   "dependencies": {

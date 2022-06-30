@@ -44,6 +44,9 @@ android.iml
 #
 example/ios/Pods
 
+# Ruby
+example/vendor/
+
 # node.js
 #
 node_modules/

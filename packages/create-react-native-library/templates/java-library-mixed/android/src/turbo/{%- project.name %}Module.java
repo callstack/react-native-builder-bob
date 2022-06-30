@@ -18,6 +18,9 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
     return <%- project.name -%>ModuleImpl.NAME;
   }
 
+  // Example method
+  // See https://reactnative.dev/docs/native-modules-android
+  @Override
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
     <%- project.name -%>ModuleImpl.multiply(a, b, promise);
