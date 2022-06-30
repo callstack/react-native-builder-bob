@@ -240,18 +240,14 @@ async function create(argv: yargs.Arguments<any>) {
       name: 'type',
       message: 'What type of library do you want to develop?',
       choices: [
-        ...(process.env.EXPERIMENTAL_TURBO_MODULES === '1'
-          ? [
-              {
-                title: 'Turbo module (backward compatible)',
-                value: 'module-mixed',
-              },
-              {
-                title: 'Turbo module',
-                value: 'module-turbo',
-              },
-            ]
-          : []),
+        {
+          title: 'Turbo module with backward compat (experimental)',
+          value: 'module-mixed',
+        },
+        {
+          title: 'Turbo module (experimental)',
+          value: 'module-turbo',
+        },
         {
           title: 'Native module',
           value: 'module-legacy',
