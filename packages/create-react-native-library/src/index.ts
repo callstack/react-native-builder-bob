@@ -9,7 +9,7 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
 
-const FALLBACK_BOB_VERSION = '0.18.0';
+const FALLBACK_BOB_VERSION = '0.18.3';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
