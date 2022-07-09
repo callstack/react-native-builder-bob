@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.23.1...create-react-native-library@0.23.2) (2022-07-09)
+
+
+### Bug Fixes
+
+* update ‘js’ value type to new value ‘library’ in create library script ([#253](https://github.com/callstack/react-native-builder-bob/issues/253)) ([5599ee6](https://github.com/callstack/react-native-builder-bob/commit/5599ee63cafb0e39d238d38bd58734b40ca001aa))
+
+
+
+
+
 ## [0.23.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.23.0...create-react-native-library@0.23.1) (2022-07-04)
 
 
