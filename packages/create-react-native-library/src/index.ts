@@ -258,7 +258,7 @@ async function create(argv: yargs.Arguments<any>) {
     },
     'languages': {
       type: (_, values) =>
-        values.type === 'js' ||
+        values.type === 'library' ||
         values.type === 'module-turbo' ||
         values.type === 'module-mixed'
           ? null
@@ -274,7 +274,7 @@ async function create(argv: yargs.Arguments<any>) {
       ],
     },
     'example': {
-      type: (_, values) => (values.type === 'js' ? 'select' : null),
+      type: (_, values) => (values.type === 'library' ? 'select' : null),
       name: 'example',
       message: 'What type of example app do you want to generate?',
       choices: [
