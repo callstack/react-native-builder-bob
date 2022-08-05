@@ -40,6 +40,10 @@ This will ask you few questions about your project and generate a new project in
 - TypeScript definitions (uses `tsc` to generate declaration files)
 - Android AAR files
 
+If you created a project with `create-react-native-library`, `react-native-builder-bob` is already pre-configured to build your project. You don't need to configure it again.
+
+The following configuration steps are for projects not created with `create-react-native-library`.
+
 ### Automatic configuration
 
 To automatically configure your project to use `react-native-builder-bob`, open a Terminal and run:
@@ -204,13 +208,26 @@ Just as an example, this is a command we have in one of the packages: `babel --e
 
 If your library depends on another react-native library containing native code, you should do the following:
 
-- Add the native library to `peerDependencies`: This makes sure that there are no conflicts between the version you have specified and the version user has installed (in case they also want to use that library). By deferring the installation to the user, it also makes sure the package manager installs it in correct location and that autolinking can work properly.
-- Add the native library to `devDependencies`: This makes sure that you can use it for tests, and there are no other errors such as type errors due to the missing module.
-- Add the native library to `dependencies` under `example`: This is equivalent to the consumer of the library installing the dependency, and is needed so that this module is also available to the example app.
+- **Add the native library to `peerDependencies`**
+
+  This means that the user will need to install the native library and add it to their `package.json`. It makes sure that:
+
+  - There are no version conflicts if another package also happens to use the same library, or if the user wants to use the library in their app. While there can be multiple versions of a JavaScript-only library, there can only be one version of a native library - so avoiding version conflicts is important.
+  - The package manager installs it in correct location so that autolinking can work properly.
+
+  Don't add the native library to `dependencies`, otherwise it may cause issues for the user even if it seems to work.
+
+- **Add the native library to `devDependencies`**
+
+  This makes sure that you can use it for tests, and there are no other errors such as type errors due to the missing module.
+
+- **Add the native library to `dependencies` in the `package.json` under `example`**
+
+  This is equivalent to the consumer of the library installing the dependency, and is needed so that this module is also available to the example app.
 
 ## Development workflow
 
-To get started with the project, run `yarn` in the root directory to install the required dependencies.
+This project uses a monorepo using `yarn`. To setup the project, run `yarn` in the root directory to install the required dependencies.
 
 ```sh
 yarn
@@ -247,6 +264,7 @@ Thanks to the authors of these libraries for inspiration:
 
 - [create-react-native-module](https://github.com/brodybits/create-react-native-module)
 - [react-native-webview](https://github.com/react-native-community/react-native-webview)
+- [RNNewArchitectureLibraries](https://github.com/react-native-community/RNNewArchitectureLibraries)
 
 ## Alternatives
 
