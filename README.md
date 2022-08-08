@@ -225,6 +225,52 @@ If your library depends on another react-native library containing native code, 
 
   This is equivalent to the consumer of the library installing the dependency, and is needed so that this module is also available to the example app.
 
+### How to upgrade the `react-native` version in the generated project?
+
+Since this is a library, the `react-native` version specified in the `package.json` is not relevant for the consumers. It's only used for developing and testing the library. If you'd like to upgrade the `react-native` version to test with it, you'd need to:
+
+1. Bump versions of the following packages under `devDependencies` in the `package.json`:
+
+   - `react-native`
+   - `react`
+   - `@types/react`
+   - `@types/react-native`
+
+   If you have any other related packages such as `react-test-renderer`, make sure to bump them as well.
+
+2. Upgrade `react-native` in the `example` app.
+
+   The example app is a React Native app that can be updated following the same process as a regular React Native app. The process will vary depending on if it's using [Expo](https://expo.io) or [React Native CLI](https://github.com/react-native-community/cli). See the [official upgrade guide](https://reactnative.dev/docs/upgrading) for more details.
+
+To avoid issues, make sure that the versions of `react` and `react-native` are the same in `example/package.json` and the `package.json` at the root.
+
+### How does the library get linked to the example app in the generated project?
+
+If you generate a project with `create-react-native-library`, you get an example app to test your library. It's good to understand how the library gets linked to the example app in case you want to tweak how it works or if you run into issues.
+
+There are 2 parts to this process.
+
+1. **Aliasing the JavaScript code**
+
+   The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. This is achieved by using [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) in the `example/babel.config.js` file.
+
+   In addition to the alias, we need also need to configure the bundler to handle it correctly.
+
+   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, and to use the appropriate peer dependencies. This configuration exists in the `example/metro.config.js` file.
+   - [Webpack](https://webpack.js.org/) is configured to compile the library source code when running on the Web. This configuration exists in the `example/webpack.config.js` file.
+
+2. **Linking the native code**
+
+   By default, React Native CLI only links the modules installed under `node_module` of the app. To be able to link the `android` and `ios` folders from the project root, the path is specified in the `example/react-native.config.js` file.
+
+### How to test the library in an app locally?
+
+You may have come across the `yarn link` and `npm link` commands to test libraries locally. These commands work great for simple packages without build process, but they have different behavior from how a published package works.
+
+For more accurate testing, you could create a tarball using `npm pack` and install it instead, but it also has [some issues](https://github.com/yarnpkg/yarn/issues/6811).
+
+The most reliable way is to use [Verdaccio](https://verdaccio.org/) to publish the library to a local server and install it.
+
 ## Development workflow
 
 This project uses a monorepo using `yarn`. To setup the project, run `yarn` in the root directory to install the required dependencies.
