@@ -1,4 +1,6 @@
 #import <React/RCTViewManager.h>
+#import <React/RCTUIManager.h>
+#import "RCTBridge.h"
 
 @interface <%- project.name -%>ViewManager : RCTViewManager
 @end
@@ -10,6 +12,15 @@ RCT_EXPORT_MODULE(<%- project.name -%>View)
 - (UIView *)view
 {
   return [[UIView alloc] init];
+}
+
+RCT_EXPORT_METHOD(changeBackgroundColor
+                  : (nonnull NSNumber *) reactTag color
+                  : (nonnull NSString *) color) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+      UIView *view = viewRegistry[reactTag];
+      [view setBackgroundColor:[self hexStringToColor:color]];
+    }];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(color, NSString, UIView)
