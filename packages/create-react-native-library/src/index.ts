@@ -377,10 +377,11 @@ async function create(argv: yargs.Arguments<any>) {
       architecture,
       turbomodule,
       fabricView,
+      newArchitecture: architecture === 'turbo' || architecture === 'mixed',
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
-      view: type === 'view',
+      view: moduleType === 'view',
     },
     author: {
       name: authorName,

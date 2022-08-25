@@ -147,13 +147,13 @@
         }
       ]
     ]
-<% if (project.turbomodule) { -%>
+<% if (project.newArchitecture) { -%>
   },
   "codegenConfig": {
     "libraries": [
       {
         "name": "RN<%- project.name -%>Spec",
-        "type": "modules",
+        "type": <%- project.view ? '"components"': '"modules"' %>,
         "jsSrcsDir": "src"
       }
     ]
