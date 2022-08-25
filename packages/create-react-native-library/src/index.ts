@@ -32,6 +32,7 @@ const NATIVE_FILES = {
   module_turbo: path.resolve(__dirname, '../templates/native-library-turbo'),
   module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view: path.resolve(__dirname, '../templates/native-view-library'),
+  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed-library'),
 };
 
 const JAVA_FILES = {
@@ -39,11 +40,13 @@ const JAVA_FILES = {
   module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view: path.resolve(__dirname, '../templates/java-view-library'),
+  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library')
 };
 
 const OBJC_FILES = {
   module: path.resolve(__dirname, '../templates/objc-library'),
   view: path.resolve(__dirname, '../templates/objc-view-library'),
+  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed-library')
 };
 
 const KOTLIN_FILES = {
@@ -80,7 +83,7 @@ type Answers = {
     | 'kotlin-objc'
     | 'kotlin-swift'
     | 'cpp';
-  type?: 'module-legacy' | 'module-turbo' | 'module-mixed' | 'view' | 'library';
+  type?: 'module-legacy' | 'module-turbo' | 'module-mixed' | 'view' | 'view-mixed' | 'library';
   example?: 'expo' | 'native';
 };
 
@@ -120,6 +123,7 @@ const args: Record<ArgName, yargs.Options> = {
       'js',
     ],
   },
+  // TODO: update those types
   'type': {
     description: 'Type of library you want to develop',
     choices: ['module', 'view'],
@@ -253,6 +257,10 @@ async function create(argv: yargs.Arguments<any>) {
           value: 'module-legacy',
         },
         { title: 'Native view', value: 'view' },
+        { 
+          title: 'Native fabric view with backward compat (experimental)', 
+          value: 'view-mixed',
+        },
         { title: 'JavaScript library', value: 'library' },
       ],
     },
@@ -260,7 +268,8 @@ async function create(argv: yargs.Arguments<any>) {
       type: (_, values) =>
         values.type === 'library' ||
         values.type === 'module-turbo' ||
-        values.type === 'module-mixed'
+        values.type === 'module-mixed' ||
+        values.type === 'view-mixed'
           ? null
           : 'select',
       name: 'languages',
@@ -339,16 +348,18 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type === 'view' ? 'view' : 'module';
+  const moduleType = type.startsWith('view') ? 'view' : 'module';
 
+  // TODO: swap turbo with new
   const architecture =
     type === 'module-turbo'
       ? 'turbo'
-      : type === 'module-mixed'
+      : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
 
-  const turbomodule = architecture === 'turbo' || architecture === 'mixed';
+  const turbomodule = (architecture === 'turbo' || architecture === 'mixed') && moduleType === 'module';
+  const fabricView = architecture === 'mixed' && moduleType === 'view';
 
   const options = {
     bob: {
@@ -365,6 +376,7 @@ async function create(argv: yargs.Arguments<any>) {
       native: languages !== 'js',
       architecture,
       turbomodule,
+      fabricView,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
