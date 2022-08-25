@@ -152,7 +152,7 @@
   "codegenConfig": {
     "libraries": [
       {
-        "name": "RN<%- project.name -%>Spec",
+        "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
         "type": <%- project.view ? '"components"': '"modules"' %>,
         "jsSrcsDir": "src"
       }

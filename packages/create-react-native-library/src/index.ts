@@ -40,13 +40,13 @@ const JAVA_FILES = {
   module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view: path.resolve(__dirname, '../templates/java-view-library'),
-  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library')
+  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library'),
 };
 
 const OBJC_FILES = {
   module: path.resolve(__dirname, '../templates/objc-library'),
   view: path.resolve(__dirname, '../templates/objc-view-library'),
-  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed-library')
+  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed-library'),
 };
 
 const KOTLIN_FILES = {
@@ -83,7 +83,13 @@ type Answers = {
     | 'kotlin-objc'
     | 'kotlin-swift'
     | 'cpp';
-  type?: 'module-legacy' | 'module-turbo' | 'module-mixed' | 'view' | 'view-mixed' | 'library';
+  type?:
+    | 'module-legacy'
+    | 'module-turbo'
+    | 'module-mixed'
+    | 'view'
+    | 'view-mixed'
+    | 'library';
   example?: 'expo' | 'native';
 };
 
@@ -257,8 +263,8 @@ async function create(argv: yargs.Arguments<any>) {
           value: 'module-legacy',
         },
         { title: 'Native view', value: 'view' },
-        { 
-          title: 'Native fabric view with backward compat (experimental)', 
+        {
+          title: 'Native fabric view with backward compat (experimental)',
           value: 'view-mixed',
         },
         { title: 'JavaScript library', value: 'library' },
@@ -358,7 +364,10 @@ async function create(argv: yargs.Arguments<any>) {
       ? 'mixed'
       : 'legacy';
 
-  const turbomodule = (architecture === 'turbo' || architecture === 'mixed') && moduleType === 'module';
+  const newArchitecture = architecture === 'turbo' || architecture === 'mixed';
+  const turbomodule =
+    (architecture === 'turbo' || architecture === 'mixed') &&
+    moduleType === 'module';
   const fabricView = architecture === 'mixed' && moduleType === 'view';
 
   const options = {
@@ -377,7 +386,7 @@ async function create(argv: yargs.Arguments<any>) {
       architecture,
       turbomodule,
       fabricView,
-      newArchitecture: architecture === 'turbo' || architecture === 'mixed',
+      newArchitecture,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
@@ -439,7 +448,7 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
-    if (turbomodule) {
+    if (newArchitecture) {
       await copyDir(
         path.join(EXAMPLE_TURBO_FILES, 'example'),
         path.join(folder, 'example')
@@ -451,13 +460,23 @@ async function create(argv: yargs.Arguments<any>) {
     if (moduleType === 'module') {
       await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
     } else {
-      await copyDir(NATIVE_FILES[moduleType], folder);
+      await copyDir(
+        NATIVE_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
+        folder
+      );
     }
 
     if (options.project.swift) {
       await copyDir(SWIFT_FILES[moduleType], folder);
     } else {
-      await copyDir(OBJC_FILES[moduleType], folder);
+      if (moduleType === 'module') {
+        await copyDir(OBJC_FILES[moduleType], folder);
+      } else {
+        await copyDir(
+          OBJC_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
+          folder
+        );
+      }
     }
 
     if (options.project.kotlin) {
@@ -466,7 +485,10 @@ async function create(argv: yargs.Arguments<any>) {
       if (moduleType === 'module') {
         await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
       } else {
-        await copyDir(JAVA_FILES[moduleType], folder);
+        await copyDir(
+          JAVA_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
+          folder
+        );
       }
     }
 
