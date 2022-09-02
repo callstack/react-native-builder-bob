@@ -61,8 +61,8 @@
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "17.0.2",
-    "react-native": "0.68.2",
+    "react": "18.1.0",
+    "react-native": "0.70.0-rc.4",
     "react-native-builder-bob": "^<%- bob.version %>",
     "release-it": "^15.0.0",
     "typescript": "^4.5.2"
