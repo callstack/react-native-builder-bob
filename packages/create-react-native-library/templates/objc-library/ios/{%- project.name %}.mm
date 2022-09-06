@@ -10,7 +10,7 @@ RCT_EXPORT_MODULE()
 
 // Example method
 // See // https://reactnative.dev/docs/native-modules-ios
-<% if (project.architecture == 'turbo') { -%>
+<% if (project.turbomodule) { -%>
 RCT_REMAP_BLOCKING_SYNCHRONOUS_METHOD(multiply,
                                       NSNumber *,
                                       multiplyWithA:(double)a  withB:(double)b)

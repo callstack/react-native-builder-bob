@@ -18,9 +18,9 @@ const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
-const EXAMPLE_TURBO_FILES = path.resolve(
+const EXAMPLE_NEW_ARCH_FILES = path.resolve(
   __dirname,
-  '../templates/example-turbo'
+  '../templates/example-new-arch'
 );
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
@@ -29,7 +29,10 @@ const NATIVE_COMMON_FILES = path.resolve(
 
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/native-library-turbo'),
+  module_new_arch: path.resolve(
+    __dirname,
+    '../templates/native-library-new-arch'
+  ),
   module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view: path.resolve(__dirname, '../templates/native-view-library'),
   view_mixed: path.resolve(__dirname, '../templates/native-view-mixed-library'),
@@ -37,7 +40,10 @@ const NATIVE_FILES = {
 
 const JAVA_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
+  module_new_arch: path.resolve(
+    __dirname,
+    '../templates/java-library-new-arch'
+  ),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view: path.resolve(__dirname, '../templates/java-view-library'),
   view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library'),
@@ -85,7 +91,7 @@ type Answers = {
     | 'cpp';
   type?:
     | 'module-legacy'
-    | 'module-turbo'
+    | 'module-new-arch'
     | 'module-mixed'
     | 'view'
     | 'view-mixed'
@@ -256,7 +262,7 @@ async function create(argv: yargs.Arguments<any>) {
         },
         {
           title: 'Turbo module (experimental)',
-          value: 'module-turbo',
+          value: 'module-new-arch',
         },
         {
           title: 'Native module',
@@ -273,7 +279,7 @@ async function create(argv: yargs.Arguments<any>) {
     'languages': {
       type: (_, values) =>
         values.type === 'library' ||
-        values.type === 'module-turbo' ||
+        values.type === 'module-new-arch' ||
         values.type === 'module-mixed' ||
         values.type === 'view-mixed'
           ? null
@@ -356,17 +362,17 @@ async function create(argv: yargs.Arguments<any>) {
 
   const moduleType = type.startsWith('view') ? 'view' : 'module';
 
-  // TODO: swap turbo with new
   const architecture =
-    type === 'module-turbo'
-      ? 'turbo'
+    type === 'module-new-arch'
+      ? 'new_arch'
       : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
 
-  const newArchitecture = architecture === 'turbo' || architecture === 'mixed';
+  const newArchitecture =
+    architecture === 'new_arch' || architecture === 'mixed';
   const turbomodule =
-    (architecture === 'turbo' || architecture === 'mixed') &&
+    (architecture === 'new_arch' || architecture === 'mixed') &&
     moduleType === 'module';
   const fabricView = architecture === 'mixed' && moduleType === 'view';
 
@@ -450,7 +456,7 @@ async function create(argv: yargs.Arguments<any>) {
 
     if (newArchitecture) {
       await copyDir(
-        path.join(EXAMPLE_TURBO_FILES, 'example'),
+        path.join(EXAMPLE_NEW_ARCH_FILES, 'example'),
         path.join(folder, 'example')
       );
     }
