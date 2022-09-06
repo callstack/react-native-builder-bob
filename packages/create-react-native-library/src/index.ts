@@ -409,11 +409,13 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
-  generateRNApp({
-    dest: folder,
-    projectName: options.project.name,
-    isTurboModule: options.project.turbomodule,
-  });
+  if (options.project.native) {
+    generateRNApp({
+      dest: folder,
+      projectName: options.project.name,
+      isTurboModule: options.project.turbomodule,
+    });
+  }
 
   await copyDir(COMMON_FILES, folder);
 
