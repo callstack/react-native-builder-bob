@@ -8,7 +8,7 @@ import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
-import { generateRNApp } from './utils/exampleAppGenerators';
+import generateRNApp from './utils/generateRNApp';
 
 const FALLBACK_BOB_VERSION = '0.18.3';
 const REACT_NATIVE_VERSION = '0.70.0';

@@ -2,7 +2,7 @@ import fs from 'fs';
 import spawn from 'cross-spawn';
 import path from 'path';
 
-export function generateRNApp({
+export default function generateRNApp({
   dest,
   projectName,
   version,
