@@ -12,6 +12,28 @@ const FILES_TO_DELETE = [
   'App.tsx',
 ];
 
+const PACKAGES_TO_REMOVE = [
+  '@react-native-community/eslint-config',
+  '@tsconfig/react-native',
+  '@types/jest',
+  '@types/react-native',
+  '@types/react-test-renderer',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
+  'babel-jest',
+  'eslint',
+  'jest',
+  'react-test-renderer',
+  'typescript',
+];
+
+const PACKAGES_TO_ADD = {
+  'babel-plugin-module-resolver': '^4.1.0',
+  'metro-react-native-babel-preset': '^0.72.1',
+  'patch-package': '^6.4.7',
+  'postinstall-postinstall': '^2.1.0',
+};
+
 export default function generateRNApp({
   dest,
   projectName,
@@ -63,25 +85,12 @@ export default function generateRNApp({
     pods: 'pod-install --quiet',
     postinstall: 'patch-package',
   };
+  PACKAGES_TO_REMOVE.forEach((pkg) => {
+    examplePackageJson.devDependencies[pkg] = undefined;
+  });
   examplePackageJson.devDependencies = {
     ...examplePackageJson.devDependencies,
-    '@react-native-community/eslint-config': undefined,
-    '@tsconfig/react-native': undefined,
-    '@types/jest': undefined,
-    '@types/react-native': undefined,
-    '@types/react-test-renderer': undefined,
-    '@typescript-eslint/eslint-plugin': undefined,
-    '@typescript-eslint/parser': undefined,
-    'babel-jest': undefined,
-    'eslint': undefined,
-    'jest': undefined,
-    'react-test-renderer': undefined,
-    'typescript': undefined,
-
-    'babel-plugin-module-resolver': '^4.1.0',
-    'metro-react-native-babel-preset': '^0.72.1',
-    'patch-package': '^6.4.7',
-    'postinstall-postinstall': '^2.1.0',
+    ...PACKAGES_TO_ADD,
   };
   examplePackageJson.jest = undefined;
   fs.writeFileSync(
