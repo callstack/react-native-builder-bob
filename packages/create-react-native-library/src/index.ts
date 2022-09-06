@@ -11,7 +11,6 @@ import prompts, { PromptObject } from './utils/prompts';
 import generateRNApp from './utils/generateRNApp';
 
 const FALLBACK_BOB_VERSION = '0.18.3';
-const REACT_NATIVE_VERSION = '0.70.0';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
@@ -413,7 +412,6 @@ async function create(argv: yargs.Arguments<any>) {
   generateRNApp({
     dest: folder,
     projectName: options.project.name,
-    version: REACT_NATIVE_VERSION,
     isTurboModule: options.project.turbomodule,
   });
 

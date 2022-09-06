@@ -5,12 +5,10 @@ import path from 'path';
 export default function generateRNApp({
   dest,
   projectName,
-  version,
   isTurboModule,
 }: {
   dest: string;
   projectName: string;
-  version: string;
   isTurboModule: boolean;
 }) {
   // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install --version <version>`
@@ -25,8 +23,6 @@ export default function generateRNApp({
       '--directory',
       path.join(dest, 'example'),
       '--skip-install',
-      '--version',
-      version,
     ],
     {
       cwd: dest,
