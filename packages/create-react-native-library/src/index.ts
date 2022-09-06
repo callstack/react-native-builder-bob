@@ -8,8 +8,10 @@ import spawn from 'cross-spawn';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
+import { generateRNApp } from './utils/exampleAppGenerators';
 
 const FALLBACK_BOB_VERSION = '0.18.3';
+const REACT_NATIVE_VERSION = '0.70.0';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
@@ -378,32 +380,6 @@ async function create(argv: yargs.Arguments<any>) {
     repo: repoUrl,
   };
 
-  // Generate the example app's base using `npx react-native init`
-  const generateExampleApp = (dest: string) => {
-    const createRNAppProcess = spawn.sync(
-      'npx',
-      [
-        'react-native',
-        'init',
-        `${options.project.name}Example`,
-        '--template',
-        'react-native-template-typescript',
-        '--directory',
-        path.join(dest, 'example'),
-        '--skip-install',
-        '--version',
-        '0.70.0', // Change this for newer versions of RN
-      ],
-      {
-        cwd: dest,
-      }
-    );
-
-    if (createRNAppProcess.error) {
-      throw createRNAppProcess.error;
-    }
-  };
-
   const copyDir = async (source: string, dest: string) => {
     await fs.mkdirp(dest);
 
@@ -434,7 +410,11 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
-  generateExampleApp(folder);
+  generateRNApp({
+    dest: folder,
+    projectName: options.project.name,
+    version: REACT_NATIVE_VERSION,
+  });
 
   await copyDir(COMMON_FILES, folder);
 
