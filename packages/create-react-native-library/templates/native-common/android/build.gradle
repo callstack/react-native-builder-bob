@@ -177,7 +177,7 @@ dependencies {
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-    libraryName = "<%- project.name -%>"
+    libraryName = "<%- project.view ? project.name+'View' : project.name -%>"
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }

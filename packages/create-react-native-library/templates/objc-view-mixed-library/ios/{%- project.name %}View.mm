@@ -1,10 +1,10 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "<%- project.name -%>View.h"
 
-#import <react/renderer/components/<%- project.name -%>ViewSpec/ComponentDescriptors.h>
-#import <react/renderer/components/<%- project.name -%>ViewSpec/EventEmitters.h>
-#import <react/renderer/components/<%- project.name -%>ViewSpec/Props.h>
-#import <react/renderer/components/<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h>
+#import <react/renderer/components/RN<%- project.name -%>ViewSpec/ComponentDescriptors.h>
+#import <react/renderer/components/RN<%- project.name -%>ViewSpec/EventEmitters.h>
+#import <react/renderer/components/RN<%- project.name -%>ViewSpec/Props.h>
+#import <react/renderer/components/RN<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
 

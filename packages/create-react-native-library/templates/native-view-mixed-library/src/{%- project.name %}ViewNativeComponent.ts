@@ -1,6 +1,6 @@
-import { ElementRef } from 'react';
 import codegenNativeComponent, { NativeComponentType } from 'react-native/Libraries/Utilities/codegenNativeComponent';
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+import type * as React from 'react';
 import type {  ViewProps } from 'react-native';
 
 interface NativeProps extends ViewProps  {
@@ -12,7 +12,7 @@ export type <%- project.name -%>ViewType = NativeComponentType<NativeProps>;
 
 interface NativeCommands {
   changeBackgroundColor: (
-      viewRef: ElementRef<<%- project.name -%>ViewType>,
+      viewRef: React.ElementRef<<%- project.name -%>ViewType>,
       color: string,
   ) => void;
 }
