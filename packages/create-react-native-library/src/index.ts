@@ -414,6 +414,7 @@ async function create(argv: yargs.Arguments<any>) {
     dest: folder,
     projectName: options.project.name,
     version: REACT_NATIVE_VERSION,
+    isTurboModule: options.project.turbomodule,
   });
 
   await copyDir(COMMON_FILES, folder);

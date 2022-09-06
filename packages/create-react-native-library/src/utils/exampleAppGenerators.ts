@@ -6,10 +6,12 @@ export function generateRNApp({
   dest,
   projectName,
   version,
+  isTurboModule,
 }: {
   dest: string;
   projectName: string;
   version: string;
+  isTurboModule: boolean;
 }) {
   // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install --version <version>`
   const createRNAppProcess = spawn.sync(
@@ -88,4 +90,31 @@ export function generateRNApp({
     path.join(dest, 'example', 'package.json'),
     JSON.stringify(examplePackageJson, null, 2)
   );
+
+  // If the library is a TurboModule, enable new arch for IOS and Android
+  if (isTurboModule) {
+    // Android
+    // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
+    const gradleProperties = fs
+      .readFileSync(
+        path.join(dest, 'example', 'android', 'gradle.properties'),
+        'utf8'
+      )
+      .replace('newArchEnabled=false', 'newArchEnabled=true');
+    fs.writeFileSync(
+      path.join(dest, 'example', 'android', 'gradle.properties'),
+      gradleProperties
+    );
+
+    // IOS
+    // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
+    const podfile = fs.readFileSync(
+      path.join(dest, 'example', 'ios', 'Podfile'),
+      'utf8'
+    );
+    fs.writeFileSync(
+      path.join(dest, 'example', 'ios', 'Podfile'),
+      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n" + podfile
+    );
+  }
 }
