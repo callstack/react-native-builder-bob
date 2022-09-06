@@ -43,7 +43,7 @@ export default function generateRNApp({
   projectName: string;
   isNewArch: boolean;
 }) {
-  // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install --version <version>`
+  // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install`
   const createRNAppProcess = spawn.sync(
     'npx',
     [
