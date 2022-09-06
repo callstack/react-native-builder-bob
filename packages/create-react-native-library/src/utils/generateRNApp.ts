@@ -2,6 +2,16 @@ import fs from 'fs';
 import spawn from 'cross-spawn';
 import path from 'path';
 
+const FILES_TO_DELETE = [
+  '.eslintrc.js',
+  'tsconfig.json',
+  '.gitignore',
+  '.git',
+  '.prettierrc.js',
+  'index.js',
+  'App.tsx',
+];
+
 export default function generateRNApp({
   dest,
   projectName,
@@ -33,15 +43,7 @@ export default function generateRNApp({
   }
 
   // Remove unnecessary files
-  [
-    '.eslintrc.js',
-    'tsconfig.json',
-    '.gitignore',
-    '.git',
-    '.prettierrc.js',
-    'index.js',
-    'App.tsx',
-  ].forEach((file) => {
+  FILES_TO_DELETE.forEach((file) => {
     try {
       fs.unlinkSync(path.join(dest, 'example', file));
     } catch (e) {
