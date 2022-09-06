@@ -413,7 +413,7 @@ async function create(argv: yargs.Arguments<any>) {
     generateRNApp({
       dest: folder,
       projectName: options.project.name,
-      isTurboModule: options.project.turbomodule,
+      isNewArch: options.project.turbomodule,
     });
   }
 

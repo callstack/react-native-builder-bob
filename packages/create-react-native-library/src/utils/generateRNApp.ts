@@ -37,11 +37,11 @@ const PACKAGES_TO_ADD = {
 export default function generateRNApp({
   dest,
   projectName,
-  isTurboModule,
+  isNewArch,
 }: {
   dest: string;
   projectName: string;
-  isTurboModule: boolean;
+  isNewArch: boolean;
 }) {
   // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install --version <version>`
   const createRNAppProcess = spawn.sync(
@@ -98,8 +98,8 @@ export default function generateRNApp({
     JSON.stringify(examplePackageJson, null, 2)
   );
 
-  // If the library is a TurboModule, enable new arch for IOS and Android
-  if (isTurboModule) {
+  // If the library is on new architecture, enable new arch for IOS and Android
+  if (isNewArch) {
     // Android
     // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
     const gradleProperties = fs
