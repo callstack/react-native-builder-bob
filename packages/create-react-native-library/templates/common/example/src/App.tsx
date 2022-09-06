@@ -16,7 +16,7 @@ export default function App() {
     </View>
   );
 }
-<% } else if (project.turbomodule) { -%>
+<% } else if (project.architecture === "new_arch" && project.turbomodule) { -%>
 const result = multiply(3, 7);
 
 export default function App() {
