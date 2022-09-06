@@ -378,6 +378,32 @@ async function create(argv: yargs.Arguments<any>) {
     repo: repoUrl,
   };
 
+  // Generate the example app's base using `npx react-native init`
+  const generateExampleApp = (dest: string) => {
+    const createRNAppProcess = spawn.sync(
+      'npx',
+      [
+        'react-native',
+        'init',
+        `${options.project.name}Example`,
+        '--template',
+        'react-native-template-typescript',
+        '--directory',
+        path.join(dest, 'example'),
+        '--skip-install',
+        '--version',
+        '0.70.0', // Change this for newer versions of RN
+      ],
+      {
+        cwd: dest,
+      }
+    );
+
+    if (createRNAppProcess.error) {
+      throw createRNAppProcess.error;
+    }
+  };
+
   const copyDir = async (source: string, dest: string) => {
     await fs.mkdirp(dest);
 
@@ -406,6 +432,9 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
   };
+
+  await fs.mkdirp(folder);
+  generateExampleApp(folder);
 
   await copyDir(COMMON_FILES, folder);
 
