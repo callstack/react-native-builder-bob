@@ -4,7 +4,9 @@
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/components/rncore/ComponentDescriptors.h>
+<% if (project.fabricView) { -%>
 #include <react/renderer/components/<%- project.name -%>View/ComponentDescriptors.h>
+<% } -%>
 
 namespace facebook {
 namespace react {
@@ -20,7 +22,9 @@ MainComponentsRegistry::sharedProviderRegistry() {
   //
   // providerRegistry->add(concreteComponentDescriptorProvider<
   //        AocViewerComponentDescriptor>());
+  <% if (project.fabricView) { -%>
   providerRegistry->add(concreteComponentDescriptorProvider<<%- project.name -%>ViewComponentDescriptor>());
+  <% } -%>
   return providerRegistry;
 }
 
