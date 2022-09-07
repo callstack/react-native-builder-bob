@@ -33,6 +33,10 @@ const NATIVE_FILES = {
   module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view: path.resolve(__dirname, '../templates/native-view-library'),
   view_mixed: path.resolve(__dirname, '../templates/native-view-mixed-library'),
+  view_fabric: path.resolve(
+    __dirname,
+    '../templates/native-view-fabric-library'
+  ),
 };
 
 const JAVA_FILES = {
@@ -41,12 +45,14 @@ const JAVA_FILES = {
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view: path.resolve(__dirname, '../templates/java-view-library'),
   view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library'),
+  view_fabric: path.resolve(__dirname, '../templates/java-view-fabric-library'),
 };
 
 const OBJC_FILES = {
   module: path.resolve(__dirname, '../templates/objc-library'),
   view: path.resolve(__dirname, '../templates/objc-view-library'),
   view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed-library'),
+  view_fabric: path.resolve(__dirname, '../templates/objc-view-fabric-library'),
 };
 
 const KOTLIN_FILES = {
@@ -89,16 +95,17 @@ type Answers = {
     | 'module-mixed'
     | 'view'
     | 'view-mixed'
+    | 'view-fabric'
     | 'library';
   example?: 'expo' | 'native';
 };
 
 const args: Record<ArgName, yargs.Options> = {
-  'slug': {
+  slug: {
     description: 'Name of the npm package',
     type: 'string',
   },
-  'description': {
+  description: {
     description: 'Description of the npm package',
     type: 'string',
   },
@@ -118,7 +125,7 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'URL for the repository',
     type: 'string',
   },
-  'languages': {
+  languages: {
     description: 'Languages you want to use',
     choices: [
       'java-objc',
@@ -130,11 +137,11 @@ const args: Record<ArgName, yargs.Options> = {
     ],
   },
   // TODO: update those types
-  'type': {
+  type: {
     description: 'Type of library you want to develop',
     choices: ['module', 'view'],
   },
-  'example': {
+  example: {
     description: 'Type of example app',
     choices: ['expo', 'native'],
   },
@@ -177,7 +184,7 @@ async function create(argv: yargs.Arguments<any>) {
       validate?: (value: string) => boolean | string;
     }
   > = {
-    'slug': {
+    slug: {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
@@ -190,7 +197,7 @@ async function create(argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    'description': {
+    description: {
       type: 'text',
       name: 'description',
       message: 'What is the description for the package?',
@@ -245,7 +252,7 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'type': {
+    type: {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
@@ -267,14 +274,19 @@ async function create(argv: yargs.Arguments<any>) {
           title: 'Native fabric view with backward compat (experimental)',
           value: 'view-mixed',
         },
+        {
+          title: 'Native fabric view (experimental)',
+          value: 'view-fabric',
+        },
         { title: 'JavaScript library', value: 'library' },
       ],
     },
-    'languages': {
+    languages: {
       type: (_, values) =>
         values.type === 'library' ||
         values.type === 'module-turbo' ||
         values.type === 'module-mixed' ||
+        values.type === 'view-fabric' ||
         values.type === 'view-mixed'
           ? null
           : 'select',
@@ -288,7 +300,7 @@ async function create(argv: yargs.Arguments<any>) {
         { title: 'C++ for both iOS & Android', value: 'cpp' },
       ],
     },
-    'example': {
+    example: {
       type: (_, values) => (values.type === 'library' ? 'select' : null),
       name: 'example',
       message: 'What type of example app do you want to generate?',
@@ -355,20 +367,16 @@ async function create(argv: yargs.Arguments<any>) {
   }
 
   const moduleType = type.startsWith('view') ? 'view' : 'module';
-
-  // TODO: swap turbo with new
   const architecture =
-    type === 'module-turbo'
-      ? 'turbo'
+    type === 'module-turbo' || type === 'view-fabric'
+      ? 'new'
       : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
 
-  const newArchitecture = architecture === 'turbo' || architecture === 'mixed';
-  const turbomodule =
-    (architecture === 'turbo' || architecture === 'mixed') &&
-    moduleType === 'module';
-  const fabricView = architecture === 'mixed' && moduleType === 'view';
+  const newArchitecture = architecture === 'new';
+  const turbomodule = type.includes('turbo') && moduleType === 'module';
+  const fabricView = type.includes('fabric') && moduleType === 'view';
 
   const options = {
     bob: {
@@ -458,12 +466,23 @@ async function create(argv: yargs.Arguments<any>) {
     await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (moduleType === 'module') {
-      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
-    } else {
       await copyDir(
-        NATIVE_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
+        NATIVE_FILES[
+          `${moduleType}_${architecture === 'new' ? 'turbo' : architecture}`
+        ],
         folder
       );
+    } else {
+      let postfix: keyof typeof NATIVE_FILES = 'view';
+      switch (architecture) {
+        case 'new':
+          postfix = 'view_fabric';
+          break;
+        case 'mixed':
+          postfix = 'view_mixed';
+          break;
+      }
+      await copyDir(NATIVE_FILES[postfix], folder);
     }
 
     if (options.project.swift) {
@@ -472,10 +491,16 @@ async function create(argv: yargs.Arguments<any>) {
       if (moduleType === 'module') {
         await copyDir(OBJC_FILES[moduleType], folder);
       } else {
-        await copyDir(
-          OBJC_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
-          folder
-        );
+        let postfix: keyof typeof OBJC_FILES = 'view';
+        switch (architecture) {
+          case 'new':
+            postfix = 'view_fabric';
+            break;
+          case 'mixed':
+            postfix = 'view_mixed';
+            break;
+        }
+        await copyDir(OBJC_FILES[postfix], folder);
       }
     }
 
@@ -483,12 +508,23 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(KOTLIN_FILES[moduleType], folder);
     } else {
       if (moduleType === 'module') {
-        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
-      } else {
         await copyDir(
-          JAVA_FILES[`${moduleType}${newArchitecture ? '_mixed' : ''}`],
+          JAVA_FILES[
+            `${moduleType}_${architecture === 'new' ? 'turbo' : architecture}`
+          ],
           folder
         );
+      } else {
+        let postfix: keyof typeof JAVA_FILES = 'view';
+        switch (architecture) {
+          case 'new':
+            postfix = 'view_fabric';
+            break;
+          case 'mixed':
+            postfix = 'view_mixed';
+            break;
+        }
+        await copyDir(JAVA_FILES[postfix], folder);
       }
     }
 

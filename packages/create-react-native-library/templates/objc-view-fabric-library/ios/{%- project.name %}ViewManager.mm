@@ -1,0 +1,17 @@
+#import <React/RCTViewManager.h>
+#import <React/RCTUIManager.h>
+#import "RCTBridge.h"
+
+@interface <%- project.name -%>ViewManager : RCTViewManager
+@end
+
+@implementation <%- project.name -%>ViewManager
+
+RCT_EXPORT_MODULE(<%- project.name -%>View)
+
+- (UIView *)view
+{
+  return [[UIView alloc] init];
+}
+
+@end

@@ -3,12 +3,16 @@ import * as React from 'react';
 <% if (project.view) { -%>
 import { StyleSheet, View } from 'react-native';
 import { <%- project.name -%>View } from '<%- project.slug -%>';
+<% if (project.newArchitecture) { -%>
+import { Commands } from '<%- project.slug -%>';
+import { Button } from 'react-native';
+<% } -%>
 <% } else { -%>
 import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from '<%- project.slug -%>';
 <% } -%>
 
-<% if (project.view) { -%>
+<% if (project.view && !project.newArchitecture) { -%>
 export default function App() {
   return (
     <View style={styles.container}>
@@ -16,16 +20,31 @@ export default function App() {
     </View>
   );
 }
-<% } else if (project.architecture == 'turbo') { -%>
-const result = multiply(3, 7);
+<% } else if (project.turbomodule) { -%>
+  const result = multiply(3, 7);
+  
+  export default function App() {
+    return (
+      <View style={styles.container}>
+        <Text>Result: {result}</Text>
+      </View>
+    );
+  }
+<% } else if (project.view && project.newArchitecture){ -%>
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
-  );
-}
+  function getRandomColor() {
+    return [Math.random(), Math.random(), Math.random()].map((val) => Math.round(val*255).toString(16).padStart(2,'0')).join('').padStart(7,'#');
+  }
+  
+  export default function App() {
+    const ref = React.useRef(<%- project.name -%>View);
+    return (
+      <View style={styles.container}>
+        <<%- project.name -%>View ref={ref} color="#339022" style={styles.box} />
+        <Button title='Change color' onPress={() => Commands.changeBackgroundColor(ref.current, getRandomColor())}/>
+      </View>
+    );
+  }
 <% } else { -%>
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
