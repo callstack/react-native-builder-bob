@@ -101,11 +101,11 @@ type Answers = {
 };
 
 const args: Record<ArgName, yargs.Options> = {
-  slug: {
+  'slug': {
     description: 'Name of the npm package',
     type: 'string',
   },
-  description: {
+  'description': {
     description: 'Description of the npm package',
     type: 'string',
   },
@@ -125,7 +125,7 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'URL for the repository',
     type: 'string',
   },
-  languages: {
+  'languages': {
     description: 'Languages you want to use',
     choices: [
       'java-objc',
@@ -137,11 +137,11 @@ const args: Record<ArgName, yargs.Options> = {
     ],
   },
   // TODO: update those types
-  type: {
+  'type': {
     description: 'Type of library you want to develop',
     choices: ['module', 'view'],
   },
-  example: {
+  'example': {
     description: 'Type of example app',
     choices: ['expo', 'native'],
   },
@@ -184,7 +184,7 @@ async function create(argv: yargs.Arguments<any>) {
       validate?: (value: string) => boolean | string;
     }
   > = {
-    slug: {
+    'slug': {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
@@ -197,7 +197,7 @@ async function create(argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    description: {
+    'description': {
       type: 'text',
       name: 'description',
       message: 'What is the description for the package?',
@@ -252,7 +252,7 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    type: {
+    'type': {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
@@ -281,7 +281,7 @@ async function create(argv: yargs.Arguments<any>) {
         { title: 'JavaScript library', value: 'library' },
       ],
     },
-    languages: {
+    'languages': {
       type: (_, values) =>
         values.type === 'library' ||
         values.type === 'module-turbo' ||
@@ -300,7 +300,7 @@ async function create(argv: yargs.Arguments<any>) {
         { title: 'C++ for both iOS & Android', value: 'cpp' },
       ],
     },
-    example: {
+    'example': {
       type: (_, values) => (values.type === 'library' ? 'select' : null),
       name: 'example',
       message: 'What type of example app do you want to generate?',
