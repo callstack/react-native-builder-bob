@@ -18,7 +18,7 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 <<%- project.name -%>View color="tomato" />
 ```
-<% } else if (project.architecture == 'new_arch') { -%>
+<% } else if (project.architecture == 'turbo') { -%>
 ```js
 import { multiply } from "<%- project.slug -%>";
 
