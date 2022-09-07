@@ -23,7 +23,6 @@ const PACKAGES_TO_REMOVE = [
   'babel-jest',
   'eslint',
   'jest',
-  'react-test-renderer',
   'typescript',
 ];
 
@@ -96,6 +95,20 @@ export default function generateRNApp({
   fs.writeFileSync(
     path.join(dest, 'example', 'package.json'),
     JSON.stringify(examplePackageJson, null, 2)
+  );
+
+  // Patch the integration tests to correct imports
+  // Instead of importing App from `../App`, use `../src/App`
+  const integrationTest = fs.readFileSync(
+    path.join(dest, 'example', '__tests__', 'App-test.tsx'),
+    'utf8'
+  );
+  fs.writeFileSync(
+    path.join(dest, 'example', '__tests__', 'App-test.tsx'),
+    integrationTest.replace(
+      "import App from '../App';",
+      "import App from '../src/App';"
+    )
   );
 
   // If the library is on new architecture, enable new arch for IOS and Android
