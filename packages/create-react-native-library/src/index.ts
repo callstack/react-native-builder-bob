@@ -409,7 +409,7 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
-  if (options.project.native) {
+  if (example === 'native') {
     generateRNApp({
       dest: folder,
       projectName: options.project.name,
@@ -471,6 +471,21 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(CPP_FILES, folder);
       await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
     }
+  }
+
+  if (example === 'native') {
+    // Set `react` and `react-native` versions of root `package.json` from example `package.json`
+    const examplePackageJson = fs.readJSONSync(
+      path.join(folder, 'example', 'package.json')
+    );
+    const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
+    rootPackageJson.devDependencies.react =
+      examplePackageJson.dependencies.react;
+    rootPackageJson.devDependencies['react-native'] =
+      examplePackageJson.dependencies['react-native'];
+    fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
+      spaces: 2,
+    });
   }
 
   try {
