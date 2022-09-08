@@ -1,0 +1,63 @@
+name: Test all templates
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-all-templates:
+    name: Test all templates
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example: [native]
+        type: [module, view]
+        language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp, js]
+        include:
+          - language: js
+            example: expo
+            type: module
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 16.13.x
+          cache: yarn
+
+      - name: Install dependencies
+        working-directory: ./packages/create-react-native-library
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Build package
+        working-directory: ./packages/create-react-native-library
+        run: |
+          yarn prepare
+
+      - name: Create example app
+        working-directory: ./packages/create-react-native-library/bin
+        run: |
+          ./create-react-native-library test --slug test --description test --author-name test --author-email test@test --author-url https:// --repo-url https:// --type ${{ matrix.type }} --example ${{ matrix.example }} --languages ${{ matrix.language }}
+
+      - name: Install dependencies of example app
+        working-directory: ./packages/create-react-native-library/bin/test
+        run: |
+          yarn install
+
+      - name: Lint example app
+        working-directory: ./packages/create-react-native-library/bin/test
+        run: |
+          yarn lint
+
+      - name: Generate types of example app
+        working-directory: ./packages/create-react-native-library/bin/test
+        run: |
+          yarn typescript
+
+      - name: Run tests on example app
+        working-directory: ./packages/create-react-native-library/bin/test
+        run: |
+          yarn test
