@@ -17,11 +17,8 @@ const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
-const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
-const EXAMPLE_TURBO_FILES = path.resolve(
-  __dirname,
-  '../templates/example-turbo'
-);
+const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example-legacy');
+const EXAMPLE_NEW_FILES = path.resolve(__dirname, '../templates/example-new');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
@@ -29,40 +26,37 @@ const NATIVE_COMMON_FILES = path.resolve(
 
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/native-library-turbo'),
+  module_new: path.resolve(__dirname, '../templates/native-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
-  view: path.resolve(__dirname, '../templates/native-view-library'),
-  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed-library'),
-  view_fabric: path.resolve(
-    __dirname,
-    '../templates/native-view-fabric-library'
-  ),
+  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/native-view-new'),
 };
 
 const JAVA_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
+  module_new: path.resolve(__dirname, '../templates/java-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
-  view: path.resolve(__dirname, '../templates/java-view-library'),
+  view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
   view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library'),
-  view_fabric: path.resolve(__dirname, '../templates/java-view-fabric-library'),
+  view_new: path.resolve(__dirname, '../templates/java-view-new'),
 };
 
 const OBJC_FILES = {
   module: path.resolve(__dirname, '../templates/objc-library'),
-  view: path.resolve(__dirname, '../templates/objc-view-library'),
-  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed-library'),
-  view_fabric: path.resolve(__dirname, '../templates/objc-view-fabric-library'),
+  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
 };
 
 const KOTLIN_FILES = {
   module: path.resolve(__dirname, '../templates/kotlin-library'),
-  view: path.resolve(__dirname, '../templates/kotlin-view-library'),
+  view: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
 };
 
 const SWIFT_FILES = {
-  module: path.resolve(__dirname, '../templates/swift-library'),
-  view: path.resolve(__dirname, '../templates/swift-view-library'),
+  module: path.resolve(__dirname, '../templates/swift-library-legacy'),
+  view: path.resolve(__dirname, '../templates/swift-view-legacy'),
 };
 
 type ArgName =
@@ -91,11 +85,11 @@ type Answers = {
     | 'cpp';
   type?:
     | 'module-legacy'
-    | 'module-turbo'
+    | 'module-new'
     | 'module-mixed'
     | 'view'
     | 'view-mixed'
-    | 'view-fabric'
+    | 'view-new'
     | 'library';
   example?: 'expo' | 'native';
 };
@@ -263,7 +257,7 @@ async function create(argv: yargs.Arguments<any>) {
         },
         {
           title: 'Turbo module (experimental)',
-          value: 'module-turbo',
+          value: 'module-new',
         },
         {
           title: 'Native module',
@@ -276,7 +270,7 @@ async function create(argv: yargs.Arguments<any>) {
         },
         {
           title: 'Native fabric view (experimental)',
-          value: 'view-fabric',
+          value: 'view-new',
         },
         { title: 'JavaScript library', value: 'library' },
       ],
@@ -284,9 +278,9 @@ async function create(argv: yargs.Arguments<any>) {
     'languages': {
       type: (_, values) =>
         values.type === 'library' ||
-        values.type === 'module-turbo' ||
+        values.type === 'module-new' ||
         values.type === 'module-mixed' ||
-        values.type === 'view-fabric' ||
+        values.type === 'view-new' ||
         values.type === 'view-mixed'
           ? null
           : 'select',
@@ -368,15 +362,11 @@ async function create(argv: yargs.Arguments<any>) {
 
   const moduleType = type.startsWith('view') ? 'view' : 'module';
   const architecture =
-    type === 'module-turbo' || type === 'view-fabric'
+    type === 'module-new' || type === 'view-new'
       ? 'new'
       : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
-
-  const newArchitecture = architecture === 'new';
-  const turbomodule = type.includes('turbo') && moduleType === 'module';
-  const fabricView = type.includes('fabric') && moduleType === 'view';
 
   const options = {
     bob: {
@@ -392,13 +382,11 @@ async function create(argv: yargs.Arguments<any>) {
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
       architecture,
-      turbomodule,
-      fabricView,
-      newArchitecture,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
       view: moduleType === 'view',
+      module: moduleType === 'module',
     },
     author: {
       name: authorName,
@@ -456,9 +444,9 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
-    if (newArchitecture) {
+    if (architecture === 'new') {
       await copyDir(
-        path.join(EXAMPLE_TURBO_FILES, 'example'),
+        path.join(EXAMPLE_NEW_FILES, 'example'),
         path.join(folder, 'example')
       );
     }
@@ -466,23 +454,9 @@ async function create(argv: yargs.Arguments<any>) {
     await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (moduleType === 'module') {
-      await copyDir(
-        NATIVE_FILES[
-          `${moduleType}_${architecture === 'new' ? 'turbo' : architecture}`
-        ],
-        folder
-      );
+      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
     } else {
-      let postfix: keyof typeof NATIVE_FILES = 'view';
-      switch (architecture) {
-        case 'new':
-          postfix = 'view_fabric';
-          break;
-        case 'mixed':
-          postfix = 'view_mixed';
-          break;
-      }
-      await copyDir(NATIVE_FILES[postfix], folder);
+      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
     }
 
     if (options.project.swift) {
@@ -491,16 +465,7 @@ async function create(argv: yargs.Arguments<any>) {
       if (moduleType === 'module') {
         await copyDir(OBJC_FILES[moduleType], folder);
       } else {
-        let postfix: keyof typeof OBJC_FILES = 'view';
-        switch (architecture) {
-          case 'new':
-            postfix = 'view_fabric';
-            break;
-          case 'mixed':
-            postfix = 'view_mixed';
-            break;
-        }
-        await copyDir(OBJC_FILES[postfix], folder);
+        await copyDir(OBJC_FILES[`view_${architecture}`], folder);
       }
     }
 
@@ -508,23 +473,9 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(KOTLIN_FILES[moduleType], folder);
     } else {
       if (moduleType === 'module') {
-        await copyDir(
-          JAVA_FILES[
-            `${moduleType}_${architecture === 'new' ? 'turbo' : architecture}`
-          ],
-          folder
-        );
+        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
       } else {
-        let postfix: keyof typeof JAVA_FILES = 'view';
-        switch (architecture) {
-          case 'new':
-            postfix = 'view_fabric';
-            break;
-          case 'mixed':
-            postfix = 'view_mixed';
-            break;
-        }
-        await copyDir(JAVA_FILES[postfix], folder);
+        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
       }
     }
 

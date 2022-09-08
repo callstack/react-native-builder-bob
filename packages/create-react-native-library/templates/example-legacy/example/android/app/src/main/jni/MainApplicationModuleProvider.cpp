@@ -1,7 +1,7 @@
 #include "MainApplicationModuleProvider.h"
 
 #include <rncore.h>
-<% if (project.turbomodule) { -%>
+<% if (project.module && !project.architecture === "legacy") { -%>
 #include <<%- project.name -%>.h>
 <% } -%>
 
@@ -21,7 +21,7 @@ std::shared_ptr<TurboModule> MainApplicationModuleProvider(
   // }
   // return rncore_ModuleProvider(moduleName, params);
 
-<% if (project.turbomodule) { -%>
+<% if (project.module && !project.architecture === "legacy") { -%>
   auto module = <%- project.name -%>_ModuleProvider(moduleName, params);
 
   if (module != nullptr) {

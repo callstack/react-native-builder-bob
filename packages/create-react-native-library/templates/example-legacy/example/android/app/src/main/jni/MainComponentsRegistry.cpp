@@ -4,7 +4,7 @@
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/components/rncore/ComponentDescriptors.h>
-<% if (project.fabricView) { -%>
+<% if (project.architecture === "new" && project.view) { -%>
 #include <react/renderer/components/<%- project.name -%>View/ComponentDescriptors.h>
 <% } -%>
 
@@ -22,7 +22,7 @@ MainComponentsRegistry::sharedProviderRegistry() {
   //
   // providerRegistry->add(concreteComponentDescriptorProvider<
   //        AocViewerComponentDescriptor>());
-  <% if (project.fabricView) { -%>
+  <% if (project.architecture === "new" && project.view) { -%>
   providerRegistry->add(concreteComponentDescriptorProvider<<%- project.name -%>ViewComponentDescriptor>());
   <% } -%>
   return providerRegistry;

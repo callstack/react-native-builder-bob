@@ -3,7 +3,7 @@ import * as React from 'react';
 <% if (project.view) { -%>
 import { StyleSheet, View } from 'react-native';
 import { <%- project.name -%>View } from '<%- project.slug -%>';
-<% if (project.newArchitecture) { -%>
+<% if (project.architecture === "new") { -%>
 import { Commands } from '<%- project.slug -%>';
 import { Button } from 'react-native';
 <% } -%>
@@ -12,7 +12,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from '<%- project.slug -%>';
 <% } -%>
 
-<% if (project.view && !project.newArchitecture) { -%>
+<% if (project.view && !project.architecture === "legacy") { -%>
 export default function App() {
   return (
     <View style={styles.container}>
@@ -20,7 +20,7 @@ export default function App() {
     </View>
   );
 }
-<% } else if (project.turbomodule) { -%>
+<% } else if (project.module && !project.architecture === "legacy") { -%>
   const result = multiply(3, 7);
   
   export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
       </View>
     );
   }
-<% } else if (project.view && project.newArchitecture){ -%>
+<% } else if (project.view && project.architecture === "new"){ -%>
 
   function getRandomColor() {
     return [Math.random(), Math.random(), Math.random()].map((val) => Math.round(val*255).toString(16).padStart(2,'0')).join('').padStart(7,'#');
