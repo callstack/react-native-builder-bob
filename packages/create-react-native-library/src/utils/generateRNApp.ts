@@ -16,8 +16,6 @@ const PACKAGES_TO_REMOVE = [
   '@react-native-community/eslint-config',
   '@tsconfig/react-native',
   '@types/jest',
-  '@types/react-native',
-  '@types/react-test-renderer',
   '@typescript-eslint/eslint-plugin',
   '@typescript-eslint/parser',
   'babel-jest',
