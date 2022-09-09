@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        example: [native]
         type: [module, view]
         language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp, js]
+        example: [native]
         include:
-          - language: js
+          - type: module
+            language: js
             example: expo
-            type: module
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
       - name: Create example app
         working-directory: ./packages/create-react-native-library/bin
         run: |
-          ./create-react-native-library test --slug test --description test --author-name test --author-email test@test --author-url https:// --repo-url https:// --type ${{ matrix.type }} --example ${{ matrix.example }} --languages ${{ matrix.language }}
+          ./create-react-native-library test --slug test --description test --author-name test --author-email test@test --author-url https:// --repo-url https:// --type ${{ matrix.type }} --languages ${{ matrix.language }} --example ${{ matrix.example }}
 
       - name: Install dependencies of example app
         working-directory: ./packages/create-react-native-library/bin/test
