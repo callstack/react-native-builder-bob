@@ -9,6 +9,7 @@ jobs:
     name: Test all templates
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         type: [module, view]
         language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp, js]
