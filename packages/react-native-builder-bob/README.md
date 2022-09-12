@@ -6,7 +6,7 @@ Quick start:
 
 ```sh
 cd your-project
-npx react-native-builder-bob init
+npx react-native-builder-bob@latest init
 ```
 
 See more details on the [GitHub repository](https://github.com/callstack/react-native-builder-bob).
