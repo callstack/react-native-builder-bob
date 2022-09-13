@@ -39,7 +39,7 @@ const JAVA_FILES = {
   module_new: path.resolve(__dirname, '../templates/java-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed-library'),
+  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/java-view-new'),
 };
 
