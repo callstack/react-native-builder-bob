@@ -25,11 +25,13 @@ export default function App() {
     return [Math.random(), Math.random(), Math.random()].map((val) => Math.round(val*255).toString(16).padStart(2,'0')).join('').padStart(7,'#');
   }
   export default function App() {
-    const ref = React.useRef(<%- project.name -%>View);
+    const ref = React.useRef(null);
     return (
       <View style={styles.container}>
-        <<%- project.name -%>View color="#32a852" style={styles.box} />
-        <Button title='Change color' onPress={() => Commands.changeBackgroundColor(ref.current, getRandomColor())}/>
+        <<%- project.name -%>View ref={ref} color="#32a852" style={styles.box} />
+        <Button title='Change color' onPress={() => 
+          // @ts-ignore
+          Commands.changeBackgroundColor(ref.current, getRandomColor())}/>
       </View>
     );
   }
