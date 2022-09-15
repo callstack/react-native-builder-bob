@@ -6,8 +6,8 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-const <%- project.name -%> = NativeModules.<%- project.name -%>
-  ? NativeModules.<%- project.name -%>
+const <%- project.name -%> = NativeModules.<%- project.name %>
+  ? NativeModules.<%- project.name %>
   : new Proxy(
       {},
       {

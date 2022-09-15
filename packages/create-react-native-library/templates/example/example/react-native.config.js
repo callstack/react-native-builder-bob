@@ -1,9 +1,8 @@
 const path = require('path');
 
-module.exports = {
-<% if (project.native) { -%>
+module.exports = {<% if (project.native) { %>
   dependencies: {
-    '<%- project.slug -%>': {
+    '<% project.slug -%>': {
       root: path.join(__dirname, '..'),
     },
   },
