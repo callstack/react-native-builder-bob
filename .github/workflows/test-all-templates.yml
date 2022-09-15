@@ -12,12 +12,24 @@ jobs:
       fail-fast: false
       matrix:
         type: [module, view]
-        language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp, js]
+        language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp]
         example: [native]
         include:
           - type: module
             language: js
             example: expo
+          - type: module
+            language: js
+            example: native
+          - type: module-legacy
+            language: java-objc
+            example: native
+          - type: module-turbo
+            language: java-objc
+            example: native
+          - type: module-mixed
+            language: java-objc
+            example: native
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
