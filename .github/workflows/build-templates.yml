@@ -1,9 +1,6 @@
 name: Build all templates
 on:
   push:
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build-templates:
