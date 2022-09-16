@@ -23,10 +23,10 @@ If you want to create your own React Native module, scaffolding the project can 
 To create new project, run the following:
 
 ```sh
-npx create-react-native-library react-native-awesome-module
+npx create-react-native-library@latest react-native-awesome-library
 ```
 
-This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
+This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-library`.
 
 <img src="assets/create-react-native-library.gif" width="500px" height="auto">
 
@@ -49,7 +49,7 @@ The following configuration steps are for projects not created with `create-reac
 To automatically configure your project to use `react-native-builder-bob`, open a Terminal and run:
 
 ```js
-npx react-native-builder-bob init
+npx react-native-builder-bob@latest init
 ```
 
 ### Manual configuration
