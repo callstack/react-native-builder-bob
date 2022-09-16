@@ -1,0 +1,112 @@
+name: Build all templates
+on:
+  push:
+
+jobs:
+  build-templates:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type:
+          - module
+          - view
+        language:
+          - java-objc
+          - java-swift
+          - kotlin-objc
+          - kotlin-swift
+          - cpp
+        example:
+          - native
+        include:
+          - type: module
+            language: js
+            example: expo
+          - type: module
+            language: js
+            example: native
+          - type: module-legacy
+            language: java-objc
+            example: native
+          - type: module-turbo
+            language: java-objc
+            example: native
+          - type: module-mixed
+            language: java-objc
+            example: native
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Restore project yarn cache
+        id: root-yarn-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        if: steps.root-yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Build package
+        run: |
+          yarn workspace create-react-native-library prepare
+
+      - name: Create temporary working directory
+        run: |
+          mkdir ../tmp
+
+      - name: Create library
+        working-directory: ../tmp
+        run: |
+          ../react-native-builder-bob/packages/create-react-native-library/bin/create-react-native-library react-native-test \
+            --slug react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type ${{ matrix.type }} \
+            --languages ${{ matrix.language }} \
+            --example ${{ matrix.example }}
+
+      - name: Cache dependencies of library
+        id: library-yarn-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ../tmp/react-native-test/node_modules
+            ../tmp/example/node_modules
+          key: ${{ runner.os }}-library-yarn-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example}}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies of library
+        if: steps.library-yarn-cache.outputs.cache-hit != 'true'
+        working-directory: ../tmp/react-native-test
+        run: |
+          yarn install
+
+      - name: Lint library
+        working-directory: ../tmp/react-native-test
+        run: |
+          yarn lint
+
+      - name: Typecheck library
+        working-directory: ../tmp/react-native-test
+        run: |
+          yarn typescript
+
+      - name: Test library
+        working-directory: ../tmp/react-native-test
+        run: |
+          yarn test

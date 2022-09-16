@@ -122,7 +122,13 @@ const args: Record<ArgName, yargs.Options> = {
   },
   'type': {
     description: 'Type of library you want to develop',
-    choices: ['module', 'view'],
+    choices: [
+      'module-legacy',
+      'module-turbo',
+      'module-mixed',
+      'module',
+      'view',
+    ],
   },
   'example': {
     description: 'Type of example app',
