@@ -1,4 +1,4 @@
-name: Test all tmplates
+name: Build all templates
 on:
   push:
   pull_request:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   build-templates:
-    name: Build all templates
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -16,7 +15,6 @@ jobs:
           - module
           - view
         language:
-          - js
           - java-objc
           - java-swift
           - kotlin-objc
@@ -28,9 +26,9 @@ jobs:
           - type: module
             language: js
             example: expo
-          - type: view
+          - type: module
             language: js
-            example: expo
+            example: native
           - type: module-legacy
             language: java-objc
             example: native
@@ -42,21 +40,22 @@ jobs:
             example: native
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3.4.1
         with:
-          node-version: 16.13.x
+          node-version: 16.x
           cache: yarn
 
-      - name: Restore root level yarn cache
+      - name: Restore project yarn cache
         id: root-yarn-cache
         uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-root-yarn-${{ hashFiles('yarn.lock') }}
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
         if: steps.root-yarn-cache.outputs.cache-hit != 'true'

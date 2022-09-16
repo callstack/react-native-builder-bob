@@ -1,39 +1,40 @@
-name: Test monorepo
+name: Check project
 on:
+  push:
   pull_request:
     branches:
       - main
 
 jobs:
-  test-monorepo:
-    name: Test monorepo
+  check-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.13.x
+          node-version: 16.x
           cache: yarn
 
-      - name: Restore dependencies
+      - name: Restore yarn cache
         id: yarn-cache
         uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: |
+            **/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Lint files
+      - name: Lint
         run: yarn lint
 
-      - name: Build packages in the monorepo
+      - name: Build packages
         run: yarn lerna run prepare
 
-      - name: Typecheck files
+      - name: Typecheck
         run: yarn typescript
