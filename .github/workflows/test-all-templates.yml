@@ -1,26 +1,36 @@
-name: Test all templates
+name: Test all tmplates
 on:
+  push:
   pull_request:
     branches:
       - main
 
 jobs:
-  test-all-templates:
-    name: Test all templates
+  build-templates:
+    name: Build all templates
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        type: [module, view]
-        language: [java-objc, java-swift, kotlin-objc, kotlin-swift, cpp]
-        example: [native]
+        type:
+          - module
+          - view
+        language:
+          - js
+          - java-objc
+          - java-swift
+          - kotlin-objc
+          - kotlin-swift
+          - cpp
+        example:
+          - native
         include:
           - type: module
             language: js
             example: expo
-          - type: module
+          - type: view
             language: js
-            example: native
+            example: expo
           - type: module-legacy
             language: java-objc
             example: native
@@ -30,11 +40,12 @@ jobs:
           - type: module-mixed
             language: java-objc
             example: native
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v3.4.1
         with:
           node-version: 16.13.x
@@ -49,46 +60,57 @@ jobs:
 
       - name: Install dependencies
         if: steps.root-yarn-cache.outputs.cache-hit != 'true'
-        working-directory: ./packages/create-react-native-library
         run: |
           yarn install --frozen-lockfile
 
       - name: Build package
-        working-directory: ./packages/create-react-native-library
         run: |
-          yarn prepare
+          yarn workspace create-react-native-library prepare
 
-      - name: Create example app
-        working-directory: ./packages/create-react-native-library/bin
+      - name: Create temporary working directory
         run: |
-          ./create-react-native-library react-native-test --slug react-native-test --description test --author-name test --author-email test@test --author-url https:// --repo-url https:// --type ${{ matrix.type }} --languages ${{ matrix.language }} --example ${{ matrix.example }}
+          mkdir ../tmp
 
-      - name: Restore dependencies of example app
-        id: example-app-yarn-cache
+      - name: Create library
+        working-directory: ../tmp
+        run: |
+          ../react-native-builder-bob/packages/create-react-native-library/bin/create-react-native-library react-native-test \
+            --slug react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type ${{ matrix.type }} \
+            --languages ${{ matrix.language }} \
+            --example ${{ matrix.example }}
+
+      - name: Cache dependencies of library
+        id: library-yarn-cache
         uses: actions/cache@v3
         with:
           path: |
-            packages/create-react-native-library/bin/react-native-test/node_modules
-            packages/create-react-native-library/bin/react-native-test/example/node_modules
-          key: ${{ runner.os }}-example-app-yarn-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example}}-${{ hashFiles('yarn.lock') }}
+            ../tmp/react-native-test/node_modules
+            ../tmp/example/node_modules
+          key: ${{ runner.os }}-library-yarn-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example}}-${{ hashFiles('yarn.lock') }}
 
-      - name: Install dependencies of example app
-        if: steps.example-app-yarn-cache.outputs.cache-hit != 'true'
-        working-directory: ./packages/create-react-native-library/bin/react-native-test
+      - name: Install dependencies of library
+        if: steps.library-yarn-cache.outputs.cache-hit != 'true'
+        working-directory: ../tmp/react-native-test
         run: |
           yarn install
 
-      - name: Lint example app
-        working-directory: ./packages/create-react-native-library/bin/react-native-test
+      - name: Lint library
+        working-directory: ../tmp/react-native-test
         run: |
           yarn lint
 
-      - name: Generate types of example app
-        working-directory: ./packages/create-react-native-library/bin/react-native-test
+      - name: Typecheck library
+        working-directory: ../tmp/react-native-test
         run: |
           yarn typescript
 
-      - name: Run tests on example app
-        working-directory: ./packages/create-react-native-library/bin/react-native-test
+      - name: Test library
+        working-directory: ../tmp/react-native-test
         run: |
           yarn test
