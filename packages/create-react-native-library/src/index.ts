@@ -5,6 +5,7 @@ import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import spawn from 'cross-spawn';
+import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
@@ -410,11 +411,13 @@ async function create(argv: yargs.Arguments<any>) {
 
   await fs.mkdirp(folder);
   if (example === 'native') {
-    generateRNApp({
+    const spinner = ora('Generating example app').start();
+    await generateRNApp({
       dest: folder,
       projectName: options.project.name,
       isNewArch: options.project.turbomodule,
     });
+    spinner.succeed();
   }
 
   await copyDir(COMMON_FILES, folder);

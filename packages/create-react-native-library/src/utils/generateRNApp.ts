@@ -5,7 +5,6 @@ import path from 'path';
 const FILES_TO_DELETE = [
   '.eslintrc.js',
   '.gitignore',
-  '.git',
   '.prettierrc.js',
   'App.js',
   'index.js',
@@ -30,7 +29,7 @@ const PACKAGES_TO_ADD = {
   'postinstall-postinstall': '^2.1.0',
 };
 
-export default function generateRNApp({
+export default async function generateRNApp({
   dest,
   projectName,
   isNewArch,
@@ -40,7 +39,7 @@ export default function generateRNApp({
   isNewArch: boolean;
 }) {
   // Generate the example app's base using `npx react-native init <projectName>Example --directory example --skip-install`
-  const createRNAppProcess = spawn.sync(
+  const createRNAppProcess = spawn(
     'npx',
     [
       'react-native',
@@ -54,23 +53,26 @@ export default function generateRNApp({
       cwd: dest,
     }
   );
-  if (createRNAppProcess.error) {
-    throw createRNAppProcess.error;
-  }
+  await new Promise((resolve, reject) => {
+    createRNAppProcess.once('error', reject);
+    createRNAppProcess.once('close', resolve);
+  });
 
   // Remove unnecessary files
   FILES_TO_DELETE.forEach((file) => {
     try {
       fs.unlinkSync(path.join(dest, 'example', file));
     } catch (e) {
-      // ignore
+      //ignore
     }
   });
 
   // Remove unnecessary folders
   FOLDERS_TO_DELETE.forEach((folder) => {
     try {
-      fs.rmdirSync(path.join(dest, 'example', folder), { recursive: true });
+      fs.rmSync(path.join(dest, 'example', folder), {
+        recursive: true,
+      });
     } catch (e) {
       // ignore
     }
