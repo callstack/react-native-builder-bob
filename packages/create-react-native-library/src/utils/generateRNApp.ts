@@ -4,24 +4,23 @@ import path from 'path';
 
 const FILES_TO_DELETE = [
   '.eslintrc.js',
-  'tsconfig.json',
   '.gitignore',
   '.git',
   '.prettierrc.js',
+  'App.js',
   'index.js',
-  'App.tsx',
+  '.flowconfig',
+  '.buckconfig',
 ];
+
+const FOLDERS_TO_DELETE = ['__tests__'];
 
 const PACKAGES_TO_REMOVE = [
   '@react-native-community/eslint-config',
-  '@tsconfig/react-native',
-  '@types/jest',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
   'babel-jest',
   'eslint',
   'jest',
-  'typescript',
+  'react-test-renderer',
 ];
 
 const PACKAGES_TO_ADD = {
@@ -40,15 +39,13 @@ export default function generateRNApp({
   projectName: string;
   isNewArch: boolean;
 }) {
-  // Generate the example app's base using `npx react-native init <projectName>Example --template react-native-template-typescript --directory example --skip-install`
+  // Generate the example app's base using `npx react-native init <projectName>Example --directory example --skip-install`
   const createRNAppProcess = spawn.sync(
     'npx',
     [
       'react-native',
       'init',
       `${projectName}Example`,
-      '--template',
-      'react-native-template-typescript',
       '--directory',
       path.join(dest, 'example'),
       '--skip-install',
@@ -65,6 +62,15 @@ export default function generateRNApp({
   FILES_TO_DELETE.forEach((file) => {
     try {
       fs.unlinkSync(path.join(dest, 'example', file));
+    } catch (e) {
+      // ignore
+    }
+  });
+
+  // Remove unnecessary folders
+  FOLDERS_TO_DELETE.forEach((folder) => {
+    try {
+      fs.rmdirSync(path.join(dest, 'example', folder), { recursive: true });
     } catch (e) {
       // ignore
     }
@@ -93,20 +99,6 @@ export default function generateRNApp({
   fs.writeFileSync(
     path.join(dest, 'example', 'package.json'),
     JSON.stringify(examplePackageJson, null, 2)
-  );
-
-  // Patch the integration tests to correct imports
-  // Instead of importing App from `../App`, use `../src/App`
-  const integrationTest = fs.readFileSync(
-    path.join(dest, 'example', '__tests__', 'App-test.tsx'),
-    'utf8'
-  );
-  fs.writeFileSync(
-    path.join(dest, 'example', '__tests__', 'App-test.tsx'),
-    integrationTest.replace(
-      "import App from '../App';",
-      "import App from '../src/App';"
-    )
   );
 
   // If the library is on new architecture, enable new arch for IOS and Android
