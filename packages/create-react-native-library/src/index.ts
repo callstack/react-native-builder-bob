@@ -317,8 +317,6 @@ async function create(argv: yargs.Arguments<any>) {
     )),
   } as Answers;
 
-  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
-
   // Get latest version of Bob from NPM
   let version: string;
 
@@ -356,6 +354,23 @@ async function create(argv: yargs.Arguments<any>) {
 
   const turbomodule = architecture === 'turbo' || architecture === 'mixed';
 
+  // @namespace/package try to preserve @namespace
+  let [namespace, packageName] = slug.split('/');
+  let identifier = packageName;
+  if (!packageName) {
+    packageName = namespace;
+    namespace = '';
+    identifier = packageName;
+  }
+  namespace = namespace?.replace(/[^a-z0-9]/g, '');
+  packageName = packageName?.replace(/[^a-z0-9]/g, '');
+  identifier = identifier?.replace(/[^a-z0-9]+/g, '-').replace(/^-/, '');
+
+  const javaPackage = `${
+    namespace ? `${namespace}.` : ``
+  }${packageName}`.toLowerCase();
+  const javaPackageDir = javaPackage.replace(/\./g, '/');
+
   const options = {
     bob: {
       version: version || FALLBACK_BOB_VERSION,
@@ -363,11 +378,12 @@ async function create(argv: yargs.Arguments<any>) {
     project: {
       slug,
       description,
-      name: `${project.charAt(0).toUpperCase()}${project
-        .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
-        .slice(1)}`,
-      package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
-      identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
+      // try to preserve original casing in yarn exec create-react-native-library BoB
+      // for all files e.g. BoBModule.java, BoBPackage.java, BoB.h ,BoB.mm ...
+      name: argv.name,
+      package: javaPackage, // e.g. namespace.package if it has namespace
+      packageDir: javaPackageDir, // e.g. namespace/package if it has namespace
+      identifier,
       native: languages !== 'js',
       architecture,
       turbomodule,
