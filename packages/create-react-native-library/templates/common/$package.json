@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@babel/eslint-parser": "^7.18.2",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
@@ -105,7 +104,6 @@
   },
   "eslintConfig": {
     "root": true,
-    "parser": "@babel/eslint-parser",
     "extends": [
       "@react-native-community",
       "prettier"
