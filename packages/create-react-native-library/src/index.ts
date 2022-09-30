@@ -416,15 +416,20 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
+
+  const spinner = ora('Generating example app').start();
+
   if (example === 'native') {
-    const spinner = ora('Generating example app').start();
     await generateRNApp({
       dest: folder,
       projectName: options.project.name,
       isNewArch: options.project.turbomodule,
     });
-    spinner.succeed();
   }
+
+  spinner.succeed(
+    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
+  );
 
   await copyDir(COMMON_FILES, folder);
 
@@ -517,8 +522,6 @@ async function create(argv: yargs.Arguments<any>) {
 
   console.log(
     dedent(`
-      Project created successfully at ${kleur.yellow(argv.name)}!
-
       ${kleur.magenta(
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}

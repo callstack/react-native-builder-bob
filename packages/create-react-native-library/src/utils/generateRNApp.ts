@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import spawn from 'cross-spawn';
 import path from 'path';
 
@@ -58,24 +58,9 @@ export default async function generateRNApp({
     createRNAppProcess.once('close', resolve);
   });
 
-  // Remove unnecessary files
-  FILES_TO_DELETE.forEach((file) => {
-    try {
-      fs.unlinkSync(path.join(dest, 'example', file));
-    } catch (e) {
-      //ignore
-    }
-  });
-
-  // Remove unnecessary folders
-  FOLDERS_TO_DELETE.forEach((folder) => {
-    try {
-      fs.rmSync(path.join(dest, 'example', folder), {
-        recursive: true,
-      });
-    } catch (e) {
-      // ignore
-    }
+  // Remove unnecessary files and folders
+  [...FILES_TO_DELETE, ...FOLDERS_TO_DELETE].forEach((file) => {
+    fs.removeSync(path.join(dest, 'example', file));
   });
 
   // Patch the example app's package.json
