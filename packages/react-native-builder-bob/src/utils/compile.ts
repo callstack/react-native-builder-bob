@@ -7,10 +7,11 @@ import glob from 'glob';
 import type { Input } from '../types';
 
 type Options = Input & {
-  babelrc?: boolean | null | undefined;
-  configFile?: string | false | null | undefined;
+  babelrc?: boolean | null;
+  configFile?: string | false | null;
+  sourceMaps?: boolean;
+  copyFlow?: boolean;
   modules: 'commonjs' | false;
-  copyFlow: boolean | undefined;
 };
 
 export default async function compile({
@@ -21,6 +22,7 @@ export default async function compile({
   configFile = false,
   modules,
   copyFlow,
+  sourceMaps = true,
   report,
 }: Options) {
   const files = glob.sync('**/*', {
@@ -54,7 +56,8 @@ export default async function compile({
       const result = await babel.transformAsync(content, {
         babelrc: babelrc,
         configFile: configFile,
-        sourceMaps: true,
+        sourceMaps,
+        sourceRoot: path.relative(output, source),
         filename: filepath,
         ...(babelrc || configFile
           ? null
@@ -99,9 +102,13 @@ export default async function compile({
 
       let code = result.code;
 
-      if (result.map) {
+      if (sourceMaps && result.map) {
         const mapFilename = outputFilename + '.map';
+
         code += '\n//# sourceMappingURL=' + path.basename(mapFilename);
+
+        // Don't inline the source code, it can be retrieved from the source file
+        result.map.sourcesContent = undefined;
 
         fs.writeFileSync(mapFilename, JSON.stringify(result.map));
       }
