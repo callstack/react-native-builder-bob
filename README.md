@@ -147,6 +147,8 @@ By default, this will compile the code for last 2 versions of modern browsers, a
 
 If your source code is written in [Flow](http://www.typescriptlang.org/), You can also specify the `copyFlow` option to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
 
+By default, sourcemaps are generated alongside the compiled files. You can disable them by setting the `sourceMaps` option to `false`.
+
 Example:
 
 ```json
