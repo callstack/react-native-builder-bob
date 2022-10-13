@@ -9,7 +9,7 @@ import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
-import generateRNApp from './utils/generateRNApp';
+import generateExampleApp from './utils/generateExampleApp';
 
 const FALLBACK_BOB_VERSION = '0.18.3';
 
@@ -384,6 +384,7 @@ async function create(argv: yargs.Arguments<any>) {
       url: authorUrl,
     },
     repo: repoUrl,
+    example,
   };
 
   const copyDir = async (source: string, dest: string) => {
@@ -419,13 +420,12 @@ async function create(argv: yargs.Arguments<any>) {
 
   const spinner = ora('Generating example app').start();
 
-  if (example === 'native') {
-    await generateRNApp({
-      dest: folder,
-      projectName: options.project.name,
-      isNewArch: options.project.turbomodule,
-    });
-  }
+  await generateExampleApp({
+    type: example,
+    dest: folder,
+    projectName: options.project.name,
+    isNewArch: options.project.turbomodule,
+  });
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(argv.name)}!\n`
@@ -487,20 +487,18 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  if (example === 'native') {
-    // Set `react` and `react-native` versions of root `package.json` from example `package.json`
-    const examplePackageJson = fs.readJSONSync(
-      path.join(folder, 'example', 'package.json')
-    );
-    const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
-    rootPackageJson.devDependencies.react =
-      examplePackageJson.dependencies.react;
-    rootPackageJson.devDependencies['react-native'] =
-      examplePackageJson.dependencies['react-native'];
-    fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
-      spaces: 2,
-    });
-  }
+  // Set `react` and `react-native` versions of root `package.json` from example `package.json`
+  const examplePackageJson = fs.readJSONSync(
+    path.join(folder, 'example', 'package.json')
+  );
+  const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
+  rootPackageJson.devDependencies.react = examplePackageJson.dependencies.react;
+  rootPackageJson.devDependencies['react-native'] =
+    examplePackageJson.dependencies['react-native'];
+
+  fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
+    spaces: 2,
+  });
 
   try {
     spawn.sync('git', ['init'], { cwd: folder });
