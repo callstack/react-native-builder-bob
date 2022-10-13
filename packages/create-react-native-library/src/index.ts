@@ -5,9 +5,11 @@ import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import spawn from 'cross-spawn';
+import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
+import generateExampleApp from './utils/generateExampleApp';
 
 const FALLBACK_BOB_VERSION = '0.18.3';
 
@@ -147,6 +149,28 @@ async function create(argv: yargs.Arguments<any>) {
     );
 
     process.exit(1);
+  }
+
+  try {
+    const child = spawn('npx', ['--help']);
+
+    await new Promise((resolve, reject) => {
+      child.once('error', reject);
+      child.once('close', resolve);
+    });
+  } catch (error) {
+    // @ts-expect-error: TS doesn't know about `code`
+    if (error != null && error.code === 'ENOENT') {
+      console.log(
+        `Couldn't find ${kleur.blue(
+          'npx'
+        )}! Please install it by running ${kleur.blue('npm install -g npx')}`
+      );
+
+      process.exit(1);
+    } else {
+      throw error;
+    }
   }
 
   let name, email;
@@ -398,6 +422,7 @@ async function create(argv: yargs.Arguments<any>) {
       url: authorUrl,
     },
     repo: repoUrl,
+    example,
   };
 
   const copyDir = async (source: string, dest: string) => {
@@ -428,6 +453,21 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
   };
+
+  await fs.mkdirp(folder);
+
+  const spinner = ora('Generating example app').start();
+
+  await generateExampleApp({
+    type: example,
+    dest: folder,
+    projectName: options.project.name,
+    isNewArch: options.project.turbomodule,
+  });
+
+  spinner.succeed(
+    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
+  );
 
   await copyDir(COMMON_FILES, folder);
 
@@ -485,6 +525,19 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
+  // Set `react` and `react-native` versions of root `package.json` from example `package.json`
+  const examplePackageJson = fs.readJSONSync(
+    path.join(folder, 'example', 'package.json')
+  );
+  const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
+  rootPackageJson.devDependencies.react = examplePackageJson.dependencies.react;
+  rootPackageJson.devDependencies['react-native'] =
+    examplePackageJson.dependencies['react-native'];
+
+  fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
+    spaces: 2,
+  });
+
   try {
     spawn.sync('git', ['init'], { cwd: folder });
     spawn.sync('git', ['add', '.'], { cwd: folder });
@@ -505,8 +558,6 @@ async function create(argv: yargs.Arguments<any>) {
 
   console.log(
     dedent(`
-      Project created successfully at ${kleur.yellow(argv.name)}!
-
       ${kleur.magenta(
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}

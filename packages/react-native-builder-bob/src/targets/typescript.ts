@@ -132,6 +132,7 @@ export default async function build({
       [
         '--pretty',
         '--declaration',
+        '--declarationMap',
         '--emitDeclarationOnly',
         '--project',
         project,

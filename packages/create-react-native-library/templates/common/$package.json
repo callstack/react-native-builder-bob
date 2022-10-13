@@ -13,13 +13,18 @@
     "android",
     "ios",
     "cpp",
-    "<%- project.identifier -%>.podspec",
+    "*.podspec",
     "!lib/typescript/example",
-    "!android/build",
     "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "!**/.*"
   ],
   "scripts": {
     "test": "jest",
@@ -28,7 +33,11 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
+<% if (example == 'native') { -%>
+    "bootstrap": "yarn example && yarn install && yarn example pods"
+<% } else { -%>
+    "bootstrap": "yarn example && yarn install"
+<% } -%>
   },
   "keywords": [
     "react-native",

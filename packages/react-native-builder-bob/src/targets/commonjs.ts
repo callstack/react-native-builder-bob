@@ -8,6 +8,7 @@ type Options = Input & {
   options?: {
     babelrc?: boolean | null;
     configFile?: string | false | null;
+    sourceMaps?: boolean;
     copyFlow?: boolean;
   };
 };
@@ -26,13 +27,11 @@ export default async function build({
   await del([output]);
 
   await compile({
+    ...options,
     root,
     source,
     output,
     modules: 'commonjs',
-    babelrc: options?.babelrc,
-    configFile: options?.configFile,
-    copyFlow: options?.copyFlow,
     report,
   });
 }
