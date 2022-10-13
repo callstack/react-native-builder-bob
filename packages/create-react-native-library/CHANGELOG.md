@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.24.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.0...create-react-native-library@0.24.1) (2022-10-13)
+
+
+### Bug Fixes
+
+* use index.js instead of index.ts ([1393499](https://github.com/callstack/react-native-builder-bob/commit/1393499fab8a282f09fec68ccf10b52517581c1e)), closes [#281](https://github.com/callstack/react-native-builder-bob/issues/281)
+
+
+
+
+
 # [0.24.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.23.3...create-react-native-library@0.24.0) (2022-10-13)
 
 
