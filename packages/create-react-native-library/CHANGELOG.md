@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.24.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.1...create-react-native-library@0.24.2) (2022-10-13)
+
+
+### Bug Fixes
+
+* use [@latest](https://github.com/latest) for the npx commands ([5a0fbfa](https://github.com/callstack/react-native-builder-bob/commit/5a0fbfacc52ae26254b565ff2a4cf442eaa6ef8d))
+
+
+
+
+
 ## [0.24.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.0...create-react-native-library@0.24.1) (2022-10-13)
 
 
