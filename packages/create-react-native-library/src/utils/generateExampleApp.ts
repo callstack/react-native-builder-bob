@@ -47,7 +47,7 @@ export default async function generateExampleApp({
     type === 'native'
       ? // `npx react-native init <projectName> --directory example --skip-install`
         [
-          'react-native',
+          'react-native@latest',
           'init',
           `${projectName}Example`,
           '--directory',
@@ -55,7 +55,7 @@ export default async function generateExampleApp({
           '--skip-install',
         ]
       : // `npx create-expo-app example --no-install`
-        ['create-expo-app', directory, '--no-install'];
+        ['create-expo-app@latest', directory, '--no-install'];
 
   const child = spawn('npx', ['--yes', ...args], {
     cwd: dest,
