@@ -94,7 +94,7 @@ jobs:
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
         working-directory: ../tmp/react-native-test
         run: |
-          yarn install
+          yarn
 
       - name: Lint library
         working-directory: ../tmp/react-native-test
