@@ -33,7 +33,11 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
+<% if (example == 'native') { -%>
+    "bootstrap": "yarn example && yarn install && yarn example pods"
+<% } else { -%>
+    "bootstrap": "yarn example && yarn install"
+<% } -%>
   },
   "keywords": [
     "react-native",
