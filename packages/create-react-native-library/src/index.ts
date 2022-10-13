@@ -151,6 +151,28 @@ async function create(argv: yargs.Arguments<any>) {
     process.exit(1);
   }
 
+  try {
+    const child = spawn('npx', ['--help']);
+
+    await new Promise((resolve, reject) => {
+      child.once('error', reject);
+      child.once('close', resolve);
+    });
+  } catch (error) {
+    // @ts-expect-error: TS doesn't know about `code`
+    if (error != null && error.code === 'ENOENT') {
+      console.log(
+        `Couldn't find ${kleur.blue(
+          'npx'
+        )}! Please install it by running ${kleur.blue('npm install -g npx')}`
+      );
+
+      process.exit(1);
+    } else {
+      throw error;
+    }
+  }
+
   let name, email;
 
   try {
