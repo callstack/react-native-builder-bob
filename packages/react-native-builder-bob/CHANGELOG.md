@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.19.0...react-native-builder-bob@0.19.1) (2022-10-14)
+
+
+### Bug Fixes
+
+* restrict engine to latest Node LTS ([f569064](https://github.com/callstack/react-native-builder-bob/commit/f5690640cfca5b3b7c32b98c80442b08fda09150))
+
+
+
+
+
 # [0.19.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.18.3...react-native-builder-bob@0.19.0) (2022-10-13)
 
 

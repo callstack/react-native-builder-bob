@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.24.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.2...create-react-native-library@0.24.3) (2022-10-14)
+
+
+### Bug Fixes
+
+* restrict engine to latest Node LTS ([f569064](https://github.com/callstack/react-native-builder-bob/commit/f5690640cfca5b3b7c32b98c80442b08fda09150))
+
+
+
+
+
 ## [0.24.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.1...create-react-native-library@0.24.2) (2022-10-13)
 
 
