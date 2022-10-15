@@ -52,7 +52,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         if: steps.root-yarn-cache.outputs.cache-hit != 'true'
@@ -63,14 +63,10 @@ jobs:
         run: |
           yarn workspace create-react-native-library prepare
 
-      - name: Create temporary working directory
-        run: |
-          mkdir ../tmp
-
       - name: Create library
-        working-directory: ../tmp
         run: |
-          ../react-native-builder-bob/packages/create-react-native-library/bin/create-react-native-library react-native-test \
+          WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
+          ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
             --slug react-native-test \
             --description test \
             --author-name test \
@@ -80,33 +76,33 @@ jobs:
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
             --example ${{ matrix.example }}
+          echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
 
       - name: Cache dependencies of library
         id: library-yarn-cache
         uses: actions/cache@v3
         with:
           path: |
-            ../tmp/react-native-test/node_modules
-            ../tmp/example/node_modules
-          key: ${{ runner.os }}-library-yarn-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example}}-${{ hashFiles('yarn.lock') }}
+            ${{ env.work_dir }}/**/node_modules
+          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format(env.work_dir, '/**/package.json')) }}
 
       - name: Install dependencies of library
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
-        working-directory: ../tmp/react-native-test
+        working-directory: ${{ env.work_dir }}
         run: |
           yarn
 
       - name: Lint library
-        working-directory: ../tmp/react-native-test
+        working-directory: ${{ env.work_dir }}
         run: |
           yarn lint
 
       - name: Typecheck library
-        working-directory: ../tmp/react-native-test
+        working-directory: ${{ env.work_dir }}
         run: |
           yarn typescript
 
       - name: Test library
-        working-directory: ../tmp/react-native-test
+        working-directory: ${{ env.work_dir }}
         run: |
           yarn test
