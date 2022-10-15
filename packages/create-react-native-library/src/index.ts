@@ -11,7 +11,7 @@ import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 
-const FALLBACK_BOB_VERSION = '0.18.3';
+const FALLBACK_BOB_VERSION = '0.20.0';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
