@@ -192,6 +192,38 @@ Example:
 ["aar", { "reverseJetify": true }]
 ```
 
+### Commands
+
+The `bob` CLI exposes the following commands:
+
+#### `init`
+
+This configures an existing project to use `bob` by adding the required configuration and dependencies. This is usually run with `npx`:
+
+```sh
+npx react-native-builder-bob@latest init
+```
+
+#### `build`
+
+This builds the project according to the configuration. This is usually run as part of the package's publishing flow, i.e. in the `prepare` or `prepack` scripts.
+
+```json
+"scripts": {
+  "prepare": "bob build"
+}
+```
+
+#### `run`
+
+This runs a script either with `npm` or `yarn` depending on the command that was used to run `bob`. If the script doesn't exist under the `scripts` section in `package.json`, then it's forwarded to `npm` or `yarn`. This is useful for using inside `package.json` scripts to avoid coupling them with a specific package manager.
+
+```json
+"scripts": {
+  "bootstrap": "bob run install && bob run --cwd example pods"
+}
+```
+
 ## FAQ
 
 ### Why should I compile my project with `react-native-builder-bob`?

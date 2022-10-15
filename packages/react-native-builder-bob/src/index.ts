@@ -1,4 +1,6 @@
 import path from 'path';
+import os from 'os';
+import spawn from 'cross-spawn';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import dedent from 'dedent';
@@ -427,6 +429,58 @@ yargs
       }
     }
   })
+  .command(
+    'run [script...]',
+    'run a package.json script',
+    {
+      cwd: {
+        type: 'string',
+        describe: 'specify the working directory',
+      },
+      script: {
+        type: 'array',
+      },
+    },
+    async (argv) => {
+      const execpath = process.env.npm_execpath;
+      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
+      const args = argv.script?.map((s) => String(s)) ?? [];
+      const cwd = argv.cwd
+        ? path.resolve(process.cwd(), argv.cwd)
+        : process.cwd();
+
+      const scripts = Object.keys(
+        JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8'))
+          .scripts || {}
+      );
+
+      if (args[0] && scripts.includes(args[0])) {
+        // If the script exists in package.json, then prefix with `run`
+        // e.g. `yarn run build`
+        args.unshift('run');
+      }
+
+      const options = {
+        cwd,
+        env: process.env,
+        stdio: 'inherit',
+        encoding: 'utf-8',
+        shell: os.type() === 'Windows_NT',
+      } as const;
+
+      const dir = path.relative(process.cwd(), cwd);
+
+      logger.info(
+        `Running ${kleur.cyan(`${cli} ${args.join(' ')}`.trim())}${
+          dir ? ` at ${kleur.blue(dir)}` : ''
+        }`
+      );
+
+      const result = spawn.sync(cli, args, options);
+
+      process.exitCode = result.status ?? undefined;
+    }
+  )
   .demandCommand()
   .recommendCommands()
   .strict().argv;
