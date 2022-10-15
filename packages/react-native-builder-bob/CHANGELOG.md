@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.19.1...react-native-builder-bob@0.20.0) (2022-10-15)
+
+
+### Features
+
+* add a run command to bob ([16dace2](https://github.com/callstack/react-native-builder-bob/commit/16dace209521d25f64b8d40631bb74241444938c))
+
+
+
+
+
 ## [0.19.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.19.0...react-native-builder-bob@0.19.1) (2022-10-14)
 
 
