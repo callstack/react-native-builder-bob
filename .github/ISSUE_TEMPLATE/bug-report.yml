@@ -1,0 +1,49 @@
+name: 🐛 Report a bug
+description: Report a reproducible or regression bug.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        If this is not a bug report, please create a [Discussion](https://github.com/callstack/react-native-builder-bob/discussions) instead.
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Describe the issue you're having.
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Packages
+      description: |
+        Which packages are affected by the issue?
+      options:
+        - label: 'create-react-native-library'
+        - label: 'react-native-builder-bob'
+
+  - type: textarea
+    attributes:
+      label: Selected options
+      description: |
+        Mention the options that you selected or the configuration for Bob.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Link to repro
+      description: |
+        Provide a link to a repository that contains the project with the issue.
+
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        Provide details about your development environment such as OS, Node version etc. You can run `npx react-native info` in your project folder and paste the output here.
+    validations:
+      required: true
