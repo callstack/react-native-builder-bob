@@ -16,7 +16,7 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   @Override
   @NonNull
   public String getName() {
-    return <%- project.name -%>ModuleImpl.NAME;
+    return NAME;
   }
 
   // Example method

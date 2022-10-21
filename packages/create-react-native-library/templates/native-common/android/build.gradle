@@ -79,13 +79,29 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-<% if (project.architecture == 'mixed') { -%>
+
+<% if (project.architecture == 'turbo') { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
-          java.srcDirs += ['src/turbo']
+          java.srcDirs += [
+            // This is needed to build Kotlin project with TurboModules enabled
+            "${project.buildDir}/generated/source/codegen/java"
+          ]
+      }
+    }
+  }
+<% } else if (project.architecture == 'mixed') { -%>
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+          java.srcDirs += [
+            "src/turbo",
+            // This is needed to build Kotlin project with TurboModules enabled
+            "${project.buildDir}/generated/source/codegen/java"
+          ]
       } else {
-          java.srcDirs += ['src/legacy']
+          java.srcDirs += ["src/legacy"]
       }
     }
   }

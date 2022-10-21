@@ -10,6 +10,9 @@ jobs:
       matrix:
         type:
           - module
+          - module-legacy
+          - module-mixed
+          - module-turbo
           - view
         language:
           - java-objc
@@ -19,21 +22,25 @@ jobs:
           - cpp
         example:
           - native
+        exclude:
+          - type: module-turbo
+            language: java-swift
+          - type: module-turbo
+            language: kotlin-swift
+          - type: module-mixed
+            language: java-swift
+          - type: module-mixed
+            language: kotlin-swift
+          - type: module-legacy
+            language: java-swift
+          - type: module-legacy
+            language: kotlin-swift
         include:
           - type: module
             language: js
             example: expo
           - type: module
             language: js
-            example: native
-          - type: module-legacy
-            language: java-objc
-            example: native
-          - type: module-turbo
-            language: java-objc
-            example: native
-          - type: module-mixed
-            language: java-objc
             example: native
 
     steps:
