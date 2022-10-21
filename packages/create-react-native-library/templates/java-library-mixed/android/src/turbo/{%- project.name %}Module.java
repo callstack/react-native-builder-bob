@@ -15,7 +15,7 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
   @Override
   @NonNull
   public String getName() {
-    return <%- project.name -%>ModuleImpl.NAME;
+    return NAME;
   }
 
   // Example method

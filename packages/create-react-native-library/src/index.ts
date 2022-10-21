@@ -49,7 +49,9 @@ const OBJC_FILES = {
 };
 
 const KOTLIN_FILES = {
-  module: path.resolve(__dirname, '../templates/kotlin-library'),
+  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
+  module_turbo: path.resolve(__dirname, '../templates/kotlin-library-turbo'),
+  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view: path.resolve(__dirname, '../templates/kotlin-view-library'),
 };
 
@@ -287,21 +289,25 @@ async function create(argv: yargs.Arguments<any>) {
       ],
     },
     'languages': {
-      type: (_, values) =>
-        values.type === 'library' ||
-        values.type === 'module-turbo' ||
-        values.type === 'module-mixed'
-          ? null
-          : 'select',
+      type: (_, values) => (values.type !== 'library' ? 'select' : null),
       name: 'languages',
       message: 'Which languages do you want to use?',
-      choices: [
-        { title: 'Java & Objective-C', value: 'java-objc' },
-        { title: 'Java & Swift', value: 'java-swift' },
-        { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
-        { title: 'Kotlin & Swift', value: 'kotlin-swift' },
-        { title: 'C++ for both iOS & Android', value: 'cpp' },
-      ],
+      choices: (_, values) => {
+        const languages = [
+          { title: 'Java & Objective-C', value: 'java-objc' },
+          { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
+        ];
+
+        if (values.type !== 'module-turbo' && values.type !== 'module-mixed') {
+          languages.push(
+            { title: 'Java & Swift', value: 'java-swift' },
+            { title: 'Kotlin & Swift', value: 'kotlin-swift' },
+            { title: 'C++ for both iOS & Android', value: 'cpp' }
+          );
+        }
+
+        return languages;
+      },
     },
     'example': {
       type: (_, values) => (values.type === 'library' ? 'select' : null),
@@ -440,7 +446,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   await fs.mkdirp(folder);
 
-  const spinner = ora('Generating example app').start();
+  const spinner = ora('Generating example').start();
 
   await generateExampleApp({
     type: example,
@@ -449,9 +455,7 @@ async function create(argv: yargs.Arguments<any>) {
     isNewArch: options.project.turbomodule,
   });
 
-  spinner.succeed(
-    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
-  );
+  spinner.text = 'Copying files';
 
   await copyDir(COMMON_FILES, folder);
 
@@ -493,14 +497,12 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(OBJC_FILES[moduleType], folder);
     }
 
-    if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES[moduleType], folder);
+    const android_files = options.project.kotlin ? KOTLIN_FILES : JAVA_FILES;
+
+    if (moduleType === 'module') {
+      await copyDir(android_files[`${moduleType}_${architecture}`], folder);
     } else {
-      if (moduleType === 'module') {
-        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
-      } else {
-        await copyDir(JAVA_FILES[moduleType], folder);
-      }
+      await copyDir(android_files[moduleType], folder);
     }
 
     if (options.project.cpp) {
@@ -531,6 +533,10 @@ async function create(argv: yargs.Arguments<any>) {
   } catch (e) {
     // Ignore error
   }
+
+  spinner.succeed(
+    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
+  );
 
   const platforms = {
     ios: { name: 'iOS', color: 'cyan' },

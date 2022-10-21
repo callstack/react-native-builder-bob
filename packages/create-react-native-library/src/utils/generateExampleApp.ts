@@ -131,7 +131,7 @@ export default async function generateExampleApp({
 
     await fs.writeFile(
       path.join(directory, 'ios', 'Podfile'),
-      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n" + podfile
+      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
     );
   }
 }
