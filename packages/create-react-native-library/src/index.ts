@@ -130,8 +130,8 @@ const args: Record<ArgName, yargs.Options> = {
       'module-legacy',
       'module-turbo',
       'module-mixed',
-      'module',
       'view',
+      'library',
     ],
   },
   'example': {
