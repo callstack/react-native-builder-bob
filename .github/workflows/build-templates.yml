@@ -29,10 +29,6 @@ jobs:
             language: java-swift
           - type: module-mixed
             language: kotlin-swift
-          - type: module-legacy
-            language: java-swift
-          - type: module-legacy
-            language: kotlin-swift
         include:
           - type: module-legacy
             language: cpp
