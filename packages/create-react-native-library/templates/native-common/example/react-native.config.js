@@ -1,8 +1,9 @@
 const path = require('path');
+const pak = require('../package.json');
 
 module.exports = {
   dependencies: {
-    '<%- project.slug -%>': {
+    [pak.name]: {
       root: path.join(__dirname, '..'),
     },
   },
