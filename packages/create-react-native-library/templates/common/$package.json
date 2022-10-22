@@ -157,13 +157,9 @@
 <% if (project.turbomodule) { -%>
   },
   "codegenConfig": {
-    "libraries": [
-      {
-        "name": "RN<%- project.name -%>Spec",
-        "type": "modules",
-        "jsSrcsDir": "src"
-      }
-    ]
+    "name": "RN<%- project.name -%>Spec",
+    "type": "modules",
+    "jsSrcsDir": "src"
 <% } -%>
   }
 }
