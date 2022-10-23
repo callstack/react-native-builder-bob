@@ -564,7 +564,9 @@ async function create(argv: yargs.Arguments<any>) {
         )
         .join('\n')}
 
-      ${kleur.yellow('Good luck!')}
+      ${kleur.yellow(
+        `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
+      )}
     `)
   );
 }

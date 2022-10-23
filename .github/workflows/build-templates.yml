@@ -1,6 +1,8 @@
 name: Build template
 on:
   push:
+    paths:
+      - packages/create-react-native-library/**
 
 jobs:
   build:
