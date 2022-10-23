@@ -51,14 +51,24 @@ By default, the example is configured to build with the old architecture. To run
    ```
 
 <% } -%>
+<% if (project.architecture === 'turbo' || project.architecture == 'mixed') { -%>
+To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
+
+```sh
+Running "<%- project.name -%>Example" with {"fabric":true,"initialProps":{"concurrentRoot":true},"rootTag":1}
+```
+
+Note the `"fabric":true` and `"concurrentRoot":true` properties.
+
+<% } -%>
 <% if (!project.native) { -%>
 To run the example app on Web:
 
 ```sh
 yarn example web
 ```
-<% } -%>
 
+<% } -%>
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
@@ -77,10 +87,12 @@ Remember to add tests for your change if possible. Run the unit tests by:
 ```sh
 yarn test
 ```
+
 <% if (project.native) { -%>
 To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcworkspace` in XCode and find the source files at `Pods > Development Pods > <%- project.slug -%>`.
 
 To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
+
 <% } -%>
 ### Commit message convention
 
