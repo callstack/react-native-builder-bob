@@ -301,9 +301,12 @@ async function create(argv: yargs.Arguments<any>) {
         if (values.type !== 'module-turbo' && values.type !== 'module-mixed') {
           languages.push(
             { title: 'Java & Swift', value: 'java-swift' },
-            { title: 'Kotlin & Swift', value: 'kotlin-swift' },
-            { title: 'C++ for both iOS & Android', value: 'cpp' }
+            { title: 'Kotlin & Swift', value: 'kotlin-swift' }
           );
+        }
+
+        if (values.type !== 'view') {
+          languages.push({ title: 'C++ for Android & iOS', value: 'cpp' });
         }
 
         return languages;

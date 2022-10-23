@@ -23,6 +23,6 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
-    <%- project.name -%>ModuleImpl.multiply(a, b, promise);
+    promise.resolve(<%- project.name -%>ModuleImpl.multiply(a, b));
   }
 }

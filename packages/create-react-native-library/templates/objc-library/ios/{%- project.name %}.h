@@ -1,3 +1,9 @@
+<% if (project.cpp) { -%>
+#ifdef __cplusplus
+#import "<%- project.identifier -%>.h"
+#endif
+<% } -%>
+
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RN<%- project.name -%>Spec.h"
 

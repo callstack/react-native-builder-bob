@@ -23,6 +23,6 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
   @Override
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
-    <%- project.name -%>ModuleImpl.multiply(a, b, promise);
+    promise.resolve(<%- project.name -%>ModuleImpl.multiply(a, b));
   }
 }

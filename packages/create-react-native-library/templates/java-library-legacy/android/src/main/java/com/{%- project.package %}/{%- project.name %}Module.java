@@ -24,11 +24,7 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
 
 <% if (project.cpp) { -%>
   static {
-    try {
-      // Used to load the 'native-lib' library on application startup.
-      System.loadLibrary("cpp");
-    } catch (Exception ignored) {
-    }
+    System.loadLibrary("cpp");
   }
 <% } -%>
 
@@ -44,6 +40,6 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   }
 
 <% if (project.cpp) { -%>
-  public static native double nativeMultiply(double a, double b);
+  private static native double nativeMultiply(double a, double b);
 <% } -%>
 }
