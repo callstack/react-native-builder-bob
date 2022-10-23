@@ -35,12 +35,12 @@ export default async function generateExampleApp({
   type,
   dest,
   projectName,
-  isNewArch,
+  architecture,
 }: {
   type: 'expo' | 'native';
   dest: string;
   projectName: string;
-  isNewArch: boolean;
+  architecture: 'turbo' | 'mixed' | 'legacy';
 }) {
   const directory = path.join(dest, 'example');
   const args =
@@ -97,7 +97,7 @@ export default async function generateExampleApp({
 
   // Temporary until autolinking is fixed on iOS
   // https://github.com/facebook/react-native/commit/a5622165c198ac6e7ffff5883d4f269a2c974f2e
-  if (isNewArch) {
+  if (architecture === 'turbo' || architecture === 'mixed') {
     scripts.postinstall = 'patch-package';
 
     Object.assign(devDependencies, PACKAGES_TO_ADD_NEW_ARCH);
@@ -109,7 +109,7 @@ export default async function generateExampleApp({
   );
 
   // If the library is on new architecture, enable new arch for iOS and Android
-  if (isNewArch) {
+  if (architecture === 'turbo') {
     // Android
     // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
     const gradleProperties = await fs.readFile(

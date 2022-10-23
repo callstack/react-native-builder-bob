@@ -476,7 +476,7 @@ async function create(argv: yargs.Arguments<any>) {
     type: example,
     dest: folder,
     projectName: options.project.name,
-    isNewArch: options.project.turbomodule,
+    architecture,
   });
 
   spinner.text = 'Copying files';

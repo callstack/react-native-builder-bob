@@ -35,10 +35,21 @@ yarn example ios
 ```
 
 <% if (project.architecture == 'mixed') { -%>
-By default, the example is configured to build with the new architecture. To build with the old architecture, you can change the following:
+By default, the example is configured to build with the old architecture. To run the example with the new architecture, you can do the following:
 
-1. For Android, change `newArchEnabled=true` to `newArchEnabled=false` in `example/android/gradle.properties`.
-2. For iOS, change `ENV['RCT_NEW_ARCH_ENABLED'] = '1'` to `ENV['RCT_NEW_ARCH_ENABLED'] = '0'` in `example/ios/Podfile`.
+1. For Android, run:
+
+   ```sh
+   ORG_GRADLE_PROJECT_newArchEnabled=true yarn example android
+   ```
+
+2. For iOS, run:
+
+   ```sh
+   RCT_NEW_ARCH_ENABLED=1 yarn example pods
+   yarn example ios
+   ```
+
 <% } -%>
 <% if (!project.native) { -%>
 To run the example app on Web:
