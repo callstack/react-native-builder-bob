@@ -7,7 +7,7 @@ RCT_EXPORT_MODULE()
 <% if (project.architecture == 'turbo') { -%>
 - (NSNumber *)multiply:(double)a b:(double)b {
 <% if (project.cpp) { -%>
-    NSNumber *result = @(<%- project.package -%>::multiply(a, b));
+    NSNumber *result = @(<%- project.package_cpp -%>::multiply(a, b));
 <% } else { -%>
     NSNumber *result = @(a * b);
 <% } -%>
@@ -23,7 +23,7 @@ RCT_REMAP_METHOD(multiply,
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
 <% if (project.cpp) { -%>
-    NSNumber *result = @(<%- project.package -%>::multiply(a, b));
+    NSNumber *result = @(<%- project.package_cpp -%>::multiply(a, b));
 <% } else { -%>
     NSNumber *result = @(a * b);
 <% } -%>

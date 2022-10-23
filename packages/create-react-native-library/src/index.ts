@@ -350,8 +350,6 @@ async function create(argv: yargs.Arguments<any>) {
     )),
   } as Answers;
 
-  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
-
   // Get latest version of Bob from NPM
   let version: string;
 
@@ -389,6 +387,22 @@ async function create(argv: yargs.Arguments<any>) {
 
   const turbomodule = architecture === 'turbo' || architecture === 'mixed';
 
+  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+
+  let namespace: string | undefined;
+
+  if (slug.startsWith('@') && slug.includes('/')) {
+    namespace = slug
+      .split('/')[0]
+      ?.replace(/[^a-z0-9]/g, '')
+      .toLowerCase();
+  }
+
+  // Create a package identifier with specified namespace when possible
+  const pack = `${namespace ? `${namespace}.` : ''}${project
+    .replace(/[^a-z0-9]/g, '')
+    .toLowerCase()}`;
+
   const options = {
     bob: {
       version: version || FALLBACK_BOB_VERSION,
@@ -396,10 +410,17 @@ async function create(argv: yargs.Arguments<any>) {
     project: {
       slug,
       description,
-      name: `${project.charAt(0).toUpperCase()}${project
-        .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
-        .slice(1)}`,
-      package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
+      name:
+        /^[A-Z]/.test(argv.name) && /^[a-z0-9]+$/i.test(argv.name)
+          ? // If the project name is already in PascalCase, use it as-is
+            argv.name
+          : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
+            `${project.charAt(0).toUpperCase()}${project
+              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
+              .slice(1)}`,
+      package: pack,
+      package_dir: pack.replace(/\./g, '/'),
+      package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
       architecture,
