@@ -10,13 +10,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class <%- project.name -%>Package implements ReactPackage {
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+    return Collections.emptyList();
+  }
 
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(new <%- project.name -%>ViewManager());
-    }
+  @Override
+  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+    return Arrays.<ViewManager>asList(new <%- project.name -%>ViewManager());
+  }
 }

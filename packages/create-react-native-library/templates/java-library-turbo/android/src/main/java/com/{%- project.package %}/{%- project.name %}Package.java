@@ -16,9 +16,9 @@ public class <%- project.name -%>Package extends TurboReactPackage {
   @Override
   public NativeModule getModule(String name, ReactApplicationContext reactContext) {
     if (name.equals(<%- project.name -%>Module.NAME)) {
-        return new <%- project.name -%>Module(reactContext);
+      return new <%- project.name -%>Module(reactContext);
     } else {
-        return null;
+      return null;
     }
   }
 

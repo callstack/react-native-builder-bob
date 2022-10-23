@@ -10,40 +10,40 @@ import com.facebook.react.module.annotations.ReactModule;
 
 @ReactModule(name = <%- project.name -%>Module.NAME)
 public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
-    public static final String NAME = "<%- project.name -%>";
+  public static final String NAME = "<%- project.name -%>";
 
-    public <%- project.name -%>Module(ReactApplicationContext reactContext) {
-        super(reactContext);
-    }
+  public <%- project.name -%>Module(ReactApplicationContext reactContext) {
+    super(reactContext);
+  }
 
-    @Override
-    @NonNull
-    public String getName() {
-        return NAME;
-    }
+  @Override
+  @NonNull
+  public String getName() {
+    return NAME;
+  }
 
 <% if (project.cpp) { -%>
-    static {
-        try {
-            // Used to load the 'native-lib' library on application startup.
-            System.loadLibrary("cpp");
-        } catch (Exception ignored) {
-        }
+  static {
+    try {
+      // Used to load the 'native-lib' library on application startup.
+      System.loadLibrary("cpp");
+    } catch (Exception ignored) {
     }
+  }
 <% } -%>
 
-    // Example method
-    // See https://reactnative.dev/docs/native-modules-android
-    @ReactMethod
-    public void multiply(double a, double b, Promise promise) {
+  // Example method
+  // See https://reactnative.dev/docs/native-modules-android
+  @ReactMethod
+  public void multiply(double a, double b, Promise promise) {
 <% if (project.cpp) { -%>
-        promise.resolve(nativeMultiply(a, b));
+    promise.resolve(nativeMultiply(a, b));
 <% } else { -%>
-        promise.resolve(a * b);
+    promise.resolve(a * b);
 <% } -%>
-    }
+  }
 
 <% if (project.cpp) { -%>
-    public static native double nativeMultiply(double a, double b);
+  public static native double nativeMultiply(double a, double b);
 <% } -%>
 }

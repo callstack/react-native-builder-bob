@@ -7,11 +7,11 @@ import com.facebook.react.uimanager.ViewManager
 
 
 class <%- project.name -%>Package : ReactPackage {
-    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-        return emptyList()
-    }
+  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+    return emptyList()
+  }
 
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf(<%- project.name -%>ViewManager())
-    }
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return listOf(<%- project.name -%>ViewManager())
+  }
 }
