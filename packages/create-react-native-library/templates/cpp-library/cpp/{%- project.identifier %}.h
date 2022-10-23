@@ -1,8 +1,8 @@
-#ifndef EXAMPLE_H
-#define EXAMPLE_H
+#ifndef <%- project.package -%>_H
+#define <%- project.package -%>_H
 
-namespace example {
-  int multiply(double a, double b);
+namespace <%- project.package -%> {
+  double multiply(double a, double b);
 }
 
-#endif /* EXAMPLE_H */
+#endif /* <%- project.package -%>_H */

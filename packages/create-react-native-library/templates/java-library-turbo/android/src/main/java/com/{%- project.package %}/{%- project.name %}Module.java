@@ -19,10 +19,24 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
     return NAME;
   }
 
+<% if (project.cpp) { -%>
+  static {
+    System.loadLibrary("cpp");
+  }
+<% } -%>
+
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @Override
   public double multiply(double a, double b) {
+<% if (project.cpp) { -%>
+    return nativeMultiply(a, b);
+<% } else { -%>
     return a * b;
+<% } -%>
   }
+
+<% if (project.cpp) { -%>
+  private static native double nativeMultiply(double a, double b);
+<% } -%>
 }

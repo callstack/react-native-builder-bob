@@ -6,25 +6,13 @@ RCT_EXPORT_MODULE()
 
 <% if (project.architecture == 'turbo') { -%>
 - (NSNumber *)multiply:(double)a b:(double)b {
+<% if (project.cpp) { -%>
+    NSNumber *result = @(<%- project.package -%>::multiply(a, b));
+<% } else { -%>
     NSNumber *result = @(a * b);
+<% } -%>
 
     return result;
-}
-<% } else if (project.architecture == 'mixed') { -%>
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-RCT_REMAP_METHOD(multiply,
-                 multiplyWithA:(double)a  withB:(double)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
-{
-    [self multiply:a b:b resolve:resolve reject:reject];
-}
-
-- (void)multiply:(double)a b:(double)b resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-    NSNumber *result = @(a * b);
-
-    resolve(result);
 }
 <% } else { -%>
 // Example method
@@ -34,9 +22,13 @@ RCT_REMAP_METHOD(multiply,
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSNumber *result = @(a * b);
+<% if (project.cpp) { -%>
+    NSNumber *result = @(<%- project.package -%>::multiply(a, b));
+<% } else { -%>
+    NSNumber *result = @(a * b);
+<% } -%>
 
-  resolve(result);
+    resolve(result);
 }
 <% } -%>
 
