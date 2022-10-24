@@ -117,7 +117,7 @@ jobs:
       - name: Lint library
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn lint
+          yarn lint --fix
 
       - name: Typecheck library
         working-directory: ${{ env.work_dir }}
