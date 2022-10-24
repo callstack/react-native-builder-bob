@@ -5,12 +5,13 @@ import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import spawn from 'cross-spawn';
+import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { PromptObject } from './utils/prompts';
-import generateRNApp from './utils/generateRNApp';
+import generateExampleApp from './utils/generateExampleApp';
 
-const FALLBACK_BOB_VERSION = '0.18.3';
+const FALLBACK_BOB_VERSION = '0.20.0';
 
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
@@ -51,8 +52,13 @@ const OBJC_FILES = {
 };
 
 const KOTLIN_FILES = {
-  module: path.resolve(__dirname, '../templates/kotlin-library'),
-  view: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
+  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
+  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
+  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  // MISSING FILES
+  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
 };
 
 const SWIFT_FILES = {
@@ -131,10 +137,17 @@ const args: Record<ArgName, yargs.Options> = {
       'js',
     ],
   },
-  // TODO: update those types
   'type': {
     description: 'Type of library you want to develop',
-    choices: ['module', 'view'],
+    choices: [
+      'module-legacy',
+      'module-turbo',
+      'module-mixed',
+      'view',
+      'view-mixed',
+      'view-new',
+      'library',
+    ],
   },
   'example': {
     description: 'Type of example app',
@@ -153,6 +166,28 @@ async function create(argv: yargs.Arguments<any>) {
     );
 
     process.exit(1);
+  }
+
+  try {
+    const child = spawn('npx', ['--help']);
+
+    await new Promise((resolve, reject) => {
+      child.once('error', reject);
+      child.once('close', resolve);
+    });
+  } catch (error) {
+    // @ts-expect-error: TS doesn't know about `code`
+    if (error != null && error.code === 'ENOENT') {
+      console.log(
+        `Couldn't find ${kleur.blue(
+          'npx'
+        )}! Please install it by running ${kleur.blue('npm install -g npx')}`
+      );
+
+      process.exit(1);
+    } else {
+      throw error;
+    }
   }
 
   let name, email;
@@ -279,21 +314,31 @@ async function create(argv: yargs.Arguments<any>) {
     'languages': {
       type: (_, values) =>
         values.type === 'library' ||
-        values.type === 'module-new' ||
-        values.type === 'module-mixed' ||
         values.type === 'view-new' ||
         values.type === 'view-mixed'
           ? null
           : 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
-      choices: [
-        { title: 'Java & Objective-C', value: 'java-objc' },
-        { title: 'Java & Swift', value: 'java-swift' },
-        { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
-        { title: 'Kotlin & Swift', value: 'kotlin-swift' },
-        { title: 'C++ for both iOS & Android', value: 'cpp' },
-      ],
+      choices: (_, values) => {
+        const languages = [
+          { title: 'Java & Objective-C', value: 'java-objc' },
+          { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
+        ];
+
+        if (values.type !== 'module-new' && values.type !== 'module-mixed') {
+          languages.push(
+            { title: 'Java & Swift', value: 'java-swift' },
+            { title: 'Kotlin & Swift', value: 'kotlin-swift' }
+          );
+        }
+
+        if (values.type !== 'view') {
+          languages.push({ title: 'C++ for Android & iOS', value: 'cpp' });
+        }
+
+        return languages;
+      },
     },
     'example': {
       type: (_, values) => (values.type === 'library' ? 'select' : null),
@@ -333,8 +378,6 @@ async function create(argv: yargs.Arguments<any>) {
     )),
   } as Answers;
 
-  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
-
   // Get latest version of Bob from NPM
   let version: string;
 
@@ -369,6 +412,22 @@ async function create(argv: yargs.Arguments<any>) {
       ? 'mixed'
       : 'legacy';
 
+  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+
+  let namespace: string | undefined;
+
+  if (slug.startsWith('@') && slug.includes('/')) {
+    namespace = slug
+      .split('/')[0]
+      ?.replace(/[^a-z0-9]/g, '')
+      .toLowerCase();
+  }
+
+  // Create a package identifier with specified namespace when possible
+  const pack = `${namespace ? `${namespace}.` : ''}${project
+    .replace(/[^a-z0-9]/g, '')
+    .toLowerCase()}`;
+
   const options = {
     bob: {
       version: version || FALLBACK_BOB_VERSION,
@@ -376,10 +435,17 @@ async function create(argv: yargs.Arguments<any>) {
     project: {
       slug,
       description,
-      name: `${project.charAt(0).toUpperCase()}${project
-        .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
-        .slice(1)}`,
-      package: slug.replace(/[^a-z0-9]/g, '').toLowerCase(),
+      name:
+        /^[A-Z]/.test(argv.name) && /^[a-z0-9]+$/i.test(argv.name)
+          ? // If the project name is already in PascalCase, use it as-is
+            argv.name
+          : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
+            `${project.charAt(0).toUpperCase()}${project
+              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
+              .slice(1)}`,
+      package: pack,
+      package_dir: pack.replace(/\./g, '/'),
+      package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
       architecture,
@@ -395,6 +461,7 @@ async function create(argv: yargs.Arguments<any>) {
       url: authorUrl,
     },
     repo: repoUrl,
+    example,
   };
 
   const copyDir = async (source: string, dest: string) => {
@@ -427,13 +494,17 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
-  if (example === 'native') {
-    generateRNApp({
-      dest: folder,
-      projectName: options.project.name,
-      isNewArch: options.project.architecture === 'new',
-    });
-  }
+
+  const spinner = ora('Generating example').start();
+
+  await generateExampleApp({
+    type: example,
+    dest: folder,
+    projectName: options.project.name,
+    architecture,
+  });
+
+  spinner.text = 'Copying files';
 
   await copyDir(COMMON_FILES, folder);
 
@@ -479,15 +550,8 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
 
-    if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES[moduleType], folder);
-    } else {
-      if (moduleType === 'module') {
-        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
-      } else {
-        await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
-      }
-    }
+    const android_files = options.project.kotlin ? KOTLIN_FILES : JAVA_FILES;
+    await copyDir(android_files[`${moduleType}_${architecture}`], folder);
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
@@ -495,20 +559,18 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  if (example === 'native') {
-    // Set `react` and `react-native` versions of root `package.json` from example `package.json`
-    const examplePackageJson = fs.readJSONSync(
-      path.join(folder, 'example', 'package.json')
-    );
-    const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
-    rootPackageJson.devDependencies.react =
-      examplePackageJson.dependencies.react;
-    rootPackageJson.devDependencies['react-native'] =
-      examplePackageJson.dependencies['react-native'];
-    fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
-      spaces: 2,
-    });
-  }
+  // Set `react` and `react-native` versions of root `package.json` from example `package.json`
+  const examplePackageJson = fs.readJSONSync(
+    path.join(folder, 'example', 'package.json')
+  );
+  const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
+  rootPackageJson.devDependencies.react = examplePackageJson.dependencies.react;
+  rootPackageJson.devDependencies['react-native'] =
+    examplePackageJson.dependencies['react-native'];
+
+  fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
+    spaces: 2,
+  });
 
   try {
     spawn.sync('git', ['init'], { cwd: folder });
@@ -520,6 +582,10 @@ async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
+  spinner.succeed(
+    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
+  );
+
   const platforms = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },
@@ -530,8 +596,6 @@ async function create(argv: yargs.Arguments<any>) {
 
   console.log(
     dedent(`
-      Project created successfully at ${kleur.yellow(argv.name)}!
-
       ${kleur.magenta(
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}
@@ -548,7 +612,9 @@ async function create(argv: yargs.Arguments<any>) {
         )
         .join('\n')}
 
-      ${kleur.yellow('Good luck!')}
+      ${kleur.yellow(
+        `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
+      )}
     `)
   );
 }

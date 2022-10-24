@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🗣 Feature requests
+    url: https://github.com/callstack/react-native-builder-bob/discussions/new?category=ideas
+    about: Suggest an idea.
+  - name: 🙏 Question
+    url: https://github.com/callstack/react-native-builder-bob/discussions/new?category=q-a
+    about: Choose if you need help.

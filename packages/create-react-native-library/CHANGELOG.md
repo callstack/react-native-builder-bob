@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.4...create-react-native-library@0.25.0) (2022-10-21)
+
+
+### Features
+
+* add kotlin support to turbo module template ([ad43843](https://github.com/callstack/react-native-builder-bob/commit/ad4384374e0502b071692dec5fd5d3cf7c1b4338))
+
+
+
+
+
+## [0.24.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.3...create-react-native-library@0.24.4) (2022-10-19)
+
+
+### Bug Fixes
+
+* fix library name not being written to react-native.config.js ([4e05286](https://github.com/callstack/react-native-builder-bob/commit/4e05286d57c6f1a98217d9e860fbee622352ea5f)), closes [#299](https://github.com/callstack/react-native-builder-bob/issues/299) [#300](https://github.com/callstack/react-native-builder-bob/issues/300) [#302](https://github.com/callstack/react-native-builder-bob/issues/302)
+
+
+
+
+
+## [0.24.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.2...create-react-native-library@0.24.3) (2022-10-14)
+
+
+### Bug Fixes
+
+* restrict engine to latest Node LTS ([f569064](https://github.com/callstack/react-native-builder-bob/commit/f5690640cfca5b3b7c32b98c80442b08fda09150))
+
+
+
+
+
+## [0.24.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.1...create-react-native-library@0.24.2) (2022-10-13)
+
+
+### Bug Fixes
+
+* use [@latest](https://github.com/latest) for the npx commands ([5a0fbfa](https://github.com/callstack/react-native-builder-bob/commit/5a0fbfacc52ae26254b565ff2a4cf442eaa6ef8d))
+
+
+
+
+
+## [0.24.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.0...create-react-native-library@0.24.1) (2022-10-13)
+
+
+### Bug Fixes
+
+* use index.js instead of index.ts ([1393499](https://github.com/callstack/react-native-builder-bob/commit/1393499fab8a282f09fec68ccf10b52517581c1e)), closes [#281](https://github.com/callstack/react-native-builder-bob/issues/281)
+
+
+
+
+
+# [0.24.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.23.3...create-react-native-library@0.24.0) (2022-10-13)
+
+
+### Bug Fixes
+
+* exclude some unnecessary files from the package ([0213adc](https://github.com/callstack/react-native-builder-bob/commit/0213adccf8cff279b6953f503bdc04db1d72437f))
+* fix types in cpp adapter. closes [#278](https://github.com/callstack/react-native-builder-bob/issues/278) ([2c572dd](https://github.com/callstack/react-native-builder-bob/commit/2c572dd9b8eac5a494ed3c39dc7f1f453d08c7ed))
+* remove babel-eslint parser due to lack of support for typescript ([#274](https://github.com/callstack/react-native-builder-bob/issues/274)) ([7a0c0e9](https://github.com/callstack/react-native-builder-bob/commit/7a0c0e9794c741b6dc0a43b65bb98ef513c41f4b))
+* show a helpful error if npx isn't installed ([2c3b5e4](https://github.com/callstack/react-native-builder-bob/commit/2c3b5e4464ceca56c5dd8e51f3f29ab3c7ba08a8))
+
+
+### Features
+
+* **ios:** enable function generation by Xcode with CodeGen interface ([#267](https://github.com/callstack/react-native-builder-bob/issues/267)) ([b152ccf](https://github.com/callstack/react-native-builder-bob/commit/b152ccf4ba0aa9aabf9697506b45ac2c4e75a1c1)), closes [#261](https://github.com/callstack/react-native-builder-bob/issues/261)
+* use react-native init for generating example app ([#271](https://github.com/callstack/react-native-builder-bob/issues/271)) ([ac0e2f7](https://github.com/callstack/react-native-builder-bob/commit/ac0e2f79ed292b92341a00e73ab6395c9ad8e0d2))
+
+
+
+
+
 ## [0.23.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.23.2...create-react-native-library@0.23.3) (2022-08-01)
 
 

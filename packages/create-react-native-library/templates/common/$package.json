@@ -13,13 +13,18 @@
     "android",
     "ios",
     "cpp",
-    "<%- project.identifier -%>.podspec",
+    "*.podspec",
     "!lib/typescript/example",
-    "!android/build",
     "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "!**/.*"
   ],
   "scripts": {
     "test": "jest",
@@ -28,7 +33,11 @@
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
+<% if (example == 'native') { -%>
+    "bootstrap": "yarn example && yarn install && yarn example pods"
+<% } else { -%>
+    "bootstrap": "yarn example && yarn install"
+<% } -%>
   },
   "keywords": [
     "react-native",
@@ -47,7 +56,6 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@babel/eslint-parser": "^7.18.2",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
@@ -105,7 +113,6 @@
   },
   "eslintConfig": {
     "root": true,
-    "parser": "@babel/eslint-parser",
     "extends": [
       "@react-native-community",
       "prettier"
@@ -150,13 +157,9 @@
 <% if (project.architecture === "new") { -%>
   },
   "codegenConfig": {
-    "libraries": [
-      {
-        "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
-        "type": <%- project.view ? '"components"': '"modules"' %>,
-        "jsSrcsDir": "src"
-      }
-    ]
+    "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
+    "type": <%- project.view ? '"components"': '"modules"' %>,
+    "jsSrcsDir": "src"
 <% } -%>
   }
 }

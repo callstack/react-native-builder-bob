@@ -2,7 +2,6 @@
 
 [![create-react-native-library][create-react-native-library-version-badge]][create-react-native-library]
 [![react-native-builder-bob][react-native-builder-bob-version-badge]][react-native-builder-bob]
-[![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
 
 👷‍♂️ Simple set of CLIs to scaffold and build React Native libraries for different targets.
@@ -23,10 +22,10 @@ If you want to create your own React Native module, scaffolding the project can 
 To create new project, run the following:
 
 ```sh
-npx create-react-native-library react-native-awesome-module
+npx create-react-native-library@latest react-native-awesome-library
 ```
 
-This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-module`.
+This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-library`.
 
 <img src="assets/create-react-native-library.gif" width="500px" height="auto">
 
@@ -49,7 +48,7 @@ The following configuration steps are for projects not created with `create-reac
 To automatically configure your project to use `react-native-builder-bob`, open a Terminal and run:
 
 ```js
-npx react-native-builder-bob init
+npx react-native-builder-bob@latest init
 ```
 
 ### Manual configuration
@@ -147,6 +146,8 @@ By default, this will compile the code for last 2 versions of modern browsers, a
 
 If your source code is written in [Flow](http://www.typescriptlang.org/), You can also specify the `copyFlow` option to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
 
+By default, sourcemaps are generated alongside the compiled files. You can disable them by setting the `sourceMaps` option to `false`.
+
 Example:
 
 ```json
@@ -188,6 +189,38 @@ Example:
 
 ```json
 ["aar", { "reverseJetify": true }]
+```
+
+### Commands
+
+The `bob` CLI exposes the following commands:
+
+#### `init`
+
+This configures an existing project to use `bob` by adding the required configuration and dependencies. This is usually run with `npx`:
+
+```sh
+npx react-native-builder-bob@latest init
+```
+
+#### `build`
+
+This builds the project according to the configuration. This is usually run as part of the package's publishing flow, i.e. in the `prepare` or `prepack` scripts.
+
+```json
+"scripts": {
+  "prepare": "bob build"
+}
+```
+
+#### `run`
+
+This runs a script either with `npm` or `yarn` depending on the command that was used to run `bob`. If the script doesn't exist under the `scripts` section in `package.json`, then it's forwarded to `npm` or `yarn`. This is useful for using inside `package.json` scripts to avoid coupling them with a specific package manager.
+
+```json
+"scripts": {
+  "bootstrap": "bob run install && bob run --cwd example pods"
+}
 ```
 
 ## FAQ
@@ -252,12 +285,12 @@ There are 2 parts to this process.
 
 1. **Aliasing the JavaScript code**
 
-   The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. This is achieved by using [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) in the `example/babel.config.js` file.
+   The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. We configure several tools to make this work:
 
-   In addition to the alias, we need also need to configure the bundler to handle it correctly.
-
+   - [Babel](https://babeljs.io) is configured to use the alias in `example/babel.config.js` using [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver). This transforms the imports to point to the source code instead.
    - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, and to use the appropriate peer dependencies. This configuration exists in the `example/metro.config.js` file.
    - [Webpack](https://webpack.js.org/) is configured to compile the library source code when running on the Web. This configuration exists in the `example/webpack.config.js` file.
+   - [TypeScript](https://www.typescriptlang.org/) is configured to use the source code for type checking by using the `paths` property under `compilerOptions`. This configuration exists in the `tsconfig.json` file at the root.
 
 2. **Linking the native code**
 
@@ -328,7 +361,5 @@ MIT
 [react-native-builder-bob-version-badge]: https://img.shields.io/npm/v/react-native-builder-bob?label=react-native-builder-bob&style=flat-square
 [create-react-native-library]: https://www.npmjs.com/package/create-react-native-library
 [react-native-builder-bob]: https://www.npmjs.com/package/react-native-builder-bob
-[build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-builder-bob/main.svg?style=flat-square
-[build]: https://circleci.com/gh/callstack/react-native-builder-bob
 [license-badge]: https://img.shields.io/npm/l/react-native-builder-bob.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT

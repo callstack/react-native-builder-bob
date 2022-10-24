@@ -1,33 +1,34 @@
 #import "<%- project.name -%>.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "RN<%- project.name -%>Spec.h"
-#endif
-
 @implementation <%- project.name -%>
 
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-<% if (project.architecture == 'turbo') { -%>
-RCT_REMAP_BLOCKING_SYNCHRONOUS_METHOD(multiply,
-                                      NSNumber *,
-                                      multiplyWithA:(double)a  withB:(double)b)
-{
+<% if (project.architecture === 'new') { -%>
+- (NSNumber *)multiply:(double)a b:(double)b {
+<% if (project.cpp) { -%>
+    NSNumber *result = @(<%- project.package_cpp -%>::multiply(a, b));
+<% } else { -%>
     NSNumber *result = @(a * b);
+<% } -%>
 
     return result;
 }
 <% } else { -%>
+// Example method
+// See // https://reactnative.dev/docs/native-modules-ios
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(double)a withB:(double)b
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSNumber *result = @(a * b);
+<% if (project.cpp) { -%>
+    NSNumber *result = @(<%- project.package_cpp -%>::multiply(a, b));
+<% } else { -%>
+    NSNumber *result = @(a * b);
+<% } -%>
 
-  resolve(result);
+    resolve(result);
 }
 <% } -%>
 

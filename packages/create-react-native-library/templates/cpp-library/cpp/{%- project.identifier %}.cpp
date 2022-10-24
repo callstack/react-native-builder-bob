@@ -1,7 +1,7 @@
 #include "<%- project.identifier -%>.h"
 
-namespace example {
-	int multiply(double a, double b) {
+namespace <%- project.package_cpp -%> {
+	double multiply(double a, double b) {
 		return a * b;
 	}
 }

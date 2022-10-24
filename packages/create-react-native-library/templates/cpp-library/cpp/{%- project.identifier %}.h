@@ -1,8 +1,8 @@
-#ifndef EXAMPLE_H
-#define EXAMPLE_H
+#ifndef <%- project.package_cpp.toUpperCase() -%>_H
+#define <%- project.package_cpp.toUpperCase() -%>_H
 
-namespace example {
-  int multiply(double a, double b);
+namespace <%- project.package_cpp -%> {
+  double multiply(double a, double b);
 }
 
-#endif /* EXAMPLE_H */
+#endif /* <%- project.package_cpp.toUpperCase() -%>_H */

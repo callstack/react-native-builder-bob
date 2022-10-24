@@ -1,0 +1,181 @@
+name: Build template
+on:
+  push:
+    paths:
+      - 'packages/create-react-native-library/**'
+      - '!**.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type:
+          - module-legacy
+          - module-mixed
+          - module-turbo
+          - view
+        language:
+          - java-objc
+          - java-swift
+          - kotlin-objc
+          - kotlin-swift
+        example:
+          - native
+        exclude:
+          - type: module-turbo
+            language: java-swift
+          - type: module-turbo
+            language: kotlin-swift
+          - type: module-mixed
+            language: java-swift
+          - type: module-mixed
+            language: kotlin-swift
+        include:
+          - type: module-legacy
+            language: cpp
+            example: native
+          - type: module-mixed
+            language: cpp
+            example: native
+          - type: module-turbo
+            language: cpp
+            example: native
+          - type: library
+            language: js
+            example: native
+          - type: library
+            language: js
+            example: expo
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Cache project dependencies
+        id: root-yarn-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        if: steps.root-yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Build package
+        run: |
+          yarn workspace create-react-native-library prepare
+
+      - name: Create library
+        run: |
+          WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
+          ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
+            --slug react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type ${{ matrix.type }} \
+            --languages ${{ matrix.language }} \
+            --example ${{ matrix.example }}
+          echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
+
+          # Build Android for only some matrices to skip redundant builds
+          if [[ ${{ matrix.type }} == view && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+            echo "build_android=1" >> $GITHUB_ENV
+          fi
+
+      - name: Cache dependencies of library
+        id: library-yarn-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.work_dir }}/**/node_modules
+          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir)) }}
+
+      - name: Install dependencies of library
+        if: steps.library-yarn-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn
+
+      - name: Lint library
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn lint
+
+      - name: Typecheck library
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn typescript
+
+      - name: Test library
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn test
+
+      - name: Setup JDK
+        if: env.build_android == 1
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Install NDK
+        if: env.build_android == 1
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r21d
+
+      - name: Set ANDROID_NDK
+        if: env.build_android == 1
+        run: echo "ANDROID_NDK=$ANDROID_HOME/ndk-bundle" >> $GITHUB_ENV
+
+      - name: Accept Android SDK licenses
+        if: env.build_android == 1
+        run: /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      - name: Cache Gradle
+        if: env.build_android == 1
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles(format('{0}/example/android/gradle/wrapper/gradle-wrapper.properties', env.work_dir)) }}
+
+      - name: Cache hermes
+        if: env.build_android == 1
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.work_dir }}/example/node_modules/react-native
+          key: ${{ runner.os }}-hermes-engine-${{ hashFiles(format('{0}/example/node_modules/react-native/package.json', env.work_dir)) }}
+
+      - name: Cache android libraries
+        if: env.build_android == 1
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.work_dir }}/example/android/app/build/react-ndk
+          key: ${{ runner.os }}-react-ndk-${{ hashFiles(format('{0}/example/node_modules/react-native/package.json', env.work_dir)) }}
+
+      - name: Build example (Android)
+        if: env.build_android == 1
+        working-directory: ${{ env.work_dir }}
+        run: |
+          cd example/android
+          ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a

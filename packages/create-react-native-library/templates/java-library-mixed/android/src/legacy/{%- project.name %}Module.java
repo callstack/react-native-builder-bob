@@ -16,13 +16,13 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   @Override
   @NonNull
   public String getName() {
-    return <%- project.name -%>ModuleImpl.NAME;
+    return NAME;
   }
 
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
-    <%- project.name -%>ModuleImpl.multiply(a, b, promise);
+    promise.resolve(<%- project.name -%>ModuleImpl.multiply(a, b));
   }
 }
