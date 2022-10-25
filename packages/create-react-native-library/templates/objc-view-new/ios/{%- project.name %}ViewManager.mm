@@ -14,4 +14,6 @@ RCT_EXPORT_MODULE(<%- project.name -%>View)
   return [[UIView alloc] init];
 }
 
+RCT_EXPORT_VIEW_PROPERTY(color, NSString)
+
 @end

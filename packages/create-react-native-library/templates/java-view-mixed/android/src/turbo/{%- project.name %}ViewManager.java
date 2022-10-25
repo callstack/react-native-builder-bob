@@ -40,14 +40,4 @@ public class <%- project.name -%>ViewManager extends SimpleViewManager<<%- proje
   public void setColor(<%- project.name -%>View view, String color) {
     <%- project.name -%>ViewManagerImpl.setColor(view, color);
   }
-
-  @Override
-  public void changeBackgroundColor(<%- project.name -%>View view, String color) {
-    <%- project.name -%>ViewManagerImpl.setColor(view, color);
-  }
-
-  @Override
-  public void receiveCommand(<%- project.name -%>View root, String commandId, ReadableArray args) {
-    mDelegate.receiveCommand(root, commandId, args);
-  }
 }

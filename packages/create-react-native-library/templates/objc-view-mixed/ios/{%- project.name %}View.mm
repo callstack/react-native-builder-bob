@@ -7,6 +7,7 @@
 #import <react/renderer/components/RN<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
+#import "Utils.h"
 
 using namespace facebook::react;
 
@@ -44,7 +45,7 @@ using namespace facebook::react;
 
     if (oldViewProps.color != newViewProps.color) {
         NSString * colorToConvert = [[NSString alloc] initWithUTF8String: newViewProps.color.c_str()];
-        [_view setBackgroundColor:[self hexStringToColor:colorToConvert]];
+        [_view setBackgroundColor: [Utils hexStringToColor:colorToConvert]];
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -53,29 +54,6 @@ using namespace facebook::react;
 Class<RCTComponentViewProtocol> <%- project.name -%>ViewCls(void)
 {
     return <%- project.name -%>View.class;
-}
-
-- hexStringToColor:(NSString *)stringToConvert
-{
-    NSString *noHashString = [stringToConvert stringByReplacingOccurrencesOfString:@"#" withString:@""];
-    NSScanner *stringScanner = [NSScanner scannerWithString:noHashString];
-    
-    unsigned hex;
-    if (![stringScanner scanHexInt:&hex]) return nil;
-    int r = (hex >> 16) & 0xFF;
-    int g = (hex >> 8) & 0xFF;
-    int b = (hex) & 0xFF;
-    
-    return [UIColor colorWithRed:r / 255.0f green:g / 255.0f blue:b / 255.0f alpha:1.0f];
-}
-
-- (void)changeBackgroundColor:(nonnull NSString *)color {
-    [_view setBackgroundColor:[self hexStringToColor:color]];
-}
-
-- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
-{
-  RCT<%- project.name -%>ViewHandleCommand(self, commandName, args);
 }
 
 @end

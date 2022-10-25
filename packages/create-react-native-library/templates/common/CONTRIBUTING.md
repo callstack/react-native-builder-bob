@@ -94,7 +94,6 @@ To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Ex
 To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
 
 <% } -%>
-
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:

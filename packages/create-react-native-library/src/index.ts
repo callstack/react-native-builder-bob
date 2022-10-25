@@ -55,9 +55,6 @@ const KOTLIN_FILES = {
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  // MISSING FILES
-  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
 };
 
 const SWIFT_FILES = {
@@ -542,8 +539,28 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
 
-    const android_files = options.project.kotlin ? KOTLIN_FILES : JAVA_FILES;
-    await copyDir(android_files[`${moduleType}_${architecture}`], folder);
+    if (options.project.kotlin) {
+      switch (`${moduleType}_${architecture}`) {
+        case 'module_legacy':
+          await copyDir(KOTLIN_FILES['module_legacy'], folder);
+          break;
+        case 'module_mixed':
+          await copyDir(KOTLIN_FILES['module_mixed'], folder);
+          break;
+        case 'module_new':
+          await copyDir(KOTLIN_FILES['module_new'], folder);
+          break;
+        case 'view_legacy':
+          await copyDir(KOTLIN_FILES['view_legacy'], folder);
+          break;
+        default:
+          console.log(
+            `Kotlin template for ${moduleType}_${architecture} has not been implemented`
+          );
+      }
+    } else {
+      await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
+    }
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);

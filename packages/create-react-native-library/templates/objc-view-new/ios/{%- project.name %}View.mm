@@ -68,13 +68,4 @@ Class<RCTComponentViewProtocol> <%- project.name -%>ViewCls(void)
     return [UIColor colorWithRed:r / 255.0f green:g / 255.0f blue:b / 255.0f alpha:1.0f];
 }
 
-- (void)changeBackgroundColor:(nonnull NSString *)color {
-    [_view setBackgroundColor:[self hexStringToColor:color]];
-}
-
-- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
-{
-  RCT<%- project.name -%>ViewHandleCommand(self, commandName, args);
-}
-
 @end

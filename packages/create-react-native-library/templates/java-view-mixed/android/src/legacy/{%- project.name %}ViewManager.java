@@ -31,29 +31,6 @@ public class <%- project.name -%>ViewManager extends SimpleViewManager<<%- proje
     return <%- project.name -%>ViewManagerImpl.createViewInstance(context);
   }
 
-  @Override
-  public Map<String, Integer> getCommandsMap() {
-    return MapBuilder.of("changeBackgroundColor", 1);
-  }
-
-  @Override
-  public void receiveCommand(
-    @NonNull <%- project.name -%>View view,
-    String commandId,
-    @Nullable ReadableArray args
-  ) {
-    super.receiveCommand(view, commandId, args);
-    String color = args.getString(0);
-
-    switch (commandId) {
-      case "changeBackgroundColor":
-        setColor(view, color);
-        break;
-      default: {}
-    }
-  }
-
-
   @ReactProp(name = "color")
   public void setColor(<%- project.name -%>View view, String color) {
     <%- project.name -%>ViewManagerImpl.setColor(view, color);
