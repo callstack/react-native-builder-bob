@@ -107,6 +107,7 @@ jobs:
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
             --example ${{ matrix.example }}
+
           echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
 
           # Build Android for only some matrices to skip redundant builds

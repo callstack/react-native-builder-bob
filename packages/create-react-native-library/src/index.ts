@@ -71,7 +71,8 @@ type ArgName =
   | 'repo-url'
   | 'languages'
   | 'type'
-  | 'example';
+  | 'example'
+  | 'react-native-version';
 
 type ProjectLanguages =
   | 'java-objc'
@@ -102,6 +103,7 @@ type Answers = {
   languages: ProjectLanguages;
   type?: ProjectType;
   example?: ProjectExample;
+  reactNativeVersion?: string;
 };
 
 const LANGUAGE_CHOICES: {
@@ -206,6 +208,10 @@ const args: Record<ArgName, yargs.Options> = {
   'example': {
     description: 'Type of example app',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
+  },
+  'react-native-version': {
+    description: 'Version of React Native to use, uses latest if not specified',
+    type: 'string',
   },
 };
 
@@ -374,6 +380,7 @@ async function create(argv: yargs.Arguments<any>) {
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
     example = 'native',
+    reactNativeVersion,
   } = {
     ...argv,
     ...(await prompts(
@@ -539,6 +546,7 @@ async function create(argv: yargs.Arguments<any>) {
     dest: folder,
     projectName: options.project.name,
     architecture,
+    reactNativeVersion,
   });
 
   spinner.text = 'Copying files';

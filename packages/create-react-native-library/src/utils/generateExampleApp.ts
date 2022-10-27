@@ -26,21 +26,18 @@ const PACKAGES_TO_ADD = {
   'babel-plugin-module-resolver': '^4.1.0',
 };
 
-const PACKAGES_TO_ADD_NEW_ARCH = {
-  'patch-package': '^6.4.7',
-  'postinstall-postinstall': '^2.1.0',
-};
-
 export default async function generateExampleApp({
   type,
   dest,
   projectName,
   architecture,
+  reactNativeVersion = 'latest',
 }: {
   type: 'expo' | 'native';
   dest: string;
   projectName: string;
   architecture: 'new' | 'mixed' | 'legacy';
+  reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
   const args =
@@ -52,6 +49,8 @@ export default async function generateExampleApp({
           `${projectName}Example`,
           '--directory',
           directory,
+          '--version',
+          reactNativeVersion,
           '--skip-install',
         ]
       : // `npx create-expo-app example --no-install`
@@ -94,14 +93,6 @@ export default async function generateExampleApp({
   });
 
   Object.assign(devDependencies, PACKAGES_TO_ADD);
-
-  // Temporary until autolinking is fixed on iOS
-  // https://github.com/facebook/react-native/commit/a5622165c198ac6e7ffff5883d4f269a2c974f2e
-  if (architecture === 'new' || architecture === 'mixed') {
-    scripts.postinstall = 'patch-package';
-
-    Object.assign(devDependencies, PACKAGES_TO_ADD_NEW_ARCH);
-  }
 
   await fs.writeFile(
     path.join(directory, 'package.json'),
