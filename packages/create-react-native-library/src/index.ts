@@ -32,7 +32,7 @@ const NATIVE_FILES = {
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
-};
+} as const;
 
 const JAVA_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
@@ -41,26 +41,26 @@ const JAVA_FILES = {
   view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
   view_mixed: path.resolve(__dirname, '../templates/java-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/java-view-new'),
-};
+} as const;
 
 const OBJC_FILES = {
-  module: path.resolve(__dirname, '../templates/objc-library'),
+  module_common: path.resolve(__dirname, '../templates/objc-library'),
   view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
   view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/objc-view-new'),
-};
+} as const;
 
 const KOTLIN_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-};
+} as const;
 
 const SWIFT_FILES = {
-  module: path.resolve(__dirname, '../templates/swift-library-legacy'),
-  view: path.resolve(__dirname, '../templates/swift-view-legacy'),
-};
+  module_legacy: path.resolve(__dirname, '../templates/swift-library-legacy'),
+  view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
+} as const;
 
 type ArgName =
   | 'slug'
@@ -73,6 +73,25 @@ type ArgName =
   | 'type'
   | 'example';
 
+type ProjectLanguages =
+  | 'java-objc'
+  | 'java-swift'
+  | 'kotlin-objc'
+  | 'kotlin-swift'
+  | 'cpp'
+  | 'js';
+
+type ProjectType =
+  | 'module-legacy'
+  | 'module-new'
+  | 'module-mixed'
+  | 'view-mixed'
+  | 'view-new'
+  | 'view-legacy'
+  | 'library';
+
+type ProjectExample = 'expo' | 'native';
+
 type Answers = {
   slug: string;
   description: string;
@@ -80,22 +99,76 @@ type Answers = {
   authorEmail: string;
   authorUrl: string;
   repoUrl: string;
-  languages:
-    | 'java-objc'
-    | 'java-swift'
-    | 'kotlin-objc'
-    | 'kotlin-swift'
-    | 'cpp';
-  type?:
-    | 'module-legacy'
-    | 'module-new'
-    | 'module-mixed'
-    | 'view'
-    | 'view-mixed'
-    | 'view-new'
-    | 'library';
-  example?: 'expo' | 'native';
+  languages: ProjectLanguages;
+  type?: ProjectType;
+  example?: ProjectExample;
 };
+
+const LANGUAGE_CHOICES: {
+  title: string;
+  value: ProjectLanguages;
+  types?: ProjectType[];
+}[] = [
+  { title: 'Java & Objective-C', value: 'java-objc' },
+  {
+    title: 'Kotlin & Objective-C',
+    value: 'kotlin-objc',
+    types: ['module-legacy', 'module-mixed', 'module-new', 'view-legacy'],
+  },
+  {
+    title: 'Java & Swift',
+    value: 'java-swift',
+    types: ['module-legacy', 'view-legacy'],
+  },
+  {
+    title: 'Kotlin & Swift',
+    value: 'kotlin-swift',
+    types: ['module-legacy', 'view-legacy'],
+  },
+  {
+    title: 'C++ for Android & iOS',
+    value: 'cpp',
+    types: ['module-legacy', 'module-mixed', 'module-new'],
+  },
+  {
+    title: 'JavaScript for Android, iOS & Web',
+    value: 'js',
+    types: ['library'],
+  },
+];
+
+const TYPE_CHOICES: { title: string; value: ProjectType }[] = [
+  {
+    title: 'Turbo module with backward compat (experimental)',
+    value: 'module-mixed',
+  },
+  {
+    title: 'Turbo module (experimental)',
+    value: 'module-new',
+  },
+  {
+    title: 'Native module',
+    value: 'module-legacy',
+  },
+  {
+    title: 'Fabric view with backward compat (experimental)',
+    value: 'view-mixed',
+  },
+  {
+    title: 'Fabric view (experimental)',
+    value: 'view-new',
+  },
+  { title: 'Native view', value: 'view-legacy' },
+  { title: 'JavaScript library', value: 'library' },
+];
+
+const EXAMPLE_CHOICES: { title: string; value: ProjectExample }[] = [
+  { title: 'JavaScript only (with Expo and Web support)', value: 'expo' },
+  {
+    title: 'Native (to use other libraries with native code)',
+    value: 'native',
+  },
+];
 
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
@@ -124,30 +197,15 @@ const args: Record<ArgName, yargs.Options> = {
   },
   'languages': {
     description: 'Languages you want to use',
-    choices: [
-      'java-objc',
-      'java-swift',
-      'kotlin-objc',
-      'kotlin-swift',
-      'cpp',
-      'js',
-    ],
+    choices: LANGUAGE_CHOICES.map(({ value }) => value),
   },
   'type': {
     description: 'Type of library you want to develop',
-    choices: [
-      'module-legacy',
-      'module-turbo',
-      'module-mixed',
-      'view',
-      'view-mixed',
-      'view-new',
-      'library',
-    ],
+    choices: TYPE_CHOICES.map(({ value }) => value),
   },
   'example': {
     description: 'Type of example app',
-    choices: ['expo', 'native'],
+    choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
 };
 
@@ -282,71 +340,27 @@ async function create(argv: yargs.Arguments<any>) {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
-      choices: [
-        {
-          title: 'Turbo module with backward compat (experimental)',
-          value: 'module-mixed',
-        },
-        {
-          title: 'Turbo module (experimental)',
-          value: 'module-new',
-        },
-        {
-          title: 'Native module',
-          value: 'module-legacy',
-        },
-        { title: 'Native view', value: 'view' },
-        {
-          title: 'Native fabric view with backward compat (experimental)',
-          value: 'view-mixed',
-        },
-        {
-          title: 'Native fabric view (experimental)',
-          value: 'view-new',
-        },
-        { title: 'JavaScript library', value: 'library' },
-      ],
+      choices: TYPE_CHOICES,
     },
     'languages': {
-      type: (_, values) =>
-        values.type === 'library' ||
-        values.type === 'view-new' ||
-        values.type === 'view-mixed'
-          ? null
-          : 'select',
+      type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
-        const languages = [
-          { title: 'Java & Objective-C', value: 'java-objc' },
-          { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
-        ];
+        return LANGUAGE_CHOICES.filter((choice) => {
+          if (choice.types) {
+            return choice.types.includes(values.type);
+          }
 
-        if (values.type !== 'module-new' && values.type !== 'module-mixed') {
-          languages.push(
-            { title: 'Java & Swift', value: 'java-swift' },
-            { title: 'Kotlin & Swift', value: 'kotlin-swift' }
-          );
-        }
-
-        if (values.type !== 'view') {
-          languages.push({ title: 'C++ for Android & iOS', value: 'cpp' });
-        }
-
-        return languages;
+          return true;
+        });
       },
     },
     'example': {
       type: (_, values) => (values.type === 'library' ? 'select' : null),
       name: 'example',
       message: 'What type of example app do you want to generate?',
-      choices: [
-        { title: 'JavaScript only (with Expo and Web support)', value: 'expo' },
-        {
-          title: 'Native (to use other libraries with native code)',
-          value: 'native',
-        },
-      ],
+      choices: EXAMPLE_CHOICES,
     },
   };
 
@@ -364,13 +378,40 @@ async function create(argv: yargs.Arguments<any>) {
     ...argv,
     ...(await prompts(
       Object.entries(questions)
-        .filter(
-          ([k, v]) =>
-            !(argv[k] && v.validate
-              ? v.validate(argv[k]) === true
-              : Boolean(argv[k]))
-        )
-        .map(([, v]) => v)
+        .filter(([k, v]) => {
+          // Skip questions which are passed as parameter and pass validation
+          if (argv[k] != null && v.validate?.(argv[k]) !== false) {
+            return false;
+          }
+
+          // Skip questions with a single choice
+          if (Array.isArray(v.choices) && v.choices.length === 1) {
+            return v;
+          }
+
+          return true;
+        })
+        .map(([, v]) => {
+          const { type, choices } = v;
+
+          // Skip dynamic questions with a single choice
+          if (type === 'select' && typeof choices === 'function') {
+            return {
+              ...v,
+              type: (...args) => {
+                const result = choices(...args);
+
+                if (result && result.length === 1) {
+                  return null;
+                }
+
+                return type;
+              },
+            };
+          }
+
+          return v;
+        })
     )),
   } as Answers;
 
@@ -400,7 +441,7 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type.startsWith('view') ? 'view' : 'module';
+  const moduleType = type.startsWith('view-') ? 'view' : 'module';
   const architecture =
     type === 'module-new' || type === 'view-new'
       ? 'new'
@@ -530,36 +571,32 @@ async function create(argv: yargs.Arguments<any>) {
     }
 
     if (options.project.swift) {
-      await copyDir(SWIFT_FILES[moduleType], folder);
+      await copyDir(SWIFT_FILES[`${moduleType}_legacy`], folder);
     } else {
       if (moduleType === 'module') {
-        await copyDir(OBJC_FILES[moduleType], folder);
+        await copyDir(OBJC_FILES[`${moduleType}_common`], folder);
       } else {
         await copyDir(OBJC_FILES[`view_${architecture}`], folder);
       }
     }
 
+    const templateType = `${moduleType}_${architecture}` as const;
+
     if (options.project.kotlin) {
-      switch (`${moduleType}_${architecture}`) {
+      switch (templateType) {
         case 'module_legacy':
-          await copyDir(KOTLIN_FILES['module_legacy'], folder);
-          break;
         case 'module_mixed':
-          await copyDir(KOTLIN_FILES['module_mixed'], folder);
-          break;
         case 'module_new':
-          await copyDir(KOTLIN_FILES['module_new'], folder);
-          break;
         case 'view_legacy':
-          await copyDir(KOTLIN_FILES['view_legacy'], folder);
+          await copyDir(KOTLIN_FILES[templateType], folder);
           break;
         default:
-          console.log(
-            `Kotlin template for ${moduleType}_${architecture} has not been implemented`
+          throw new Error(
+            `Kotlin template for ${templateType} has not been implemented`
           );
       }
     } else {
-      await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
+      await copyDir(JAVA_FILES[templateType], folder);
     }
 
     if (options.project.cpp) {

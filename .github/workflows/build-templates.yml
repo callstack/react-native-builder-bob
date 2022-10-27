@@ -14,8 +14,10 @@ jobs:
         type:
           - module-legacy
           - module-mixed
-          - module-turbo
-          - view
+          - module-new
+          - view-legacy
+          - view-mixed
+          - view-new
         language:
           - java-objc
           - java-swift
@@ -24,13 +26,25 @@ jobs:
         example:
           - native
         exclude:
-          - type: module-turbo
+          - type: module-new
             language: java-swift
-          - type: module-turbo
+          - type: module-new
             language: kotlin-swift
           - type: module-mixed
             language: java-swift
           - type: module-mixed
+            language: kotlin-swift
+          - type: view-new
+            language: kotlin-objc
+          - type: view-new
+            language: java-swift
+          - type: view-new
+            language: kotlin-swift
+          - type: view-mixed
+            language: kotlin-objc
+          - type: view-mixed
+            language: java-swift
+          - type: view-mixed
             language: kotlin-swift
         include:
           - type: module-legacy
@@ -39,7 +53,7 @@ jobs:
           - type: module-mixed
             language: cpp
             example: native
-          - type: module-turbo
+          - type: module-new
             language: cpp
             example: native
           - type: library
@@ -96,7 +110,7 @@ jobs:
           echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
 
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.type }} == view && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+          if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
             echo "build_android=1" >> $GITHUB_ENV
           fi
 
