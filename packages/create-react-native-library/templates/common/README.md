@@ -11,6 +11,7 @@ npm install <%- project.slug %>
 ## Usage
 
 <% if (project.view) { -%>
+
 ```js
 import { <%- project.name -%>View } from "<%- project.slug -%>";
 
@@ -18,22 +19,27 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 <<%- project.name -%>View color="tomato" />
 ```
-<% } else if (project.architecture == 'turbo') { -%>
+
+<% } else if (project.architecture === 'new' && project.module) { -%>
+
 ```js
-import { multiply } from "<%- project.slug -%>";
+import { multiply } from '<%- project.slug -%>';
 
 // ...
 
 const result = multiply(3, 7);
 ```
+
 <% } else { -%>
+
 ```js
-import { multiply } from "<%- project.slug -%>";
+import { multiply } from '<%- project.slug -%>';
 
 // ...
 
 const result = await multiply(3, 7);
 ```
+
 <% } -%>
 
 ## Contributing

@@ -51,7 +51,7 @@ By default, the example is configured to build with the old architecture. To run
    ```
 
 <% } -%>
-<% if (project.architecture === 'turbo' || project.architecture == 'mixed') { -%>
+<% if (project.architecture === 'new' || project.architecture == 'mixed') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
 ```sh

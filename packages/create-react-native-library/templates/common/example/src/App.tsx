@@ -16,7 +16,7 @@ export default function App() {
     </View>
   );
 }
-<% } else if (project.architecture == 'turbo') { -%>
+<% } else if (project.architecture === 'new' && project.module) { -%>
 const result = multiply(3, 7);
 
 export default function App() {

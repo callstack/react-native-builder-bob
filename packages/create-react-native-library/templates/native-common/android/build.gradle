@@ -80,12 +80,12 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-<% if (project.architecture == 'turbo') { -%>
+<% if (project.architecture == 'new') { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
           java.srcDirs += [
-            // This is needed to build Kotlin project with TurboModules enabled
+            // This is needed to build Kotlin project with NewArch enabled
             "${project.buildDir}/generated/source/codegen/java"
           ]
       }
@@ -97,7 +97,7 @@ android {
       if (isNewArchitectureEnabled()) {
           java.srcDirs += [
             "src/turbo",
-            // This is needed to build Kotlin project with TurboModules enabled
+            // This is needed to build Kotlin project with NewArch enabled
             "${project.buildDir}/generated/source/codegen/java"
           ]
       } else {
@@ -193,7 +193,7 @@ dependencies {
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-    libraryName = "<%- project.name -%>"
+    libraryName = "<%- project.view ? project.name+'View' : project.name -%>"
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }

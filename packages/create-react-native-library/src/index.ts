@@ -19,11 +19,7 @@ const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
-const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example');
-const EXAMPLE_TURBO_FILES = path.resolve(
-  __dirname,
-  '../templates/example-turbo'
-);
+const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example-legacy');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
@@ -31,33 +27,39 @@ const NATIVE_COMMON_FILES = path.resolve(
 
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/native-library-turbo'),
+  module_new: path.resolve(__dirname, '../templates/native-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
-  view: path.resolve(__dirname, '../templates/native-view-library'),
+  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/native-view-new'),
 };
 
 const JAVA_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/java-library-turbo'),
+  module_new: path.resolve(__dirname, '../templates/java-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
-  view: path.resolve(__dirname, '../templates/java-view-library'),
+  view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/java-view-new'),
 };
 
 const OBJC_FILES = {
   module: path.resolve(__dirname, '../templates/objc-library'),
-  view: path.resolve(__dirname, '../templates/objc-view-library'),
+  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
 };
 
 const KOTLIN_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
-  module_turbo: path.resolve(__dirname, '../templates/kotlin-library-turbo'),
+  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
-  view: path.resolve(__dirname, '../templates/kotlin-view-library'),
+  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
 };
 
 const SWIFT_FILES = {
-  module: path.resolve(__dirname, '../templates/swift-library'),
-  view: path.resolve(__dirname, '../templates/swift-view-library'),
+  module: path.resolve(__dirname, '../templates/swift-library-legacy'),
+  view: path.resolve(__dirname, '../templates/swift-view-legacy'),
 };
 
 type ArgName =
@@ -84,7 +86,14 @@ type Answers = {
     | 'kotlin-objc'
     | 'kotlin-swift'
     | 'cpp';
-  type?: 'module-legacy' | 'module-turbo' | 'module-mixed' | 'view' | 'library';
+  type?:
+    | 'module-legacy'
+    | 'module-new'
+    | 'module-mixed'
+    | 'view'
+    | 'view-mixed'
+    | 'view-new'
+    | 'library';
   example?: 'expo' | 'native';
 };
 
@@ -131,6 +140,8 @@ const args: Record<ArgName, yargs.Options> = {
       'module-turbo',
       'module-mixed',
       'view',
+      'view-mixed',
+      'view-new',
       'library',
     ],
   },
@@ -278,18 +289,31 @@ async function create(argv: yargs.Arguments<any>) {
         },
         {
           title: 'Turbo module (experimental)',
-          value: 'module-turbo',
+          value: 'module-new',
         },
         {
           title: 'Native module',
           value: 'module-legacy',
         },
         { title: 'Native view', value: 'view' },
+        {
+          title: 'Native fabric view with backward compat (experimental)',
+          value: 'view-mixed',
+        },
+        {
+          title: 'Native fabric view (experimental)',
+          value: 'view-new',
+        },
         { title: 'JavaScript library', value: 'library' },
       ],
     },
     'languages': {
-      type: (_, values) => (values.type !== 'library' ? 'select' : null),
+      type: (_, values) =>
+        values.type === 'library' ||
+        values.type === 'view-new' ||
+        values.type === 'view-mixed'
+          ? null
+          : 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
@@ -298,7 +322,7 @@ async function create(argv: yargs.Arguments<any>) {
           { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
         ];
 
-        if (values.type !== 'module-turbo' && values.type !== 'module-mixed') {
+        if (values.type !== 'module-new' && values.type !== 'module-mixed') {
           languages.push(
             { title: 'Java & Swift', value: 'java-swift' },
             { title: 'Kotlin & Swift', value: 'kotlin-swift' }
@@ -376,16 +400,13 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type === 'view' ? 'view' : 'module';
-
+  const moduleType = type.startsWith('view') ? 'view' : 'module';
   const architecture =
-    type === 'module-turbo'
-      ? 'turbo'
-      : type === 'module-mixed'
+    type === 'module-new' || type === 'view-new'
+      ? 'new'
+      : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
-
-  const turbomodule = architecture === 'turbo' || architecture === 'mixed';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
@@ -424,11 +445,11 @@ async function create(argv: yargs.Arguments<any>) {
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
       architecture,
-      turbomodule,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
-      view: type === 'view',
+      view: moduleType === 'view',
+      module: moduleType === 'module',
     },
     author: {
       name: authorName,
@@ -500,33 +521,45 @@ async function create(argv: yargs.Arguments<any>) {
       path.join(folder, 'example')
     );
 
-    if (turbomodule) {
-      await copyDir(
-        path.join(EXAMPLE_TURBO_FILES, 'example'),
-        path.join(folder, 'example')
-      );
-    }
-
     await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (moduleType === 'module') {
       await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
     } else {
-      await copyDir(NATIVE_FILES[moduleType], folder);
+      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
     }
 
     if (options.project.swift) {
       await copyDir(SWIFT_FILES[moduleType], folder);
     } else {
-      await copyDir(OBJC_FILES[moduleType], folder);
+      if (moduleType === 'module') {
+        await copyDir(OBJC_FILES[moduleType], folder);
+      } else {
+        await copyDir(OBJC_FILES[`view_${architecture}`], folder);
+      }
     }
 
-    const android_files = options.project.kotlin ? KOTLIN_FILES : JAVA_FILES;
-
-    if (moduleType === 'module') {
-      await copyDir(android_files[`${moduleType}_${architecture}`], folder);
+    if (options.project.kotlin) {
+      switch (`${moduleType}_${architecture}`) {
+        case 'module_legacy':
+          await copyDir(KOTLIN_FILES['module_legacy'], folder);
+          break;
+        case 'module_mixed':
+          await copyDir(KOTLIN_FILES['module_mixed'], folder);
+          break;
+        case 'module_new':
+          await copyDir(KOTLIN_FILES['module_new'], folder);
+          break;
+        case 'view_legacy':
+          await copyDir(KOTLIN_FILES['view_legacy'], folder);
+          break;
+        default:
+          console.log(
+            `Kotlin template for ${moduleType}_${architecture} has not been implemented`
+          );
+      }
     } else {
-      await copyDir(android_files[moduleType], folder);
+      await copyDir(JAVA_FILES[`${moduleType}_${architecture}`], folder);
     }
 
     if (options.project.cpp) {

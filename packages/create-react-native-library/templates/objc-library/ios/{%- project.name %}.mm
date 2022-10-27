@@ -4,7 +4,7 @@
 
 RCT_EXPORT_MODULE()
 
-<% if (project.architecture == 'turbo') { -%>
+<% if (project.architecture === 'new') { -%>
 - (NSNumber *)multiply:(double)a b:(double)b {
 <% if (project.cpp) { -%>
     NSNumber *result = @(<%- project.package_cpp -%>::multiply(a, b));

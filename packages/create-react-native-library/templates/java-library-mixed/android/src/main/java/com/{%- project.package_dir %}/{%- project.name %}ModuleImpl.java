@@ -2,7 +2,7 @@ package com.<%- project.package -%>;
 
 /**
  * This is where the module implementation lives
- * The exposed methods can be defined in the `turbo` and `legacy` folders
+ * The exposed methods can be defined in the `new` and `legacy` folders
  */
 public class <%- project.name -%>ModuleImpl  {
   public static final String NAME = "<%- project.name -%>";
