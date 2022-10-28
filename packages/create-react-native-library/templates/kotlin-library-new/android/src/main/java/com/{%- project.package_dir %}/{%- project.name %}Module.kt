@@ -4,7 +4,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.annotations.ReactModule
 
 @ReactModule(name = <%- project.name -%>Module.NAME)
-class <%- project.name -%>Module(reactContext: ReactApplicationContext?) : Native<%- project.name -%>Spec(reactContext) {
+class <%- project.name -%>Module(reactContext: ReactApplicationContext) :
+  Native<%- project.name -%>Spec(reactContext) {
+
   override fun getName(): String {
     return NAME
   }

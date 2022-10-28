@@ -2,6 +2,7 @@ name: Build template
 on:
   push:
     paths:
+      - '.github/workflows/build-templates.yml'
       - 'packages/create-react-native-library/**'
       - '!**.md'
 
