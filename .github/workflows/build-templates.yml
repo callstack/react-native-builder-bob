@@ -98,7 +98,7 @@ jobs:
         run: |
           WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
           ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
-            --slug react-native-test \
+            --slug @bob/react-native-test \
             --description test \
             --author-name test \
             --author-email test@test \
