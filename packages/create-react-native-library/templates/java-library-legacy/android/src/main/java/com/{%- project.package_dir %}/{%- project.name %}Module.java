@@ -26,6 +26,8 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   static {
     System.loadLibrary("cpp");
   }
+
+  private static native double nativeMultiply(double a, double b);
 <% } -%>
 
   // Example method
@@ -38,8 +40,4 @@ public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
     promise.resolve(a * b);
 <% } -%>
   }
-
-<% if (project.cpp) { -%>
-  private static native double nativeMultiply(double a, double b);
-<% } -%>
 }

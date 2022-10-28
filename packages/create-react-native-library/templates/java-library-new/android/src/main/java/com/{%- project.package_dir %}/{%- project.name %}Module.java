@@ -23,6 +23,8 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
   static {
     System.loadLibrary("cpp");
   }
+
+  private static native double nativeMultiply(double a, double b);
 <% } -%>
 
   // Example method
@@ -35,8 +37,4 @@ public class <%- project.name -%>Module extends Native<%- project.name -%>Spec {
     return a * b;
 <% } -%>
   }
-
-<% if (project.cpp) { -%>
-  private static native double nativeMultiply(double a, double b);
-<% } -%>
 }

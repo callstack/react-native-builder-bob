@@ -5,10 +5,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 
-class <%- project.name -%>Module(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class <%- project.name -%>Module(reactContext: ReactApplicationContext) :
+  ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String {
-    return "<%- project.name -%>"
+    return NAME
   }
 
   // Example method
@@ -16,5 +17,9 @@ class <%- project.name -%>Module(reactContext: ReactApplicationContext) : ReactC
   @ReactMethod
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
+  }
+
+  companion object {
+    const val NAME = "<%- project.name -%>"
   }
 }
