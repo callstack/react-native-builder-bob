@@ -71,7 +71,6 @@ type ArgName =
   | 'repo-url'
   | 'languages'
   | 'type'
-  | 'example'
   | 'react-native-version';
 
 type ProjectLanguages =
@@ -91,8 +90,6 @@ type ProjectType =
   | 'view-legacy'
   | 'library';
 
-type ProjectExample = 'expo' | 'native';
-
 type Answers = {
   slug: string;
   description: string;
@@ -102,7 +99,6 @@ type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
-  example?: ProjectExample;
   reactNativeVersion?: string;
 };
 
@@ -139,36 +135,48 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
-const TYPE_CHOICES: { title: string; value: ProjectType }[] = [
+const NEWARCH_DESCRIPTION = 'requires new architecture (experimental)';
+const BACKCOMPAT_DESCRIPTION = 'supports new architecture (experimental)';
+
+const TYPE_CHOICES: {
+  title: string;
+  value: ProjectType;
+  description: string;
+}[] = [
   {
-    title: 'Turbo module with backward compat (experimental)',
-    value: 'module-mixed',
-  },
-  {
-    title: 'Turbo module (experimental)',
-    value: 'module-new',
+    title: 'JavaScript library',
+    value: 'library',
+    description: 'supports Expo Go and Web',
   },
   {
     title: 'Native module',
     value: 'module-legacy',
+    description: 'bridge for native APIs to JS',
   },
   {
-    title: 'Fabric view with backward compat (experimental)',
+    title: 'Native view',
+    value: 'view-legacy',
+    description: 'bridge for native views to JS',
+  },
+  {
+    title: 'Turbo module with backward compat',
+    value: 'module-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
+  {
+    title: 'Turbo module',
+    value: 'module-new',
+    description: NEWARCH_DESCRIPTION,
+  },
+  {
+    title: 'Fabric view with backward compat',
     value: 'view-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
   },
   {
-    title: 'Fabric view (experimental)',
+    title: 'Fabric view',
     value: 'view-new',
-  },
-  { title: 'Native view', value: 'view-legacy' },
-  { title: 'JavaScript library', value: 'library' },
-];
-
-const EXAMPLE_CHOICES: { title: string; value: ProjectExample }[] = [
-  { title: 'JavaScript only (with Expo and Web support)', value: 'expo' },
-  {
-    title: 'Native (to use other libraries with native code)',
-    value: 'native',
+    description: NEWARCH_DESCRIPTION,
   },
 ];
 
@@ -204,10 +212,6 @@ const args: Record<ArgName, yargs.Options> = {
   'type': {
     description: 'Type of library you want to develop',
     choices: TYPE_CHOICES.map(({ value }) => value),
-  },
-  'example': {
-    description: 'Type of example app',
-    choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
   'react-native-version': {
     description: 'Version of React Native to use, uses latest if not specified',
@@ -362,12 +366,6 @@ async function create(argv: yargs.Arguments<any>) {
         });
       },
     },
-    'example': {
-      type: (_, values) => (values.type === 'library' ? 'select' : null),
-      name: 'example',
-      message: 'What type of example app do you want to generate?',
-      choices: EXAMPLE_CHOICES,
-    },
   };
 
   const {
@@ -379,7 +377,6 @@ async function create(argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
-    example = 'native',
     reactNativeVersion,
   } = {
     ...argv,
@@ -456,6 +453,7 @@ async function create(argv: yargs.Arguments<any>) {
       ? 'mixed'
       : 'legacy';
 
+  const example = type === 'library' ? 'expo' : 'native';
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
   let namespace: string | undefined;
@@ -555,15 +553,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   if (languages === 'js') {
     await copyDir(JS_FILES, folder);
-
-    if (example === 'expo') {
-      await copyDir(EXPO_FILES, folder);
-    } else {
-      await copyDir(
-        path.join(EXAMPLE_FILES, 'example'),
-        path.join(folder, 'example')
-      );
-    }
+    await copyDir(EXPO_FILES, folder);
   } else {
     await copyDir(
       path.join(EXAMPLE_FILES, 'example'),

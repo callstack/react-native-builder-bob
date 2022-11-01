@@ -24,8 +24,6 @@ jobs:
           - java-swift
           - kotlin-objc
           - kotlin-swift
-        example:
-          - native
         exclude:
           - type: module-new
             language: java-swift
@@ -50,22 +48,15 @@ jobs:
         include:
           - type: module-legacy
             language: cpp
-            example: native
           - type: module-mixed
             language: cpp
-            example: native
           - type: module-new
             language: cpp
-            example: native
           - type: library
             language: js
-            example: native
-          - type: library
-            language: js
-            example: expo
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
     steps:
@@ -97,7 +88,7 @@ jobs:
 
       - name: Create library
         run: |
-          WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.example }}
+          WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}
           ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
             --slug @bob/react-native-test \
             --description test \
@@ -106,8 +97,7 @@ jobs:
             --author-url https://test.test \
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
-            --languages ${{ matrix.language }} \
-            --example ${{ matrix.example }}
+            --languages ${{ matrix.language }}
 
           echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
 
