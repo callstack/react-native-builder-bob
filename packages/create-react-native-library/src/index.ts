@@ -168,16 +168,20 @@ const TYPE_CHOICES: {
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
   },
-  {
-    title: 'Fabric view with backward compat',
-    value: 'view-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view',
-    value: 'view-new',
-    description: NEWARCH_DESCRIPTION,
-  },
+  ...(process.env.EXPERIMENTAL_FABRIC_ENABLED === '1'
+    ? ([
+        {
+          title: 'Fabric view with backward compat',
+          value: 'view-mixed',
+          description: BACKCOMPAT_DESCRIPTION,
+        },
+        {
+          title: 'Fabric view',
+          value: 'view-new',
+          description: NEWARCH_DESCRIPTION,
+        },
+      ] as const)
+    : []),
 ];
 
 const args: Record<ArgName, yargs.Options> = {
