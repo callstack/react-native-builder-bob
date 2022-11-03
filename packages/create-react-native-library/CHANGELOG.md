@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.26.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.25.0...create-react-native-library@0.26.0) (2022-11-03)
+
+
+### Bug Fixes
+
+* don't hardcode mixed template to run with new architecture ([c397b8b](https://github.com/callstack/react-native-builder-bob/commit/c397b8bb38f6d1d05d95c5ae76079f11d1f1d391))
+* fix package folder names ([2436293](https://github.com/callstack/react-native-builder-bob/commit/2436293b75a14c944d9f5a57529b1a4760edc246))
+* mention CONTRIBUTING.md after generating the project ([36c1367](https://github.com/callstack/react-native-builder-bob/commit/36c1367194bc9cd5dea4098fa10bf2cd17adfe26))
+* mention Java & Swift in CONTRIBUTING.md ([9ec8f64](https://github.com/callstack/react-native-builder-bob/commit/9ec8f64b378e81a07f72e3add57fe9e135f412a6))
+* update codegenConfig to the new format ([1212367](https://github.com/callstack/react-native-builder-bob/commit/1212367bad68d59a0c559f2add667d7e18526230))
+
+
+### Features
+
+* add an option to specify react native version ([5f2a183](https://github.com/callstack/react-native-builder-bob/commit/5f2a18315fd711c3f917d33dc5e0d4fba30b83d1))
+* add fabric template ([#273](https://github.com/callstack/react-native-builder-bob/issues/273)) ([c43878f](https://github.com/callstack/react-native-builder-bob/commit/c43878f3410c111bbacaff82fb03e1a6aa5a5b61))
+* preserve casing and package namespace ([4993bc9](https://github.com/callstack/react-native-builder-bob/commit/4993bc9d200ea235456214f565184d9fd6dcf95f)), closes [#250](https://github.com/callstack/react-native-builder-bob/issues/250)
+* support cpp language with turbo modules ([1b1b68b](https://github.com/callstack/react-native-builder-bob/commit/1b1b68b3dfff77f99caeea8dc0eca2086fc0c6e8))
+
+
+
+
+
 # [0.25.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.24.4...create-react-native-library@0.25.0) (2022-10-21)
 
 
