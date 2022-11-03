@@ -89,7 +89,8 @@ jobs:
       - name: Create library
         run: |
           WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}
-          ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
+
+          EXPERIMENTAL_FABRIC_ENABLED=1 ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
             --slug @bob/react-native-test \
             --description test \
             --author-name test \
