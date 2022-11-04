@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => <%- project.architecture === "new" ? '"11.0"': '"10.0"' -%> }
+  s.platforms    = { :ios => <%- project.arch === "new" ? '"11.0"': '"10.0"' -%> }
   s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
 
 <% if (project.cpp) { -%>
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
         "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
         "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
     }
-<% if(project.architecture === "new" && project.view) { -%>
+<% if(project.arch === "new" && project.view) { -%>
     s.dependency "React-RCTFabric"
 <% } -%>
     s.dependency "React-Codegen"

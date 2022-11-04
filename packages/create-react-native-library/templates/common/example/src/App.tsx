@@ -16,7 +16,7 @@ export default function App() {
     </View>
   );
 }
-<% } else if (project.architecture === 'new' && project.module) { -%>
+<% } else if (project.arch === 'new' && project.module) { -%>
 const result = multiply(3, 7);
 
 export default function App() {

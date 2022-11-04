@@ -80,7 +80,7 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-<% if (project.architecture == 'new') { -%>
+<% if (project.arch === 'new') { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -91,7 +91,7 @@ android {
       }
     }
   }
-<% } else if (project.architecture == 'mixed') { -%>
+<% } else if (project.arch === 'mixed') { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {

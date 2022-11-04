@@ -18,7 +18,7 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 <<%- project.name -%>View color="tomato" />
 ```
-<% } else if (project.architecture === 'new' && project.module) { -%>
+<% } else if (project.arch === 'new' && project.module) { -%>
 
 ```js
 import { multiply } from '<%- project.slug -%>';

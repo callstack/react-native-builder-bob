@@ -34,7 +34,7 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-<% if (project.architecture == 'mixed') { -%>
+<% if (project.arch === 'mixed') { -%>
 By default, the example is configured to build with the old architecture. To run the example with the new architecture, you can do the following:
 
 1. For Android, run:
@@ -57,7 +57,7 @@ yarn clean
 ```
 
 <% } -%>
-<% if (project.architecture === 'new' || project.architecture == 'mixed') { -%>
+<% if (project.arch === 'new' || project.arch === 'mixed') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
 ```sh
@@ -100,6 +100,7 @@ To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Ex
 To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
 
 <% } -%>
+
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
