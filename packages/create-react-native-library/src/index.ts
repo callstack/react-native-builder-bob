@@ -55,6 +55,8 @@ const KOTLIN_FILES = {
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
   module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
 } as const;
 
 const SWIFT_FILES = {
@@ -108,11 +110,7 @@ const LANGUAGE_CHOICES: {
   types?: ProjectType[];
 }[] = [
   { title: 'Java & Objective-C', value: 'java-objc' },
-  {
-    title: 'Kotlin & Objective-C',
-    value: 'kotlin-objc',
-    types: ['module-legacy', 'module-mixed', 'module-new', 'view-legacy'],
-  },
+  { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
   {
     title: 'Java & Swift',
     value: 'java-swift',
@@ -168,20 +166,16 @@ const TYPE_CHOICES: {
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
   },
-  ...(process.env.EXPERIMENTAL_FABRIC_ENABLED === '1'
-    ? ([
-        {
-          title: 'Fabric view with backward compat',
-          value: 'view-mixed',
-          description: BACKCOMPAT_DESCRIPTION,
-        },
-        {
-          title: 'Fabric view',
-          value: 'view-new',
-          description: NEWARCH_DESCRIPTION,
-        },
-      ] as const)
-    : []),
+  {
+    title: 'Fabric view with backward compat',
+    value: 'view-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
+  {
+    title: 'Fabric view',
+    value: 'view-new',
+    description: NEWARCH_DESCRIPTION,
+  },
 ];
 
 const args: Record<ArgName, yargs.Options> = {
@@ -585,18 +579,7 @@ async function create(argv: yargs.Arguments<any>) {
     const templateType = `${moduleType}_${architecture}` as const;
 
     if (options.project.kotlin) {
-      switch (templateType) {
-        case 'module_legacy':
-        case 'module_mixed':
-        case 'module_new':
-        case 'view_legacy':
-          await copyDir(KOTLIN_FILES[templateType], folder);
-          break;
-        default:
-          throw new Error(
-            `Kotlin template for ${templateType} has not been implemented`
-          );
-      }
+      await copyDir(KOTLIN_FILES[templateType], folder);
     } else {
       await copyDir(JAVA_FILES[templateType], folder);
     }

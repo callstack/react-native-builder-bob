@@ -1,5 +1,5 @@
 <% /* TODO: try to migrate it to TurboReactPackage */ %>
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -14,7 +14,7 @@ public class <%- project.name -%>ViewPackage implements ReactPackage {
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     List<ViewManager> viewManagers = new ArrayList<>();
-    viewManagers.add(new <%- project.name -%>ViewManager(reactContext));
+    viewManagers.add(new <%- project.name -%>ViewManager());
     return viewManagers;
   }
 
