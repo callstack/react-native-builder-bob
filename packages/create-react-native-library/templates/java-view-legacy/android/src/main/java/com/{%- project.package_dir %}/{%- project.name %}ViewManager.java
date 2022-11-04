@@ -1,4 +1,4 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import android.graphics.Color;
 import android.view.View;

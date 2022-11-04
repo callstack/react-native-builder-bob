@@ -1,4 +1,4 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import androidx.annotation.NonNull;
 

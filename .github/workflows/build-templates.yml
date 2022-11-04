@@ -34,13 +34,9 @@ jobs:
           - type: module-mixed
             language: kotlin-swift
           - type: view-new
-            language: kotlin-objc
-          - type: view-new
             language: java-swift
           - type: view-new
             language: kotlin-swift
-          - type: view-mixed
-            language: kotlin-objc
           - type: view-mixed
             language: java-swift
           - type: view-mixed
@@ -90,7 +86,7 @@ jobs:
         run: |
           WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}
 
-          EXPERIMENTAL_FABRIC_ENABLED=1 ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
+          ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
             --slug @bob/react-native-test \
             --description test \
             --author-name test \

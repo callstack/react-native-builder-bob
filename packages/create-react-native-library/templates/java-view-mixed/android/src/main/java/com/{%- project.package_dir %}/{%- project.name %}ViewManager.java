@@ -1,10 +1,9 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import android.graphics.Color;
 
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -13,10 +12,6 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 public class <%- project.name -%>ViewManager extends <%- project.name -%>ViewManagerSpec<<%- project.name -%>View> {
 
   public static final String NAME = "<%- project.name -%>View";
-
-  public <%- project.name -%>ViewManager(ReactApplicationContext reactContext) {
-    super(reactContext);
-  }
 
   @Override
   public String getName() {

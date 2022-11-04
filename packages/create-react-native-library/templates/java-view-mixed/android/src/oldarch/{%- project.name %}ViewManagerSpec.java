@@ -1,4 +1,4 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import android.view.View;
 
@@ -8,9 +8,5 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.SimpleViewManager;
 
 public abstract class <%- project.name -%>ViewManagerSpec<T extends View> extends SimpleViewManager<T> {
-  public <%- project.name -%>ViewManagerSpec(ReactApplicationContext context) {
-    super();
-  }
-
   public abstract void setColor(T view, @Nullable String value);
 }

@@ -1,6 +1,7 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import androidx.annotation.Nullable;
+
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;

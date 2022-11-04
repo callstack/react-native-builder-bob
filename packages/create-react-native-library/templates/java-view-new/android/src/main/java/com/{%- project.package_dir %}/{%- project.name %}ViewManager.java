@@ -1,13 +1,14 @@
-package com.<%- project.package -%>;
+package com.<%- project.package %>;
 
 import android.graphics.Color;
+
+import androidx.annotation.Nullable;
 
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewManagerDelegate;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerDelegate;
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerInterface;
 
@@ -18,10 +19,11 @@ public class <%- project.name -%>ViewManager extends SimpleViewManager<<%- proje
 
   private final ViewManagerDelegate<<%- project.name -%>View> mDelegate;
 
-  public <%- project.name -%>ViewManager(ReactApplicationContext context) {
+  public <%- project.name -%>ViewManager() {
     mDelegate = new <%- project.name -%>ViewManagerDelegate(this);
   }
 
+  @Nullable
   @Override
   protected ViewManagerDelegate<<%- project.name -%>View> getDelegate() {
     return mDelegate;
