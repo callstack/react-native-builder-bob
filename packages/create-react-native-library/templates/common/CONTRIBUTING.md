@@ -50,6 +50,12 @@ By default, the example is configured to build with the old architecture. To run
    yarn example ios
    ```
 
+If you are building for a different architecture than your previous build, make sure to remove the build folders first. You can run the following command to cleanup all build folders:
+
+```sh
+yarn clean
+```
+
 <% } -%>
 <% if (project.architecture === 'new' || project.architecture == 'mixed') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
