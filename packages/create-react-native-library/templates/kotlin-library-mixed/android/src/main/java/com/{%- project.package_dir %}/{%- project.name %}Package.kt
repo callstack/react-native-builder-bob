@@ -9,7 +9,7 @@ import java.util.HashMap
 
 class <%- project.name -%>Package : TurboReactPackage() {
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return if (name == <%- project.name -%>Module.NAME) {
+    return if (name === <%- project.name -%>Module.NAME) {
       <%- project.name -%>Module(reactContext)
     } else {
       null

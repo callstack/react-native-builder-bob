@@ -30,13 +30,13 @@ export default async function generateExampleApp({
   type,
   dest,
   projectName,
-  architecture,
+  arch,
   reactNativeVersion = 'latest',
 }: {
   type: 'expo' | 'native';
   dest: string;
   projectName: string;
-  architecture: 'new' | 'mixed' | 'legacy';
+  arch: 'new' | 'mixed' | 'legacy';
   reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
@@ -100,7 +100,7 @@ export default async function generateExampleApp({
   );
 
   // If the library is on new architecture, enable new arch for iOS and Android
-  if (architecture === 'new') {
+  if (arch === 'new') {
     // Android
     // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
     const gradleProperties = await fs.readFile(

@@ -156,7 +156,7 @@
         }
       ]
     ]
-<% if (project.architecture === "new") { -%>
+<% if (project.arch === "new") { -%>
   },
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",

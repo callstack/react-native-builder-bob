@@ -133,8 +133,8 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
-const NEWARCH_DESCRIPTION = 'requires new architecture (experimental)';
-const BACKCOMPAT_DESCRIPTION = 'supports new architecture (experimental)';
+const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
+const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
 
 const TYPE_CHOICES: {
   title: string;
@@ -444,7 +444,7 @@ async function create(argv: yargs.Arguments<any>) {
   }
 
   const moduleType = type.startsWith('view-') ? 'view' : 'module';
-  const architecture =
+  const arch =
     type === 'module-new' || type === 'view-new'
       ? 'new'
       : type === 'module-mixed' || type === 'view-mixed'
@@ -488,7 +488,7 @@ async function create(argv: yargs.Arguments<any>) {
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
-      architecture,
+      arch,
       cpp: languages === 'cpp',
       kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
       swift: languages === 'java-swift' || languages === 'kotlin-swift',
@@ -541,7 +541,7 @@ async function create(argv: yargs.Arguments<any>) {
     type: example,
     dest: folder,
     projectName: options.project.name,
-    architecture,
+    arch,
     reactNativeVersion,
   });
 
@@ -561,9 +561,9 @@ async function create(argv: yargs.Arguments<any>) {
     await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (moduleType === 'module') {
-      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
+      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
     } else {
-      await copyDir(NATIVE_FILES[`${moduleType}_${architecture}`], folder);
+      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
     }
 
     if (options.project.swift) {
@@ -572,11 +572,11 @@ async function create(argv: yargs.Arguments<any>) {
       if (moduleType === 'module') {
         await copyDir(OBJC_FILES[`${moduleType}_common`], folder);
       } else {
-        await copyDir(OBJC_FILES[`view_${architecture}`], folder);
+        await copyDir(OBJC_FILES[`view_${arch}`], folder);
       }
     }
 
-    const templateType = `${moduleType}_${architecture}` as const;
+    const templateType = `${moduleType}_${arch}` as const;
 
     if (options.project.kotlin) {
       await copyDir(KOTLIN_FILES[templateType], folder);
