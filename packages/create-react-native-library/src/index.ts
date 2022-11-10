@@ -403,7 +403,8 @@ async function create(argv: yargs.Arguments<any>) {
     let valid = question.validate ? question.validate(String(value)) : true;
 
     // We also need to guard against invalid choices
-    if (valid && 'choices' in question) {
+    // If we don't already have a validation message to provide a better error
+    if (typeof valid !== 'string' && 'choices' in question) {
       const choices =
         typeof question.choices === 'function'
           ? question.choices(undefined, argv, question)
