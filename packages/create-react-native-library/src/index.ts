@@ -107,10 +107,32 @@ type Answers = {
 const LANGUAGE_CHOICES: {
   title: string;
   value: ProjectLanguages;
-  types?: ProjectType[];
+  types: ProjectType[];
 }[] = [
-  { title: 'Java & Objective-C', value: 'java-objc' },
-  { title: 'Kotlin & Objective-C', value: 'kotlin-objc' },
+  {
+    title: 'Java & Objective-C',
+    value: 'java-objc',
+    types: [
+      'module-legacy',
+      'module-new',
+      'module-mixed',
+      'view-mixed',
+      'view-new',
+      'view-legacy',
+    ],
+  },
+  {
+    title: 'Kotlin & Objective-C',
+    value: 'kotlin-objc',
+    types: [
+      'module-legacy',
+      'module-new',
+      'module-mixed',
+      'view-mixed',
+      'view-new',
+      'view-legacy',
+    ],
+  },
   {
     title: 'Java & Swift',
     value: 'java-swift',
@@ -366,6 +388,49 @@ async function create(argv: yargs.Arguments<any>) {
     },
   };
 
+  // Validate arguments passed to the CLI
+  for (const [key, value] of Object.entries(argv)) {
+    if (value == null) {
+      continue;
+    }
+
+    const question = questions[key as ArgName];
+
+    if (question == null) {
+      continue;
+    }
+
+    let valid = question.validate ? question.validate(String(value)) : true;
+
+    // We also need to guard against invalid choices
+    if (valid && 'choices' in question) {
+      const choices =
+        typeof question.choices === 'function'
+          ? question.choices(undefined, argv, question)
+          : question.choices;
+
+      if (choices && !choices.some((choice) => choice.value === value)) {
+        valid = `Supported values are - ${choices.map((c) =>
+          kleur.green(c.value)
+        )}`;
+      }
+    }
+
+    if (valid !== true) {
+      let message = `Invalid value ${kleur.red(
+        String(value)
+      )} passed for ${kleur.blue(key)}`;
+
+      if (typeof valid === 'string') {
+        message += `: ${valid}`;
+      }
+
+      console.log(message);
+
+      process.exit(1);
+    }
+  }
+
   const {
     slug,
     description,
@@ -388,7 +453,7 @@ async function create(argv: yargs.Arguments<any>) {
 
           // Skip questions with a single choice
           if (Array.isArray(v.choices) && v.choices.length === 1) {
-            return v;
+            return false;
           }
 
           return true;
@@ -400,8 +465,8 @@ async function create(argv: yargs.Arguments<any>) {
           if (type === 'select' && typeof choices === 'function') {
             return {
               ...v,
-              type: (...args) => {
-                const result = choices(...args);
+              type: (prev, values, prompt) => {
+                const result = choices(prev, { ...argv, ...values }, prompt);
 
                 if (result && result.length === 1) {
                   return null;
@@ -534,6 +599,20 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   await fs.mkdirp(folder);
+
+  if (reactNativeVersion != null) {
+    if (example === 'expo') {
+      console.warn(
+        `${kleur.yellow('⚠')} Ignoring --react-native-version for Expo example`
+      );
+    } else {
+      console.log(
+        `${kleur.blue('ℹ')} Using ${kleur.cyan(
+          `react-native@${reactNativeVersion}`
+        )} for the example`
+      );
+    }
+  }
 
   const spinner = ora('Generating example').start();
 
