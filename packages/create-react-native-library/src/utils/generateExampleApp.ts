@@ -56,8 +56,9 @@ export default async function generateExampleApp({
       : // `npx create-expo-app example --no-install`
         ['create-expo-app@latest', directory, '--no-install'];
 
-  const child = spawn('npx', ['--yes', ...args], {
+  const child = spawn('npx', args, {
     cwd: dest,
+    env: { ...process.env, npm_config_yes: 'true' },
   });
 
   await new Promise((resolve, reject) => {
