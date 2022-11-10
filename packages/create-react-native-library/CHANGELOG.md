@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.26.0...create-react-native-library@0.27.0) (2022-11-10)
+
+
+### Bug Fixes
+
+* use npm_config_yes instead of --yes for npm 6 compatibility ([aefa30b](https://github.com/callstack/react-native-builder-bob/commit/aefa30b6f0cacf16e1ed2d5577c6c62dc442f320))
+* validate arguments passed to the CLI ([03defcf](https://github.com/callstack/react-native-builder-bob/commit/03defcf22e3b07a09c05eb982db0deb4c0b3845f))
+
+
+### Features
+
+* add a clean script to cleanup build folders ([6085fd6](https://github.com/callstack/react-native-builder-bob/commit/6085fd60dddac20b8fc87ff86ec469bac7ba8ca8))
+* add kotlin support to the fabric template ([ccdb618](https://github.com/callstack/react-native-builder-bob/commit/ccdb618665a4f17d677073d6fba1f71044d3f3a0))
+
+
+
+
+
 # [0.26.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.25.0...create-react-native-library@0.26.0) (2022-11-03)
 
 
