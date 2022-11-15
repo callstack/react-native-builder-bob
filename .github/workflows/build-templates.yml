@@ -59,24 +59,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Cache project dependencies
-        id: root-yarn-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install dependencies
-        if: steps.root-yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn install --frozen-lockfile
+      - name: Setup
+        uses: ./.github/actions/setup
 
       - name: Build package
         run: |
@@ -110,6 +94,8 @@ jobs:
           path: |
             ${{ env.work_dir }}/**/node_modules
           key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir)) }}
+          restore-keys: |
+            ${{ runner.os }}-library-yarn-
 
       - name: Install dependencies of library
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'

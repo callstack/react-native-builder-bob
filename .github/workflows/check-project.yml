@@ -9,29 +9,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: yarn
-
-      - name: Cache dependencies
-        id: yarn-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+      - name: Setup
+        uses: ./.github/actions/setup
 
       - name: Lint
         run: yarn lint
 
-      - name: Build packages
-        run: yarn lerna run prepare
-
       - name: Typecheck
         run: yarn typescript
+
+      - name: Build packages
+        run: yarn lerna run prepare
