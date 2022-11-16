@@ -57,9 +57,9 @@ To configure your project manually, follow these steps:
 
 1. First, install `react-native-builder-bob` in your project. Open a Terminal in your project, and run:
 
-  ```sh
-  yarn add --dev react-native-builder-bob
-  ```
+```sh
+yarn add --dev react-native-builder-bob
+```
 
 1. In your `package.json`, specify the targets to build for:
 
@@ -300,9 +300,37 @@ There are 2 parts to this process.
 
 You may have come across the `yarn link` and `npm link` commands to test libraries locally. These commands work great for simple packages without build process, but they have different behavior from how a published package works.
 
-For more accurate testing, you could create a tarball using `npm pack` and install it instead, but it also has [some issues](https://github.com/yarnpkg/yarn/issues/6811).
+For more accurate testing, we recommend following approaches:
 
-The most reliable way is to use [Verdaccio](https://verdaccio.org/) to publish the library to a local server and install it.
+1. **Local tarball with `npm`**
+
+   First, temporarily change the version in `package.json` to something like `0.0.0-local.0`. This version number needs to be updated to something different every time you do this to avoid [stale content](https://github.com/yarnpkg/yarn/issues/6811).
+
+   Run the following command inside your library's root:
+
+   ```sh
+   npm pack
+   ```
+
+   This will generate a file like `your-library-name-0.0.0-local.0.tgz` in the root of the project.
+
+   Then, you can install the tarball in your app:
+
+   ```sh
+   yarn add ../path/to/your-library-name-0.0.0-local.0.tgz
+   ```
+
+   Or if you use `npm`:
+
+   ```sh
+   npm install ../path/to/your-library-name-0.0.0-local.0.tgz
+   ```
+
+2. **Verdaccio**
+
+   [Verdaccio](https://verdaccio.org/) is a lightweight private npm registry that can be used to test packages locally. The advantage of using Verdaccio is that it allows to test the complete workflow of publishing and installing a package without actually publishing it to a remote registry.
+
+   You can find installation and usage instructions in the [Verdaccio documentation](https://verdaccio.org/docs/en/installation).
 
 ## Development workflow
 
