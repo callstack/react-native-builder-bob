@@ -16,6 +16,7 @@ const FALLBACK_BOB_VERSION = '0.20.0';
 const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
+const TURBOREPO_FILES = path.resolve(__dirname, '../templates/turborepo');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
@@ -73,7 +74,8 @@ type ArgName =
   | 'repo-url'
   | 'languages'
   | 'type'
-  | 'react-native-version';
+  | 'react-native-version'
+  | 'turborepo';
 
 type ProjectLanguages =
   | 'java-objc'
@@ -102,6 +104,7 @@ type Answers = {
   languages: ProjectLanguages;
   type?: ProjectType;
   reactNativeVersion?: string;
+  turborepo?: boolean;
 };
 
 const LANGUAGE_CHOICES: {
@@ -236,6 +239,10 @@ const args: Record<ArgName, yargs.Options> = {
   'react-native-version': {
     description: 'Version of React Native to use, uses latest if not specified',
     type: 'string',
+  },
+  'turborepo': {
+    description: 'Whether to configure Turborepo for the project',
+    type: 'boolean',
   },
 };
 
@@ -442,6 +449,7 @@ async function create(argv: yargs.Arguments<any>) {
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
     reactNativeVersion,
+    turborepo,
   } = {
     ...argv,
     ...(await prompts(
@@ -568,6 +576,7 @@ async function create(argv: yargs.Arguments<any>) {
     },
     repo: repoUrl,
     example,
+    turborepo,
   };
 
   const copyDir = async (source: string, dest: string) => {
@@ -628,6 +637,10 @@ async function create(argv: yargs.Arguments<any>) {
   spinner.text = 'Copying files';
 
   await copyDir(COMMON_FILES, folder);
+
+  if (turborepo) {
+    await copyDir(TURBOREPO_FILES, folder);
+  }
 
   if (languages === 'js') {
     await copyDir(JS_FILES, folder);

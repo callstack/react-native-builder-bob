@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+<% if (example === 'native') { -%>
+    "build:android": {
+      "inputs": [
+        "package.json",
+        "android/**",
+        "example/package.json",
+        "example/android/**"
+      ],
+      "outputs": []
+    },
+    "build:ios": {
+      "inputs": [
+        "package.json",
+        "*.podspec",
+        "ios/**",
+        "example/package.json",
+        "example/ios/**"
+      ],
+      "outputs": []
+    }
+<% } -%>
+  }
+}

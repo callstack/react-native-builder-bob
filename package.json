@@ -10,8 +10,9 @@
     "url": "git+https://github.com/react-navigation/react-navigation.git"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 16.0.0"
   },
+  "packageManager": "^yarn@1.22.15",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typescript": "tsc --noEmit",

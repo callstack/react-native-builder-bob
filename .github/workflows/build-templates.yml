@@ -78,7 +78,8 @@ jobs:
             --author-url https://test.test \
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
-            --languages ${{ matrix.language }}
+            --languages ${{ matrix.language }} \
+            --turborepo
 
           echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
 
@@ -93,6 +94,7 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
+            ${{ env.work_dir }}/**/yarn.lock
           key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir)) }}
           restore-keys: |
             ${{ runner.os }}-library-yarn-
@@ -102,6 +104,15 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           yarn
+
+      - name: Cache turborepo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.work_dir }}/.turbo
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          restore-keys: |
+            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
 
       - name: Lint library
         working-directory: ${{ env.work_dir }}
@@ -130,6 +141,7 @@ jobs:
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r21d
+          local-cache: true
 
       - name: Set ANDROID_NDK
         if: env.build_android == 1
@@ -166,5 +178,4 @@ jobs:
         if: env.build_android == 1
         working-directory: ${{ env.work_dir }}
         run: |
-          cd example/android
-          ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a
+          yarn turbo run build:android --cache-dir=".turbo/cache"
