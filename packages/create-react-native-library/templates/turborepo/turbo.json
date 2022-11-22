@@ -6,6 +6,8 @@
       "inputs": [
         "package.json",
         "android/**",
+        "src/**/*.ts",
+        "src/**/*.tsx",
         "example/package.json",
         "example/android/**"
       ],
@@ -16,6 +18,8 @@
         "package.json",
         "*.podspec",
         "ios/**",
+        "src/**/*.ts",
+        "src/**/*.tsx",
         "example/package.json",
         "example/ios/**"
       ],
