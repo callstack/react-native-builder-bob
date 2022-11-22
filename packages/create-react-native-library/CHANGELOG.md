@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.27.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.27.0...create-react-native-library@0.27.1) (2022-11-22)
+
+
+### Bug Fixes
+
+* add missing codegen config for mixed template for iOS ([577fd15](https://github.com/callstack/react-native-builder-bob/commit/577fd152056d09cf895e1293f12f67b99bd6d5c7))
+* fix typo in mixed template for iOS ([#331](https://github.com/callstack/react-native-builder-bob/issues/331)) ([f76ca8d](https://github.com/callstack/react-native-builder-bob/commit/f76ca8d42e2a68dcaab068dfa567d733d0a87bb9)), closes [#330](https://github.com/callstack/react-native-builder-bob/issues/330)
+* fix typo when checking validity ([5ffd5c5](https://github.com/callstack/react-native-builder-bob/commit/5ffd5c5d98e7151f2a16456e4d58eca677f3bf80))
+
+
+
+
+
 # [0.27.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.26.0...create-react-native-library@0.27.0) (2022-11-10)
 
 
