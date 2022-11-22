@@ -57,7 +57,7 @@ yarn clean
 ```
 
 <% } -%>
-<% if (project.arch === 'new' || project.arch === 'mixed') { -%>
+<% if (project.arch !== 'legacy') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
 ```sh
