@@ -8,10 +8,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu
+          - macos
         type:
           - module-legacy
           - module-mixed
@@ -25,6 +27,10 @@ jobs:
           - kotlin-objc
           - kotlin-swift
         exclude:
+          - os: macos
+            language: kotlin-objc
+          - os: macos
+            language: kotlin-swift
           - type: module-new
             language: java-swift
           - type: module-new
@@ -42,18 +48,33 @@ jobs:
           - type: view-mixed
             language: kotlin-swift
         include:
-          - type: module-legacy
-            language: cpp
-          - type: module-mixed
-            language: cpp
-          - type: module-new
-            language: cpp
-          - type: library
+          - os: ubuntu
+            type: library
             language: js
+          - os: ubuntu
+            type: module-legacy
+            language: cpp
+          - os: ubuntu
+            type: module-mixed
+            language: cpp
+          - os: ubuntu
+            type: module-new
+            language: cpp
+          - os: macos
+            type: module-legacy
+            language: cpp
+          - os: macos
+            type: module-mixed
+            language: cpp
+          - os: macos
+            type: module-new
+            language: cpp
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
+
+    runs-on: ${{ matrix.os }}-latest
 
     steps:
       - name: Checkout
@@ -66,11 +87,27 @@ jobs:
         run: |
           yarn workspace create-react-native-library prepare
 
+      - name: Configure environment
+        run: |
+          echo "work_dir=tmp-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
+
+          # Build Android for only some matrices to skip redundant builds
+          if [[ ${{ matrix.os }} == ubuntu ]]; then
+            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+              echo "build_android=1" >> $GITHUB_ENV
+            fi
+          fi
+
+          # Build iOS for only some matrices to skip redundant builds
+          if [[ ${{ matrix.os }} == macos ]]; then
+            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+              echo "build_ios=1" >> $GITHUB_ENV
+            fi
+          fi
+
       - name: Create library
         run: |
-          WORK_DIR=tmp-${{ matrix.type }}-${{ matrix.language }}
-
-          ./packages/create-react-native-library/bin/create-react-native-library "$WORK_DIR" \
+          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
             --slug @bob/react-native-test \
             --description test \
             --author-name test \
@@ -80,13 +117,6 @@ jobs:
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
             --turborepo
-
-          echo "work_dir=$WORK_DIR" >> $GITHUB_ENV
-
-          # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
-            echo "build_android=1" >> $GITHUB_ENV
-          fi
 
       - name: Cache dependencies of library
         id: library-yarn-cache
@@ -103,7 +133,8 @@ jobs:
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn
+          yarn install --cwd example
+          yarn install
 
       - name: Cache turborepo
         uses: actions/cache@v3
@@ -115,21 +146,24 @@ jobs:
             ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
 
       - name: Lint library
+        if: matrix.os == 'ubuntu'
         working-directory: ${{ env.work_dir }}
         run: |
           yarn lint
 
       - name: Typecheck library
+        if: matrix.os == 'ubuntu'
         working-directory: ${{ env.work_dir }}
         run: |
           yarn typescript
 
       - name: Test library
+        if: matrix.os == 'ubuntu'
         working-directory: ${{ env.work_dir }}
         run: |
           yarn test
 
-      - name: Setup JDK
+      - name: Install JDK
         if: env.build_android == 1
         uses: actions/setup-java@v3
         with:
@@ -143,13 +177,11 @@ jobs:
           ndk-version: r21d
           local-cache: true
 
-      - name: Set ANDROID_NDK
+      - name: Finalize Android NDK & SDK
         if: env.build_android == 1
-        run: echo "ANDROID_NDK=$ANDROID_HOME/ndk-bundle" >> $GITHUB_ENV
-
-      - name: Accept Android SDK licenses
-        if: env.build_android == 1
-        run: /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+        run: |
+          echo "ANDROID_NDK=$ANDROID_HOME/ndk-bundle" >> $GITHUB_ENV
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
 
       - name: Cache Gradle
         if: env.build_android == 1
@@ -159,13 +191,6 @@ jobs:
             ~/.gradle/wrapper
             ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles(format('{0}/example/android/gradle/wrapper/gradle-wrapper.properties', env.work_dir)) }}
-
-      - name: Cache hermes
-        if: env.build_android == 1
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.work_dir }}/example/node_modules/react-native
-          key: ${{ runner.os }}-hermes-engine-${{ hashFiles(format('{0}/example/node_modules/react-native/package.json', env.work_dir)) }}
 
       - name: Cache android libraries
         if: env.build_android == 1
@@ -179,3 +204,37 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           yarn turbo run build:android --cache-dir=".turbo/cache"
+
+      - name: Cache cocoapods
+        if: env.build_ios == 1
+        id: library-cocoapods-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.work_dir }}/**/ios/Pods
+            ${{ env.work_dir }}/**/ios/Podfile.lock
+          key: ${{ runner.os }}-library-cocoapods-${{ env.work_dir }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          restore-keys: |
+            ${{ runner.os }}-library-cocoapods-${{ env.work_dir }}-
+
+      - name: Install cocoapods
+        if: steps.library-cocoapods-cache.outputs.cache-hit != 'true' && env.build_ios == 1
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn example pods
+
+      - name: Cache iOS build artifacts
+        if: env.build_ios == 1
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-library-xcode-derived-data-${{ env.work_dir }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          restore-keys: |
+            ${{ runner.os }}-library-xcode-derived-data-${{ env.work_dir }}-
+
+      - name: Build example (iOS)
+        if: env.build_ios == 1
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn turbo run build:ios --cache-dir=".turbo/cache"
