@@ -78,7 +78,7 @@ yarn example web
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
-yarn typescript
+yarn typecheck
 yarn lint
 ```
 
@@ -137,7 +137,7 @@ yarn release
 The `package.json` file contains various scripts for common tasks:
 
 - `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
+- `yarn typecheck`: type-check files with TypeScript.
 - `yarn lint`: lint files with ESLint.
 - `yarn test`: run unit tests with Jest.
 - `yarn example start`: start the Metro server for the example app.

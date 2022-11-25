@@ -15,8 +15,8 @@
   "packageManager": "^yarn@1.22.15",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typescript": "tsc --noEmit",
-    "watch": "concurrently 'yarn typescript --watch' 'lerna run --parallel prepare -- --watch'"
+    "typecheck": "tsc --noEmit",
+    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'"
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",

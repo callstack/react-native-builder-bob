@@ -1,16 +1,16 @@
 buildscript {
 <% if (project.kotlin) { -%>
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['<%- project.name -%>_kotlinVersion']
+  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["<%- project.name -%>_kotlinVersion"]
 
 <% } -%>
   repositories {
-      google()
-      mavenCentral()
+    google()
+    mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.2.1'
+    classpath "com.android.tools.build:gradle:7.2.1"
 <% if (project.kotlin) { -%>
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -19,41 +19,81 @@ buildscript {
 }
 
 def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") &&  rootProject.getProperty("newArchEnabled") == "true"
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
-apply plugin: 'com.android.library'
+def resolveReactNativeDirectory() {
+  def reactNativeLocation = rootProject.hasProperty("reactNativeDir") ? rootProject.getProperty("reactNativeDir") : null
+
+  if (reactNativeLocation != null) {
+    return file(reactNativeLocation)
+  }
+
+  try {
+    // Resolve React Native location with Node
+    // This will make sure that we get installation location correctly in monorepos
+    def reactNativePackageJsonPathStdout = new ByteArrayOutputStream()
+
+    exec {
+      commandLine("node", "-p", "require.resolve('react-native/package.json')")
+      ignoreExitValue true
+      standardOutput = reactNativePackageJsonPathStdout
+    }
+
+    def reactNativeFromProjectNodeModules = file(reactNativePackageJsonPathStdout.toString().trim()).getParentFile();
+
+    if (reactNativeFromProjectNodeModules.exists()) {
+      return reactNativeFromProjectNodeModules
+    }
+  } catch (e) {
+    // Ignore
+  }
+
+  throw new Exception(
+    "${project.name}: Failed to resolve 'react-native' in the project. " +
+    "Altenatively, you can specify 'reactNativeDir' with the path to 'react-native' in your 'gradle.properties' file."
+  )
+}
+
+apply plugin: "com.android.library"
 <% if (project.kotlin) { -%>
-apply plugin: 'kotlin-android'
+apply plugin: "kotlin-android"
 <% } -%>
 
 if (isNewArchitectureEnabled()) {
-  apply plugin: 'com.facebook.react'
+  apply plugin: "com.facebook.react"
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['<%- project.name -%>_' + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["<%- project.name -%>_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['<%- project.name -%>_' + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
 }
+
+def reactNativeRootDir = resolveReactNativeDirectory()
+def reactProperties = new Properties()
+file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
+
+def reactNativeVersion = reactProperties.getProperty("VERSION_NAME")
+def (reactNativeMajorVersion, reactNativeMinorVersion) = reactNativeVersion.split("\\.").collect { it.isInteger() ? it.toInteger() : it }
 
 android {
 <% if (project.cpp) { -%>
-  ndkVersion getExtOrDefault('ndkVersion')
+  ndkVersion getExtOrDefault("ndkVersion")
 <% } -%>
-  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault('minSdkVersion')
-    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 <% if (project.cpp) { -%>
     externalNativeBuild {
       cmake {
         cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
-        abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
       }
     }
 <% } -%>
@@ -72,7 +112,7 @@ android {
   }
 
   lintOptions {
-    disable 'GradleCompatible'
+    disable "GradleCompatible"
   }
 
   compileOptions {
@@ -80,7 +120,7 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-<% if (project.arch === 'new') { -%>
+<% if (project.arch === "new") { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -91,17 +131,17 @@ android {
       }
     }
   }
-<% } else if (project.arch === 'mixed') { -%>
+<% } else if (project.arch === "mixed") { -%>
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
-          java.srcDirs += [
-            "src/newarch",
-            // This is needed to build Kotlin project with NewArch enabled
-            "${project.buildDir}/generated/source/codegen/java"
-          ]
+        java.srcDirs += [
+          "src/newarch",
+          // This is needed to build Kotlin project with NewArch enabled
+          "${project.buildDir}/generated/source/codegen/java"
+        ]
       } else {
-          java.srcDirs += ["src/oldarch"]
+        java.srcDirs += ["src/oldarch"]
       }
     }
   }
@@ -112,88 +152,41 @@ repositories {
   mavenCentral()
   google()
 
-  def found = false
-  def defaultDir = null
-  def androidSourcesName = 'React Native sources'
+  if (reactNativeMajorVersion == 0 && reactNativeMinorVersion < 71) {
+    def androidSourcesDir = file("$reactNativeRootDir/android")
+    def androidSourcesName = "React Native sources"
 
-  if (rootProject.ext.has('reactNativeAndroidRoot')) {
-    defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
-  } else {
-    defaultDir = new File(
-      projectDir,
-      '/../../../node_modules/react-native/android'
-    )
-  }
-
-  if (defaultDir.exists()) {
-    maven {
-      url defaultDir.toString()
-      name androidSourcesName
-    }
-
-    logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
-    found = true
-  } else {
-    def parentDir = rootProject.projectDir
-
-    1.upto(5, {
-      if (found) return true
-      parentDir = parentDir.parentFile
-
-      def androidSourcesDir = new File(
-        parentDir,
-        'node_modules/react-native'
-      )
-
-      def androidPrebuiltBinaryDir = new File(
-        parentDir,
-        'node_modules/react-native/android'
-      )
-
-      if (androidPrebuiltBinaryDir.exists()) {
-        maven {
-          url androidPrebuiltBinaryDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
-        found = true
-      } else if (androidSourcesDir.exists()) {
-        maven {
-          url androidSourcesDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
-        found = true
+    if (androidSourcesDir.exists()) {
+      maven {
+        url androidSourcesDir.toString()
+        name androidSourcesName
       }
-    })
-  }
-
-  if (!found) {
-    throw new GradleException(
-      "${project.name}: unable to locate React Native android sources. " +
-      "Ensure you have you installed React Native as a dependency in your project and try again."
-    )
+    }
   }
 }
 
 <% if (project.kotlin) { -%>
-def kotlin_version = getExtOrDefault('kotlinVersion')
+def kotlin_version = getExtOrDefault("kotlinVersion")
 <% } -%>
 
 dependencies {
+  if (reactNativeMajorVersion == 0 && reactNativeMinorVersion < 71) {
     //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
+    implementation "com.facebook.react:react-native:+"
+    // From node_modules
+  } else {
+    implementation "com.facebook.react:react-android"
+  }
+
 <% if (project.kotlin) { -%>
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-<% } -%>// From node_modules
+<% } -%>
 }
 
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-    libraryName = "<%- project.view ? project.name+'View' : project.name -%>"
+    libraryName = "<%- project.view ? project.name + 'View' : project.name -%>"
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }

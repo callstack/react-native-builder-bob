@@ -16,7 +16,7 @@ jobs:
         run: yarn lint
 
       - name: Typecheck
-        run: yarn typescript
+        run: yarn typecheck
 
       - name: Build packages
         run: yarn lerna run prepare

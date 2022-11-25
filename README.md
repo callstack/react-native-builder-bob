@@ -355,7 +355,7 @@ To test the CLI locally, you can point to the `bin/bob` executable:
 Before sending a pull request, make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
-yarn typescript
+yarn typecheck
 yarn lint
 ```
 

@@ -16,7 +16,7 @@ jobs:
         run: yarn lint
 
       - name: Typecheck files
-        run: yarn typescript
+        run: yarn typecheck
 
   test:
     runs-on: ubuntu-latest

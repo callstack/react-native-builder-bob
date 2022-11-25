@@ -11,15 +11,25 @@ const FILES_TO_DELETE = [
   '.gitignore',
   '.prettierrc.js',
   'App.js',
+  'App.tsx',
   'index.js',
+  'tsconfig.json',
 ];
 
 const PACKAGES_TO_REMOVE = [
   '@react-native-community/eslint-config',
+  '@tsconfig/react-native',
+  '@types/jest',
+  '@types/react',
+  '@types/react-test-renderer',
+  '@typescript-eslint/eslint-plugin',
+  '@typescript-eslint/parser',
   'babel-jest',
   'eslint',
   'jest',
+  'prettier',
   'react-test-renderer',
+  'typescript',
 ];
 
 const PACKAGES_TO_ADD = {
