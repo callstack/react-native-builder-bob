@@ -79,30 +79,72 @@ export default async function build({
       );
     }
 
-    let tsc = options?.tsc
-      ? path.resolve(root, options.tsc)
-      : path.resolve(root, 'node_modules', '.bin', 'tsc') +
-        (platform() === 'win32' ? '.cmd' : '');
+    let tsc;
+
+    if (options?.tsc) {
+      tsc = path.resolve(root, options.tsc);
+
+      if (!(await fs.pathExists(tsc))) {
+        throw new Error(
+          `The ${kleur.blue(
+            'tsc'
+          )} binary doesn't seem to be installed at ${kleur.blue(
+            tsc
+          )}. Please specify the correct path in options or remove it to use the workspace's version.`
+        );
+      }
+    } else {
+      const execpath = process.env.npm_execpath;
+      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
+
+      try {
+        if (cli === 'yarn') {
+          const result = spawn.sync('yarn', ['bin', 'tsc'], {
+            stdio: 'pipe',
+            encoding: 'utf-8',
+            cwd: root,
+          });
+
+          tsc = result.stdout.trim();
+        } else {
+          const result = spawn.sync('npm', ['bin'], {
+            stdio: 'pipe',
+            encoding: 'utf-8',
+            cwd: root,
+          });
+
+          tsc = path.resolve(result.stdout.trim(), 'tsc');
+        }
+      } catch (e) {
+        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+      }
+
+      if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
+        tsc += '.cmd';
+      }
+    }
 
     if (!(await fs.pathExists(tsc))) {
       try {
         tsc = await which('tsc');
 
-        report.warn(
-          `Using a global version of ${kleur.blue(
-            'tsc'
-          )}. Consider adding ${kleur.blue('typescript')} to your ${kleur.blue(
-            'devDependencies'
-          )} or specifying the ${kleur.blue(
-            'tsc'
-          )} option for the typescript target.`
-        );
+        if (await fs.pathExists(tsc)) {
+          report.warn(
+            `Failed to locate 'tsc' in the workspace. Falling back to the globally installed version. Consider adding ${kleur.blue(
+              'typescript'
+            )} to your ${kleur.blue(
+              'devDependencies'
+            )} or specifying the ${kleur.blue(
+              'tsc'
+            )} option for the typescript target.`
+          );
+        }
       } catch (e) {
         // Ignore
       }
     }
 
-    if (!(await fs.pathExists(tsc))) {
+    if (tsc == null || !(await fs.pathExists(tsc))) {
       throw new Error(
         `The ${kleur.blue(
           'tsc'
@@ -139,7 +181,10 @@ export default async function build({
         '--outDir',
         output,
       ],
-      { stdio: 'inherit' }
+      {
+        stdio: 'inherit',
+        cwd: root,
+      }
     );
 
     if (result.status === 0) {
