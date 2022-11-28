@@ -747,4 +747,22 @@ yargs
   .command('$0 <name>', 'create a react native library', args, create)
   .demandCommand()
   .recommendCommands()
+  .fail((message, error) => {
+    console.log('\n');
+
+    if (error) {
+      console.log(kleur.red(error.message));
+      throw error;
+    }
+
+    if (message) {
+      console.log(kleur.red(message));
+    } else {
+      console.log(
+        kleur.red(`An unknown error occurred. See '--help' for usage guide.`)
+      );
+    }
+
+    process.exit(1);
+  })
   .strict().argv;
