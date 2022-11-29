@@ -226,6 +226,8 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           yarn example pods
+        env:
+          NO_FLIPPER: 1
 
       - name: Cache iOS build artifacts
         if: env.build_ios == 1
