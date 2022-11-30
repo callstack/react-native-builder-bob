@@ -213,9 +213,10 @@ jobs:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
             ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ env.work_dir }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
           restore-keys: |
-            ${{ runner.os }}-library-cocoapods-${{ env.work_dir }}-
+            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-
+            ${{ runner.os }}-library-cocoapods-
 
       - name: Install cocoapods
         if: steps.library-cocoapods-cache.outputs.cache-hit != 'true' && env.ios_build == 1
@@ -231,9 +232,10 @@ jobs:
         with:
           path: |
             ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-library-xcode-derived-data-${{ env.work_dir }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-xcode-derived-data-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
           restore-keys: |
-            ${{ runner.os }}-library-xcode-derived-data-${{ env.work_dir }}-
+            ${{ runner.os }}-library-xcode-derived-data-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-
+            ${{ runner.os }}-library-xcode-derived-data-
 
       - name: Build example (iOS)
         if: env.ios_build == 1
