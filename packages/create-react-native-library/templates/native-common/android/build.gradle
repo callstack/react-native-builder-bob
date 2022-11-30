@@ -51,7 +51,7 @@ def resolveReactNativeDirectory() {
 
   throw new Exception(
     "${project.name}: Failed to resolve 'react-native' in the project. " +
-    "Altenatively, you can specify 'reactNativeDir' with the path to 'react-native' in your 'gradle.properties' file."
+    "If you have a non-standard project structure, you can specify 'reactNativeDir' with the path to 'react-native' in your 'gradle.properties' file."
   )
 }
 

@@ -32,8 +32,18 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
-const PACKAGES_TO_ADD = {
+const PACKAGES_TO_ADD_DEV = {
   'babel-plugin-module-resolver': '^4.1.0',
+};
+
+const PACKAGES_TO_ADD_WEB = {
+  'react-dom': '18.1.0',
+  'react-native-web': '~0.18.9',
+};
+
+const PACKAGES_TO_ADD_WEB_DEV = {
+  '@expo/webpack-config': '^0.17.2',
+  'babel-loader': '^8.1.0',
 };
 
 export default async function generateExampleApp({
@@ -101,7 +111,7 @@ export default async function generateExampleApp({
   // Remove Jest config for now
   delete pkg.jest;
 
-  const { scripts, devDependencies } = pkg;
+  const { scripts, dependencies, devDependencies } = pkg;
 
   delete scripts.test;
   delete scripts.lint;
@@ -115,7 +125,12 @@ export default async function generateExampleApp({
     delete devDependencies[pkg];
   });
 
-  Object.assign(devDependencies, PACKAGES_TO_ADD);
+  Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
+
+  if (type === 'expo') {
+    Object.assign(dependencies, PACKAGES_TO_ADD_WEB);
+    Object.assign(devDependencies, PACKAGES_TO_ADD_WEB_DEV);
+  }
 
   await fs.writeFile(
     path.join(directory, 'package.json'),

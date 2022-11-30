@@ -168,6 +168,12 @@ jobs:
         run: |
           yarn test
 
+      - name: Build example (Web)
+        working-directory: ${{ env.work_dir }}
+        if: matrix.language == 'js'
+        run: |
+          yarn example expo export:web
+
       - name: Install JDK
         if: env.android_build == 1
         uses: actions/setup-java@v3
