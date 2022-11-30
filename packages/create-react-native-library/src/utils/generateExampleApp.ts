@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import spawn from 'cross-spawn';
 import path from 'path';
+import https from 'https';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -120,16 +121,51 @@ export default async function generateExampleApp({
     scripts.pods = 'pod-install --quiet';
   }
 
-  PACKAGES_TO_REMOVE.forEach((pkg) => {
+  PACKAGES_TO_REMOVE.forEach((name) => {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete devDependencies[pkg];
+    delete devDependencies[name];
   });
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 
   if (type === 'expo') {
-    Object.assign(dependencies, PACKAGES_TO_ADD_WEB);
-    Object.assign(devDependencies, PACKAGES_TO_ADD_WEB_DEV);
+    const sdkVersion = dependencies.expo.split('.')[0].replace(/[^\d]/, '');
+
+    let bundledNativeModules: Record<string, string>;
+
+    try {
+      bundledNativeModules = await new Promise((resolve, reject) => {
+        https
+          .get(
+            `https://raw.githubusercontent.com/expo/expo/sdk-${sdkVersion}/packages/expo/bundledNativeModules.json`,
+            (res) => {
+              let data = '';
+
+              res.on('data', (chunk) => (data += chunk));
+              res.on('end', () => {
+                try {
+                  resolve(JSON.parse(data));
+                } catch (e) {
+                  reject(e);
+                }
+              });
+            }
+          )
+          .on('error', reject);
+      });
+    } catch (e) {
+      bundledNativeModules = {};
+    }
+
+    Object.entries(PACKAGES_TO_ADD_WEB).forEach(([name, version]) => {
+      dependencies[name] = bundledNativeModules[name] || version;
+    });
+
+    Object.entries(PACKAGES_TO_ADD_WEB_DEV).forEach(([name, version]) => {
+      devDependencies[name] = bundledNativeModules[name] || version;
+    });
+
+    scripts.web = 'expo start --web';
   }
 
   await fs.writeFile(
