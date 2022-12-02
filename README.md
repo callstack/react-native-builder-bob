@@ -4,28 +4,30 @@
 [![react-native-builder-bob][react-native-builder-bob-version-badge]][react-native-builder-bob]
 [![MIT License][license-badge]][license]
 
-👷‍♂️ Simple set of CLIs to scaffold and build React Native libraries for different targets.
+👷‍♂️ Set of CLIs to scaffold and build React Native libraries for different targets.
 
 ## Scaffold React Native libraries
 
 If you want to create your own React Native module, scaffolding the project can be a daunting task. `create-react-native-library` can scaffold a new project for you with the following things:
 
-- Simple example modules for Android and iOS which you can build upon
-- [Kotlin](https://kotlinlang.org/) configured for building the module on Android
-- C++ support for native modules on Android and iOS
-- [Expo](https://expo.io/) support for libraries without native code and web support
-- Example React Native app to manually test your modules
+- Minimal boilerplate modules on which you can build upon
+- Example React Native app to test your modules
+- [TypeScript](https://www.typescriptlang.org/) to write
+- Support for [Turbo Modules](https://reactnative.dev/docs/next/the-new-architecture/pillars-turbomodules) & [Fabric](https://reactnative.dev/docs/next/the-new-architecture/pillars-fabric-components)
+- Support for [Kotlin](https://kotlinlang.org/) on Android & [Swift](https://developer.apple.com/swift/) on iOS
+- Support for C++ to write cross-platform native code
+- [Expo](https://expo.io/) for libraries without native code and web support
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Lefthook](https://github.com/evilmartians/lefthook) and [Release It](https://github.com/release-it/release-it) pre-configured
 - `react-native-builder-bob` pre-configured to compile your files
-- [CircleCI](https://circleci.com/) pre-configured to run tests on the CI
+- [GitHub Actions](https://github.com/features/actions) pre-configured to run tests and lint on the CI
 
 To create new project, run the following:
 
 ```sh
-npx create-react-native-library@latest react-native-awesome-library
+npx create-react-native-library@latest awesome-library
 ```
 
-This will ask you few questions about your project and generate a new project in a folder named `react-native-awesome-library`.
+This will ask you few questions about your project and generate a new project in a folder named `awesome-library`.
 
 <img src="assets/create-react-native-library.gif" width="500px" height="auto">
 
