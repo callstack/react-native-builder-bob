@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.27.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.27.1...create-react-native-library@0.27.2) (2022-12-02)
+
+
+### Bug Fixes
+
+* add support for react native 0.71 ([fc87440](https://github.com/callstack/react-native-builder-bob/commit/fc8744092501ba00fd11bdb69e1ecb46fbb63c0f))
+* don't use deprecated package for lefthook ([de5b484](https://github.com/callstack/react-native-builder-bob/commit/de5b484b270ef2237161dc210f4d982aaba6637f))
+* fetch correct version of packages for web support ([628df24](https://github.com/callstack/react-native-builder-bob/commit/628df24f3e2f7e21a98fb08a0f7322de326d6b91))
+* fix typo in equality check ([23f26f5](https://github.com/callstack/react-native-builder-bob/commit/23f26f5202b72b4ddade485246bce08f786a5ed3))
+* fix web support in expo example ([1e31449](https://github.com/callstack/react-native-builder-bob/commit/1e31449679503647221412cdb1c80d4d5a2143f4))
+* improve error handling. closes [#336](https://github.com/callstack/react-native-builder-bob/issues/336) ([09f6b48](https://github.com/callstack/react-native-builder-bob/commit/09f6b48105dcffb3688d7eed8b4d718e045e65d1))
+
+
+### Reverts
+
+* Revert "refactor: remove unnecessary config that's added by codegen" ([d18a866](https://github.com/callstack/react-native-builder-bob/commit/d18a866642d086baab1868469ebc618c5636b419))
+
+
+
+
+
 ## [0.27.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.27.0...create-react-native-library@0.27.1) (2022-11-22)
 
 

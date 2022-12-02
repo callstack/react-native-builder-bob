@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.1...react-native-builder-bob@0.20.2) (2022-12-02)
+
+
+### Bug Fixes
+
+* improve tsc binary detection logic ([a213197](https://github.com/callstack/react-native-builder-bob/commit/a21319703431497d5cff36914cabadf2351e63c1))
+
+
+
+
+
 ## [0.20.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.0...react-native-builder-bob@0.20.1) (2022-11-03)
 
 **Note:** Version bump only for package react-native-builder-bob
