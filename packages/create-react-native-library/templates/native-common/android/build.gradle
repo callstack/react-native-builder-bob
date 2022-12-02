@@ -126,3 +126,11 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 <% } -%>
 }
+
+if (isNewArchitectureEnabled()) {
+  react {
+    jsRootDir = file("../src/")
+    libraryName = "<%- project.view ? project.name + 'View' : project.name -%>"
+    codegenJavaPackageName = "com.<%- project.package -%>"
+  }
+}
