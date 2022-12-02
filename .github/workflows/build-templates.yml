@@ -201,10 +201,6 @@ jobs:
         run: |
           yarn turbo run build:android --cache-dir=".turbo/cache"
 
-      - name: Cache iOS build
-        if: env.ios_build == 1
-        uses: mikehardy/buildcache-action@v1
-
       - name: Cache cocoapods
         if: env.ios_build == 1
         id: library-cocoapods-cache
@@ -225,17 +221,7 @@ jobs:
           yarn example pods
         env:
           NO_FLIPPER: 1
-
-      - name: Cache iOS build artifacts
-        if: env.ios_build == 1
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-library-xcode-derived-data-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
-          restore-keys: |
-            ${{ runner.os }}-library-xcode-derived-data-${{ hashFiles(format('{0}/**/Podfile', env.work_dir)) }}-
-            ${{ runner.os }}-library-xcode-derived-data-
+          CI: 0 # Hermes is built from source when CI=1
 
       - name: Build example (iOS)
         if: env.ios_build == 1
