@@ -12,7 +12,7 @@ If you want to create your own React Native module, scaffolding the project can 
 
 - Minimal boilerplate modules on which you can build upon
 - Example React Native app to test your modules
-- [TypeScript](https://www.typescriptlang.org/) to write
+- [TypeScript](https://www.typescriptlang.org/) to ensure type-safe code and better DX
 - Support for [Turbo Modules](https://reactnative.dev/docs/next/the-new-architecture/pillars-turbomodules) & [Fabric](https://reactnative.dev/docs/next/the-new-architecture/pillars-fabric-components)
 - Support for [Kotlin](https://kotlinlang.org/) on Android & [Swift](https://developer.apple.com/swift/) on iOS
 - Support for C++ to write cross-platform native code
