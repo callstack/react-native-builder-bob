@@ -24,4 +24,4 @@ jobs:
         run: yarn typecheck
 
       - name: Build packages
-        run: yarn lerna run prepare
+        run: yarn lerna run prepack

@@ -95,7 +95,7 @@ jobs:
 
       - name: Build package
         run: |
-          yarn workspace create-react-native-library prepare
+          yarn workspace create-react-native-library prepack
 
       - name: Get working directory
         run: |

@@ -33,7 +33,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
+    "prepack": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
