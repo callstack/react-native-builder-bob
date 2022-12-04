@@ -1,13 +1,15 @@
 {
-  "version": "independent",
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "useWorkspaces": true,
+  "version": "independent",
   "command": {
     "publish": {
+      "graphType": "all",
       "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
+      "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish"
     }
   }
