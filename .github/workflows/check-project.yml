@@ -1,6 +1,11 @@
 name: Check project
 on:
   push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   check-project:

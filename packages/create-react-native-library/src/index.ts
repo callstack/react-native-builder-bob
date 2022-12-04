@@ -698,6 +698,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   try {
     spawn.sync('git', ['init'], { cwd: folder });
+    spawn.sync('git', ['branch', '-M', 'main'], { cwd: folder });
     spawn.sync('git', ['add', '.'], { cwd: folder });
     spawn.sync('git', ['commit', '-m', 'chore: initial commit'], {
       cwd: folder,
