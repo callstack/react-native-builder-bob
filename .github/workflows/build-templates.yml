@@ -112,7 +112,7 @@ jobs:
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
-            --react-native-version 0.71.0-rc.3 \
+            --react-native-version 0.71.0-rc.4 \
             --turborepo
 
       - name: Cache dependencies of library
@@ -232,7 +232,6 @@ jobs:
           yarn example pods
         env:
           NO_FLIPPER: 1
-          CI: 0 # Hermes is built from source when CI=1
 
       - name: Build example (iOS)
         if: env.ios_build == 1
