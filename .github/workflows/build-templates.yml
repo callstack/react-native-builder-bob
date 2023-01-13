@@ -112,7 +112,6 @@ jobs:
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
-            --react-native-version 0.71.0-rc.4 \
             --turborepo
 
       - name: Cache dependencies of library
