@@ -19,4 +19,5 @@ export type Options = {
   source?: string;
   output?: string;
   targets?: (Target | [Target, object])[];
+  mergeTSDeclarations?: boolean;
 };

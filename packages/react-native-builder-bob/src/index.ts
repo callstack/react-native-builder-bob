@@ -12,6 +12,7 @@ import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import type { Options } from './types';
+import mergedirs from 'merge-dirs';
 
 // eslint-disable-next-line import/no-commonjs
 const { name, version } = require('../package.json');
@@ -424,6 +425,21 @@ yargs
           break;
         default:
           logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
+      }
+    }
+    if (options.mergeTSDeclarations) {
+      const nonTSTargets = options.targets!.filter(
+        (target) => target !== 'typescript'
+      );
+      const tsTarget = path.resolve(
+        root,
+        output as string,
+        'typescript',
+        source as string
+      );
+      for (const target of nonTSTargets) {
+        const targetName = Array.isArray(target) ? target[0] : target;
+        mergedirs(tsTarget, path.resolve(root, output as string, targetName));
       }
     }
   })

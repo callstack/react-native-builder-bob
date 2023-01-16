@@ -52,6 +52,7 @@
     "is-git-dirty": "^2.0.1",
     "json5": "^2.2.1",
     "kleur": "^4.1.4",
+    "merge-dirs": "^0.2.1",
     "prompts": "^2.4.2",
     "which": "^2.0.2",
     "yargs": "^17.5.1"
