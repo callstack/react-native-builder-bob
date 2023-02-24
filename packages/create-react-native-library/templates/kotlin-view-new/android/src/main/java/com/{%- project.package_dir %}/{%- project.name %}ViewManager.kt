@@ -8,6 +8,7 @@ import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerInterface
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerDelegate
+import com.facebook.soloader.SoLoader
 
 @ReactModule(name = <%- project.name -%>ViewManager.NAME)
 class <%- project.name -%>ViewManager : SimpleViewManager<<%- project.name -%>View>(),
@@ -37,5 +38,11 @@ class <%- project.name -%>ViewManager : SimpleViewManager<<%- project.name -%>Vi
 
   companion object {
     const val NAME = "<%- project.name -%>View"
+
+    init {
+      if (BuildConfig.CODEGEN_MODULE_REGISTRATION != null) {
+        SoLoader.loadLibrary(BuildConfig.CODEGEN_MODULE_REGISTRATION)
+      }
+    }
   }
 }
