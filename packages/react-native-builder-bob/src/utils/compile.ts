@@ -90,9 +90,6 @@ export default async function compile({
                 require.resolve('@babel/preset-typescript'),
                 require.resolve('@babel/preset-flow'),
               ],
-              plugins: [
-                require.resolve('@babel/plugin-proposal-class-properties'),
-              ],
             }),
       });
 
