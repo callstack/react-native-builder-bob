@@ -54,10 +54,12 @@ export default async function compile({
 
       const content = await fs.readFile(filepath, 'utf-8');
       const result = await babel.transformAsync(content, {
+        cwd: root,
         babelrc: babelrc,
         configFile: configFile,
         sourceMaps,
-        sourceRoot: path.relative(output, source),
+        sourceRoot: path.relative(path.dirname(outputFilename), source),
+        sourceFileName: path.relative(source, filepath),
         filename: filepath,
         ...(babelrc || configFile
           ? null
@@ -66,7 +68,6 @@ export default async function compile({
                 [
                   require.resolve('@babel/preset-env'),
                   {
-                    // @ts-ignore
                     targets: browserslist.findConfig(root) ?? {
                       browsers: [
                         '>1%',
