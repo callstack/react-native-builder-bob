@@ -36,7 +36,7 @@ def registrationCompat = {
     ? file("$projectDir/../node_modules/react-native/package.json") // developer mode, to run example app
     : file("$projectDir/../../react-native/package.json")
   def reactNativeVersion = new JsonSlurper().parseText(reactNativeManifest.text).version as String
-  // Fabric was introduced at react-native@0.68, full CMake support were introduced at react-native@0.71
+  // Fabric was introduced at react-native@0.68, full CMake support were introduced at react-native@0.70
   // Use Android.mk for compatibility with react-native@0.68/0.69
   reactNativeVersion.matches('(0.68.*|0.69.*)')
 }()
@@ -186,7 +186,7 @@ dependencies {
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { %>
+<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
     libraryName = codegenViewLibraryName
 <% } else { -%>
     libraryName = "<%- project.view ? project.name + 'View' : project.name -%>"
