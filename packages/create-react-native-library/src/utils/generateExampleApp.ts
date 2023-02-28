@@ -33,9 +33,7 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
-const PACKAGES_TO_ADD_DEV = {
-  'babel-plugin-module-resolver': '^4.1.0',
-};
+const PACKAGES_TO_ADD_DEV = {};
 
 const PACKAGES_TO_ADD_WEB = {
   'react-dom': '18.1.0',
