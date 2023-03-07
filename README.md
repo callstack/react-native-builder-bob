@@ -93,7 +93,7 @@ yarn add --dev react-native-builder-bob
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
    "react-native": "src/index.ts",
-   "types": "lib/typescript/index.d.ts",
+   "types": "lib/typescript/src/index.d.ts",
    "files": [
      "lib/",
      "src/"
