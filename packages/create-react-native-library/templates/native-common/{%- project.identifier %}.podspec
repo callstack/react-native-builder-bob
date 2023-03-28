@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
 
 <% if (project.cpp) { -%>
-  s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp}"
+  s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp,c}"
 <% } else if (project.swift) { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 <% } else { -%>
