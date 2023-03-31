@@ -103,6 +103,7 @@ jobs:
 
       - name: Create library
         run: |
+          rm -rf ${{ env.work_dir }} # Workaround for tests failing intermittently
           ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
             --slug @bob/react-native-test \
             --description test \
