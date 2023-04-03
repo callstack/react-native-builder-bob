@@ -11,11 +11,18 @@ import com.facebook.react.uimanager.ViewManagerDelegate;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerDelegate;
 import com.facebook.react.viewmanagers.<%- project.name -%>ViewManagerInterface;
+import com.facebook.soloader.SoLoader;
 
 @ReactModule(name = <%- project.name -%>ViewManager.NAME)
 public class <%- project.name -%>ViewManager extends SimpleViewManager<<%- project.name -%>View> implements <%- project.name -%>ViewManagerInterface<<%- project.name -%>View> {
 
   public static final String NAME = "<%- project.name -%>View";
+
+  static {
+    if (BuildConfig.CODEGEN_MODULE_REGISTRATION != null) {
+      SoLoader.loadLibrary(BuildConfig.CODEGEN_MODULE_REGISTRATION);
+    }
+  }
 
   private final ViewManagerDelegate<<%- project.name -%>View> mDelegate;
 

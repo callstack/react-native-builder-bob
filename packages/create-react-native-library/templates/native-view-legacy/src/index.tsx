@@ -2,7 +2,7 @@ import {
   requireNativeComponent,
   UIManager,
   Platform,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native';
 
 const LINKING_ERROR =

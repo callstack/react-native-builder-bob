@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.27.3...create-react-native-library@0.28.0) (2023-02-26)
+
+### Bug Fixes
+
+* failure noinspection version for 0.69.4 ([#362](https://github.com/callstack/react-native-builder-bob/issues/362)) ([c203294](https://github.com/callstack/react-native-builder-bob/commit/c203294fc8a40cdee07ba9379860fec6d8f5eb1d)) - by @Sunbreak
+
+### Features
+
+* backport android of new arch project ([da5335e](https://github.com/callstack/react-native-builder-bob/commit/da5335e65e9b6763e372d6422d8582097d11a9f1)) - by @Sunbreak
+* backport C++ files of new arch view ([8e42ae9](https://github.com/callstack/react-native-builder-bob/commit/8e42ae91e55469cc782224ffce7cf32b3903a7b5)) - by @Sunbreak
+* backport Java/Kotlin files of new arch view ([bf2408a](https://github.com/callstack/react-native-builder-bob/commit/bf2408a16e4e79c7692cf0781aa532e8d26e7450)) - by @Sunbreak
+* make year dynamic ([#354](https://github.com/callstack/react-native-builder-bob/issues/354)) ([8795a94](https://github.com/callstack/react-native-builder-bob/commit/8795a94b102068bc50d876b04022b0389ff0a1e3)) - by @dcangulo
+
 ## [0.27.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.27.2...create-react-native-library@0.27.3) (2022-12-04)
 
 **Note:** Version bump only for package create-react-native-library

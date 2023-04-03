@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.4](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.3...react-native-builder-bob@0.20.4) (2023-02-26)
+
+### Bug Fixes
+
+* remove extra class-props babel plugin ([#363](https://github.com/callstack/react-native-builder-bob/issues/363)) ([57755e5](https://github.com/callstack/react-native-builder-bob/commit/57755e5c39ff86db7cf22aaed392717398b9956f)), closes [#154](https://github.com/callstack/react-native-builder-bob/issues/154) - by @merrywhether
+* use correct source file names relative to source dir for sourcemaps ([2eb6ed9](https://github.com/callstack/react-native-builder-bob/commit/2eb6ed9f99223489e2fa56d860abc6e65fecd6b2)) - by @
+
 ## [0.20.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.2...react-native-builder-bob@0.20.3) (2022-12-04)
 
 **Note:** Version bump only for package react-native-builder-bob
