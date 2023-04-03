@@ -5,14 +5,13 @@ import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
-import prompts from './utils/prompts';
+import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import type { Options } from './types';
-import type { PromptObject } from './utils/prompts';
 
 // eslint-disable-next-line import/no-commonjs
 const { name, version } = require('../package.json');
