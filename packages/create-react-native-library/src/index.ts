@@ -8,9 +8,8 @@ import spawn from 'cross-spawn';
 import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
-import prompts from './utils/prompts';
+import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
-import type { PromptObject } from './utils/prompts';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
