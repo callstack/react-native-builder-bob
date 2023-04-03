@@ -5,7 +5,7 @@ import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
-import prompts, { PromptObject } from './utils/prompts';
+import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
