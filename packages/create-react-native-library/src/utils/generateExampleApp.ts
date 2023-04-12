@@ -34,7 +34,7 @@ const PACKAGES_TO_REMOVE = [
 ];
 
 const PACKAGES_TO_ADD_DEV = {
-  'babel-plugin-module-resolver': '^4.1.0',
+  'babel-plugin-module-resolver': '^5.0.0',
 };
 
 const PACKAGES_TO_ADD_WEB = {
