@@ -73,6 +73,7 @@ export default async function generateExampleApp({
           '--version',
           reactNativeVersion,
           '--skip-install',
+          '--npm',
         ]
       : // `npx create-expo-app example --no-install`
         ['create-expo-app@latest', directory, '--no-install'];
