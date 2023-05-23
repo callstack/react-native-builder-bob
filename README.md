@@ -237,6 +237,9 @@ We currenty support React Native `0.64.0` and newer versions of React Native for
 #### New Architecture
 We only support [the latest version of React Native](https://reactnative.dev/versions#Latestversion) on apps that use the new architecture.
 
+## Upgrading Your Library to Newer Versions
+You can use the [React Native Upgrade Helper](https://github.com/react-native-community/rn-diff-lib-purge/tree/release/trial2/awesome-lib) to upgrade your library.
+
 ## FAQ
 
 ### Why should I compile my project with `react-native-builder-bob`?
