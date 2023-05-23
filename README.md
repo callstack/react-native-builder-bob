@@ -227,6 +227,16 @@ This builds the project according to the configuration. This is usually run as p
 }
 ```
 
+## Supported Versions of React Native
+
+### Turbo Module and View with Backward compatibility
+
+#### Current Architecture
+We currenty support React Native `0.64.0` and newer versions of React Native for apps that use the current architecture.
+
+#### New Architecture
+We only support [the latest version of React Native](https://reactnative.dev/versions#Latestversion) on apps that use the new architecture.
+
 ## FAQ
 
 ### Why should I compile my project with `react-native-builder-bob`?
