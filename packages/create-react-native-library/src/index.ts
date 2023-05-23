@@ -119,7 +119,7 @@ const LANGUAGE_CHOICES: {
   types: ProjectType[];
 }[] = [
   {
-    title: 'Java & Objective-C',
+    title: `Java & Objective-C ${kleur.bold(kleur.yellow('(Recommended)'))}`,
     value: 'java-objc',
     types: [
       'module-legacy',
@@ -165,13 +165,27 @@ const LANGUAGE_CHOICES: {
 ];
 
 const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
-const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
+const BACKCOMPAT_DESCRIPTION = 'supports both new and current arch';
 
 const TYPE_CHOICES: {
   title: string;
   value: ProjectType;
   description: string;
 }[] = [
+  {
+    title: `Turbo module with backward compat ${kleur.bold(
+      kleur.yellow('(Recommended)')
+    )}`,
+    value: 'module-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
+  {
+    title: `Fabric view with backward compat ${kleur.bold(
+      kleur.yellow('(Recommended)')
+    )}`,
+    value: 'view-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
   {
     title: 'JavaScript library',
     value: 'library',
@@ -188,19 +202,9 @@ const TYPE_CHOICES: {
     description: 'bridge for native views to JS',
   },
   {
-    title: 'Turbo module with backward compat',
-    value: 'module-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-  },
-  {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view with backward compat',
-    value: 'view-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
   },
   {
     title: 'Fabric view',
