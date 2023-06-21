@@ -1,7 +1,7 @@
 {
   "name": "<%- project.slug -%>",
   "version": "0.1.0",
-  "description": "test",
+  "description": "<%- project.description %>",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
