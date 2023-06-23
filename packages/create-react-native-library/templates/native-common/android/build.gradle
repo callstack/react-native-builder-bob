@@ -64,7 +64,16 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
 }
 
+def isAGPVersionGreaterThan(version) {
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+  return agpVersion > version
+}
+
 android {
+  if (isAGPVersionGreaterThan(7)) {
+    namespace "com.<%- project.package -%>"
+  }
+
 <% if (project.cpp || (project.view && (project.arch === "new" || project.arch === "mixed"))) { -%>
   ndkVersion getExtOrDefault("ndkVersion")
 <% } -%>
