@@ -12,6 +12,7 @@ type Options = Input & {
   sourceMaps?: boolean;
   copyFlow?: boolean;
   modules: 'commonjs' | false;
+  field: 'main' | 'module';
 };
 
 export default async function compile({
@@ -24,6 +25,7 @@ export default async function compile({
   copyFlow,
   sourceMaps = true,
   report,
+  field,
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
@@ -120,4 +122,43 @@ export default async function compile({
   );
 
   report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
+
+  const packageJson = JSON.parse(
+    await fs.readFile(path.join(root, 'package.json'), 'utf-8')
+  );
+
+  if (field in packageJson) {
+    try {
+      require.resolve(path.join(root, packageJson[field]));
+    } catch (e: unknown) {
+      if (
+        e != null &&
+        typeof e === 'object' &&
+        'code' in e &&
+        e.code === 'MODULE_NOT_FOUND'
+      ) {
+        report.error(
+          `The ${kleur.blue(field)} field in ${kleur.blue(
+            'package.json'
+          )} points to a non-existent file: ${kleur.blue(
+            packageJson[field]
+          )}.\nVerify the path points to the correct file under ${kleur.blue(
+            path.relative(root, output)
+          )}.`
+        );
+
+        throw new Error(`Found incorrect path in '${field}' field.`);
+      }
+
+      throw e;
+    }
+  } else {
+    report.warn(
+      `No ${kleur.blue(field)} field found in ${kleur.blue(
+        'package.json'
+      )}. Add it to your ${kleur.blue(
+        'package.json'
+      )} so that consumers of your package can use it.`
+    );
+  }
 }
