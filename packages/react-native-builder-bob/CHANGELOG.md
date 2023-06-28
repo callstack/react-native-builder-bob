@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.4...react-native-builder-bob@0.21.0) (2023-06-28)
+
+### Bug Fixes
+
+* typescript 5 compatibility ([#374](https://github.com/callstack/react-native-builder-bob/issues/374)) ([e369644](https://github.com/callstack/react-native-builder-bob/commit/e3696441357ba199557db0289b970e018ca3c5de)), closes [#373](https://github.com/callstack/react-native-builder-bob/issues/373) - by @dcangulo
+
+### Features
+
+* verify that the package.json fields point to correct path ([#401](https://github.com/callstack/react-native-builder-bob/issues/401)) ([49ef758](https://github.com/callstack/react-native-builder-bob/commit/49ef7585c7ca77f28a85b033dc4193df08a748f0)) - by @satya164
+
 ## [0.20.4](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.3...react-native-builder-bob@0.20.4) (2023-02-26)
 
 ### Bug Fixes
