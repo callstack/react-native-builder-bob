@@ -33,5 +33,6 @@ export default async function build({
     output,
     modules: false,
     report,
+    field: 'module',
   });
 }

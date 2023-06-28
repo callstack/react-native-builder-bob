@@ -193,16 +193,62 @@ export default async function build({
       report.success(
         `Wrote definition files to ${kleur.blue(path.relative(root, output))}`
       );
+
+      const packageJson = JSON.parse(
+        await fs.readFile(path.join(root, 'package.json'), 'utf-8')
+      );
+
+      if ('types' in packageJson) {
+        if (!packageJson.types.endsWith('.d.ts')) {
+          report.error(
+            `The ${kleur.blue('types')} field in ${kleur.blue(
+              'package.json'
+            )} doesn't point to a definition file. Verify the path points to the correct file under ${kleur.blue(
+              path.relative(root, output)
+            )}.`
+          );
+
+          throw new Error("Found incorrect path in 'types' field.");
+        }
+
+        const typesPath = path.join(root, packageJson.types);
+
+        if (!(await fs.pathExists(typesPath))) {
+          report.error(
+            `The ${kleur.blue('types')} field in ${kleur.blue(
+              'package.json'
+            )} points to a non-existent file: ${kleur.blue(
+              packageJson.types
+            )}.\nVerify the path points to the correct file under ${kleur.blue(
+              path.relative(root, output)
+            )}.`
+          );
+
+          throw new Error("Found incorrect path in 'types' field.");
+        }
+      } else {
+        report.warn(
+          `No ${kleur.blue('types')} field found in ${kleur.blue(
+            'package.json'
+          )}.\nConsider adding it so consumers can use the types.`
+        );
+      }
     } else {
       throw new Error('Failed to build definition files.');
     }
-  } catch (e: any) {
-    if (e.stdout) {
-      report.error(
-        `Errors found when building definition files:\n${e.stdout.toString()}`
-      );
+  } catch (e: unknown) {
+    if (e != null && typeof e === 'object') {
+      if ('stdout' in e && e.stdout != null) {
+        report.error(
+          `Errors found when building definition files:\n${e.stdout.toString()}`
+        );
+      } else if ('message' in e && typeof e.message === 'string') {
+        report.error(e.message);
+      } else {
+        throw e;
+      }
     } else {
-      report.error(e.message);
+      throw e;
     }
 
     throw new Error('Failed to build definition files.');
