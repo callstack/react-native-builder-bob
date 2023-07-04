@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.29.0...create-react-native-library@0.30.0) (2023-07-04)
+
+### Bug Fixes
+
+* add missing method for new arch for backward compatible turbo module ([99e990a](https://github.com/callstack/react-native-builder-bob/commit/99e990a787c98b0c4b6854301257cf726c046eff)), closes [#386](https://github.com/callstack/react-native-builder-bob/issues/386) - by @satya164
+* extend @react-native/metro-config for react-native 0.72 ([dcbe447](https://github.com/callstack/react-native-builder-bob/commit/dcbe4476bd1b1f9de79114f89646a2cbc04dfe4e)) - by @satya164
+* fix incorrect references in pbxproj. closes [#398](https://github.com/callstack/react-native-builder-bob/issues/398) ([03e8121](https://github.com/callstack/react-native-builder-bob/commit/03e812167c0e006efa333e0af8ec91809ea9c093)) - by @satya164
+* update turborepo config to exclude built files ([c69d9b3](https://github.com/callstack/react-native-builder-bob/commit/c69d9b31a8b13159611ad0ebcd4cb477094ccb12)) - by @satya164
+* use correct return type for cpp project. closes [#343](https://github.com/callstack/react-native-builder-bob/issues/343) ([6835400](https://github.com/callstack/react-native-builder-bob/commit/6835400a1743f8021e00868807d2e979e0015cce)) - by @satya164
+
+### Features
+
+* **android:** gradle namespace support for AGP versions >7.3 ([#399](https://github.com/callstack/react-native-builder-bob/issues/399)) ([c5cb6c7](https://github.com/callstack/react-native-builder-bob/commit/c5cb6c72e720b016df1ff5205da69431f660b9c2)) - by @atlj
+* build ios and android example apps on CI ([325b7ca](https://github.com/callstack/react-native-builder-bob/commit/325b7ca6bd476401f8acf54bc688f6155647dd12)) - by @satya164
+
 # [0.29.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.28.0...create-react-native-library@0.29.0) (2023-06-28)
 
 ### Bug Fixes

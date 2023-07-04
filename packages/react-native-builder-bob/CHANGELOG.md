@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.21.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.21.0...react-native-builder-bob@0.21.1) (2023-07-04)
+
+### Bug Fixes
+
+* update generated tsconfig ([c40dc3b](https://github.com/callstack/react-native-builder-bob/commit/c40dc3bed3982ab0ef795d46aa18e35fcd5aeb91)) - by @satya164
+
 # [0.21.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.20.4...react-native-builder-bob@0.21.0) (2023-06-28)
 
 ### Bug Fixes
