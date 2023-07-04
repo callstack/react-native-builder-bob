@@ -5,11 +5,15 @@
     "build:android": {
       "inputs": [
         "package.json",
-        "android/**",
-        "src/**/*.ts",
-        "src/**/*.tsx",
+        "android",
+        "!android/build",
+        "src/*.ts",
+        "src/*.tsx",
         "example/package.json",
-        "example/android/**"
+        "example/android",
+        "!example/android/.gradle",
+        "!example/android/build",
+        "!example/android/app/build"
       ],
       "outputs": []
     },
@@ -17,11 +21,13 @@
       "inputs": [
         "package.json",
         "*.podspec",
-        "ios/**",
-        "src/**/*.ts",
-        "src/**/*.tsx",
+        "ios",
+        "src/*.ts",
+        "src/*.tsx",
         "example/package.json",
-        "example/ios/**"
+        "example/ios",
+        "!example/ios/build",
+        "!example/ios/Pods"
       ],
       "outputs": []
     }
