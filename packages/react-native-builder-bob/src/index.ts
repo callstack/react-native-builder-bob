@@ -26,8 +26,6 @@ const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 // eslint-disable-next-line babel/no-unused-expressions
 yargs
   .command('init', 'configure the package to use bob', {}, async () => {
-    const pak = path.join(root, 'package.json');
-
     if (isGitDirty()) {
       const { shouldContinue } = await prompts({
         type: 'confirm',
@@ -37,14 +35,32 @@ yargs
       });
 
       if (!shouldContinue) {
-        process.exit(1);
+        process.exit(0);
       }
     }
+
+    const pak = path.join(root, 'package.json');
 
     if (!(await fs.pathExists(pak))) {
       logger.exit(
         `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
       );
+    }
+
+    const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
+    const result = explorer.search();
+
+    if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
+      const { shouldContinue } = await prompts({
+        type: 'confirm',
+        name: 'shouldContinue',
+        message: `The project seems to be already configured with bob. Do you want to overwrite the existing configuration?`,
+        initial: false,
+      });
+
+      if (!shouldContinue) {
+        process.exit(0);
+      }
     }
 
     const { source } = await prompts({
@@ -71,8 +87,6 @@ yargs
       );
       return;
     }
-
-    const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
 
     pkg.devDependencies = Object.fromEntries(
       [

@@ -41,7 +41,7 @@ This will ask you few questions about your project and generate a new project in
 - TypeScript definitions (uses `tsc` to generate declaration files)
 - Android AAR files
 
-If you created a project with `create-react-native-library`, `react-native-builder-bob` is already pre-configured to build your project. You don't need to configure it again.
+If you created a project with `create-react-native-library`, `react-native-builder-bob` is **already pre-configured to build your project**. You don't need to configure it again.
 
 The following configuration steps are for projects not created with `create-react-native-library`.
 
