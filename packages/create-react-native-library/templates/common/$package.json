@@ -33,11 +33,9 @@
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-<% if (example === 'native' && turborepo) { -%>
+<% if (example === 'native') { -%>
     "build:android": "cd example/android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
     "build:ios": "cd example/ios && xcodebuild -workspace <%- project.name %>Example.xcworkspace -scheme <%- project.name %>Example -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
-<% } -%>
-<% if (example === 'native') { -%>
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
 <% } else { -%>
@@ -79,7 +77,7 @@
     "react-native": "0.70.0",
     "react-native-builder-bob": "^<%- bob.version %>",
     "release-it": "^15.0.0",
-<% if (turborepo) { -%>
+<% if (example === 'native') { -%>
     "turbo": "^1.10.7",
 <% } -%>
     "typescript": "^5.0.2"

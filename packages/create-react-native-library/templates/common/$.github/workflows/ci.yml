@@ -35,7 +35,7 @@ jobs:
       - name: Run unit tests
         run: yarn test --maxWorkers=2 --coverage
 
-  build:
+  build-library:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,3 +46,101 @@ jobs:
 
       - name: Build package
         run: yarn prepack
+
+<% if (project.native) { -%>
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_CACHE_DIR: .turbo/android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Finalize Android SDK
+        run: |
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      - name: Cache turborepo for Android
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turborepo-android-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-library-turborepo-android-
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Build example for Android
+        run: |
+          yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+
+  build-ios:
+    runs-on: macos-latest
+    env:
+      TURBO_CACHE_DIR: .turbo/ios
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Cache turborepo for iOS
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turborepo-ios-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-library-turborepo-ios-
+
+      - name: Cache cocoapods
+        id: cocoapods-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/ios/Pods
+            **/ios/Podfile.lock
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('**/Podfile') }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-${{ hashFiles('**/Podfile') }}-
+            ${{ runner.os }}-cocoapods-
+
+      - name: Install cocoapods
+        if: steps.cocoapods-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn example pods
+        env:
+          NO_FLIPPER: 1
+
+      - name: Build example (iOS)
+        run: |
+          yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+<% } else { -%>
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build example for Web
+        run: |
+          yarn example expo export:web
+<% } -%>
