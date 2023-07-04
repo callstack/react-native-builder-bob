@@ -5,14 +5,17 @@ const exclusionList = require('metro-config/src/defaults/exclusionList');
 const pak = require('../package.json');
 
 const root = path.resolve(__dirname, '..');
-
-const modules = Object.keys({
-  ...pak.peerDependencies,
-});
+const modules = Object.keys({ ...pak.peerDependencies });
 
 const defaultConfig = getDefaultConfig(__dirname);
 
-module.exports = {
+/**
+ * Metro configuration
+ * https://facebook.github.io/metro/docs/configuration
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
   ...defaultConfig,
 
   projectRoot: __dirname,
@@ -36,3 +39,5 @@ module.exports = {
     }, {}),
   },
 };
+
+module.exports = config;
