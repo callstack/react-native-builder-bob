@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.30.0...create-react-native-library@0.30.1) (2023-07-04)
+
+### Bug Fixes
+
+* prompt when running init if project already has a config ([83c5332](https://github.com/callstack/react-native-builder-bob/commit/83c5332b82cf1dd8bcc0a3c09faee90ae10aba31)) - by @satya164
+
 # [0.30.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.29.0...create-react-native-library@0.30.0) (2023-07-04)
 
 ### Bug Fixes
