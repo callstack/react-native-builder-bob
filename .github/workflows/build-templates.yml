@@ -14,10 +14,6 @@ on:
 
 jobs:
   build:
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -86,6 +82,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}-latest
 
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      WORK_DIR: ${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -97,14 +98,10 @@ jobs:
         run: |
           yarn workspace create-react-native-library prepack
 
-      - name: Get working directory
-        run: |
-          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
-
       - name: Create library
         run: |
-          rm -rf ${{ env.work_dir }} # Workaround for tests failing intermittently
-          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
+          rm -rf ${{ env.WORK_DIR }} # Workaround for tests failing intermittently
+          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.WORK_DIR }} \
             --slug @bob/react-native-test \
             --description test \
             --author-name test \
@@ -119,21 +116,21 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.work_dir }}/**/node_modules
-            ${{ env.work_dir }}/**/yarn.lock
-          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir)) }}
+            ${{ env.WORK_DIR }}/**/node_modules
+            ${{ env.WORK_DIR }}/**/yarn.lock
+          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.WORK_DIR)) }}
           restore-keys: |
             ${{ runner.os }}-library-yarn-
 
       - name: Install dependencies of library
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn install --cwd example
           yarn install
 
       - name: Get build target
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           # Build Android for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == ubuntu ]]; then
@@ -154,14 +151,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.work_dir }}/.turbo
-          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+            ${{ env.WORK_DIR }}/.turbo
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/**/yarn.lock', env.WORK_DIR)) }}
           restore-keys: |
             ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
 
       - name: Check turborepo cache
         if: env.android_build == 1 || env.ios_build == 1
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           TURBO_CACHE_STATUS_ANDROID=$(node -p "($(yarn --silent turbo run build:android --cache-dir=".turbo/cache" --dry=json)).tasks.find(t => t.task === 'build:android').cache.status")
           TURBO_CACHE_STATUS_IOS=$(node -p "($(yarn --silent turbo run build:ios --cache-dir=".turbo/cache" --dry=json)).tasks.find(t => t.task === 'build:ios').cache.status")
@@ -175,27 +172,27 @@ jobs:
           fi
 
       - name: Lint library
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn lint
 
       - name: Typecheck library
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn typecheck
 
       - name: Test library
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn test
 
       - name: Build library
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn prepack
 
       - name: Build example (Web)
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         if: matrix.language == 'js'
         run: |
           yarn example expo export:web
@@ -219,15 +216,36 @@ jobs:
           path: |
             ~/.gradle/wrapper
             ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles(format('{0}/example/android/gradle/wrapper/gradle-wrapper.properties', env.work_dir)) }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles(format('{0}/example/android/gradle/wrapper/gradle-wrapper.properties', env.WORK_DIR)) }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: Build example (Android)
         if: env.android_build == 1
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn turbo run build:android --cache-dir=".turbo/cache"
+
+      - name: Setup ccache
+        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
+        run: |
+          brew install ccache
+          ln -s $(which ccache) /usr/local/bin/gcc
+          ln -s $(which ccache) /usr/local/bin/g++
+          ln -s $(which ccache) /usr/local/bin/cc
+          ln -s $(which ccache) /usr/local/bin/c++
+          ln -s $(which ccache) /usr/local/bin/clang
+          ln -s $(which ccache) /usr/local/bin/clang++
+
+      - name: Cache ccache
+        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
+        uses: actions/cache@v3
+        with:
+          path: |
+            /Users/$USER/Library/Caches/ccache
+          key: ${{ runner.os }}-library-ccache-${{ hashFiles(format('{0}/example/ios/Podfile', env.WORK_DIR)) }}
+          restore-keys: |
+            ${{ runner.os }}-library-ccache-
 
       - name: Cache cocoapods
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
@@ -235,16 +253,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.work_dir }}/**/ios/Pods
-            ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+            ${{ env.WORK_DIR }}/**/ios/Pods
+            ${{ env.WORK_DIR }}/**/ios/Podfile.lock
+          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.WORK_DIR)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.WORK_DIR)) }}
           restore-keys: |
-            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-
+            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.WORK_DIR)) }}-
             ${{ runner.os }}-library-cocoapods-
 
       - name: Install cocoapods
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn example pods
         env:
@@ -252,6 +270,12 @@ jobs:
 
       - name: Build example (iOS)
         if: env.ios_build == 1
-        working-directory: ${{ env.work_dir }}
+        working-directory: ${{ env.WORK_DIR }}
         run: |
           yarn turbo run build:ios --cache-dir=".turbo/cache"
+        env:
+          CCACHE_SLOPPINESS: clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          CCACHE_FILECLONE: true
+          CCACHE_DEPEND: true
+          CCACHE_INODECACHE: true
+          CCACHE_COMPILERCHECK: content
