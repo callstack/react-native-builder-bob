@@ -64,14 +64,28 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
 }
 
-def isAGPVersionGreaterThan(version) {
-  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
-  return agpVersion > version
+def supportsNamespace() {
+  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
+  def major = parsed[0].toInteger()
+  def minor = parsed[1].toInteger()
+
+  // Namespace support was added in 7.3.0
+  if (major == 7 && minor >= 3) {
+    return true
+  }
+
+  return major >= 8
 }
 
 android {
-  if (isAGPVersionGreaterThan(7)) {
+  if (supportsNamespace()) {
     namespace "com.<%- project.package -%>"
+  } else {
+    sourceSets {
+      main {
+        manifest.srcFile "src/main/AndroidManifestDeprecated.xml"
+      }
+    }
   }
 
 <% if (project.cpp || (project.view && (project.arch === "new" || project.arch === "mixed"))) { -%>
