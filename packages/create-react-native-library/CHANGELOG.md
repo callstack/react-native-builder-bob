@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.30.1...create-react-native-library@0.31.0) (2023-07-12)
+
+### Bug Fixes
+
+* don't use deprecated package field in AndroidManifest on AGP >= 7.3 ([#420](https://github.com/callstack/react-native-builder-bob/issues/420)) ([3846426](https://github.com/callstack/react-native-builder-bob/commit/38464263682b50e6953cd968db2135fb961fd083)) - by @satya164
+
+### Features
+
+* bump node version to 18 ([#418](https://github.com/callstack/react-native-builder-bob/issues/418)) ([7fa4a76](https://github.com/callstack/react-native-builder-bob/commit/7fa4a763a742962db2861dee8be90053b5376270)) - by @atlj
+
 ## [0.30.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.30.0...create-react-native-library@0.30.1) (2023-07-04)
 
 ### Bug Fixes
