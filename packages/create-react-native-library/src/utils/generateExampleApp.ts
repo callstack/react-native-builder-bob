@@ -38,12 +38,12 @@ const PACKAGES_TO_ADD_DEV = {
 };
 
 const PACKAGES_TO_ADD_WEB = {
-  'react-dom': '18.1.0',
-  'react-native-web': '~0.18.9',
+  'react-dom': '18.2.0',
+  'react-native-web': '~0.18.10',
 };
 
 const PACKAGES_TO_ADD_WEB_DEV = {
-  '@expo/webpack-config': '^0.17.2',
+  '@expo/webpack-config': '^18.0.1',
   'babel-loader': '^8.1.0',
 };
 
