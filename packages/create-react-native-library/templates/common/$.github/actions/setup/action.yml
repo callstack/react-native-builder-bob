@@ -15,6 +15,7 @@ runs:
       with:
         path: |
           **/node_modules
+          .yarn/install-state.gz
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -22,7 +23,5 @@ runs:
 
     - name: Install dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: |
-        yarn install --cwd example --frozen-lockfile
-        yarn install --frozen-lockfile
+      run: yarn install --immutable
       shell: bash

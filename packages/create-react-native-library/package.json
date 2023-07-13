@@ -24,9 +24,7 @@
   },
   "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
   "main": "lib/index.js",
-  "bin": {
-    "create-react-native-library": "bin/create-react-native-library"
-  },
+  "bin": "bin/create-react-native-library",
   "files": [
     "lib",
     "templates"
