@@ -13,7 +13,10 @@ import generateExampleApp from './utils/generateExampleApp';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
-const BINARIES = /(gradlew|\.(jar|keystore|png|jpg|gif))$/;
+const BINARIES = [
+  /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
+  /\$\.yarn(?![a-z])/,
+];
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
@@ -596,7 +599,7 @@ async function create(argv: yargs.Arguments<any>) {
 
       if (stats.isDirectory()) {
         await copyDir(file, target);
-      } else if (!file.match(BINARIES)) {
+      } else if (!BINARIES.some((r) => r.test(file))) {
         const content = await fs.readFile(file, 'utf8');
 
         await fs.writeFile(target, ejs.render(content, options));
@@ -627,6 +630,7 @@ async function create(argv: yargs.Arguments<any>) {
   await generateExampleApp({
     type: example,
     dest: folder,
+    slug: options.project.slug,
     projectName: options.project.name,
     arch,
     reactNativeVersion,

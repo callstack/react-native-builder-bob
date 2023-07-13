@@ -41,6 +41,14 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # Typescript v1 declaration files
 typings/
 

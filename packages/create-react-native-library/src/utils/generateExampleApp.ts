@@ -47,15 +47,25 @@ const PACKAGES_TO_ADD_WEB_DEV = {
   'babel-loader': '^8.1.0',
 };
 
+const SCRIPTS_TO_ADD = {
+  'pods': 'pod-install --quiet',
+  'build:android':
+    'cd android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a',
+  'build:ios':
+    'cd ios && xcodebuild -workspace TestLibExample.xcworkspace -scheme TestLibExample -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO',
+};
+
 export default async function generateExampleApp({
   type,
   dest,
+  slug,
   projectName,
   arch,
   reactNativeVersion = 'latest',
 }: {
   type: 'expo' | 'native';
   dest: string;
+  slug: string;
   projectName: string;
   arch: 'new' | 'mixed' | 'legacy';
   reactNativeVersion?: string;
@@ -110,6 +120,8 @@ export default async function generateExampleApp({
     await fs.readFile(path.join(directory, 'package.json'), 'utf8')
   );
 
+  pkg.name = `${slug}-example`;
+
   // Remove Jest config for now
   delete pkg.jest;
 
@@ -119,7 +131,7 @@ export default async function generateExampleApp({
   delete scripts.lint;
 
   if (type === 'native') {
-    scripts.pods = 'pod-install --quiet';
+    Object.assign(scripts, SCRIPTS_TO_ADD);
   }
 
   PACKAGES_TO_REMOVE.forEach((name) => {

@@ -129,8 +129,10 @@ jobs:
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn install --cwd example
-          yarn install
+          touch yarn.lock # Without this Yarn will fail due to the parent directory being a Yarn workspace
+          yarn install --no-immutable
+        env:
+          POD_INSTALL: 0
 
       - name: Get build target
         working-directory: ${{ env.work_dir }}
@@ -163,8 +165,8 @@ jobs:
         if: env.android_build == 1 || env.ios_build == 1
         working-directory: ${{ env.work_dir }}
         run: |
-          TURBO_CACHE_STATUS_ANDROID=$(node -p "($(yarn --silent turbo run build:android --cache-dir=".turbo/cache" --dry=json)).tasks.find(t => t.task === 'build:android').cache.status")
-          TURBO_CACHE_STATUS_IOS=$(node -p "($(yarn --silent turbo run build:ios --cache-dir=".turbo/cache" --dry=json)).tasks.find(t => t.task === 'build:ios').cache.status")
+          TURBO_CACHE_STATUS_ANDROID=$(node -p "($(yarn turbo run build:android --cache-dir=".turbo" --dry=json)).tasks.find(t => t.task === 'build:android').cache.status")
+          TURBO_CACHE_STATUS_IOS=$(node -p "($(yarn turbo run build:ios --cache-dir=".turbo" --dry=json)).tasks.find(t => t.task === 'build:ios').cache.status")
 
           if [[ $TURBO_CACHE_STATUS_ANDROID == "HIT" ]]; then
             echo "turbo_cache_hit_android=1" >> $GITHUB_ENV
@@ -227,7 +229,7 @@ jobs:
         if: env.android_build == 1
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn turbo run build:android --cache-dir=".turbo/cache"
+          yarn turbo run build:android --cache-dir=".turbo"
 
       - name: Cache cocoapods
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
@@ -254,4 +256,4 @@ jobs:
         if: env.ios_build == 1
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn turbo run build:ios --cache-dir=".turbo/cache"
+          yarn turbo run build:ios --cache-dir=".turbo"
