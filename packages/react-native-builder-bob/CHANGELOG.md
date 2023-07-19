@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.21.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.21.2...react-native-builder-bob@0.21.3) (2023-07-19)
+
+### Bug Fixes
+
+* warn when copyFlow is specified without flow-bin in devDependencies ([a63a9ee](https://github.com/callstack/react-native-builder-bob/commit/a63a9ee8006c1227de949896016c0a8205f61bc4)) - by @
+
 ## [0.21.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.21.1...react-native-builder-bob@0.21.2) (2023-07-04)
 
 ### Bug Fixes
