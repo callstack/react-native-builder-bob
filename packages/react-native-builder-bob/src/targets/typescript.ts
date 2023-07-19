@@ -194,12 +194,12 @@ export default async function build({
         `Wrote definition files to ${kleur.blue(path.relative(root, output))}`
       );
 
-      const packageJson = JSON.parse(
+      const pkg = JSON.parse(
         await fs.readFile(path.join(root, 'package.json'), 'utf-8')
       );
 
-      if ('types' in packageJson) {
-        if (!packageJson.types.endsWith('.d.ts')) {
+      if ('types' in pkg) {
+        if (!pkg.types.endsWith('.d.ts')) {
           report.error(
             `The ${kleur.blue('types')} field in ${kleur.blue(
               'package.json'
@@ -211,14 +211,14 @@ export default async function build({
           throw new Error("Found incorrect path in 'types' field.");
         }
 
-        const typesPath = path.join(root, packageJson.types);
+        const typesPath = path.join(root, pkg.types);
 
         if (!(await fs.pathExists(typesPath))) {
           report.error(
             `The ${kleur.blue('types')} field in ${kleur.blue(
               'package.json'
             )} points to a non-existent file: ${kleur.blue(
-              packageJson.types
+              pkg.types
             )}.\nVerify the path points to the correct file under ${kleur.blue(
               path.relative(root, output)
             )}.`

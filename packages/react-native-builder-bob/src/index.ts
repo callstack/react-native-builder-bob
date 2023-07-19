@@ -285,7 +285,7 @@ yargs
       output,
       targets: targets.map((t: string) => {
         if (t === target && flow) {
-          return [t, { flow }];
+          return [t, { copyFlow: true }];
         }
 
         return t;

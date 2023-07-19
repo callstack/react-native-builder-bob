@@ -40,6 +40,30 @@ export default async function compile({
     )} with ${kleur.blue('babel')}`
   );
 
+  const pkg = JSON.parse(
+    await fs.readFile(path.join(root, 'package.json'), 'utf-8')
+  );
+
+  if (copyFlow) {
+    if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
+      report.warn(
+        `The ${kleur.blue(
+          'copyFlow'
+        )} option was specified, but couldn't find ${kleur.blue(
+          'flow-bin'
+        )} in ${kleur.blue(
+          'package.json'
+        )}.\nIf the project is using ${kleur.blue(
+          'flow'
+        )}, then make sure you have added ${kleur.blue(
+          'flow-bin'
+        )} to your ${kleur.blue(
+          'devDependencies'
+        )}, otherwise remove the ${kleur.blue('copyFlow')} option.`
+      );
+    }
+  }
+
   await Promise.all(
     files.map(async (filepath) => {
       const outputFilename = path
@@ -123,13 +147,9 @@ export default async function compile({
 
   report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
 
-  const packageJson = JSON.parse(
-    await fs.readFile(path.join(root, 'package.json'), 'utf-8')
-  );
-
-  if (field in packageJson) {
+  if (field in pkg) {
     try {
-      require.resolve(path.join(root, packageJson[field]));
+      require.resolve(path.join(root, pkg[field]));
     } catch (e: unknown) {
       if (
         e != null &&
@@ -141,7 +161,7 @@ export default async function compile({
           `The ${kleur.blue(field)} field in ${kleur.blue(
             'package.json'
           )} points to a non-existent file: ${kleur.blue(
-            packageJson[field]
+            pkg[field]
           )}.\nVerify the path points to the correct file under ${kleur.blue(
             path.relative(root, output)
           )}.`
