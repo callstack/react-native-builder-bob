@@ -80,10 +80,10 @@ def supportsNamespace() {
 android {
   if (supportsNamespace()) {
     namespace "com.<%- project.package -%>"
-  } else {
+
     sourceSets {
       main {
-        manifest.srcFile "src/main/AndroidManifestDeprecated.xml"
+        manifest.srcFile "src/main/AndroidManifestNew.xml"
       }
     }
   }
