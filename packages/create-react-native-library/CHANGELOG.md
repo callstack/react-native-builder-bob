@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.31.0...create-react-native-library@0.31.1) (2023-08-01)
+
+### Bug Fixes
+
+* use `AndroidManifest.xml` for older RN versions ([#431](https://github.com/callstack/react-native-builder-bob/issues/431)) ([ace6101](https://github.com/callstack/react-native-builder-bob/commit/ace61019abcf1b0f1fd8189dfb8791a61ca7b22d)), closes [#429](https://github.com/callstack/react-native-builder-bob/issues/429) - by @satya164
+
 # [0.31.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.30.1...create-react-native-library@0.31.0) (2023-07-12)
 
 ### Bug Fixes
