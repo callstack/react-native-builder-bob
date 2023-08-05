@@ -1,11 +1,9 @@
 import kleur from 'kleur';
 import path from 'path';
 import fs from 'fs-extra';
-import which from 'which';
 import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
-import { platform } from 'os';
 import type { Input } from '../types';
 
 type Options = Input & {
@@ -79,83 +77,12 @@ export default async function build({
       );
     }
 
-    let tsc;
+    let binary;
 
     if (options?.tsc) {
-      tsc = path.resolve(root, options.tsc);
-
-      if (!(await fs.pathExists(tsc))) {
-        throw new Error(
-          `The ${kleur.blue(
-            'tsc'
-          )} binary doesn't seem to be installed at ${kleur.blue(
-            tsc
-          )}. Please specify the correct path in options or remove it to use the workspace's version.`
-        );
-      }
+      binary = path.resolve(root, options.tsc);
     } else {
-      const execpath = process.env.npm_execpath;
-      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
-
-      try {
-        if (cli === 'yarn') {
-          const result = spawn.sync('yarn', ['bin', 'tsc'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = result.stdout.trim();
-        } else {
-          const result = spawn.sync('npm', ['bin'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = path.resolve(result.stdout.trim(), 'tsc');
-        }
-      } catch (e) {
-        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
-      }
-
-      if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
-        tsc += '.cmd';
-      }
-    }
-
-    if (!(await fs.pathExists(tsc))) {
-      try {
-        tsc = await which('tsc');
-
-        if (await fs.pathExists(tsc)) {
-          report.warn(
-            `Failed to locate 'tsc' in the workspace. Falling back to the globally installed version. Consider adding ${kleur.blue(
-              'typescript'
-            )} to your ${kleur.blue(
-              'devDependencies'
-            )} or specifying the ${kleur.blue(
-              'tsc'
-            )} option for the typescript target.`
-          );
-        }
-      } catch (e) {
-        // Ignore
-      }
-    }
-
-    if (tsc == null || !(await fs.pathExists(tsc))) {
-      throw new Error(
-        `The ${kleur.blue(
-          'tsc'
-        )} binary doesn't seem to be installed under ${kleur.blue(
-          'node_modules'
-        )} or present in $PATH. Make sure you have added ${kleur.blue(
-          'typescript'
-        )} to your ${kleur.blue('devDependencies')} or specify the ${kleur.blue(
-          'tsc'
-        )} option for typescript.`
-      );
+      binary = 'npx';
     }
 
     const tsbuildinfo = path.join(
@@ -169,23 +96,25 @@ export default async function build({
       // Ignore
     }
 
-    const result = spawn.sync(
-      tsc,
-      [
-        '--pretty',
-        '--declaration',
-        '--declarationMap',
-        '--emitDeclarationOnly',
-        '--project',
-        project,
-        '--outDir',
-        output,
-      ],
-      {
-        stdio: 'inherit',
-        cwd: root,
-      }
-    );
+    const parameters = [
+      '--pretty',
+      '--declaration',
+      '--declarationMap',
+      '--emitDeclarationOnly',
+      '--project',
+      project,
+      '--outDir',
+      output,
+    ];
+
+    if (binary === 'npx') {
+      parameters.unshift('tsc');
+    }
+
+    const result = spawn.sync(binary, parameters, {
+      stdio: 'inherit',
+      cwd: root,
+    });
 
     if (result.status === 0) {
       await del([tsbuildinfo]);

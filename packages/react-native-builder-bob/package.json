@@ -53,7 +53,6 @@
     "json5": "^2.2.1",
     "kleur": "^4.1.4",
     "prompts": "^2.4.2",
-    "which": "^2.0.2",
     "yargs": "^17.5.1"
   },
   "optionalDependencies": {
