@@ -81,6 +81,16 @@ export default async function build({
 
     if (options?.tsc) {
       binary = path.resolve(root, options.tsc);
+
+      if (!(await fs.pathExists(binary))) {
+        throw new Error(
+          `The ${kleur.blue(
+            'tsc'
+          )} binary doesn't seem to be installed at ${kleur.blue(
+            binary
+          )}. Please specify the correct path in options or remove it to use the workspace's version.`
+        );
+      }
     } else {
       binary = 'npx';
     }
