@@ -1,9 +1,11 @@
 import kleur from 'kleur';
 import path from 'path';
 import fs from 'fs-extra';
+import which from 'which';
 import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
+import { platform } from 'os';
 import type { Input } from '../types';
 
 type Options = Input & {
@@ -77,22 +79,60 @@ export default async function build({
       );
     }
 
-    let binary;
+    let tsc;
 
     if (options?.tsc) {
-      binary = path.resolve(root, options.tsc);
+      tsc = path.resolve(root, options.tsc);
 
-      if (!(await fs.pathExists(binary))) {
+      if (!(await fs.pathExists(tsc))) {
         throw new Error(
           `The ${kleur.blue(
             'tsc'
           )} binary doesn't seem to be installed at ${kleur.blue(
-            binary
+            tsc
           )}. Please specify the correct path in options or remove it to use the workspace's version.`
         );
       }
     } else {
-      binary = 'npx';
+      tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+
+      if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
+        tsc += '.cmd';
+      }
+    }
+
+    if (!(await fs.pathExists(tsc))) {
+      try {
+        tsc = await which('tsc');
+
+        if (await fs.pathExists(tsc)) {
+          report.warn(
+            `Failed to locate 'tsc' in the workspace. Falling back to the globally installed version. Consider adding ${kleur.blue(
+              'typescript'
+            )} to your ${kleur.blue(
+              'devDependencies'
+            )} or specifying the ${kleur.blue(
+              'tsc'
+            )} option for the typescript target.`
+          );
+        }
+      } catch (e) {
+        // Ignore
+      }
+    }
+
+    if (tsc == null || !(await fs.pathExists(tsc))) {
+      throw new Error(
+        `The ${kleur.blue(
+          'tsc'
+        )} binary doesn't seem to be installed under ${kleur.blue(
+          'node_modules'
+        )} or present in $PATH. Make sure you have added ${kleur.blue(
+          'typescript'
+        )} to your ${kleur.blue('devDependencies')} or specify the ${kleur.blue(
+          'tsc'
+        )} option for typescript.`
+      );
     }
 
     const tsbuildinfo = path.join(
@@ -106,25 +146,23 @@ export default async function build({
       // Ignore
     }
 
-    const parameters = [
-      '--pretty',
-      '--declaration',
-      '--declarationMap',
-      '--emitDeclarationOnly',
-      '--project',
-      project,
-      '--outDir',
-      output,
-    ];
-
-    if (binary === 'npx') {
-      parameters.unshift('tsc');
-    }
-
-    const result = spawn.sync(binary, parameters, {
-      stdio: 'inherit',
-      cwd: root,
-    });
+    const result = spawn.sync(
+      tsc,
+      [
+        '--pretty',
+        '--declaration',
+        '--declarationMap',
+        '--emitDeclarationOnly',
+        '--project',
+        project,
+        '--outDir',
+        output,
+      ],
+      {
+        stdio: 'inherit',
+        cwd: root,
+      }
+    );
 
     if (result.status === 0) {
       await del([tsbuildinfo]);
