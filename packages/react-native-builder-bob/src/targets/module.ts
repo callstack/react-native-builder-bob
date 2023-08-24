@@ -10,6 +10,7 @@ type Options = Input & {
     configFile?: string | false | null;
     sourceMaps?: boolean;
     copyFlow?: boolean;
+    ignorePattern?: string;
   };
 };
 
