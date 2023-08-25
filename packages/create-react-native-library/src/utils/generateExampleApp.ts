@@ -18,7 +18,7 @@ const FILES_TO_DELETE = [
 ];
 
 const PACKAGES_TO_REMOVE = [
-  '@react-native-community/eslint-config',
+  '@react-native/eslint-config',
   '@tsconfig/react-native',
   '@types/jest',
   '@types/react',
