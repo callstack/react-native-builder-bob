@@ -112,7 +112,8 @@ jobs:
             --author-url https://test.test \
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
-            --languages ${{ matrix.language }}
+            --languages ${{ matrix.language }} \
+            --no-local
 
       - name: Cache dependencies of library
         id: library-yarn-cache

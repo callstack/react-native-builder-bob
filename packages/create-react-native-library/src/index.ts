@@ -19,6 +19,11 @@ const BINARIES = [
 ];
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
+const COMMON_EXAMPLE_FILES = path.resolve(
+  __dirname,
+  '../templates/common-example'
+);
+const COMMON_LOCAL_FILES = path.resolve(__dirname, '../templates/common-local');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
@@ -26,6 +31,10 @@ const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example-legacy');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
+);
+const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
+  __dirname,
+  '../templates/native-common-example'
 );
 
 const NATIVE_FILES = {
@@ -82,6 +91,8 @@ type ArgName =
   | 'repo-url'
   | 'languages'
   | 'type'
+  | 'local'
+  | 'example'
   | 'react-native-version';
 
 type ProjectLanguages =
@@ -110,6 +121,7 @@ type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
+  example?: boolean;
   reactNativeVersion?: string;
 };
 
@@ -246,10 +258,68 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'Version of React Native to use, uses latest if not specified',
     type: 'string',
   },
+  'local': {
+    description: 'Whether to create a local library',
+    type: 'boolean',
+  },
+  'example': {
+    description: 'Whether to create an example app',
+    type: 'boolean',
+    default: true,
+  },
 };
 
 async function create(argv: yargs.Arguments<any>) {
-  const folder = path.join(process.cwd(), argv.name);
+  let local = false;
+
+  if (typeof argv.local === 'boolean') {
+    local = argv.local;
+  } else {
+    let hasPackageJson = await fs.pathExists(
+      path.join(process.cwd(), 'package.json')
+    );
+
+    if (hasPackageJson) {
+      // If we're under a project with package.json, ask the user if they want to create a local library
+      const answers = await prompts({
+        type: 'confirm',
+        name: 'local',
+        message: `Looks like you're under a project folder. Do you want to create a local library?`,
+        initial: true,
+      });
+
+      local = answers.local;
+    }
+  }
+
+  let folder;
+
+  if (argv.name && !local) {
+    folder = path.join(process.cwd(), argv.name);
+  } else {
+    const answers = await prompts({
+      type: 'text',
+      name: 'folder',
+      message: `Where do you want to create the library?`,
+      initial:
+        local && argv.name && !argv.name.includes('/')
+          ? `modules/${argv.name}`
+          : argv.name,
+      validate: (input) => {
+        if (!input) {
+          return 'Cannot be empty';
+        }
+
+        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
+          return 'Folder already exists';
+        }
+
+        return true;
+      },
+    });
+
+    folder = path.join(process.cwd(), answers.folder);
+  }
 
   if (await fs.pathExists(folder)) {
     console.log(
@@ -287,7 +357,7 @@ async function create(argv: yargs.Arguments<any>) {
     // Ignore error
   }
 
-  const basename = path.basename(argv.name);
+  const basename = path.basename(folder);
 
   const questions: Record<
     ArgName,
@@ -315,14 +385,14 @@ async function create(argv: yargs.Arguments<any>) {
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     'author-name': {
-      type: 'text',
+      type: local ? null : 'text',
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: name,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     'author-email': {
-      type: 'text',
+      type: local ? null : 'text',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
       initial: email,
@@ -330,7 +400,7 @@ async function create(argv: yargs.Arguments<any>) {
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     'author-url': {
-      type: 'text',
+      type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
       // @ts-ignore: this is supported, but types are wrong
@@ -348,7 +418,7 @@ async function create(argv: yargs.Arguments<any>) {
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     'repo-url': {
-      type: 'text',
+      type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
       // @ts-ignore: this is supported, but types are wrong
@@ -438,6 +508,7 @@ async function create(argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
+    example: hasExample,
     reactNativeVersion,
   } = {
     ...argv,
@@ -503,7 +574,9 @@ async function create(argv: yargs.Arguments<any>) {
       ? 'mixed'
       : 'legacy';
 
-  const example = type === 'library' ? 'expo' : 'native';
+  const example =
+    hasExample && !local ? (type === 'library' ? 'expo' : 'native') : 'none';
+
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
   let namespace: string | undefined;
@@ -528,9 +601,9 @@ async function create(argv: yargs.Arguments<any>) {
       slug,
       description,
       name:
-        /^[A-Z]/.test(argv.name) && /^[a-z0-9]+$/i.test(argv.name)
+        /^[A-Z]/.test(basename) && /^[a-z0-9]+$/i.test(basename)
           ? // If the project name is already in PascalCase, use it as-is
-            argv.name
+            basename
           : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
             `${project.charAt(0).toUpperCase()}${project
               .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
@@ -602,31 +675,49 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  const spinner = ora('Generating example').start();
+  const spinner = ora().start();
 
-  await generateExampleApp({
-    type: example,
-    dest: folder,
-    slug: options.project.slug,
-    projectName: options.project.name,
-    arch,
-    reactNativeVersion,
-  });
+  if (example !== 'none') {
+    spinner.text = 'Generating example app';
+
+    await generateExampleApp({
+      type: example,
+      dest: folder,
+      slug: options.project.slug,
+      projectName: options.project.name,
+      arch,
+      reactNativeVersion,
+    });
+  }
 
   spinner.text = 'Copying files';
 
-  await copyDir(COMMON_FILES, folder);
+  if (local) {
+    await copyDir(COMMON_LOCAL_FILES, folder);
+  } else {
+    await copyDir(COMMON_FILES, folder);
+
+    if (example !== 'none') {
+      await copyDir(COMMON_EXAMPLE_FILES, folder);
+    }
+  }
 
   if (languages === 'js') {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
-    await copyDir(
-      path.join(EXAMPLE_FILES, 'example'),
-      path.join(folder, 'example')
-    );
+    if (example !== 'none') {
+      await copyDir(
+        path.join(EXAMPLE_FILES, 'example'),
+        path.join(folder, 'example')
+      );
+    }
 
     await copyDir(NATIVE_COMMON_FILES, folder);
+
+    if (example !== 'none') {
+      await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
+    }
 
     if (moduleType === 'module') {
       await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
@@ -664,44 +755,113 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  // Set `react` and `react-native` versions of root `package.json` from example `package.json`
-  const examplePackageJson = fs.readJSONSync(
-    path.join(folder, 'example', 'package.json')
-  );
-  const rootPackageJson = fs.readJSONSync(path.join(folder, 'package.json'));
-  rootPackageJson.devDependencies.react = examplePackageJson.dependencies.react;
-  rootPackageJson.devDependencies['react-native'] =
-    examplePackageJson.dependencies['react-native'];
+  if (example !== 'none') {
+    // Set `react` and `react-native` versions of root `package.json` from example `package.json`
+    const examplePackageJson = await fs.readJSON(
+      path.join(folder, 'example', 'package.json')
+    );
+    const rootPackageJson = await fs.readJSON(
+      path.join(folder, 'package.json')
+    );
 
-  fs.writeJSONSync(path.join(folder, 'package.json'), rootPackageJson, {
-    spaces: 2,
-  });
+    rootPackageJson.devDependencies.react =
+      examplePackageJson.dependencies.react;
+    rootPackageJson.devDependencies['react-native'] =
+      examplePackageJson.dependencies['react-native'];
 
-  try {
-    await spawn('git', ['init'], { cwd: folder });
-    await spawn('git', ['branch', '-M', 'main'], { cwd: folder });
-    await spawn('git', ['add', '.'], { cwd: folder });
-    await spawn('git', ['commit', '-m', 'chore: initial commit'], {
-      cwd: folder,
+    await fs.writeJSON(path.join(folder, 'package.json'), rootPackageJson, {
+      spaces: 2,
     });
-  } catch (e) {
-    // Ignore error
+  }
+
+  if (!local) {
+    try {
+      await spawn('git', ['init'], { cwd: folder });
+      await spawn('git', ['branch', '-M', 'main'], { cwd: folder });
+      await spawn('git', ['add', '.'], { cwd: folder });
+      await spawn('git', ['commit', '-m', 'chore: initial commit'], {
+        cwd: folder,
+      });
+    } catch (e) {
+      // Ignore error
+    }
   }
 
   spinner.succeed(
-    `Project created successfully at ${kleur.yellow(argv.name)}!\n`
+    `Project created successfully at ${kleur.yellow(
+      path.relative(process.cwd(), folder)
+    )}!\n`
   );
 
-  const platforms = {
-    ios: { name: 'iOS', color: 'cyan' },
-    android: { name: 'Android', color: 'green' },
-    ...(example === 'expo'
-      ? ({ web: { name: 'Web', color: 'blue' } } as const)
-      : null),
-  } as const;
+  if (local) {
+    let linked;
 
-  console.log(
-    dedent(`
+    const packageManager = (await fs.pathExists(
+      path.join(process.cwd(), 'yarn.lock')
+    ))
+      ? 'yarn'
+      : 'npm';
+
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+
+    if (await fs.pathExists(packageJsonPath)) {
+      const packageJson = await fs.readJSON(packageJsonPath);
+      const isReactNativeProject = Boolean(
+        packageJson.dependencies?.['react-native']
+      );
+
+      if (isReactNativeProject) {
+        packageJson.dependencies = packageJson.dependencies || {};
+        packageJson.dependencies[slug] =
+          packageManager === 'yarn'
+            ? `link:./${path.relative(process.cwd(), folder)}`
+            : `file:./${path.relative(process.cwd(), folder)}`;
+
+        await fs.writeJSON(packageJsonPath, packageJson, {
+          spaces: 2,
+        });
+
+        linked = true;
+      }
+    }
+
+    console.log(
+      dedent(`
+      ${kleur.magenta(
+        `${kleur.bold('Get started')} with the project`
+      )}${kleur.gray(':')}
+
+      ${
+        (linked
+          ? `- Run ${kleur.blue(
+              `${packageManager} install`
+            )} to link the library\n`
+          : `- Link the library at ${kleur.blue(
+              path.relative(process.cwd(), folder)
+            )} based on your project setup'\n`) +
+        `- Run ${kleur.blue(
+          'pod install --project-directory=ios'
+        )} to install dependencies with CocoaPods\n` +
+        `- Run ${kleur.blue('npx react-native run-android')} or ${kleur.blue(
+          'npx react-native run-ios'
+        )} to build and run the app\n` +
+        `- Import from ${kleur.blue(slug)} and use it in your app.`
+      }
+
+      ${kleur.yellow(`Good luck!`)}
+    `)
+    );
+  } else {
+    const platforms = {
+      ios: { name: 'iOS', color: 'cyan' },
+      android: { name: 'Android', color: 'green' },
+      ...(example === 'expo'
+        ? ({ web: { name: 'Web', color: 'blue' } } as const)
+        : null),
+    } as const;
+
+    console.log(
+      dedent(`
       ${kleur.magenta(
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}
@@ -722,11 +882,12 @@ async function create(argv: yargs.Arguments<any>) {
         `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
       )}
     `)
-  );
+    );
+  }
 }
 // eslint-disable-next-line babel/no-unused-expressions
 yargs
-  .command('$0 <name>', 'create a react native library', args, create)
+  .command('$0 [name]', 'create a react native library', args, create)
   .demandCommand()
   .recommendCommands()
   .fail((message, error) => {

@@ -172,37 +172,34 @@ yargs
         });
 
         if (tsconfig) {
-          await fs.writeFile(
+          await fs.writeJSON(
             path.join(root, 'tsconfig.json'),
-            JSON.stringify(
-              {
-                compilerOptions: {
-                  rootDir: '.',
-                  allowUnreachableCode: false,
-                  allowUnusedLabels: false,
-                  esModuleInterop: true,
-                  forceConsistentCasingInFileNames: true,
-                  jsx: 'react',
-                  lib: ['esnext'],
-                  module: 'esnext',
-                  moduleResolution: 'node',
-                  noFallthroughCasesInSwitch: true,
-                  noImplicitReturns: true,
-                  noImplicitUseStrict: false,
-                  noStrictGenericChecks: false,
-                  noUncheckedIndexedAccess: true,
-                  noUnusedLocals: true,
-                  noUnusedParameters: true,
-                  resolveJsonModule: true,
-                  skipLibCheck: true,
-                  strict: true,
-                  target: 'esnext',
-                  verbatimModuleSyntax: true,
-                },
+            {
+              compilerOptions: {
+                rootDir: '.',
+                allowUnreachableCode: false,
+                allowUnusedLabels: false,
+                esModuleInterop: true,
+                forceConsistentCasingInFileNames: true,
+                jsx: 'react',
+                lib: ['esnext'],
+                module: 'esnext',
+                moduleResolution: 'node',
+                noFallthroughCasesInSwitch: true,
+                noImplicitReturns: true,
+                noImplicitUseStrict: false,
+                noStrictGenericChecks: false,
+                noUncheckedIndexedAccess: true,
+                noUnusedLocals: true,
+                noUnusedParameters: true,
+                resolveJsonModule: true,
+                skipLibCheck: true,
+                strict: true,
+                target: 'esnext',
+                verbatimModuleSyntax: true,
               },
-              null,
-              2
-            )
+            },
+            { spaces: 2 }
           );
         }
       }
@@ -308,7 +305,9 @@ yargs
       pkg.eslintIgnore.push(`${output}/`);
     }
 
-    await fs.writeFile(pak, JSON.stringify(pkg, null, 2));
+    await fs.writeJSON(pak, pkg, {
+      spaces: 2,
+    });
 
     const ignorefiles = [
       path.join(root, '.gitignore'),
