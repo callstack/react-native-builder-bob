@@ -94,30 +94,7 @@ export default async function build({
         );
       }
     } else {
-      const execpath = process.env.npm_execpath;
-      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
-
-      try {
-        if (cli === 'yarn') {
-          const result = spawn.sync('yarn', ['bin', 'tsc'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = result.stdout.trim();
-        } else {
-          const result = spawn.sync('npm', ['bin'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = path.resolve(result.stdout.trim(), 'tsc');
-        }
-      } catch (e) {
-        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
-      }
+      tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
 
       if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
         tsc += '.cmd';
