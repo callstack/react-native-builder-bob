@@ -182,6 +182,7 @@ yargs
             JSON.stringify(
               {
                 compilerOptions: {
+                  rootDir: '.',
                   allowUnreachableCode: false,
                   allowUnusedLabels: false,
                   esModuleInterop: true,

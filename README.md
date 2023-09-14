@@ -70,7 +70,7 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
-       ["commonjs", {"copyFlow": true}],
+       "commonjs",
        "module",
        "typescript",
      ]
@@ -93,7 +93,7 @@ yarn add --dev react-native-builder-bob
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
    "react-native": "src/index.ts",
-   "types": "lib/typescript/index.d.ts",
+   "types": "lib/typescript/src/index.d.ts",
    "files": [
      "lib/",
      "src/"
@@ -104,7 +104,7 @@ yarn add --dev react-native-builder-bob
 
    It's usually good to point to your source code with the `react-native` field to make debugging easier. Metro already supports compiling a lot of new syntaxes including JSX, Flow and TypeScript and it will use this field if present.
 
-   If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory).
+   If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
 1. Add the output directory to `.gitignore` and `.eslintignore`
 
