@@ -147,6 +147,25 @@ export default async function compile({
 
   report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
 
+  const getGeneratedEntryPath = async () => {
+    if (pkg.source) {
+      const indexName =
+        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') + '.js';
+
+      const potentialPath = path.join(
+        output,
+        path.dirname(path.relative(source, path.join(root, pkg.source))),
+        indexName
+      );
+
+      if (await fs.pathExists(potentialPath)) {
+        return path.relative(root, potentialPath);
+      }
+    }
+
+    return null;
+  };
+
   if (field in pkg) {
     try {
       require.resolve(path.join(root, pkg[field]));
@@ -157,6 +176,16 @@ export default async function compile({
         'code' in e &&
         e.code === 'MODULE_NOT_FOUND'
       ) {
+        const generatedEntryPath = await getGeneratedEntryPath();
+
+        if (!generatedEntryPath) {
+          report.warn(
+            `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
+              'source'
+            )} field in your ${kleur.blue('package.json')}.`
+          );
+        }
+
         report.error(
           `The ${kleur.blue(field)} field in ${kleur.blue(
             'package.json'
@@ -164,7 +193,11 @@ export default async function compile({
             pkg[field]
           )}.\nVerify the path points to the correct file under ${kleur.blue(
             path.relative(root, output)
-          )}.`
+          )}${
+            generatedEntryPath
+              ? ` (found ${kleur.blue(generatedEntryPath)}).`
+              : '.'
+          }`
         );
 
         throw new Error(`Found incorrect path in '${field}' field.`);
@@ -173,12 +206,16 @@ export default async function compile({
       throw e;
     }
   } else {
+    const generatedEntryPath = await getGeneratedEntryPath();
+
     report.warn(
       `No ${kleur.blue(field)} field found in ${kleur.blue(
         'package.json'
-      )}. Add it to your ${kleur.blue(
-        'package.json'
-      )} so that consumers of your package can use it.`
+      )}. Consider ${
+        generatedEntryPath
+          ? `pointing it to ${kleur.blue(generatedEntryPath)}`
+          : 'adding it'
+      } so that consumers of your package can use it.`
     );
   }
 }
