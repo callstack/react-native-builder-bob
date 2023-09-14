@@ -159,6 +159,7 @@ yargs
         ? path.join(output, target, 'index.js')
         : path.join(source, entryFile),
       'react-native': path.join(source, entryFile),
+      'source': path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
