@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
-import spawn from 'cross-spawn';
 import path from 'path';
 import https from 'https';
+import { spawn } from './spawn';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -78,26 +78,9 @@ export default async function generateExampleApp({
       : // `npx create-expo-app example --no-install`
         ['create-expo-app@latest', directory, '--no-install'];
 
-  await new Promise((resolve, reject) => {
-    const child = spawn('npx', args, {
-      cwd: dest,
-      env: { ...process.env, npm_config_yes: 'true' },
-    });
-
-    let stderr = '';
-
-    child.stderr?.setEncoding('utf8');
-    child.stderr?.on('data', (data) => {
-      stderr += data;
-    });
-
-    child.once('error', reject);
-    child.once('close', resolve);
-    child.once('exit', (code) => {
-      if (code === 1) {
-        reject(new Error(stderr));
-      }
-    });
+  await spawn('npx', args, {
+    cwd: dest,
+    env: { ...process.env, npm_config_yes: 'true' },
   });
 
   // Remove unnecessary files and folders

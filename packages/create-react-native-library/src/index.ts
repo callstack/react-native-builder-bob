@@ -4,12 +4,12 @@ import ejs from 'ejs';
 import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
-import spawn from 'cross-spawn';
 import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
+import { spawn } from './utils/spawn';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -259,12 +259,7 @@ async function create(argv: yargs.Arguments<any>) {
   }
 
   try {
-    const child = spawn('npx', ['--help']);
-
-    await new Promise((resolve, reject) => {
-      child.once('error', reject);
-      child.once('close', resolve);
-    });
+    await spawn('npx', ['--help']);
   } catch (error) {
     // @ts-expect-error: TS doesn't know about `code`
     if (error != null && error.code === 'ENOENT') {
@@ -283,15 +278,8 @@ async function create(argv: yargs.Arguments<any>) {
   let name, email;
 
   try {
-    name = spawn
-      .sync('git', ['config', '--get', 'user.name'])
-      .stdout.toString()
-      .trim();
-
-    email = spawn
-      .sync('git', ['config', '--get', 'user.email'])
-      .stdout.toString()
-      .trim();
+    name = await spawn('git', ['config', '--get', 'user.name']);
+    email = await spawn('git', ['config', '--get', 'user.email']);
   } catch (e) {
     // Ignore error
   }
@@ -497,18 +485,7 @@ async function create(argv: yargs.Arguments<any>) {
       new Promise<string>((resolve) =>
         setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000)
       ),
-      new Promise<string>((resolve, reject) => {
-        const npm = spawn('npm', [
-          'view',
-          'react-native-builder-bob',
-          'dist-tags.latest',
-        ]);
-
-        npm.stdout?.on('data', (data) => resolve(data.toString().trim()));
-        npm.stderr?.on('data', (data) => reject(data.toString().trim()));
-
-        npm.on('error', (err) => reject(err));
-      }),
+      spawn('npm', ['view', 'react-native-builder-bob', 'dist-tags.latest']),
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
@@ -697,10 +674,10 @@ async function create(argv: yargs.Arguments<any>) {
   });
 
   try {
-    spawn.sync('git', ['init'], { cwd: folder });
-    spawn.sync('git', ['branch', '-M', 'main'], { cwd: folder });
-    spawn.sync('git', ['add', '.'], { cwd: folder });
-    spawn.sync('git', ['commit', '-m', 'chore: initial commit'], {
+    await spawn('git', ['init'], { cwd: folder });
+    await spawn('git', ['branch', '-M', 'main'], { cwd: folder });
+    await spawn('git', ['add', '.'], { cwd: folder });
+    await spawn('git', ['commit', '-m', 'chore: initial commit'], {
       cwd: folder,
     });
   } catch (e) {

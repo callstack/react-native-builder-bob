@@ -95,7 +95,20 @@ export default async function build({
         );
       }
     } else {
-      tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+      const execpath = process.env.npm_execpath;
+      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
+
+      if (cli === 'yarn') {
+        const result = spawn.sync('yarn', ['bin', 'tsc'], {
+          stdio: 'pipe',
+          encoding: 'utf-8',
+          cwd: root,
+        });
+
+        tsc = result.stdout.trim();
+      } else {
+        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+      }
 
       if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
         tsc += '.cmd';
@@ -108,7 +121,11 @@ export default async function build({
 
         if (await fs.pathExists(tsc)) {
           report.warn(
-            `Failed to locate 'tsc' in the workspace. Falling back to the globally installed version. Consider adding ${kleur.blue(
+            `Failed to locate ${kleur.blue(
+              'tsc'
+            )} in the workspace. Falling back to the binary found in ${kleur.blue(
+              'PATH'
+            )} at ${kleur.blue(tsc)}. Consider adding ${kleur.blue(
               'typescript'
             )} to your ${kleur.blue(
               'devDependencies'
