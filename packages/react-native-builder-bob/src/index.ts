@@ -18,7 +18,7 @@ const { name, version } = require('../package.json');
 
 const root = process.cwd();
 const explorer = cosmiconfigSync(name, {
-  searchPlaces: ['package.json', `bob.config.js`],
+  searchPlaces: ['package.json', `bob.config.js`, 'bob.config.cjs'],
 });
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
@@ -159,6 +159,7 @@ yargs
         ? path.join(output, target, 'index.js')
         : path.join(source, entryFile),
       'react-native': path.join(source, entryFile),
+      'source': path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
@@ -182,6 +183,7 @@ yargs
             JSON.stringify(
               {
                 compilerOptions: {
+                  rootDir: '.',
                   allowUnreachableCode: false,
                   allowUnusedLabels: false,
                   esModuleInterop: true,

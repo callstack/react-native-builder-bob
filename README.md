@@ -70,7 +70,7 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
-       ["commonjs", {"copyFlow": true}],
+       "commonjs",
        "module",
        "typescript",
      ]
@@ -93,18 +93,26 @@ yarn add --dev react-native-builder-bob
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
    "react-native": "src/index.ts",
-   "types": "lib/typescript/index.d.ts",
+   "types": "lib/typescript/src/index.d.ts",
+   "source": "src/index.ts",
    "files": [
-     "lib/",
-     "src/"
+     "lib",
+     "src"
    ]
    ```
 
+   Here is what each of these fields mean:
+
+   - `main`: The entry point for the commonjs build. This is used by Node - such as tests, SSR etc.
+   - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
+   - `react-native`: The entry point for the React Native apps. This is used by Metro. It's common to point to the source code here as it can make debugging easier.
+   - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to type check the code using your library.
+   - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
+   - `files`: The files to include in the package when publishing with `npm`.
+
    Make sure to change specify correct files according to the targets you have enabled.
 
-   It's usually good to point to your source code with the `react-native` field to make debugging easier. Metro already supports compiling a lot of new syntaxes including JSX, Flow and TypeScript and it will use this field if present.
-
-   If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory).
+   **NOTE**: If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
 1. Add the output directory to `.gitignore` and `.eslintignore`
 

@@ -13,6 +13,7 @@ type Options = Input & {
 };
 
 export default async function build({
+  source,
   root,
   output,
   report,
@@ -94,30 +95,7 @@ export default async function build({
         );
       }
     } else {
-      const execpath = process.env.npm_execpath;
-      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
-
-      try {
-        if (cli === 'yarn') {
-          const result = spawn.sync('yarn', ['bin', 'tsc'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = result.stdout.trim();
-        } else {
-          const result = spawn.sync('npm', ['bin'], {
-            stdio: 'pipe',
-            encoding: 'utf-8',
-            cwd: root,
-          });
-
-          tsc = path.resolve(result.stdout.trim(), 'tsc');
-        }
-      } catch (e) {
-        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
-      }
+      tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
 
       if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
         tsc += '.cmd';
@@ -198,22 +176,44 @@ export default async function build({
         await fs.readFile(path.join(root, 'package.json'), 'utf-8')
       );
 
-      if ('types' in pkg) {
-        if (!pkg.types.endsWith('.d.ts')) {
-          report.error(
-            `The ${kleur.blue('types')} field in ${kleur.blue(
-              'package.json'
-            )} doesn't point to a definition file. Verify the path points to the correct file under ${kleur.blue(
-              path.relative(root, output)
-            )}.`
-          );
+      const getGeneratedTypesPath = async () => {
+        if (pkg.source) {
+          const indexDTsName =
+            path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') + '.d.ts';
 
-          throw new Error("Found incorrect path in 'types' field.");
+          const potentialPaths = [
+            path.join(output, path.dirname(pkg.source), indexDTsName),
+            path.join(
+              output,
+              path.dirname(path.relative(source, path.join(root, pkg.source))),
+              indexDTsName
+            ),
+          ];
+
+          for (const potentialPath of potentialPaths) {
+            if (await fs.pathExists(potentialPath)) {
+              return path.relative(root, potentialPath);
+            }
+          }
         }
 
+        return null;
+      };
+
+      if ('types' in pkg) {
         const typesPath = path.join(root, pkg.types);
 
         if (!(await fs.pathExists(typesPath))) {
+          const generatedTypesPath = await getGeneratedTypesPath();
+
+          if (!generatedTypesPath) {
+            report.warn(
+              `Failed to detect the entry point for the generated types. Make sure you have a valid ${kleur.blue(
+                'source'
+              )} field in your ${kleur.blue('package.json')}.`
+            );
+          }
+
           report.error(
             `The ${kleur.blue('types')} field in ${kleur.blue(
               'package.json'
@@ -221,16 +221,26 @@ export default async function build({
               pkg.types
             )}.\nVerify the path points to the correct file under ${kleur.blue(
               path.relative(root, output)
-            )}.`
+            )}${
+              generatedTypesPath
+                ? ` (found ${kleur.blue(generatedTypesPath)}).`
+                : '.'
+            }`
           );
 
           throw new Error("Found incorrect path in 'types' field.");
         }
       } else {
+        const generatedTypesPath = await getGeneratedTypesPath();
+
         report.warn(
           `No ${kleur.blue('types')} field found in ${kleur.blue(
             'package.json'
-          )}.\nConsider adding it so consumers can use the types.`
+          )}.\nConsider ${
+            generatedTypesPath
+              ? `pointing it to ${kleur.blue(generatedTypesPath)}`
+              : 'adding it'
+          } so that consumers of your package can use the types.`
         );
       }
     } else {

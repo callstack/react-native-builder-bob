@@ -32,9 +32,11 @@ import groovy.json.JsonSlurper
 
 // https://github.com/callstack/react-native-builder-bob/discussions/359
 def registrationCompat = {
-  def reactNativeManifest = file("$projectDir/../node_modules/react-native/package.json").exists()
-    ? file("$projectDir/../node_modules/react-native/package.json") // developer mode, to run example app
-    : file("$projectDir/../../react-native/package.json")
+  // The new distribution model uses Maven Central https://reactnative.dev/blog/2023/01/12/version-071
+  def reactAndroidProject = rootProject.allprojects.find { it.name == 'ReactAndroid' }
+  if (reactAndroidProject == null) return false
+
+  def reactNativeManifest = file("${reactAndroidProject.projectDir}/../package.json")
   def reactNativeVersion = new JsonSlurper().parseText(reactNativeManifest.text).version as String
   // Fabric was introduced at react-native@0.68, full CMake support were introduced at react-native@0.70
   // Use Android.mk for compatibility with react-native@0.68/0.69
