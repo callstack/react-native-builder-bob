@@ -398,13 +398,6 @@ yargs
       report.info(`Building target ${kleur.blue(targetName)}`);
 
       switch (targetName) {
-        case 'aar':
-          logger.exit(
-            `Target ${kleur.blue(
-              'aar'
-            )} is not supported anymore. Please remove it from your configuration.`
-          );
-          break;
         case 'commonjs':
           await buildCommonJS({
             root,
