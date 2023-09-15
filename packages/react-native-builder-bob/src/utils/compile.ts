@@ -11,9 +11,9 @@ type Options = Input & {
   configFile?: string | false | null;
   sourceMaps?: boolean;
   copyFlow?: boolean;
-  exclude?: string;
   modules: 'commonjs' | false;
   field: 'main' | 'module';
+  exclude: string;
 };
 
 export default async function compile({
@@ -22,7 +22,7 @@ export default async function compile({
   output,
   babelrc = false,
   configFile = false,
-  exclude = '**/{__tests__,__fixtures__,__mocks__}/**',
+  exclude,
   modules,
   copyFlow,
   sourceMaps = true,

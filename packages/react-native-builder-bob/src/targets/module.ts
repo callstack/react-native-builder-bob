@@ -10,14 +10,15 @@ type Options = Input & {
     configFile?: string | false | null;
     sourceMaps?: boolean;
     copyFlow?: boolean;
-    exclude?: string;
   };
+  exclude: string;
 };
 
 export default async function build({
   root,
   source,
   output,
+  exclude,
   options,
   report,
 }: Options) {
@@ -32,6 +33,7 @@ export default async function build({
     root,
     source,
     output,
+    exclude,
     modules: false,
     report,
     field: 'module',
