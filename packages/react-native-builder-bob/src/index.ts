@@ -7,7 +7,6 @@ import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
-import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
@@ -122,11 +121,6 @@ yargs
             title: 'typescript - declaration files for typechecking',
             value: 'typescript',
             selected: /\.tsx?$/.test(entryFile),
-          },
-          {
-            title: 'aar - bundle android code to a binary',
-            value: 'aar',
-            selected: false,
           },
         ],
         validate: (input: string) => Boolean(input.length),
@@ -407,15 +401,6 @@ yargs
       report.info(`Building target ${kleur.blue(targetName)}`);
 
       switch (targetName) {
-        case 'aar':
-          await buildAAR({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'aar'),
-            options: targetOptions,
-            report,
-          });
-          break;
         case 'commonjs':
           await buildCommonJS({
             root,

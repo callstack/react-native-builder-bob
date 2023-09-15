@@ -39,7 +39,6 @@ This will ask you few questions about your project and generate a new project in
 - ES modules build for bundlers such as webpack
 - Flow definitions (copies .js files to .flow files)
 - TypeScript definitions (uses `tsc` to generate declaration files)
-- Android AAR files
 
 If you created a project with `create-react-native-library`, `react-native-builder-bob` is **already pre-configured to build your project**. You don't need to configure it again.
 
@@ -207,24 +206,6 @@ Example:
 
 ```json
 ["typescript", { "project": "tsconfig.build.json" }]
-```
-
-##### `aar`
-
-Enable assembling Android AAR files for a library for React Native modules including native code.
-
-The following options are supported:
-
-- `reverseJetify` (`boolean`): If your package is using [AndroidX](https://developer.android.com/jetpack/androidx), it's possible to convert the AAR with the `reverseJetify` option to use the [Android support Library](https://developer.android.com/topic/libraries/support-library) using the [`jetifier`](https://www.npmjs.com/package/jetifier) package. This is useful to publish packages for older projects which haven't migrated to AndroidX.
-
-- `androidPath` (`string`): You can specify a custom path to the `android` directory if it's not in the default location (`android` in the root of your project).
-
-- `androidBundleName`: By default, the generated `aar` file is named as `android.aar`. You can specify a custom name using this option.
-
-Example:
-
-```json
-["aar", { "reverseJetify": true }]
 ```
 
 ### Commands

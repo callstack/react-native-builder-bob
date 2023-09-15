@@ -56,9 +56,6 @@
     "which": "^2.0.2",
     "yargs": "^17.5.1"
   },
-  "optionalDependencies": {
-    "jetifier": "^2.0.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@types/babel__core": "^7.1.19",
