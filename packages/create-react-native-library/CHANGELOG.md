@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.32.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.31.1...create-react-native-library@0.32.0) (2023-09-15)
+
+### Bug Fixes
+
+* add rootDir to tsconfig for consistent output folder structure ([#460](https://github.com/callstack/react-native-builder-bob/issues/460)) ([f6225fd](https://github.com/callstack/react-native-builder-bob/commit/f6225fd67cd23695c0f130a357106798bee342e1)) - by @satya164
+* don't hardcode the location for react-native on android ([#424](https://github.com/callstack/react-native-builder-bob/issues/424)) ([7fc7f1c](https://github.com/callstack/react-native-builder-bob/commit/7fc7f1c07fc606229d7e8529310b88d5afe5e05d)) - by @Sunbreak
+* fix locating `tsc` in yarn 3 workspaces ([#462](https://github.com/callstack/react-native-builder-bob/issues/462)) ([19396ce](https://github.com/callstack/react-native-builder-bob/commit/19396ce5be7bc6b0d914a917ca3de5303194ed41)) - by @satya164
+
+### Features
+
+* **crnl:** rn-community/eslint-config -> rn/eslint-config ([#452](https://github.com/callstack/react-native-builder-bob/issues/452)) ([a5d472b](https://github.com/callstack/react-native-builder-bob/commit/a5d472ba39908c7da85dcd91b85dbbde99350fbd)), closes [#443](https://github.com/callstack/react-native-builder-bob/issues/443) - by @atlj
+
 ## [0.31.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.31.0...create-react-native-library@0.31.1) (2023-08-01)
 
 ### Bug Fixes

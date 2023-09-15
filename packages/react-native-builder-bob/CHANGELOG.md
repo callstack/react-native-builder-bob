@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.21.3...react-native-builder-bob@0.22.0) (2023-09-15)
+
+### Bug Fixes
+
+* add rootDir to tsconfig for consistent output folder structure ([#460](https://github.com/callstack/react-native-builder-bob/issues/460)) ([f6225fd](https://github.com/callstack/react-native-builder-bob/commit/f6225fd67cd23695c0f130a357106798bee342e1)) - by @satya164
+* detect entry path and show in error messages ([#461](https://github.com/callstack/react-native-builder-bob/issues/461)) ([82ad903](https://github.com/callstack/react-native-builder-bob/commit/82ad9036f38c279a7ce523ae29b9630ac623147a)) - by @satya164
+* fix locating `tsc` in yarn 3 workspaces ([#462](https://github.com/callstack/react-native-builder-bob/issues/462)) ([19396ce](https://github.com/callstack/react-native-builder-bob/commit/19396ce5be7bc6b0d914a917ca3de5303194ed41)) - by @satya164
+
+### Features
+
+* **bob:** add exclude option to config ([#450](https://github.com/callstack/react-native-builder-bob/issues/450)) ([ef37512](https://github.com/callstack/react-native-builder-bob/commit/ef375127a8e1b7a685e0c432099505e99c67face)) - by @atlj
+* **builder-bob:** dont use npm bin to get tsc path ([#435](https://github.com/callstack/react-native-builder-bob/issues/435)) ([ef5f6db](https://github.com/callstack/react-native-builder-bob/commit/ef5f6db38f7f5db81318433e4c9f000554933f4f)), closes [#434](https://github.com/callstack/react-native-builder-bob/issues/434) - by @atlj
+* support bob.config.cjs for configuration ([#442](https://github.com/callstack/react-native-builder-bob/issues/442)) ([c139df5](https://github.com/callstack/react-native-builder-bob/commit/c139df5ae26e0291e5d378d4967b0fbe293288ae)) - by @samijaber
+
 ## [0.21.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.21.2...react-native-builder-bob@0.21.3) (2023-07-19)
 
 ### Bug Fixes
