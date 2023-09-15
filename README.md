@@ -137,6 +137,10 @@ The options can be specified in the `package.json` file under the `react-native-
 
 The name of the folder with the source code which should be compiled. The folder should include an `index` file.
 
+#### `output`
+
+The name of the folder where the compiled files should be output to. It will contain separate folder for each target.
+
 #### `exclude`
 
 Glob pattern to be used while filtering the unnecessary files. Defaults to `'**/{__tests__,__fixtures__,__mocks__}/**'` if you don't specify it.
@@ -150,10 +154,6 @@ Example:
   "exclude": "ignore_me/**"
 }
 ```
-
-#### `output`
-
-The name of the folder where the compiled files should be output to. It will contain separate folder for each target.
 
 #### `targets`
 
