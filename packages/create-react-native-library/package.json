@@ -53,9 +53,6 @@
     "validate-npm-package-name": "^4.0.0",
     "yargs": "^17.5.1"
   },
-  "optionalDependencies": {
-    "jetifier": "^2.0.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.5",
