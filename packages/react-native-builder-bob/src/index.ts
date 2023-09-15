@@ -418,7 +418,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'commonjs'),
-            options: targetOptions,
+            options: { ...targetOptions, exclude: options.exclude },
             report,
           });
           break;
@@ -427,7 +427,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'module'),
-            options: targetOptions,
+            options: { ...targetOptions, exclude: options.exclude },
             report,
           });
           break;

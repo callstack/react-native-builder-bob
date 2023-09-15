@@ -11,7 +11,7 @@ type Options = Input & {
   configFile?: string | false | null;
   sourceMaps?: boolean;
   copyFlow?: boolean;
-  ignorePattern?: string;
+  exclude?: string;
   modules: 'commonjs' | false;
   field: 'main' | 'module';
 };
@@ -22,7 +22,7 @@ export default async function compile({
   output,
   babelrc = false,
   configFile = false,
-  ignorePattern = '**/{__tests__,__fixtures__,__mocks__}/**',
+  exclude = '**/{__tests__,__fixtures__,__mocks__}/**',
   modules,
   copyFlow,
   sourceMaps = true,
@@ -33,7 +33,7 @@ export default async function compile({
     cwd: source,
     absolute: true,
     nodir: true,
-    ignore: ignorePattern,
+    ignore: exclude,
   });
 
   report.info(
