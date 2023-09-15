@@ -390,6 +390,9 @@ yargs
       );
     }
 
+    const exclude =
+      options.exclude ?? '**/{__tests__,__fixtures__,__mocks__}/**';
+
     const report = {
       info: logger.info,
       warn: logger.warn,
@@ -418,6 +421,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'commonjs'),
+            exclude,
             options: targetOptions,
             report,
           });
@@ -427,6 +431,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'module'),
+            exclude,
             options: targetOptions,
             report,
           });

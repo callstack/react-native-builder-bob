@@ -141,6 +141,20 @@ The name of the folder with the source code which should be compiled. The folder
 
 The name of the folder where the compiled files should be output to. It will contain separate folder for each target.
 
+#### `exclude`
+
+Glob pattern to be used while filtering the unnecessary files. Defaults to `'**/{__tests__,__fixtures__,__mocks__}/**'` if you don't specify it.
+
+> This option only works with `commonjs` and `module` targets. To exclude files while building `typescript`, please see [the tsconfig exclude field](https://www.typescriptlang.org/tsconfig#exclude).
+
+Example:
+
+```json
+{
+  "exclude": "ignore_me/**"
+}
+```
+
 #### `targets`
 
 Various targets to build for. The available targets are:

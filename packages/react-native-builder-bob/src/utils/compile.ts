@@ -13,6 +13,7 @@ type Options = Input & {
   copyFlow?: boolean;
   modules: 'commonjs' | false;
   field: 'main' | 'module';
+  exclude: string;
 };
 
 export default async function compile({
@@ -21,6 +22,7 @@ export default async function compile({
   output,
   babelrc = false,
   configFile = false,
+  exclude,
   modules,
   copyFlow,
   sourceMaps = true,
@@ -31,7 +33,7 @@ export default async function compile({
     cwd: source,
     absolute: true,
     nodir: true,
-    ignore: '**/{__tests__,__fixtures__,__mocks__}/**',
+    ignore: exclude,
   });
 
   report.info(
