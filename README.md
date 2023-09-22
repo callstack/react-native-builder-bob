@@ -250,12 +250,12 @@ If your library depends on another react-native library containing native code, 
 
 - **Add the native library to `peerDependencies`**
 
-  This means that the user will need to install the native library and add it to their `package.json`. It makes sure that:
+  This means that the consumer of the library will need to install the native library and add it to the `dependencies` section of their `package.json`. It makes sure that:
 
   - There are no version conflicts if another package also happens to use the same library, or if the user wants to use the library in their app. While there can be multiple versions of a JavaScript-only library, there can only be one version of a native library - so avoiding version conflicts is important.
   - The package manager installs it in correct location so that autolinking can work properly.
 
-  Don't add the native library to `dependencies`, otherwise it may cause issues for the user even if it seems to work.
+  Don't add the native library to `dependencies` of your library, otherwise it may cause issues for the user even if it seems to work.
 
 - **Add the native library to `devDependencies`**
 
@@ -338,6 +338,34 @@ For more accurate testing, we recommend following approaches:
    [Verdaccio](https://verdaccio.org/) is a lightweight private npm registry that can be used to test packages locally. The advantage of using Verdaccio is that it allows to test the complete workflow of publishing and installing a package without actually publishing it to a remote registry.
 
    You can find installation and usage instructions in the [Verdaccio documentation](https://verdaccio.org/docs/en/installation).
+
+### Users get a warning when they install my library
+
+If users are using Yarn 1, they may get a warning when installing your library:
+
+```sh
+warning Workspaces can only be enabled in private projects.
+```
+
+This is because the example app is configured as a Yarn workspace, and there is a [bug in Yarn 1](https://github.com/yarnpkg/yarn/issues/8580) which causes this warning to be shown for third-party packages. It has no impact for the consumers of the library and the warning can be ignored. If consumers would like to get rid of the warning, there are 2 options:
+
+1. **Disable workspaces**
+
+   If the consumer doesn't use Yarn workspaces, they can disable it by adding the following to the `.yarnrc` file in the root of their project:
+
+   ```rc
+   workspaces-experimental false
+   ```
+
+2. **Upgrade to Yarn 3**
+
+    Yarn 1 is no longer maintained, so it's recommended to upgrade to Yarn 3. Yarn 3 works with React Native projects with the `node-modules` linker. To upgrade, consumers can follow the [official upgrade guide](https://yarnpkg.com/migration/guide).
+
+    It's also necessary to use `node-modules` linker. To use it, consumers can add the following to the `.yarnrc.yml` file in the root of their project:
+
+    ```yml
+    nodeLinker: node-modules
+    ```
 
 ## Development workflow
 
