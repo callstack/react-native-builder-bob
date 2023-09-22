@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.32.0...create-react-native-library@0.33.0) (2023-09-22)
+
+### Features
+
+* upgrade template and repo to Yarn 3 ([#421](https://github.com/callstack/react-native-builder-bob/issues/421)) ([f90ce89](https://github.com/callstack/react-native-builder-bob/commit/f90ce8920c5c8ce6d4904f9b47200d18270d067a)) - by @satya164
+
 # [0.32.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.31.1...create-react-native-library@0.32.0) (2023-09-15)
 
 ### Bug Fixes
