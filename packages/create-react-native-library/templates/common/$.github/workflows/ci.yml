@@ -45,7 +45,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build package
-        run: yarn prepack
+        run: yarn prepare
 
 <% if (project.native) { -%>
   build-android:

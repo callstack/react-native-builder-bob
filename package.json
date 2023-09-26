@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepack -- --watch'"
+    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'"
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",

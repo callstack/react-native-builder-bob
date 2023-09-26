@@ -208,7 +208,7 @@ yargs
       }
     }
 
-    const prepack = 'bob build';
+    const prepare = 'bob build';
     const files = [
       source,
       output,
@@ -236,20 +236,20 @@ yargs
       }
     }
 
-    if (pkg.scripts?.prepack && pkg.scripts.prepack !== prepack) {
+    if (pkg.scripts?.prepare && pkg.scripts.prepare !== prepare) {
       const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
-        message: `Your package.json has the 'scripts.prepack' field set to '${pkg.scripts.prepack}'. Do you want to replace it with '${prepack}'?`,
+        message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'. Do you want to replace it with '${prepare}'?`,
         initial: true,
       });
 
       if (replace) {
-        pkg.scripts.prepack = prepack;
+        pkg.scripts.prepare = prepare;
       }
     } else {
       pkg.scripts = pkg.scripts || {};
-      pkg.scripts.prepack = prepack;
+      pkg.scripts.prepare = prepare;
     }
 
     if (

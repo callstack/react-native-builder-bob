@@ -27,6 +27,7 @@
     "!**/.*"
   ],
   "scripts": {
+    "example": "yarn workspace <%- project.slug -%>-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -35,9 +36,8 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
-    "prepack": "bob build",
-    "release": "release-it",
-    "example": "yarn workspace <%- project.slug -%>-example"
+    "prepare": "bob build",
+    "release": "release-it"
   },
   "keywords": [
     "react-native",

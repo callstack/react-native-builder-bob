@@ -78,11 +78,11 @@ yarn add --dev react-native-builder-bob
 
    See options below for more details.
 
-1. Add `bob` to your `prepack` step:
+1. Add `bob` to your `prepare` or `prepack` step:
 
    ```js
    "scripts": {
-     "prepack": "bob build"
+     "prepare": "bob build"
    }
    ```
 
@@ -226,7 +226,7 @@ This builds the project according to the configuration. This is usually run as p
 
 ```json
 "scripts": {
-  "prepack": "bob build"
+  "prepare": "bob build"
 }
 ```
 
