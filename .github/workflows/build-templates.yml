@@ -102,6 +102,8 @@ jobs:
           echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
 
       - name: Create library
+        env:
+          USE_YARN: 1
         run: |
           rm -rf ${{ env.work_dir }} # Workaround for tests failing intermittently
           ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
