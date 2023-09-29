@@ -22,8 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu
-          - macos
+          - ubuntu-20.04
+          - macos-12
         type:
           - module-legacy
           - module-mixed
@@ -37,9 +37,9 @@ jobs:
           - kotlin-objc
           - kotlin-swift
         exclude:
-          - os: macos
+          - os: macos-12
             language: kotlin-objc
-          - os: macos
+          - os: macos-12
             language: kotlin-swift
           - type: module-new
             language: java-swift
@@ -58,25 +58,25 @@ jobs:
           - type: view-mixed
             language: kotlin-swift
         include:
-          - os: ubuntu
+          - os: ubuntu-20.04
             type: library
             language: js
-          - os: ubuntu
+          - os: ubuntu-20.04
             type: module-legacy
             language: cpp
-          - os: ubuntu
+          - os: ubuntu-20.04
             type: module-mixed
             language: cpp
-          - os: ubuntu
+          - os: ubuntu-20.04
             type: module-new
             language: cpp
-          - os: macos
+          - os: macos-12
             type: module-legacy
             language: cpp
-          - os: macos
+          - os: macos-12
             type: module-mixed
             language: cpp
-          - os: macos
+          - os: macos-12
             type: module-new
             language: cpp
 
@@ -84,7 +84,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
