@@ -79,10 +79,18 @@ export default async function generateExampleApp({
           '--version',
           reactNativeVersion,
           '--skip-install',
-          '--npm',
         ]
       : // `npx create-expo-app example --no-install`
         ['create-expo-app@latest', directory, '--no-install'];
+
+  if (type === 'native') {
+    if (!process.env.USE_YARN) {
+      console.debug('Using React Native CLI with npm to create example app');
+      args.push('--npm');
+    } else {
+      console.debug('Using React Native CLI with Yarn to create example app');
+    }
+  }
 
   await spawn('npx', args, {
     cwd: dest,
