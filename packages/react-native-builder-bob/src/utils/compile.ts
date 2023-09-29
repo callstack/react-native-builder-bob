@@ -136,7 +136,7 @@ export default async function compile({
         // Don't inline the source code, it can be retrieved from the source file
         result.map.sourcesContent = undefined;
 
-        fs.writeFileSync(mapFilename, JSON.stringify(result.map));
+        await fs.writeJSON(mapFilename, result.map);
       }
 
       await fs.writeFile(outputFilename, code);
