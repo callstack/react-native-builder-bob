@@ -22,16 +22,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@arkweid/lefthook@npm:^0.7.7":
-  version: 0.7.7
-  resolution: "@arkweid/lefthook@npm:0.7.7"
-  bin:
-    lefthook: bin/index.js
-  checksum: 45d9364b125a3fe05ad32f3dc1ebe779c3d237bb550ba083e8e8d273fcc0fae80cd3a59e989c3aedd1e7775033fae617af91c2817cd0ce53a1694b833e9b5b54
-  conditions: (os=darwin | os=linux | os=win32) & (cpu=x64 | cpu=arm64 | cpu=ia32)
-  languageName: node
-  linkType: hard
-
 "@babel/cli@npm:^7.17.10":
   version: 7.22.15
   resolution: "@babel/cli@npm:7.22.15"
@@ -1774,6 +1764,16 @@ __metadata:
   version: 8.49.0
   resolution: "@eslint/js@npm:8.49.0"
   checksum: a6601807c8aeeefe866926ad92ed98007c034a735af20ff709009e39ad1337474243d47908500a3bde04e37bfba16bcf1d3452417f962e1345bc8756edd6b830
+  languageName: node
+  linkType: hard
+
+"@evilmartians/lefthook@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@evilmartians/lefthook@npm:1.5.0"
+  bin:
+    lefthook: bin/index.js
+  checksum: 576582a7071be909c04386cd0a8f9dccf8ef85a257f2b3df41fb991598dbc4cd2e2ed85e9ccd2b70dd5d31f279bba69a9a691126198a26dbee03660664553ac5
+  conditions: (os=darwin | os=linux | os=win32) & (cpu=x64 | cpu=arm64 | cpu=ia32)
   languageName: node
   linkType: hard
 
@@ -8424,8 +8424,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@arkweid/lefthook": ^0.7.7
     "@commitlint/config-conventional": ^17.0.2
+    "@evilmartians/lefthook": ^1.5.0
     "@lerna-lite/cli": ^1.13.0
     "@lerna-lite/run": ^1.13.0
     commitlint: ^17.0.2
