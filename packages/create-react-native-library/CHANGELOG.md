@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.33.0...create-react-native-library@0.34.0) (2023-09-30)
+
+### Bug Fixes
+
+* don't initialize git repo if we're already under a git repo ([2c1c4e7](https://github.com/callstack/react-native-builder-bob/commit/2c1c4e7cacd924ed8d0394c3644ccdc397a0efd5)) - by @satya164
+
+### Features
+
+* add ability to generate a local library ([#469](https://github.com/callstack/react-native-builder-bob/issues/469)) ([bf94f69](https://github.com/callstack/react-native-builder-bob/commit/bf94f692e972968877f0f400e144fb680044b277)) - by @satya164
+
 # [0.33.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.32.0...create-react-native-library@0.33.0) (2023-09-22)
 
 ### Features
