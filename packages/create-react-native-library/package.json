@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/callstack/react-native-builder-bob/issues"
   },
-  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
+  "homepage": "https://callstack.github.io/react-native-builder-bob/create",
   "main": "lib/index.js",
   "bin": "bin/create-react-native-library",
   "files": [

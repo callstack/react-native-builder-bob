@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "docs"
   ],
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
@@ -16,7 +17,8 @@
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'"
+    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
+    "docs": "yarn workspace docs"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
