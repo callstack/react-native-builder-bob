@@ -8,6 +8,15 @@ export default {
   },
   docsRepositoryBase:
     'https://github.com/callstack/react-native-builder-bob/tree/main/docs',
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta
+        property="og:description"
+        content="Bob - Create and build React Native libraries with ease"
+      />
+    </>
+  ),
   footer: {
     text: (
       <span>

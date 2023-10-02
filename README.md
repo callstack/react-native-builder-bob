@@ -43,6 +43,12 @@ To fix formatting errors, run the following:
 yarn lint --fix
 ```
 
+The documentation for the project is under `docs` directory. To run the documentation locally, run the following:
+
+```sh
+yarn docs dev
+```
+
 ## Acknowledgements
 
 Thanks to the authors of these libraries for inspiration:
