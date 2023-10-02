@@ -21,7 +21,9 @@ To automatically configure your project to use `react-native-builder-bob`, open 
 npx react-native-builder-bob@latest init
 ```
 
-This will ask you a few questions and add the required configuration and scripts for building the code. You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
+This will ask you a few questions and add the required configuration and scripts for building the code. The code will be compiled automatically when the package is published.
+
+You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
 
 ## Manual configuration
 
@@ -211,3 +213,5 @@ This builds the project according to the configuration. This is usually run as p
   "prepare": "bob build"
 }
 ```
+
+![Demo](../assets/react-native-builder-bob.svg)
