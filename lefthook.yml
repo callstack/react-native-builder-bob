@@ -9,7 +9,8 @@ pre-commit:
       run: npx tsc --noEmit
     markdown:
       glob: "*.md"
-      run: npx prettier --write {staged_files} && git add {staged_files}
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
 commit-msg:
   parallel: true
   commands:

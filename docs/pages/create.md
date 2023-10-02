@@ -25,7 +25,7 @@ npx create-react-native-library@latest awesome-library
 
 This will ask you a few questions about your project and generate a new project in a folder named `awesome-library`.
 
-![Demo](../assets/create-react-native-library.gif)
+![Demo](../assets/create-react-native-library.svg)
 
 After the project is created, you can find the development workflow in the generated `CONTRIBUTING.md` file.
 
