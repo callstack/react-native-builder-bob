@@ -327,6 +327,10 @@ yargs
       }
     }
 
+    const packageManager = (await fs.pathExists(path.join(root, 'yarn.lock')))
+      ? 'yarn'
+      : 'npm';
+
     console.log(
       dedent(`
       Project ${kleur.yellow(pkg.name)} configured successfully!
@@ -335,7 +339,7 @@ yargs
         `${kleur.bold('Perform last steps')} by running`
       )}${kleur.gray(':')}
 
-        ${kleur.gray(':')} yarn
+        ${kleur.gray('$')} ${packageManager} install
 
       ${kleur.yellow('Good luck!')}
     `)
