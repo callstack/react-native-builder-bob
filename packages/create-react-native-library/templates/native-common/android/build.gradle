@@ -98,10 +98,13 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
+<% if (project.view) { -%>
     buildConfigField "String", "CODEGEN_MODULE_REGISTRATION", (isNewArchitectureEnabled() && registrationCompat ? "\"${codegenViewModuleName}_registration\"" : "null")
 <% } -%>
+<% } -%>
+
 <% if (project.cpp) { -%>
     externalNativeBuild {
       cmake {
@@ -131,12 +134,14 @@ android {
 <% } -%>
   }
 <% if (project.cpp) { -%>
+
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
     }
   }
 <% } else if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
+
   if (isNewArchitectureEnabled() && registrationCompat) {
     // We configure the NDK build only if you decide to opt-in for the New Architecture.
     externalNativeBuild {
@@ -146,6 +151,13 @@ android {
     }
   }
 <% } -%>
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
+
+  buildFeatures {
+    buildConfig true
+  }
+<% } -%>
+
   buildTypes {
     release {
       minifyEnabled false
@@ -160,8 +172,8 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
 <% if (project.arch === "new") { -%>
+
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -173,6 +185,7 @@ android {
     }
   }
 <% } else if (project.arch === "mixed") { -%>
+
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -208,10 +221,11 @@ dependencies {
 <% } -%>
 }
 
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
+<% if (project.view) { -%>
     libraryName = codegenViewLibraryName
 <% } else { -%>
     libraryName = "<%- project.view ? project.name + 'View' : project.name -%>"
@@ -219,3 +233,4 @@ if (isNewArchitectureEnabled()) {
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }
+<% } -%>
