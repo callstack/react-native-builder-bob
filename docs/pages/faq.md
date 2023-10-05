@@ -84,9 +84,9 @@ There are 2 parts to this process.
 
 ## How to test the library in an app locally?
 
-You may have come across the `yarn link` and `npm link` commands to test libraries locally. These commands work great for simple packages without build process, but they have different behavior from how a published package works.
+You may have come across the `yarn link` and `npm link` commands, or used `npm install ../path/to/folder` or `yarn add ../path/to/folder` to test libraries locally. These commands may work for simple packages without build process, but they have different behavior from how a published package works, e.g. `.npmignore` is not respected, the structure of `node_modules` is different, etc. So we don't recommended using these approaches to test libraries locally.
 
-For more accurate testing, we recommend following approaches:
+For more accurate testing, there are various other approaches:
 
 1. **Local tarball with `npm`**
 
@@ -112,7 +112,13 @@ For more accurate testing, we recommend following approaches:
    npm install ../path/to/your-library-name-0.0.0-local.0.tgz
    ```
 
-2. **Verdaccio**
+2. **Yalc**
+
+   [Yalc](https://github.com/wclr/yalc) acts as a local repository for packages that can be used to test packages locally. It's similar to the previous workflow, but more convenient to use.
+
+   You can find installation and usage instructions in the [Yalc documentation](https://github.com/wclr/yalc#installation).
+
+3. **Verdaccio**
 
    [Verdaccio](https://verdaccio.org/) is a lightweight private npm registry that can be used to test packages locally. The advantage of using Verdaccio is that it allows to test the complete workflow of publishing and installing a package without actually publishing it to a remote registry.
 
