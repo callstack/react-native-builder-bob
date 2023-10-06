@@ -66,11 +66,14 @@ jobs:
             --no-local
 
       - name: Diff the libraries
-        continue-on-error: true # Diff will output status -1 if it detects any difference
         id: diff
         run: |
           diff -r old-version new-version || true # Just for debugging, promise I'll delete it
           echo "DIFF_RESULT=$(diff -r old-version new-version || true)" $GITHUB_OUTPUT
+
+      - name: Print diff
+        run: |
+          echo ${{ steps.diff.outputs.DIFF_RESULT }}
 
       - name: Comment on PR
         uses: actions/github-script@v3
