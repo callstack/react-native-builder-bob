@@ -78,8 +78,6 @@ jobs:
 
             const channel = 'pr-${{ github.event.number }}';
 
-            const url = `https://expo.dev/@react-navigation/react-navigation-example?serviceType=eas&distribution=expo-go&scheme=exp+react-navigation-example&channel=${channel}&sdkVersion=${sdkVersion}`;
-
             const body = `The diff
             ${diff}
             `;
