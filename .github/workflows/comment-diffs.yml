@@ -37,10 +37,11 @@ jobs:
             --no-example \
             --no-local
 
-      - name: Checkout to main
-        run: |
-          git fetch origin main --depth 1
-          git checkout origin/main --no-overlay -- docs
+      - name: Fetch main
+        run: git fetch origin main --depth 1
+
+      - name: Checkout main
+        run: git checkout origin/main --no-overlay -- docs
 
       # Removed this step for the sake of testing
       # - name: Setup again # Add a check here to setup again if deps changed
