@@ -74,6 +74,8 @@ jobs:
           diff -r -u --no-ignore-file-name-case old-version new-version >> $GITHUB_OUTPUT || true 
           echo "EOF" >> $GITHUB_OUTPUT
 
+      # TODO: Upload the files with diff
+
       - name: Comment on PR
         uses: actions/github-script@v3
         with:
@@ -83,10 +85,7 @@ jobs:
 
             \`\`\`diff
             ${{ steps.diff.outputs.DIFF_RESULT }}
-            \`\`\`
-
-            > This diff is between [${ context.sha }](https://github.com/callstack/react-native-builder-bob/pull/${context.issue.number}/commits/${ context.sha }) and the [main](https://github.com/callstack/react-native-builder-bob/tree/main) branch.
-            `;
+            \`\`\``;
 
             const comments = await github.issues.listComments({
               issue_number: context.issue.number,
