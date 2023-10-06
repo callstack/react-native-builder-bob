@@ -37,7 +37,7 @@ jobs:
             --no-local
 
       - name: Checkout to main
-        run: git checkout main
+        run: git checkout origin/main
 
       - name: Setup again
         uses: ./.github/actions/setup
