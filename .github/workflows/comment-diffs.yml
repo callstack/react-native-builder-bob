@@ -91,12 +91,14 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const fs = require('fs')
-            const diff = `${{ steps.diff.outputs.DIFF_RESULT }}`
+            const diff = ``
 
             const channel = 'pr-${{ github.event.number }}';
 
             const body = `The diff
-            ${diff}
+            \`\`\`diff
+            ${{ steps.diff.outputs.DIFF_RESULT }}
+            \`\`\`
             `;
 
             const comments = await github.issues.listComments({
