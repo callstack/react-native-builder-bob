@@ -74,9 +74,13 @@ jobs:
 
       - name: Ls dirs
         run: |
-          ls DEBUG.txt
+          cat DEBUG.txt
           ls -R old-version
           ls -R new-version
+
+      - name: Cat diff
+        run: |
+          cat DEBUG.txt
 
       - name: Print diff
         run: |
