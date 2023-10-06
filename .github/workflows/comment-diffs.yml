@@ -83,13 +83,13 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const body = `The commit with hash: ${{ steps.head_hash.outputs.HEAD_HASH }} has changed the output of \`create-react-native-library\`. You can find the diff of the change below:
+            const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change below:
 
             \`\`\`diff
             ${{ steps.diff.outputs.DIFF_RESULT }}
             \`\`\`
 
-            > This diff is between this branch and the \`main\` branch.
+            > This diff is between ${{ steps.head_hash.outputs.HEAD_HASH }} and the \`main\` branch.
             `;
 
             const comments = await github.issues.listComments({
