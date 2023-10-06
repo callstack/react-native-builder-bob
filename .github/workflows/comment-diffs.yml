@@ -68,8 +68,8 @@ jobs:
       - name: Diff the libraries
         id: diff
         run: |
-          diff -r old-version new-version || true # Just for debugging, promise I'll delete it
-          echo "DIFF_RESULT=$(diff -r old-version new-version || true)" >> $GITHUB_OUTPUT
+          diff -r --no-ignore-file-name-case old-version new-version || true # Just for debugging, promise I'll delete it
+          echo "DIFF_RESULT=$(diff -r --no-ignore-file-name-case old-version new-version || true)" >> $GITHUB_OUTPUT
 
       - name: Ls dirs
         run: |
