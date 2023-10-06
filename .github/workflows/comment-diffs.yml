@@ -90,11 +90,6 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const fs = require('fs')
-            const diff = ``
-
-            const channel = 'pr-${{ github.event.number }}';
-
             const body = `The diff
             \`\`\`diff
             ${{ steps.diff.outputs.DIFF_RESULT }}
