@@ -71,7 +71,7 @@ jobs:
         run: |
           echo "DIFF_RESULT<<EOF" >> $GITHUB_OUTPUT
           # Diff in recursive mod with unified format (unified format uses - and + instead of < and >)
-          diff -r -u --no-ignore-file-name-case old-version new-version >> $GITHUB_OUTPUT || true 
+          diff -r -u --no-ignore-file-name-case old-version new-version | sed -re 's/(---|\+\+\+) (.+)\t.+/\1 \2/'  >> $GITHUB_OUTPUT || true 
           echo "EOF" >> $GITHUB_OUTPUT
 
       # TODO: Upload the files with diff
