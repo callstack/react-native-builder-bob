@@ -41,8 +41,9 @@ jobs:
           git fetch origin main --depth 1
           git checkout origin/main --no-overlay -- docs
 
-      - name: Setup again
-        uses: ./.github/actions/setup
+      # Removed this step for the sake of testing
+      # - name: Setup again # Add a check here to setup again if deps changed
+      #   uses: ./.github/actions/setup
 
       - name: Remove old build and build again
         run: |
