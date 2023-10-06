@@ -6,6 +6,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactMethod;
 
+// Hi mom!
 public class <%- project.name -%>Module extends <%- project.name -%>Spec {
   public static final String NAME = "<%- project.name -%>";
 
