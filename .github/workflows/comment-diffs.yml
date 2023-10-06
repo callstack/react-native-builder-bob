@@ -38,10 +38,10 @@ jobs:
             --no-local
 
       - name: Fetch main
-        run: git fetch origin main --depth 1
+        run: git fetch origin main
 
       - name: Checkout main
-        run: git checkout origin/main --no-overlay -- docs
+        run: git checkout origin/main
 
       # Removed this step for the sake of testing
       # - name: Setup again # Add a check here to setup again if deps changed
