@@ -89,7 +89,7 @@ jobs:
             ${{ steps.diff.outputs.DIFF_RESULT }}
             \`\`\`
 
-            > This diff is between ${{ steps.head_hash.outputs.HEAD_HASH }} and the \`main\` branch.
+            > This diff is between [${{ steps.head_hash.outputs.HEAD_HASH }}](https://github.com/callstack/react-native-builder-bob/pull/${context.issue.number}/commits/${{ steps.head_hash.outputs.HEAD_HASH }}) and the [main](callstack/react-native-builder-bob/tree/main) branch.
             `;
 
             const comments = await github.issues.listComments({
