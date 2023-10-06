@@ -70,7 +70,7 @@ jobs:
         id: diff
         run: |
           diff -r --no-ignore-file-name-case old-version new-version >> DEBUG.txt || true # Just for debugging, promise I'll delete it
-          # echo "DIFF_RESULT={$(diff -r --no-ignore-file-name-case old-version new-version || true)}" >> $GITHUB_OUTPUT
+          echo "DIFF_RESULT={$(diff -r --no-ignore-file-name-case old-version new-version || true)}" >> $GITHUB_OUTPUT
 
       - name: Ls dirs
         run: |
