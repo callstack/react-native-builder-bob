@@ -85,17 +85,13 @@ jobs:
         run: |
           cat DEBUG.txt
 
-      - name: Print diff
-        run: |
-          echo ${{ steps.diff.outputs.DIFF_RESULT }}
-
       - name: Comment on PR
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const fs = require('fs')
-            const diff = '${{ steps.diff.outputs.DIFF_RESULT }}'
+            const diff = `${{ steps.diff.outputs.DIFF_RESULT }}`
 
             const channel = 'pr-${{ github.event.number }}';
 
