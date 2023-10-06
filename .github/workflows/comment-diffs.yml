@@ -37,7 +37,9 @@ jobs:
             --no-local
 
       - name: Checkout to main
-        run: git checkout origin/main
+        run: |
+          git fetch origin main --depth 1
+          git checkout origin/main --no-overlay -- docs
 
       - name: Setup again
         uses: ./.github/actions/setup
