@@ -37,6 +37,10 @@ jobs:
             --no-example \
             --no-local
 
+      - name: Store the commit hash
+        id: head_hash
+        run: echo "HEAD_HASH=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Fetch main
         run: git fetch origin main
 
@@ -69,31 +73,23 @@ jobs:
       - name: Diff the libraries
         id: diff
         run: |
-          diff -r --no-ignore-file-name-case old-version new-version >> DEBUG.txt || true # Just for debugging, promise I'll delete it
           echo "DIFF_RESULT<<EOF" >> $GITHUB_OUTPUT
-          diff -r --no-ignore-file-name-case old-version new-version >> $GITHUB_OUTPUT || true 
+          # Diff in recursive mod with unified format (unified format uses - and + instead of < and >)
+          diff -r -u --no-ignore-file-name-case old-version new-version >> $GITHUB_OUTPUT || true 
           echo "EOF" >> $GITHUB_OUTPUT
-
-
-      - name: Ls dirs
-        run: |
-          cat DEBUG.txt
-          ls -R old-version
-          ls -R new-version
-
-      - name: Cat diff
-        run: |
-          cat DEBUG.txt
 
       - name: Comment on PR
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const body = `The diff
+            const body = `The commit with hash: ${{ steps.head_hash.outputs.HEAD_HASH }} has changed the output of \`create-react-native-library\`. You can find the diff of the change below:
+
             \`\`\`diff
             ${{ steps.diff.outputs.DIFF_RESULT }}
             \`\`\`
+
+            > This diff is between this branch and the \`main\` branch.
             `;
 
             const comments = await github.issues.listComments({
