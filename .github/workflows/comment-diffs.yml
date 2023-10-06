@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-templates.yml'
+      - '.github/workflows/comment-diffs.yml'
       - 'packages/create-react-native-library/**'
       - '!**.md'
 
