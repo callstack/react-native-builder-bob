@@ -34,6 +34,7 @@ jobs:
             --repo-url https://test.test \
             --type module-mixed \
             --languages java-objc \
+            --no-example \
             --no-local
 
       - name: Checkout to main
@@ -61,11 +62,13 @@ jobs:
             --repo-url https://test.test \
             --type module-mixed \
             --languages java-objc \
+            --no-example \
             --no-local
 
       - name: Diff the libraries
         id: diff
         run: |
+          diff -r old-library new-library # Just for debugging, promise I'll delete it
           echo "DIFF_RESULT=$(diff -r old-library new-library)" $GITHUB_OUTPUT
 
       - name: Comment on PR
