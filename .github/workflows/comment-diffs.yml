@@ -37,31 +37,79 @@ jobs:
             --no-example \
             --no-local
 
-      - name: Fetch main
-        run: git fetch origin main
-
-      - name: Checkout main
-        run: git checkout origin/main
-
-      # Removed this step for the sake of testing
-      # - name: Setup again # Add a check here to setup again if deps changed
-      #   uses: ./.github/actions/setup
-
-      - name: Remove old build and build again
+      - name: Create the Differ repo
         run: |
-          rm -rf ./packages/create-react-native-library/lib
-          yarn workspace create-react-native-library prepare
+          mkdir differ
+          cd differ
+          git init
+          git remote add origin $DIFF_VIEW_SSH
+          desired_branch="new-version"
+          # Check if the branch exists on the remote repository
+          if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
+            echo "The branch $desired_branch already exists on the remote repository."
+            git fetch origin "$desired_branch"  # Fetch the branch from the remote
+            git checkout "$desired_branch"     # Switch to the existing branch
+          else
+            echo "The branch $desired_branch does not exist on the remote repository."
+            git checkout -b "$desired_branch"  # Create a new branch and switch to it
+          fi
 
-      - name: Create library again
+      - name: Clean the Differ repo
         run: |
-          ./packages/create-react-native-library/bin/create-react-native-library old-version \
-            --slug @bob/react-native-test \
-            --description test \
-            --author-name test \
-            --author-email test@test \
-            --author-url https://test.test \
-            --repo-url https://test.test \
-            --type module-mixed \
-            --languages java-objc \
-            --no-example \
-            --no-local
+          cd differ
+          # Remove everything except the .git folder and it's contents.
+          for i in `ls | grep -v ".git"` ; do rm -rf $i; done;
+
+      - name: Delete .git of new-version
+        run: |
+          rm -rf new-version/.git
+
+      - name: Copy everything inside new-version to differ
+        run: |
+          cp new-version/* differ
+
+      - name: Commit everything in differ
+        run: |
+          cd differ
+          git add -A && git commit -m "Automatic commit"
+
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'output'
+          destination-github-username: $DIFF_VIEW_USERNAME
+          destination-repository-name: $DIFF_VIEW_REPO_NAME
+          user-email: test@test.com
+          target-branch: new-version
+
+      # - name: Fetch main
+      #   run: git fetch origin main
+      #
+      # - name: Checkout main
+      #   run: git checkout origin/main
+      #
+      # # Removed this step for the sake of testing
+      # # - name: Setup again # Add a check here to setup again if deps changed
+      # #   uses: ./.github/actions/setup
+      #
+      # - name: Remove old build and build again
+      #   run: |
+      #     rm -rf ./packages/create-react-native-library/lib
+      #     yarn workspace create-react-native-library prepare
+      #
+      # - name: Create library again
+      #   run: |
+      #     ./packages/create-react-native-library/bin/create-react-native-library old-version \
+      #       --slug @bob/react-native-test \
+      #       --description test \
+      #       --author-name test \
+      #       --author-email test@test \
+      #       --author-url https://test.test \
+      #       --repo-url https://test.test \
+      #       --type module-mixed \
+      #       --languages java-objc \
+      #       --no-example \
+      #       --no-local
