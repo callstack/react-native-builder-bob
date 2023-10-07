@@ -13,8 +13,8 @@ jobs:
   comment-diffs:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      # - name: Checkout
+      #   uses: actions/checkout@v3
 
       # - name: Setup
       #   uses: ./.github/actions/setup
@@ -79,6 +79,8 @@ jobs:
 
       - name: Commit everything in differ
         run: |
+          git config --global user.email "text@test.com"
+          git config --global user.name "Github actions test"
           cd differ
           git add -A && git commit -m "Automatic commit"
 
