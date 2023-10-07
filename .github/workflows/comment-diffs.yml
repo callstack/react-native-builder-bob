@@ -235,30 +235,43 @@ jobs:
           name: outputs
           path: outputs
 
-      - run: |
-          ls outputs
-          cat outputs/*.txt
+      - name: Output artifacts
+        id: artifacts
+        run: |
+          if ls outputs/*.txt; then
+            result=1 # Artifacts are not empty
+            echo "ARTIFACTS<<EOF" >> $GITHUB_OUTPUT
+            cat outputs/*.txt >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
 
-      # - name: Comment on PR
-      #   if: output is not empty
-      #   uses: actions/github-script@v3
-      #   with:
-      #     github-token: ${{secrets.GITHUB_TOKEN}}
-      #     script: |
-      #       const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }})`;
-      #
-      #       const comments = await github.issues.listComments({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #       });
-      #       if (comments.data.some(comment => comment.body === body)) {
-      #         return;
-      #       }
-      #       github.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body
-      #       })
-      #     
+          else
+            result=0 # Artifacts are empty
+          fi
+
+          echo "ARTIFACTS_ARE_NON_EMPTY=$result" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        if: ${{ steps.artifacts.outputs.ARTIFACTS_ARE_NON_EMPTY == '1' }}
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the changes below:
+              ${{ steps.artifacts.outputs.ARTIFACTS }}
+            `;
+
+            const comments = await github.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            if (comments.data.some(comment => comment.body === body)) {
+              return;
+            }
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            })
+          
