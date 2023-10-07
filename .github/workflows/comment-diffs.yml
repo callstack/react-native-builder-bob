@@ -10,7 +10,8 @@ on:
       - '!**.md'
 
 jobs:
-  comment-diffs:
+  generate-diffs-if-needed:
+    name: Generate library, compare, and post diffs if needed
     strategy:
           fail-fast: false
           matrix:
@@ -224,9 +225,10 @@ jobs:
           name: outputs
           path: outputs/*.txt
 
-  read-values:
+  read-artifacts-and-comment:
+    name: Read the artifacts and comment
     runs-on: ubuntu-latest
-    needs: [comment-diffs]
+    needs: [generate-diffs-if-needed]
     steps:
       - name: Load outputs
         uses: actions/download-artifact@v3
