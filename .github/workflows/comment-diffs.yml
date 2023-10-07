@@ -11,6 +11,43 @@ on:
 
 jobs:
   comment-diffs:
+    strategy:
+          fail-fast: false
+          matrix:
+            type:
+              - module-legacy
+              - module-mixed
+              - module-new
+              - view-legacy
+              - view-mixed
+              - view-new
+            language:
+              - java-objc
+              - java-swift
+              - kotlin-objc
+              - kotlin-swift
+            exclude:
+              - type: module-new
+                language: java-swift
+              - type: module-new
+                language: kotlin-swift
+              - type: module-mixed
+                language: java-swift
+              - type: module-mixed
+                language: kotlin-swift
+              - type: view-new
+                language: java-swift
+              - type: view-new
+                language: kotlin-swift
+              - type: view-mixed
+                language: java-swift
+              - type: view-mixed
+                language: kotlin-swift
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}
+      cancel-in-progress: true
+
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -158,7 +195,31 @@ jobs:
 
       - name: Echo change url
         run: |
-          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
+
+      - name: Write changes to common file
+        run: |
+          mkdir -p pipelines
+          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: outputs
+          path: outputs/*.txt
+
+  read-values:
+    runs-on: ubuntu-latest
+    needs: [comment-diffs]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Load outputs
+        uses: actions/download-artifact@v3
+        with:
+          name: outputs
+          path: outputs
+
+      - run: |
+          ls outputs
+          cat outputs/*.txt
 
       # - name: Comment on PR
       #   uses: actions/github-script@v3
