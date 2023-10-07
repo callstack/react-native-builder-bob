@@ -127,6 +127,7 @@ jobs:
 
       - name: Print diff
         run: |
+          cd differ
           git diff old-version..new-version
 
       - name: Commit everything in differ
