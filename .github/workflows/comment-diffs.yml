@@ -216,7 +216,7 @@ jobs:
         if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
         run: |
           mkdir outputs
-          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
+          echo "${{ matrix.language }} - ${{ matrix.type }}: https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
 
       - uses: actions/upload-artifact@v3
         if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
@@ -256,8 +256,27 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the changes below:
-              ${{ steps.artifacts.outputs.ARTIFACTS }}
+            const replaceTable = {
+              "module-legacy": "**Native module**",
+              "module-mixed": "**Turbo module with backward compat**",
+              "module-new": "**Turbo module**",
+              "view-legacy": "**Native view**",
+              "view-mixed": "**Fabric view with backward compat**",
+              "view-new": "**Fabric view**",
+              "java-objc": "**Java and Objective C**",
+              "java-swift": "**Java and Swift**",
+              "kotlin-objc": "**Kotlin and Objective C**",
+              "kotlin-swift": "**Kotlin and Swift**"
+            }
+
+            const artifacts = `${{ steps.artifacts.outputs.ARTIFACTS }}`;
+
+            const artifactsReplaced = Object.entries(replaceTable).reduce((acc, [key, value]) => {
+              return acc.replace(new RegExp(key, "g"), value);
+            }, artifacts)
+
+            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diff of the changes below:
+            ${artifactsReplaced}
             `;
 
             const comments = await github.issues.listComments({
