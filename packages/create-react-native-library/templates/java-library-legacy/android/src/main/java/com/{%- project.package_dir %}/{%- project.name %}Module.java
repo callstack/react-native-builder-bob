@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
+// Hi mom! Is this thing on?
 @ReactModule(name = <%- project.name -%>Module.NAME)
 public class <%- project.name -%>Module extends ReactContextBaseJavaModule {
   public static final String NAME = "<%- project.name -%>";

@@ -194,9 +194,6 @@ jobs:
           git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
-      - name: Echo change url
-        run: |
-
       - name: Write changes to common file
         run: |
           mkdir outputs
