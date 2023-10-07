@@ -94,7 +94,7 @@ jobs:
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
           cd differ
-          git add -A && git commit -m "Automatic commit"
+          git add -A || true && git commit -m "Automatic commit" || true
           git push --set-upstream origin new-version
 
       - name: Switch to old version repo
@@ -134,7 +134,7 @@ jobs:
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
           cd differ
-          git add -A && git commit -m "Automatic commit"
+          git add -A || true && git commit -m "Automatic commit" || true
           git push --set-upstream origin new-version
 
       # - name: Fetch main
