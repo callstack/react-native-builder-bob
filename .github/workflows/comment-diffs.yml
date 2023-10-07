@@ -69,8 +69,8 @@ jobs:
       - name: Set Diff view branch prefix env
         run: |
           BRANCH_PREFIX="${{ github.event.number }}-type-languages"
-          echo "OLD_VERSION_BRANCH=$(BRANCH_PREFIX)-old-version" >> $GITHUB_ENV
-          echo "NEW_VERSION_BRANCH=$(BRANCH_PREFIX)-new-version" >> $GITHUB_ENV
+          echo "OLD_VERSION_BRANCH=$BRANCH_PREFIX-old-version" >> $GITHUB_ENV
+          echo "NEW_VERSION_BRANCH=$BRANCH_PREFIX-new-version" >> $GITHUB_ENV
 
       - uses: webfactory/ssh-agent@v0.7.0
         with:
