@@ -216,7 +216,7 @@ jobs:
         if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
         run: |
           mkdir outputs
-          echo "${{ matrix.language }} - ${{ matrix.type }}: https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
+          echo "[${{ matrix.language }} - ${{ matrix.type }}](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }})" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
 
       - uses: actions/upload-artifact@v3
         if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
