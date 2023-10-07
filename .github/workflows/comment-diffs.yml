@@ -128,7 +128,7 @@ jobs:
       - name: Print diff
         run: |
           cd differ
-          git diff old-version..new-version
+          git diff old-version..new-version | cat
 
       - name: Commit everything in differ
         run: |
@@ -136,7 +136,7 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          git push --set-upstream origin new-version
+          git push --set-upstream origin old-version
 
       # - name: Fetch main
       #   run: git fetch origin main
