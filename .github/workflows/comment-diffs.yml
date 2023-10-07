@@ -11,47 +11,60 @@ on:
 
 jobs:
   comment-diffs:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # - name: Setup
+      - name: Setup
+        uses: ./.github/actions/setup
+      
+      - name: Build crnl
+        run: |
+          yarn workspace create-react-native-library prepare
+      
+      - name: Create library
+        run: |
+          ./packages/create-react-native-library/bin/create-react-native-library new-version \
+            --slug @bob/react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type module-mixed \
+            --languages java-objc \
+            --no-example \
+            --no-local
+      
+      - name: Fetch main
+        run: git fetch origin main
+      
+      - name: Checkout main
+        run: git checkout origin/main
+      
+      # Removed this step for the sake of testing
+      # - name: Setup again # Add a check here to setup again if deps changed
       #   uses: ./.github/actions/setup
-      #
-      # - name: Build crnl
-      #   run: |
-      #     yarn workspace create-react-native-library prepare
-      #
-      # - name: Create library
-      #   run: |
-      #     ./packages/create-react-native-library/bin/create-react-native-library new-version \
-      #       --slug @bob/react-native-test \
-      #       --description test \
-      #       --author-name test \
-      #       --author-email test@test \
-      #       --author-url https://test.test \
-      #       --repo-url https://test.test \
-      #       --type module-mixed \
-      #       --languages java-objc \
-      #       --no-example \
-      #       --no-local
-      #
-      - name: Create new-version for now
+      
+      - name: Remove old build and build again
         run: |
-          mkdir new-version
-          cd new-version
-          echo "Hi mom!" > hey.txt
-          # For good measure
-          git init 
-
-      - name: Create old-version for now
+          rm -rf ./packages/create-react-native-library/lib
+          yarn workspace create-react-native-library prepare
+      
+      - name: Create library again
         run: |
-          mkdir old-version
-          cd old-version
-          echo "Hi mom, I'm old!" > hey.txt
-          # For good measure
-          git init 
+          ./packages/create-react-native-library/bin/create-react-native-library old-version \
+            --slug @bob/react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type module-mixed \
+            --languages java-objc \
+            --no-example \
+            --no-local
 
       - uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -137,35 +150,25 @@ jobs:
           git push --set-upstream origin old-version
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/old-version)" >> $GITHUB_OUTPUT
 
-      - name: Print out the diff check url
-        run: |
-          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
+      - name: Comment on PR
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }})`;
 
-      # - name: Fetch main
-      #   run: git fetch origin main
-      #
-      # - name: Checkout main
-      #   run: git checkout origin/main
-      #
-      # # Removed this step for the sake of testing
-      # # - name: Setup again # Add a check here to setup again if deps changed
-      # #   uses: ./.github/actions/setup
-      #
-      # - name: Remove old build and build again
-      #   run: |
-      #     rm -rf ./packages/create-react-native-library/lib
-      #     yarn workspace create-react-native-library prepare
-      #
-      # - name: Create library again
-      #   run: |
-      #     ./packages/create-react-native-library/bin/create-react-native-library old-version \
-      #       --slug @bob/react-native-test \
-      #       --description test \
-      #       --author-name test \
-      #       --author-email test@test \
-      #       --author-url https://test.test \
-      #       --repo-url https://test.test \
-      #       --type module-mixed \
-      #       --languages java-objc \
-      #       --no-example \
-      #       --no-local
+            const comments = await github.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            if (comments.data.some(comment => comment.body === body)) {
+              return;
+            }
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            })
+          
