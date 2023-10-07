@@ -274,7 +274,7 @@ jobs:
               return acc.replace(new RegExp(key, "g"), value);
             }, artifacts)
 
-            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diff of the changes below:
+            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of affected templates below:
 
             ${artifactsReplaced}
             `;
