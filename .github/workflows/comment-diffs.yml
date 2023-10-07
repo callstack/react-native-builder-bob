@@ -17,33 +17,33 @@ jobs:
           matrix:
             type:
               - module-legacy
-              # - module-mixed
-              # - module-new
+              - module-mixed
+              - module-new
               - view-legacy
-              # - view-mixed
-              # - view-new
+              - view-mixed
+              - view-new
             language:
               - java-objc
-              # - java-swift
-              # - kotlin-objc
-              # - kotlin-swift
-            # exclude:
-            #   - type: module-new
-            #     language: java-swift
-            #   - type: module-new
-            #     language: kotlin-swift
-            #   - type: module-mixed
-            #     language: java-swift
-            #   - type: module-mixed
-            #     language: kotlin-swift
-            #   - type: view-new
-            #     language: java-swift
-            #   - type: view-new
-            #     language: kotlin-swift
-            #   - type: view-mixed
-            #     language: java-swift
-            #   - type: view-mixed
-            #     language: kotlin-swift
+              - java-swift
+              - kotlin-objc
+              - kotlin-swift
+            exclude:
+              - type: module-new
+                language: java-swift
+              - type: module-new
+                language: kotlin-swift
+              - type: module-mixed
+                language: java-swift
+              - type: module-mixed
+                language: kotlin-swift
+              - type: view-new
+                language: java-swift
+              - type: view-new
+                language: kotlin-swift
+              - type: view-mixed
+                language: java-swift
+              - type: view-mixed
+                language: kotlin-swift
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}
