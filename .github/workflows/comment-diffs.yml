@@ -96,7 +96,7 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          echo "NEW_COMMIT_HASH$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "NEW_COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git push --set-upstream origin new-version
 
       - name: Switch to old version repo
@@ -134,7 +134,7 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          echo "OLD_COMMIT_HASH$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "OLD_COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git push --set-upstream origin old-version
 
       - name: Print out the diff check url
