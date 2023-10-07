@@ -206,7 +206,18 @@ jobs:
         run: |
           git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
-          git switch ${{ env.NEW_VERSION_BRANCH }}
+
+          desired_branch="${{ env.NEW_VERSION_BRANCH }}"
+          # Check if the branch exists on the remote repository
+          if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
+            echo "The branch $desired_branch already exists on the remote repository."
+            git fetch origin "$desired_branch"  # Fetch the branch from the remote
+            git checkout "$desired_branch"     # Switch to the existing branch
+          else
+            echo "The branch $desired_branch does not exist on the remote repository."
+            git checkout -b "$desired_branch"  # Create a new branch and switch to it
+          fi
+
           git push --set-upstream origin ${{ env.NEW_VERSION_BRANCH }}
           echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/${{ env.NEW_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
