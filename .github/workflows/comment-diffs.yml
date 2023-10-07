@@ -139,7 +139,7 @@ jobs:
 
       - name: Print out the diff check url
         run: |
-          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
+          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
 
       # - name: Fetch main
       #   run: git fetch origin main
