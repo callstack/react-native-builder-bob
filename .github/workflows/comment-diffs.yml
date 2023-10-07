@@ -45,6 +45,11 @@ jobs:
           # For good measure
           git init 
 
+
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+
       - name: Create the Differ repo
         run: |
           echo ${{ vars.DIFF_VIEW_SSH }}
@@ -83,17 +88,7 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A && git commit -m "Automatic commit"
-
-      - name: Pushes to another repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-        with:
-          source-directory: 'new-version'
-          destination-github-username: ${{ vars.DIFF_VIEW_USERNAME }}
-          destination-repository-name: ${{ vars.DIFF_VIEW_REPO_NAME }}
-          user-email: test@test.com
-          target-branch: new-version
+          git push
 
       # - name: Fetch main
       #   run: git fetch origin main
