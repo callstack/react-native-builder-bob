@@ -90,11 +90,13 @@ jobs:
           cp new-version/* differ
 
       - name: Commit everything in differ
+        id: commit-new
         run: |
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
+          echo "NEW_COMMIT_HASH$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git push --set-upstream origin new-version
 
       - name: Switch to old version repo
@@ -125,18 +127,19 @@ jobs:
         run: |
           cp old-version/* differ
 
-      - name: Print diff
-        run: |
-          cd differ
-          git diff old-version..new-version | cat
-
       - name: Commit everything in differ
+        id: commit-old
         run: |
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
+          echo "OLD_COMMIT_HASH$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git push --set-upstream origin old-version
+
+      - name: Print out the diff check url
+        run: |
+          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}${{ vars.DIFF_VIEW_REPO_NAME }}/compare${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
 
       # - name: Fetch main
       #   run: git fetch origin main
