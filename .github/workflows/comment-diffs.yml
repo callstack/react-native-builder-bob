@@ -153,8 +153,6 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          git push --set-upstream origin ${{ env.NEW_VERSION_BRANCH }}
-          echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/${{ env.NEW_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
       - name: Switch to old version repo
         run: |
@@ -185,21 +183,41 @@ jobs:
           cp -r old-version/* differ
 
       - name: Commit everything in differ
-        id: commit-old
         run: |
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
+
+
+      - name: Check if the diff is non-empty
+        id: check-is-diff-non-empty
+        run: |
+          if git diff --quiet ${{ env.OLD_VERSION_BRANCH }}..${{ env.NEW_VERSION_BRANCH }}; then
+            result=0 # Diff is empty
+          else
+            result=1 # Diff is not empty
+          fi
+          echo "DIFF_IS_NON_EMPTY=$result" >> $GITHUB_OUTPUT
+          
+      - name: Push repos
+        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
+        id: push
+        run: |
           git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
+          git switch ${{ env.NEW_VERSION_BRANCH }}
+          git push --set-upstream origin ${{ env.NEW_VERSION_BRANCH }}
+          echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/${{ env.NEW_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
       - name: Write changes to common file
+        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
         run: |
           mkdir outputs
-          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
+          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }}" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
 
       - uses: actions/upload-artifact@v3
+        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
         with:
           name: outputs
           path: outputs/*.txt
@@ -220,11 +238,12 @@ jobs:
           cat outputs/*.txt
 
       # - name: Comment on PR
+      #   if: output is not empty
       #   uses: actions/github-script@v3
       #   with:
       #     github-token: ${{secrets.GITHUB_TOKEN}}
       #     script: |
-      #       const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }})`;
+      #       const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }})`;
       #
       #       const comments = await github.issues.listComments({
       #         issue_number: context.issue.number,
