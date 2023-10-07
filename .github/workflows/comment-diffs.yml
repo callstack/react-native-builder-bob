@@ -11,31 +11,39 @@ on:
 
 jobs:
   comment-diffs:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Build crnl
+      # - name: Setup
+      #   uses: ./.github/actions/setup
+      #
+      # - name: Build crnl
+      #   run: |
+      #     yarn workspace create-react-native-library prepare
+      #
+      # - name: Create library
+      #   run: |
+      #     ./packages/create-react-native-library/bin/create-react-native-library new-version \
+      #       --slug @bob/react-native-test \
+      #       --description test \
+      #       --author-name test \
+      #       --author-email test@test \
+      #       --author-url https://test.test \
+      #       --repo-url https://test.test \
+      #       --type module-mixed \
+      #       --languages java-objc \
+      #       --no-example \
+      #       --no-local
+      #
+      - name: Create new-version for now
         run: |
-          yarn workspace create-react-native-library prepare
-
-      - name: Create library
-        run: |
-          ./packages/create-react-native-library/bin/create-react-native-library new-version \
-            --slug @bob/react-native-test \
-            --description test \
-            --author-name test \
-            --author-email test@test \
-            --author-url https://test.test \
-            --repo-url https://test.test \
-            --type module-mixed \
-            --languages java-objc \
-            --no-example \
-            --no-local
+          mkdir new-version
+          cd new-version
+          echo "Hi mom!" > hey.txt
+          # For good measure
+          git init 
 
       - name: Create the Differ repo
         run: |
