@@ -100,7 +100,7 @@ jobs:
 
       - name: Copy everything inside new-version to differ
         run: |
-          cp new-version/* differ
+          cp -r new-version/* differ
 
       - name: Commit everything in differ
         id: commit-new
@@ -138,7 +138,7 @@ jobs:
 
       - name: Copy everything inside new-version to differ
         run: |
-          cp old-version/* differ
+          cp -r old-version/* differ
 
       - name: Commit everything in differ
         id: commit-old
