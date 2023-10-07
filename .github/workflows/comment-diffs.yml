@@ -45,6 +45,13 @@ jobs:
           # For good measure
           git init 
 
+      - name: Create old-version for now
+        run: |
+          mkdir old-version
+          cd old-version
+          echo "Hi mom, I'm old!" > hey.txt
+          # For good measure
+          git init 
 
       - uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -81,6 +88,46 @@ jobs:
       - name: Copy everything inside new-version to differ
         run: |
           cp new-version/* differ
+
+      - name: Commit everything in differ
+        run: |
+          git config --global user.email "text@test.com"
+          git config --global user.name "Github actions test"
+          cd differ
+          git add -A && git commit -m "Automatic commit"
+          git push --set-upstream origin new-version
+
+      - name: Switch to old version repo
+        run: |
+          cd differ
+          desired_branch="old-version"
+          # Check if the branch exists on the remote repository
+          if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
+            echo "The branch $desired_branch already exists on the remote repository."
+            git fetch origin "$desired_branch"  # Fetch the branch from the remote
+            git checkout "$desired_branch"     # Switch to the existing branch
+          else
+            echo "The branch $desired_branch does not exist on the remote repository."
+            git checkout -b "$desired_branch"  # Create a new branch and switch to it
+          fi
+
+      - name: Clean the Differ repo
+        run: |
+          cd differ
+          # Remove everything except the .git folder and it's contents.
+          for i in `ls | grep -v ".git"` ; do rm -rf $i; done;
+
+      - name: Delete .git of old-version
+        run: |
+          rm -rf old-version/.git
+
+      - name: Copy everything inside new-version to differ
+        run: |
+          cp old-version/* differ
+
+      - name: Print diff
+        run: |
+          git diff old-version..new-version
 
       - name: Commit everything in differ
         run: |
