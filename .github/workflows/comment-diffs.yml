@@ -150,25 +150,29 @@ jobs:
           git push --set-upstream origin old-version
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/old-version)" >> $GITHUB_OUTPUT
 
-      - name: Comment on PR
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }})`;
+      - name: Echo change url
+        run: |
+          echo "https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }}"
 
-            const comments = await github.issues.listComments({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-            if (comments.data.some(comment => comment.body === body)) {
-              return;
-            }
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body
-            })
-          
+      # - name: Comment on PR
+      #   uses: actions/github-script@v3
+      #   with:
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     script: |
+      #       const body = `This PR changes the output of \`create-react-native-library\`. You can find the diff of the change [here](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.commit-old.outputs.OLD_COMMIT_HASH }}..${{ steps.commit-new.outputs.NEW_COMMIT_HASH }})`;
+      #
+      #       const comments = await github.issues.listComments({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #       });
+      #       if (comments.data.some(comment => comment.body === body)) {
+      #         return;
+      #       }
+      #       github.issues.createComment({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body
+      #       })
+      #     
