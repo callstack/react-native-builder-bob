@@ -68,7 +68,9 @@ jobs:
 
       - name: Set Diff view branch prefix env
         run: |
-          echo "BRANCH_PREFIX=${{ github.event.number }}-type-languages" >> $GITHUB_ENV
+          BRANCH_PREFIX="${{ github.event.number }}-type-languages"
+          echo "OLD_VERSION_BRANCH=$($BRANCH_PREFIX)-old-version" >> $GITHUB_ENV
+          echo "NEW_VERSION_BRANCH=$($BRANCH_PREFIX)-new-version" >> $GITHUB_ENV
 
       - uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -81,7 +83,7 @@ jobs:
           cd differ
           git init
           git remote add origin ${{ vars.DIFF_VIEW_SSH }}
-          desired_branch="${{ env.BRANCH_PREFIX }}-new-version"
+          desired_branch="${{ env.NEW_VERSION_BRANCH }}"
           # Check if the branch exists on the remote repository
           if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
             echo "The branch $desired_branch already exists on the remote repository."
@@ -113,13 +115,13 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          git push --set-upstream origin new-version
-          echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/new-version)" >> $GITHUB_OUTPUT
+          git push --set-upstream origin ${{ env.NEW_VERSION_BRANCH }}
+          echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/${{ env.NEW_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
       - name: Switch to old version repo
         run: |
           cd differ
-          desired_branch="${{ env.BRANCH_PREFIX }}-old-version"
+          desired_branch="${{ env.OLD_VERSION_BRANCH }}"
           # Check if the branch exists on the remote repository
           if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
             echo "The branch $desired_branch already exists on the remote repository."
@@ -151,8 +153,8 @@ jobs:
           git config --global user.name "Github actions test"
           cd differ
           git add -A || true && git commit -m "Automatic commit" || true
-          git push --set-upstream origin old-version
-          echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/old-version)" >> $GITHUB_OUTPUT
+          git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
+          echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
       - name: Echo change url
         run: |
