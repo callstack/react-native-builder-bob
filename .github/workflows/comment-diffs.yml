@@ -68,8 +68,7 @@ jobs:
 
       - name: Set Diff view branch prefix env
         run: |
-          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "BRANCH_PREFIX=$($PR_NUMBER)-type-languages" >> $GITHUB_ENV
+          echo "BRANCH_PREFIX=${{ github.event.number }}-type-languages" >> $GITHUB_ENV
 
       - uses: webfactory/ssh-agent@v0.7.0
         with:
