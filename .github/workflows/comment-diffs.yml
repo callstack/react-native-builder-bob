@@ -193,6 +193,7 @@ jobs:
       - name: Check if the diff is non-empty
         id: check-is-diff-non-empty
         run: |
+          cd differ
           if git diff --quiet ${{ env.OLD_VERSION_BRANCH }}..${{ env.NEW_VERSION_BRANCH }}; then
             result=0 # Diff is empty
           else
@@ -204,6 +205,7 @@ jobs:
         if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
         id: push
         run: |
+          cd differ
           git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
           echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
 
