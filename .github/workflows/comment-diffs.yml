@@ -66,6 +66,11 @@ jobs:
             --no-example \
             --no-local
 
+      - name: Set Diff view branch prefix env
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "BRANCH_PREFIX=$($PR_NUMBER)-type-languages" >> $GITHUB_ENV
+
       - uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
@@ -77,7 +82,7 @@ jobs:
           cd differ
           git init
           git remote add origin ${{ vars.DIFF_VIEW_SSH }}
-          desired_branch="new-version"
+          desired_branch="${{ env.BRANCH_PREFIX }}-new-version"
           # Check if the branch exists on the remote repository
           if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
             echo "The branch $desired_branch already exists on the remote repository."
@@ -115,7 +120,7 @@ jobs:
       - name: Switch to old version repo
         run: |
           cd differ
-          desired_branch="old-version"
+          desired_branch="${{ env.BRANCH_PREFIX }}-old-version"
           # Check if the branch exists on the remote repository
           if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
             echo "The branch $desired_branch already exists on the remote repository."
