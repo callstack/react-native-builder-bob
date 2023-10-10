@@ -17,6 +17,7 @@ export default {
       />
     </>
   ),
+  faviconGlyph: '👷‍♂️',
   footer: {
     text: (
       <span>
