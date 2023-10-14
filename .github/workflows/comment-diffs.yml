@@ -212,23 +212,14 @@ jobs:
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
               
  
-              # Add type to output file
-              message="""<details>
-              <summary>${library_type}/${language}</summary>"""
+            # Add type to output file
+            echo "${library_type} ${language}" >> $output_file
 
-              echo $message >> $output_file
+            # Add changes to output file
+            git diff HEAD~ >> $output_file
 
-              echo "\`\`\`diff" >> $output_file
-              echo """${message}""" >> $output_file
-              echo "\`\`\`" >> $output_file
-
-              # Add changes to output file
-              git diff HEAD~ >> $output_file
-
-              echo "</details>" >> $output_file
-
-              # Add empty line
-              echo \ >> $output_file
+            # Add empty line
+            echo \ >> $output_file
             fi
           }
 
@@ -292,11 +283,44 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            const replaceTable = {
+              "module-legacy": "Native module",
+              "module-mixed": "Turbo module with backward compat",
+              "module-new": "Turbo module",
+              "view-legacy": "Native view",
+              "view-mixed": "Fabric view with backward compat",
+              "view-new": "Fabric view",
+              "java-objc": "Java and Objective C",
+              "java-swift": "Java and Swift",
+              "kotlin-objc": "Kotlin and Objective C",
+              "kotlin-swift": "Kotlin and Swift"
+            }
+
             const artifacts = `${{ steps.artifacts.outputs.ARTIFACTS }}`;
+
+            // Get every input by empty line
+
+            const splittedArtifacts = artifacts.split("\n\n")
+            const parsedArtifacts = splittedArtifacts.map((artifact) => {
+              // The first line indicates the type
+              const type = artifacts.split("\n").shift()
+              const typeReplaced = Object.entries(replaceTable).reduce((acc, [key, value]) => {
+                return acc.replace(new RegExp(key, "g"), value);
+              }, type)
+
+              return `<details>
+                <summary>${typeReplaced}</summary>
+                \`\`\`diff
+                ${artifact}
+                \`\`\`
+                </details>
+
+                `
+            })
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
 
-            ${artifacts}
+            ${parsedArtifacts}
             `;
 
             const comments = await github.issues.listComments({
@@ -313,4 +337,4 @@ jobs:
               repo: context.repo.repo,
               body
             })
-          
+                      
