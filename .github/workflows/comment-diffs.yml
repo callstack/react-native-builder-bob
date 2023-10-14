@@ -308,14 +308,7 @@ jobs:
                 return acc.replace(new RegExp(key, "g"), value);
               }, type)
 
-              return `<details>
-                <summary>${typeReplaced}</summary>
-                \`\`\`diff
-                ${artifact}
-                \`\`\`
-                </details>
-
-                `
+              return `<details><summary>${typeReplaced}</summary>\n\`\`\`diff\n${artifact}\n\`\`\`\n\n</details>\n\n`;
             })
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
