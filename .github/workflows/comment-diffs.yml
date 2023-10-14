@@ -145,7 +145,6 @@ jobs:
           source ../configMatrix/configMatrix.sh
 
           output_path="../outputs"
-          output_file="$output_path/output.txt"
 
           mkdir -p "$output_path"
 
@@ -155,6 +154,7 @@ jobs:
           function copy_commit_diff(){
             library_type=$1
             language=$2
+            output_file="$output_path/$library_type-$language.txt"
 
             path_prefix="../test/$library_type/$language"
             target_path_new_version="$path_prefix/new-version"
@@ -211,15 +211,8 @@ jobs:
               # Add output to file
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
               
- 
-            # Add type to output file
-            echo "${library_type} ${language}" >> $output_file
-
             # Add changes to output file
             git diff HEAD~ >> $output_file
-
-            # Add empty line
-            echo \ >> $output_file
             fi
           }
 
@@ -281,10 +274,6 @@ jobs:
           script: |
             const fs = require('fs');
 
-            fs.readdirSync('./outputs').forEach(file => {
-              console.log(file);
-            });
-
             const replaceTable = {
               "module-legacy": "Native module",
               "module-mixed": "Turbo module with backward compat",
@@ -298,19 +287,16 @@ jobs:
               "kotlin-swift": "Kotlin and Swift"
             }
 
-            const artifacts = `${{ steps.artifacts.outputs.ARTIFACTS }}`;
+            const parsedArtifacts = fs.readdirSync('./outputs').map(fileName => {
+              const [type, language] = fileName.split("-");
 
-            // Get every input by empty line
-
-            const splittedArtifacts = artifacts.split("\n\n")
-            const parsedArtifacts = splittedArtifacts.map((artifact) => {
-              // The first line indicates the type
-              const type = artifacts.split("\n").shift()
-              const typeReplaced = Object.entries(replaceTable).reduce((acc, [key, value]) => {
+              const header = Object.entries(replaceTable).reduce((acc, [key, value]) => {
                 return acc.replace(new RegExp(key, "g"), value);
-              }, type)
+              }, `${type} ${language}`);
 
-              return `<details><summary>${typeReplaced}</summary>\n\n\`\`\`diff\n${artifact}\n\`\`\`\n</details>\n\n`;
+              const fileContents = fs.readFileSync(`./outputs/${fileName}`, 'utf8');
+
+              return `<details><summary>${header}</summary>\n\n\`\`\`diff\n${fileContents}\n\`\`\`\n</details>\n\n`;
             })
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
