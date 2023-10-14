@@ -17,17 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test export
-        run: |
-          source ./.github/workflows/configMatrix.sh
-          for libraryType in "${libraryTypes[@]}"; do
-            for language in "${languages[@]}"; do
-              if [[ ! "${exclude[*]}" =~ ${libraryType}/${language} ]]; then
-                echo "$libraryType" "$language"
-              fi
-            done
-          done
-
       - name: Setup
         uses: ./.github/actions/setup
       
@@ -37,21 +26,38 @@ jobs:
       
       - name: Create old version libraries
         run: |
+          # Source all the configuration values to load $languages, $types, and $exclude
           source ./.github/workflows/configMatrix.sh
-          echo "$languages"
 
-          ./packages/create-react-native-library/bin/create-react-native-library new-version \
-            --slug @bob/react-native-test \
-            --description test \
-            --author-name test \
-            --author-email test@test \
-            --author-url https://test.test \
-            --repo-url https://test.test \
-            --type ${{ matrix.type }} \
-            --languages ${{ matrix.language }} \
-            --no-example \
-            --no-local \
-            --react-native-version 0.73.0-rc.2      
+          create_library() {
+            library_type=$1
+            language=$2
+
+            echo "Generating $library_type/$language"
+            path_prefix="../test/$library_type/$language"
+            target_path="$path_prefix/new-version"
+
+            npx create-react-native-library "$target_path" \
+              --slug @bob/react-native-test \
+              --description test \
+              --author-name test \
+              --author-email test@test \
+              --author-url https://test.test \
+              --repo-url https://test.test \
+              --type "$library_type" \
+              --languages "$language" \
+              --no-example \
+              --no-local \
+              --react-native-version 0.73.0-rc.2 
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                create_library "$library_type" "$language"
+              fi
+            done
+          done
 
       - name: Fetch main
         run: git fetch origin main
@@ -69,32 +75,48 @@ jobs:
       
       - name: Create library again
         run: |
-          ./packages/create-react-native-library/bin/create-react-native-library old-version \
-            --slug @bob/react-native-test \
-            --description test \
-            --author-name test \
-            --author-email test@test \
-            --author-url https://test.test \
-            --repo-url https://test.test \
-            --type ${{ matrix.type }} \
-            --languages ${{ matrix.language }} \
-            --no-example \
-            --no-local \
-            --react-native-version 0.73.0-rc.2      
+          # Source all the configuration values to load $languages, $types, and $exclude
+          source ./.github/workflows/configMatrix.sh
 
-      - name: Set Diff view branch prefix env
-        run: |
-          BRANCH_PREFIX="${{ github.event.number }}-${{ matrix.type }}-${{ matrix.language }}"
-          echo "OLD_VERSION_BRANCH=$BRANCH_PREFIX-old-version" >> $GITHUB_ENV
-          echo "NEW_VERSION_BRANCH=$BRANCH_PREFIX-new-version" >> $GITHUB_ENV
+          create_library() {
+            library_type=$1
+            language=$2
 
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+            echo "Running $library_type/$language"
+            path_prefix="../test/$library_type/$language"
+            target_path="$path_prefix/old-version"
+
+            npx create-react-native-library "$target_path" \
+              --slug @bob/react-native-test \
+              --description test \
+              --author-name test \
+              --author-email test@test \
+              --author-url https://test.test \
+              --repo-url https://test.test \
+              --type "$library_type" \
+              --languages "$language" \
+              --no-example \
+              --no-local \
+              --react-native-version 0.73.0-rc.2 
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                create_library "$library_type" "$language"
+              fi
+            done
+          done
+
+          cd ..
+          echo "$PWD"
+
+      # - uses: webfactory/ssh-agent@v0.7.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
 
       - name: Create the Differ repo
         run: |
-          echo ${{ vars.DIFF_VIEW_SSH }}
           mkdir differ
           cd differ
           git init
