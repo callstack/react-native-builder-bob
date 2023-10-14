@@ -129,10 +129,6 @@ jobs:
             git checkout -b "$desired_branch"  # Create a new branch and switch to it
           fi
 
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
-
       - name: Initiate diffs
         id: create-diffs
         run: |
