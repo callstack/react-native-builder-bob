@@ -291,7 +291,7 @@ jobs:
 
               const header = Object.entries(replaceTable).reduce((acc, [key, value]) => {
                 return acc.replace(new RegExp(key, "g"), value);
-              }, `${type} ${language}`);
+              }, `${language} ${type}`);
 
               const fileContents = fs.readFileSync(`./outputs/${fileName}`, 'utf8');
 
