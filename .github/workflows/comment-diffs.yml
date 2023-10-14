@@ -220,11 +220,17 @@ jobs:
             echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
           fi
 
+          # Remove outputs if it exists
+          rm -rf ./outputs || true
+
+          # Copy the outputs to cwd
+          cp -r $output_path ./outputs
+
       - uses: actions/upload-artifact@v3
         if: ${{ steps.create-diffs.outputs.DIFF_IS_NON_EMPTY == '1' }}
         with:
           name: outputs
-          path: ../outputs/*.txt
+          path: outputs/*.txt
 
   read-artifacts-and-comment:
     name: Read the artifacts and comment
