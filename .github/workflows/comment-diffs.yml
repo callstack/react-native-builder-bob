@@ -154,6 +154,7 @@ jobs:
           function copy_commit_diff(){
             library_type=$1
             language=$2
+
             output_file="$output_path/$library_type-$language.txt"
 
             path_prefix="../test/$library_type/$language"
@@ -213,6 +214,7 @@ jobs:
               
               # Add changes to output file
               git diff HEAD~ >> $output_file
+              echo "$output_file"
             fi
           }
 
