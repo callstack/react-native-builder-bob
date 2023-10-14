@@ -211,8 +211,8 @@ jobs:
               # Add output to file
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
               
-            # Add changes to output file
-            git diff HEAD~ >> $output_file
+              # Add changes to output file
+              git diff HEAD~ >> $output_file
             fi
           }
 
