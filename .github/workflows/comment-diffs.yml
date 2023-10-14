@@ -124,7 +124,10 @@ jobs:
           done
 
       - name: Remove everything
-        run: rm -rf ./*
+        run: |
+          # Remove everything except the .git folder
+          for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
+          rm -rf ./.git
 
       - name: Checkout
         # uses: checkout
