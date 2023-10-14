@@ -34,11 +34,6 @@ jobs:
           cache-install-state: false 
           cache-node-modules: false
 
-      - name: Get hash of yarn lock
-        id: yarn-lock-hash
-        run: |
-          echo "YARN_LOCK_HASH=${{ hashFiles('./yarn.lock') }}" >> $GITHUB_OUTPUT
-      
       - name: Build crnl
         run: |
           yarn workspace create-react-native-library prepare
@@ -81,8 +76,7 @@ jobs:
             done
           done
       
-      - name: Setup again #
-        if: ${{ steps.yarn-lock-hash.outputs.YARN_LOCK_HASH != hashFiles('./yarn.lock') }}
+      - name: Setup again
         uses: ./.github/actions/setup
         with:
           cache-npm-cache: true
