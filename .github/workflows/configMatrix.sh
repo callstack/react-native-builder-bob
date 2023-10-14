@@ -4,18 +4,18 @@
 
 export libraryTypes=( 
   module-legacy 
-  module-mixed 
-  module-new 
-  view-legacy 
-  view-mixed 
-  view-new 
+  # module-mixed 
+  # module-new 
+  # view-legacy 
+  # view-mixed 
+  # view-new 
 )
 
 export languages=( 
   java-objc 
-  java-swift 
-  kotlin-objc 
-  kotlin-swift 
+  # java-swift 
+  # kotlin-objc 
+  # kotlin-swift 
 )
 
 export exclude=(
