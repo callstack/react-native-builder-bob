@@ -17,6 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Copy config matrix to persist it
+        run: |
+          mkdir ../configMatrix
+          cp ./.github/workflows/configMatrix.sh ../configMatrix/
+
       - name: Setup
         uses: ./.github/actions/setup
       
@@ -27,7 +32,7 @@ jobs:
       - name: Create old version libraries
         run: |
           # Source all the configuration values to load $languages, $types, and $exclude
-          source ./.github/workflows/configMatrix.sh
+          source ../configMatrix/configMatrix.sh
 
           create_library() {
             library_type=$1
@@ -49,6 +54,9 @@ jobs:
               --no-example \
               --no-local \
               --react-native-version 0.73.0-rc.2 
+
+            # Remove the .git folder of the created library
+            rm -rf "$target_path/.git"
           }
 
           for library_type in "${libraryTypes[@]}"; do
@@ -58,12 +66,6 @@ jobs:
               fi
             done
           done
-
-      - name: Fetch main
-        run: git fetch origin main
-      
-      - name: Checkout main
-        run: git checkout origin/main
       
       # - name: Setup again # Add a check here to setup again if deps changed
       #   uses: ./.github/actions/setup
@@ -76,7 +78,10 @@ jobs:
       - name: Create library again
         run: |
           # Source all the configuration values to load $languages, $types, and $exclude
-          source ./.github/workflows/configMatrix.sh
+          source ../configMatrix/configMatrix.sh
+
+          git fetch origin main
+          git checkout origin/main
 
           create_library() {
             library_type=$1
@@ -98,6 +103,9 @@ jobs:
               --no-example \
               --no-local \
               --react-native-version 0.73.0-rc.2 
+
+            # Remove the .git folder of the created library
+            rm -rf "$target_path/.git"
           }
 
           for library_type in "${libraryTypes[@]}"; do
@@ -108,20 +116,9 @@ jobs:
             done
           done
 
-          cd ..
-          echo "$PWD"
-
-      # - uses: webfactory/ssh-agent@v0.7.0
-      #   with:
-      #     ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
-
-      - name: Create the Differ repo
+      - name: Switch to diffs branch
         run: |
-          mkdir differ
-          cd differ
-          git init
-          git remote add origin ${{ vars.DIFF_VIEW_SSH }}
-          desired_branch="${{ env.NEW_VERSION_BRANCH }}"
+          desired_branch="diffs"
           # Check if the branch exists on the remote repository
           if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
             echo "The branch $desired_branch already exists on the remote repository."
@@ -131,6 +128,82 @@ jobs:
             echo "The branch $desired_branch does not exist on the remote repository."
             git checkout -b "$desired_branch"  # Create a new branch and switch to it
           fi
+
+      - name: Initiate diffs
+        run: |
+          # Source all the configuration values to load $languages, $types, and $exclude
+          source ../configMatrix/configMatrix.sh
+
+          output_path="../output"
+          output_file="$output_path/output.txt"
+
+          mkdir -p "$output_path"
+
+          function copy_commit_diff(){
+            library_type=$1
+            language=$2
+
+            path_prefix="../test/$library_type/$language"
+            target_path_new_version="$path_prefix/new-version"
+            target_path_old_version="$path_prefix/old-version"
+
+            # Remove everything except the .git folder
+            for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
+
+            # Copy the old version
+            cp -r "$target_path_old_version/." .
+
+            git config --global user.email "text@test.com"
+            git config --global user.name "Github actions test"
+
+            # Add all files and commit
+            git add -A || true && git commit -m "Automatic commit" || true
+
+            # Remove everything except the .git folder
+            for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
+
+            # Copy the new version
+            cp -r "$target_path_new_version/." .
+
+            # Add all files and commit
+            git add -A || true && git commit -m "Automatic commit" || true
+
+            # echo diff
+            echo $(git diff HEAD~)
+
+            # Check if there is a diff
+            if git diff --quiet HEAD~; then
+              echo "No diff"
+            else
+              # Push the branches
+              git push --set-upstream origin diffs
+
+              # Get new version remote commit hash
+              new_version_commit_hash=$(git rev-parse --short origin/diffs)
+
+              # Get old version remote commit hash
+              old_version_commit_hash=$(git rev-parse --short origin/diffs~)
+
+              # Add output to file
+              echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
+
+              # Add empty line
+              echo \ >> $output_file
+            fi
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                copy_commit_diff "$library_type" "$language"
+              fi
+            done
+          done
+
+
+      # - uses: webfactory/ssh-agent@v0.7.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
 
       - name: Clean the Differ repo
         run: |
