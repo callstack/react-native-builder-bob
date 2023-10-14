@@ -8,6 +8,7 @@ on:
       - '.github/workflows/comment-diffs.yml'
       - 'packages/create-react-native-library/**'
       - '!**.md'
+permissions: write-all
 
 jobs:
   generate-diffs-if-needed:
