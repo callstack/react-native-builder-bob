@@ -16,41 +16,41 @@ jobs:
           fail-fast: false
           matrix:
             type:
-              - module-legacy
+              # - module-legacy
               - module-mixed
-              - module-new
-              - view-legacy
+              # - module-new
+              # - view-legacy
               - view-mixed
-              - view-new
+              # - view-new
             language:
               - java-objc
-              - java-swift
-              - kotlin-objc
-              - kotlin-swift
-            exclude:
-              - type: module-new
-                language: java-swift
-              - type: module-new
-                language: kotlin-swift
-              - type: module-mixed
-                language: java-swift
-              - type: module-mixed
-                language: kotlin-swift
-              - type: view-new
-                language: java-swift
-              - type: view-new
-                language: kotlin-swift
-              - type: view-mixed
-                language: java-swift
-              - type: view-mixed
-                language: kotlin-swift
+              # - java-swift
+              # - kotlin-objc
+              # - kotlin-swift
+            # exclude:
+            #   - type: module-new
+            #     language: java-swift
+            #   - type: module-new
+            #     language: kotlin-swift
+            #   - type: module-mixed
+            #     language: java-swift
+            #   - type: module-mixed
+            #     language: kotlin-swift
+            #   - type: view-new
+            #     language: java-swift
+            #   - type: view-new
+            #     language: kotlin-swift
+            #   - type: view-mixed
+            #     language: java-swift
+            #   - type: view-mixed
+            #     language: kotlin-swift
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
     # TODO: use ubuntu once CLI is fixed
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -74,8 +74,9 @@ jobs:
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
             --no-example \
-            --no-local
-      
+            --no-local \
+            --react-native-version 0.73.0-rc.2      
+
       - name: Fetch main
         run: git fetch origin main
       
@@ -103,7 +104,8 @@ jobs:
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
             --no-example \
-            --no-local
+            --no-local \
+            --react-native-version 0.73.0-rc.2      
 
       - name: Set Diff view branch prefix env
         run: |
