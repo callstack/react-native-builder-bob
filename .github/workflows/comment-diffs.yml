@@ -31,8 +31,8 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cache-npm-cache: true
-          cache-node-modules: true
-          cache-install-state: true 
+          cache-install-state: false 
+          cache-node-modules: false
 
       - name: Get hash of yarn lock
         id: yarn-lock-hash
@@ -86,8 +86,8 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cache-npm-cache: true
-          cache-node-modules: true
-          cache-install-state: true 
+          cache-install-state: false 
+          cache-node-modules: false
       
       - name: Remove old build and build again
         run: |
