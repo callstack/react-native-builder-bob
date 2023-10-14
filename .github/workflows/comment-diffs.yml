@@ -299,7 +299,7 @@ jobs:
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
 
-            ${parsedArtifacts}
+            ${parsedArtifacts.join("")}
             `;
 
             const comments = await github.issues.listComments({
