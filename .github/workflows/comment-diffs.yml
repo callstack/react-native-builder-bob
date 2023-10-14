@@ -20,8 +20,13 @@ jobs:
       - name: Test export
         run: |
           source ./.github/workflows/configMatrix.sh
-          echo "$languages"
-          exit -1
+          for libraryType in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${libraryType}/${language} ]]; then
+                echo "$libraryType" "$language"
+              fi
+            done
+          done
 
       - name: Setup
         uses: ./.github/actions/setup

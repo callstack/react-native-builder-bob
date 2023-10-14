@@ -11,11 +11,11 @@ export libraryTypes=(
   view-new 
 )
 
-export languages=( \
-  java-objc \
-  java-swift \
-  kotlin-objc \
-  kotlin-swift \
+export languages=( 
+  java-objc 
+  java-swift 
+  kotlin-objc 
+  kotlin-swift 
 )
 
 export exclude=(
