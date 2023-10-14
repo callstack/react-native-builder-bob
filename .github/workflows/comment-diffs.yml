@@ -224,7 +224,7 @@ jobs:
             done
           done
 
-          if ls outputs/*.txt; then
+          if ls "$output_path/*.txt"; then
             echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
           else
             echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
