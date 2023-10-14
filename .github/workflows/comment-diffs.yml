@@ -23,8 +23,14 @@ jobs:
           mkdir ../configMatrix
           cp ./.github/workflows/configMatrix.sh ../configMatrix/
 
-      - name: Setup
-        uses: ./.github/actions/setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        shell: bash
       
       - name: Build crnl
         run: |
