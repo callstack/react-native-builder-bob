@@ -8,7 +8,6 @@ on:
       - '.github/workflows/comment-diffs.yml'
       - 'packages/create-react-native-library/**'
       - '!**.md'
-permissions: write-all
 
 jobs:
   generate-diffs-if-needed:
@@ -31,9 +30,14 @@ jobs:
       - name: 📥 Monorepo install
         uses: ./.github/actions/setup
         with:
-          enable-corepack: false 
+          cache-npm-cache: true
           cache-node-modules: true
           cache-install-state: true 
+
+      - name: Get hash of yarn lock
+        id: yarn-lock-hash
+        run: |
+          echo "YARN_LOCK_HASH=${{ hashFiles('./yarn.lock') }}" >> $GITHUB_OUTPUT
       
       - name: Build crnl
         run: |
@@ -77,8 +81,13 @@ jobs:
             done
           done
       
-      # - name: Setup again # Add a check here to setup again if deps changed
-      #   uses: ./.github/actions/setup
+      - name: Setup again #
+        if: ${{ steps.yarn-lock-hash.outputs.YARN_LOCK_HASH != hashFiles('./yarn.lock') }}
+        uses: ./.github/actions/setup
+        with:
+          cache-npm-cache: true
+          cache-node-modules: true
+          cache-install-state: true 
       
       - name: Remove old build and build again
         run: |
@@ -128,10 +137,7 @@ jobs:
           done
 
       - name: Remove everything
-        run: |
-          # Remove everything except the .git folder
-          for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
-          rm -rf ./.git
+        run: for i in $(ls) ; do rm -rf "$i"; done;
 
       - name: Checkout
         # uses: checkout
