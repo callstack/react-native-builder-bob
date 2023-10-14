@@ -224,8 +224,7 @@ jobs:
             done
           done
 
-          if [ -s "$output_file" ]; then
-            cat $output_file
+          if ls outputs/*.txt; then
             echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
           else
             echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
