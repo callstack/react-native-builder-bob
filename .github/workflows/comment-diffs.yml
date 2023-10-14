@@ -28,9 +28,11 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install dependencies
-        run: yarn install --immutable
-        shell: bash
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/setup
+        with:
+          cache-node-modules: true
+          cache-install-state: true 
       
       - name: Build crnl
         run: |
