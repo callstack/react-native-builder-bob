@@ -170,7 +170,7 @@ jobs:
             # Add all files and commit
             git add -A || true 
 
-            if git commit -m "Automatic commit"; then
+            if git commit -qm "Automatic commit"; then
               echo "Commit successful"
             else
               echo "No changes"
@@ -186,15 +186,12 @@ jobs:
             # Add all files and commit
             git add -A || true 
 
-            if git commit -m "Automatic commit"; then
-            echo "Commit successful"
+            if git commit -qm "Automatic commit"; then
+              echo "Commit successful"
             else
-            echo "No changes"
-            return
+              echo "No changes"
+              return
             fi
-
-            # echo diff
-            echo $(git diff HEAD~)
 
             # Check if there is a diff
             if git diff --quiet HEAD~; then
@@ -213,6 +210,8 @@ jobs:
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
               
               # Add changes to output file
+              echo $(git diff HEAD~)
+
               git diff HEAD~ >> $output_file
               echo "$output_file"
             fi
