@@ -77,11 +77,7 @@ jobs:
           done
       
       - name: Setup again
-        uses: ./.github/actions/setup
-        with:
-          cache-npm-cache: true
-          cache-install-state: false 
-          cache-node-modules: false
+        run: yarn install
       
       - name: Remove old build and build again
         run: |
