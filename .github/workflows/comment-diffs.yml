@@ -83,9 +83,8 @@ jobs:
       - name: Checkout main
         run: git checkout origin/main
       
-      # Removed this step for the sake of testing
-      # - name: Setup again # Add a check here to setup again if deps changed
-      #   uses: ./.github/actions/setup
+      - name: Setup again # Add a check here to setup again if deps changed
+        uses: ./.github/actions/setup
       
       - name: Remove old build and build again
         run: |
