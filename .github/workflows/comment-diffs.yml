@@ -155,7 +155,7 @@ jobs:
             library_type=$1
             language=$2
 
-            output_file="$output_path/$library_type-$language.txt"
+            output_file="$output_path/$library_type+$language.txt"
 
             path_prefix="../test/$library_type/$language"
             target_path_new_version="$path_prefix/new-version"
@@ -208,12 +208,10 @@ jobs:
 
               # Add output to file
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
-              
-              # Add changes to output file
-              echo $(git diff HEAD~)
-
               git diff HEAD~ >> $output_file
               echo "$output_file"
+
+              cat "$output_file"
             fi
           }
 
@@ -288,7 +286,7 @@ jobs:
             }
 
             const parsedArtifacts = fs.readdirSync('./outputs').map(fileName => {
-              const [type, language] = fileName.split("-");
+              const [type, language] = fileName.split("+");
 
               const header = Object.entries(replaceTable).reduce((acc, [key, value]) => {
                 return acc.replace(new RegExp(key, "g"), value);
