@@ -55,5 +55,8 @@
     "tabWidth": 2,
     "trailingComma": "es5",
     "useTabs": false
+  },
+  "dependencies": {
+    "leftpad": "^0.0.1"
   }
 }
