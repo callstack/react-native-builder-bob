@@ -178,16 +178,27 @@ jobs:
               echo "No diff"
             else
               # Push the branches
-              git push --set-upstream origin diffs
+              # git push --set-upstream origin diffs
 
               # Get new version remote commit hash
-              new_version_commit_hash=$(git rev-parse --short origin/diffs)
+              # new_version_commit_hash=$(git rev-parse --short origin/diffs)
 
               # Get old version remote commit hash
-              old_version_commit_hash=$(git rev-parse --short origin/diffs~)
+              # old_version_commit_hash=$(git rev-parse --short origin/diffs~)
 
               # Add output to file
-              echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
+              # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
+              
+ 
+              # Add type to output file
+              message="""<details>
+              <summary>${library_type}/${language}</summary>"""
+              echo """${message}""" >> $output_file
+
+              # Add changes to output file
+              git diff HEAD~ >> $output_file
+
+              echo "</details>" >> $output_file
 
               # Add empty line
               echo \ >> $output_file
@@ -203,6 +214,7 @@ jobs:
           done
 
           if [ -s "$output_file" ]; then
+            cat $output_file
             echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
           else
             echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
