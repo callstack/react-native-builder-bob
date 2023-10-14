@@ -129,12 +129,17 @@ jobs:
             git checkout -b "$desired_branch"  # Create a new branch and switch to it
           fi
 
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
+
       - name: Initiate diffs
+        id: create-diffs
         run: |
           # Source all the configuration values to load $languages, $types, and $exclude
           source ../configMatrix/configMatrix.sh
 
-          output_path="../output"
+          output_path="../outputs"
           output_file="$output_path/output.txt"
 
           mkdir -p "$output_path"
@@ -200,102 +205,17 @@ jobs:
             done
           done
 
-
-      # - uses: webfactory/ssh-agent@v0.7.0
-      #   with:
-      #     ssh-private-key: ${{ secrets.SSH_DEPLOY_KEY }}
-
-      - name: Clean the Differ repo
-        run: |
-          cd differ
-          # Remove everything except the .git folder and it's contents.
-          for i in `ls | grep -v ".git"` ; do rm -rf $i; done;
-
-      - name: Delete .git of new-version
-        run: |
-          rm -rf new-version/.git
-
-      - name: Copy everything inside new-version to differ
-        run: |
-          cp -r new-version/* differ
-
-      - name: Commit everything in differ
-        id: commit-new
-        run: |
-          git config --global user.email "text@test.com"
-          git config --global user.name "Github actions test"
-          cd differ
-          git add -A || true && git commit -m "Automatic commit" || true
-
-      - name: Switch to old version repo
-        run: |
-          cd differ
-          desired_branch="${{ env.OLD_VERSION_BRANCH }}"
-          # Check if the branch exists on the remote repository
-          if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
-            echo "The branch $desired_branch already exists on the remote repository."
-            git fetch origin "$desired_branch"  # Fetch the branch from the remote
-            git checkout "$desired_branch"     # Switch to the existing branch
+          if [ -s "$output_file" ]; then
+            echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
           else
-            echo "The branch $desired_branch does not exist on the remote repository."
-            git checkout -b "$desired_branch"  # Create a new branch and switch to it
+            echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
           fi
-
-      - name: Clean the Differ repo
-        run: |
-          cd differ
-          # Remove everything except the .git folder and it's contents.
-          for i in `ls | grep -v ".git"` ; do rm -rf $i; done;
-
-      - name: Delete .git of old-version
-        run: |
-          rm -rf old-version/.git
-
-      - name: Copy everything inside new-version to differ
-        run: |
-          cp -r old-version/* differ
-
-      - name: Commit everything in differ
-        run: |
-          git config --global user.email "text@test.com"
-          git config --global user.name "Github actions test"
-          cd differ
-          git add -A || true && git commit -m "Automatic commit" || true
-
-
-      - name: Check if the diff is non-empty
-        id: check-is-diff-non-empty
-        run: |
-          cd differ
-          if git diff --quiet ${{ env.OLD_VERSION_BRANCH }}..${{ env.NEW_VERSION_BRANCH }}; then
-            result=0 # Diff is empty
-          else
-            result=1 # Diff is not empty
-          fi
-          echo "DIFF_IS_NON_EMPTY=$result" >> $GITHUB_OUTPUT
-          
-      - name: Push repos
-        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
-        id: push
-        run: |
-          cd differ
-          git push --set-upstream origin ${{ env.OLD_VERSION_BRANCH }}
-          echo "OLD_COMMIT_HASH=$(git rev-parse --short origin/${{ env.OLD_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
-          git checkout ${{ env.NEW_VERSION_BRANCH }}
-          git push --set-upstream origin ${{ env.NEW_VERSION_BRANCH }}
-          echo "NEW_COMMIT_HASH=$(git rev-parse --short origin/${{ env.NEW_VERSION_BRANCH }})" >> $GITHUB_OUTPUT
-
-      - name: Write changes to common file
-        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
-        run: |
-          mkdir outputs
-          echo "- [${{ matrix.language }} ${{ matrix.type }}](https://github.com/${{ vars.DIFF_VIEW_USERNAME }}/${{ vars.DIFF_VIEW_REPO_NAME }}/compare/${{ steps.push.outputs.OLD_COMMIT_HASH }}..${{ steps.push.outputs.NEW_COMMIT_HASH }})" >> outputs/${{ matrix.type }}-${{ matrix.language }}.txt
 
       - uses: actions/upload-artifact@v3
-        if: ${{ steps.check-is-diff-non-empty.outputs.DIFF_IS_NON_EMPTY == '1' }}
+        if: ${{ steps.create-diffs.outputs.DIFF_IS_NON_EMPTY == '1' }}
         with:
           name: outputs
-          path: outputs/*.txt
+          path: ../outputs/*.txt
 
   read-artifacts-and-comment:
     name: Read the artifacts and comment
