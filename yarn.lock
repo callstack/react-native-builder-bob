@@ -8227,13 +8227,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leftpad@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "leftpad@npm:0.0.1"
-  checksum: ca725b724fe748086385d6bdea80a0b76519b8fddeec0d200e7eaa214a57ec5d8e2687561547478af57020418b1015be00c4ffb982b3100ca09b902ec87fb7ac
-  languageName: node
-  linkType: hard
-
 "levn@npm:^0.4.1":
   version: 0.4.1
   resolution: "levn@npm:0.4.1"
@@ -11588,7 +11581,6 @@ __metadata:
     concurrently: ^7.2.2
     eslint: ^8.18.0
     eslint-config-satya164: ^3.1.11
-    leftpad: ^0.0.1
     prettier: ^2.7.1
     typescript: ^5.0.2
   languageName: unknown
