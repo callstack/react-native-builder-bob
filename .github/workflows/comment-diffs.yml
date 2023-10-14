@@ -213,9 +213,11 @@ jobs:
               message="""<details>
               <summary>${library_type}/${language}</summary>"""
 
-              echo "```diff" >> $output_file
+              echo $message >> $output_file
+
+              echo "\`\`\`diff" >> $output_file
               echo """${message}""" >> $output_file
-              echo "```" >> $output_file
+              echo "\`\`\`" >> $output_file
 
               # Add changes to output file
               git diff HEAD~ >> $output_file
