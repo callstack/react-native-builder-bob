@@ -234,6 +234,7 @@ jobs:
     steps:
       - name: Load outputs
         uses: actions/download-artifact@v3
+        continue-on-error: true
         with:
           name: outputs
           path: outputs
