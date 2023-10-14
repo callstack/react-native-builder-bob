@@ -89,6 +89,7 @@ jobs:
 
           git fetch origin main
           git checkout origin/main
+          git pull || true
 
           create_library() {
             library_type=$1
