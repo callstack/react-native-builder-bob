@@ -129,10 +129,8 @@ jobs:
       - name: Remove everything
         run: for i in $(ls) ; do rm -rf "$i"; done;
 
-      - name: Checkout
-        # uses: checkout
-        run: |
-          git init
+      - name: Create new empty repo
+        run: git init
 
       - name: Initiate diffs
         id: create-diffs
@@ -141,9 +139,9 @@ jobs:
           source ../configMatrix/configMatrix.sh
 
           output_path="../outputs"
-
           mkdir -p "$output_path"
 
+          # Set author
           git config --global user.email "text@test.com"
           git config --global user.name "Github actions test"
 
@@ -225,7 +223,7 @@ jobs:
             echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
           fi
 
-          # Remove outputs if it exists
+          # Remove outputs folder in cwd if it exists
           rm -rf ./outputs || true
 
           # Copy the outputs to cwd
@@ -285,13 +283,13 @@ jobs:
             const parsedArtifacts = fs.readdirSync('./outputs').map(fileName => {
               const [type, language] = fileName.split("+");
 
-              const header = Object.entries(replaceTable).reduce((acc, [key, value]) => {
+              const title = Object.entries(replaceTable).reduce((acc, [key, value]) => {
                 return acc.replace(new RegExp(key, "g"), value);
               }, `${language} ${type}`);
 
               const fileContents = fs.readFileSync(`./outputs/${fileName}`, 'utf8');
 
-              return `<details><summary>${header}</summary>\n\n\`\`\`diff\n${fileContents}\n\`\`\`\n</details>\n\n`;
+              return `<details><summary>${title}</summary>\n\n\`\`\`diff\n${fileContents}\n\`\`\`\n</details>\n\n`;
             })
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
