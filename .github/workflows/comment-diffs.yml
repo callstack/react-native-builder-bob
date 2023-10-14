@@ -7,7 +7,6 @@ on:
     paths:
       - '.github/workflows/comment-diffs.yml'
       - 'packages/create-react-native-library/**'
-      - '!**.md'
 
 jobs:
   generate-diffs-if-needed:
@@ -61,8 +60,7 @@ jobs:
               --type "$library_type" \
               --languages "$language" \
               --no-example \
-              --no-local \
-              --react-native-version 0.73.0-rc.2 
+              --no-local
 
             # Remove the .git folder of the created library
             rm -rf "$target_path/.git"
@@ -111,8 +109,7 @@ jobs:
               --type "$library_type" \
               --languages "$language" \
               --no-example \
-              --no-local \
-              --react-native-version 0.73.0-rc.2 
+              --no-local
 
             # Remove the .git folder of the created library
             rm -rf "$target_path/.git"
