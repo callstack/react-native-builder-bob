@@ -117,18 +117,13 @@ jobs:
             done
           done
 
-      - name: Switch to diffs branch
+      - name: Remove everything
+        run: rm -rf *
+
+      - name: Checkout
+        # uses: checkout
         run: |
-          desired_branch="diffs"
-          # Check if the branch exists on the remote repository
-          if git ls-remote --heads origin "$desired_branch" | grep -q "$desired_branch"; then
-            echo "The branch $desired_branch already exists on the remote repository."
-            git fetch origin "$desired_branch"  # Fetch the branch from the remote
-            git checkout "$desired_branch"     # Switch to the existing branch
-          else
-            echo "The branch $desired_branch does not exist on the remote repository."
-            git checkout -b "$desired_branch"  # Create a new branch and switch to it
-          fi
+          git init
 
       - name: Initiate diffs
         id: create-diffs
@@ -265,28 +260,11 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const replaceTable = {
-              "module-legacy": "Native module",
-              "module-mixed": "Turbo module with backward compat",
-              "module-new": "Turbo module",
-              "view-legacy": "Native view",
-              "view-mixed": "Fabric view with backward compat",
-              "view-new": "Fabric view",
-              "java-objc": "Java and Objective C",
-              "java-swift": "Java and Swift",
-              "kotlin-objc": "Kotlin and Objective C",
-              "kotlin-swift": "Kotlin and Swift"
-            }
-
             const artifacts = `${{ steps.artifacts.outputs.ARTIFACTS }}`;
-
-            const artifactsReplaced = Object.entries(replaceTable).reduce((acc, [key, value]) => {
-              return acc.replace(new RegExp(key, "g"), value);
-            }, artifacts)
 
             const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
 
-            ${artifactsReplaced}
+            ${artifacts}
             `;
 
             const comments = await github.issues.listComments({
