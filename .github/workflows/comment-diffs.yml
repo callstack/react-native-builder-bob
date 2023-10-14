@@ -124,7 +124,7 @@ jobs:
           done
 
       - name: Remove everything
-        run: rm -rf *
+        run: rm -rf ./*
 
       - name: Checkout
         # uses: checkout
@@ -142,6 +142,9 @@ jobs:
 
           mkdir -p "$output_path"
 
+          git config --global user.email "text@test.com"
+          git config --global user.name "Github actions test"
+
           function copy_commit_diff(){
             library_type=$1
             language=$2
@@ -155,9 +158,6 @@ jobs:
 
             # Copy the old version
             cp -r "$target_path_old_version/." .
-
-            git config --global user.email "text@test.com"
-            git config --global user.name "Github actions test"
 
             # Add all files and commit
             git add -A || true && git commit -m "Automatic commit" || true
