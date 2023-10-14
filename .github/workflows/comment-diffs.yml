@@ -17,6 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Test export
+        run: |
+          source ./.github/workflows/configMatrix.sh
+          echo "$languages"
+          exit -1
+
       - name: Setup
         uses: ./.github/actions/setup
       
