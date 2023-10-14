@@ -223,11 +223,11 @@ jobs:
             done
           done
 
-          if ls "$output_path/*.txt"; then
-            echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
-          else
-            echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
-          fi
+          # if ls "$output_path/*.txt"; then
+          #   echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
+          # else
+          #   echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
+          # fi
 
           # Remove outputs if it exists
           rm -rf ./outputs || true
