@@ -289,7 +289,7 @@ jobs:
               return `<details><summary>${title}</summary>\n\n\`\`\`diff\n${fileContents}\n\`\`\`\n</details>\n\n`;
             })
 
-            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of effected templates below:
+            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of affected templates below:
 
             ${parsedArtifacts.join("")}
             `;
