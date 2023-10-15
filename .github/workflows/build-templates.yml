@@ -113,7 +113,8 @@ jobs:
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
-            --no-local
+            --no-local \
+            --react-native-version 0.73.0-rc.2
 
       - name: Cache dependencies of library
         id: library-yarn-cache
