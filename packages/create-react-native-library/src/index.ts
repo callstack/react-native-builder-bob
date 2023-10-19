@@ -125,18 +125,6 @@ const LANGUAGE_CHOICES: {
   types: ProjectType[];
 }[] = [
   {
-    title: 'Java & Objective-C',
-    value: 'java-objc',
-    types: [
-      'module-legacy',
-      'module-new',
-      'module-mixed',
-      'view-mixed',
-      'view-new',
-      'view-legacy',
-    ],
-  },
-  {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
     types: [
@@ -149,13 +137,25 @@ const LANGUAGE_CHOICES: {
     ],
   },
   {
-    title: 'Java & Swift',
-    value: 'java-swift',
-    types: ['module-legacy', 'view-legacy'],
+    title: 'Java & Objective-C',
+    value: 'java-objc',
+    types: [
+      'module-legacy',
+      'module-new',
+      'module-mixed',
+      'view-mixed',
+      'view-new',
+      'view-legacy',
+    ],
   },
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
+    types: ['module-legacy', 'view-legacy'],
+  },
+  {
+    title: 'Java & Swift',
+    value: 'java-swift',
     types: ['module-legacy', 'view-legacy'],
   },
   {
