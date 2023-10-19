@@ -76,12 +76,6 @@ const SWIFT_FILES = {
   view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
 } as const;
 
-const CPP_VIEW_FILES = {
-  // view_legacy does NOT need component registration
-  view_mixed: path.resolve(__dirname, '../templates/cpp-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/cpp-view-new'),
-} as const;
-
 type ArgName =
   | 'slug'
   | 'description'
@@ -746,12 +740,6 @@ async function create(argv: yargs.Arguments<any>) {
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
       await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
-    }
-
-    if (moduleType === 'view') {
-      if (arch === 'new' || arch === 'mixed') {
-        await copyDir(CPP_VIEW_FILES[`${moduleType}_${arch}`], folder);
-      }
     }
   }
 
