@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.1...create-react-native-library@0.34.2) (2023-10-19)
+
+**Note:** Version bump only for package create-react-native-library
+
 ## [0.34.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.0...create-react-native-library@0.34.1) (2023-10-04)
 
 ### Bug Fixes
