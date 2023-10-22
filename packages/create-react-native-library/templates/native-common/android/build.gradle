@@ -158,7 +158,6 @@ dependencies {
 <% } -%>
 }
 
-<% if (project.arch === "new" || project.arch === "mixed") { -%>
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
@@ -166,4 +165,3 @@ if (isNewArchitectureEnabled()) {
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }
-<% } -%>
