@@ -1,7 +1,7 @@
 import kleur from 'kleur';
 
 const logger =
-  (type: string, color: Function) =>
+  (type: string, color: kleur.Color) =>
   (...messages: unknown[]) => {
     console.log(
       color(kleur.bold(type)),

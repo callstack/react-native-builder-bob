@@ -12,7 +12,7 @@ import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import type { Options } from './types';
 
-// eslint-disable-next-line import/no-commonjs
+// eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
 
 const root = process.cwd();
@@ -22,7 +22,6 @@ const explorer = cosmiconfigSync(name, {
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
-// eslint-disable-next-line babel/no-unused-expressions
 yargs
   .command('init', 'configure the package to use bob', {}, async () => {
     if (isGitDirty()) {

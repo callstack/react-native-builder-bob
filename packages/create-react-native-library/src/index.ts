@@ -263,13 +263,15 @@ const args: Record<ArgName, yargs.Options> = {
   },
 };
 
+// FIXME: fix the type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function create(argv: yargs.Arguments<any>) {
   let local = false;
 
   if (typeof argv.local === 'boolean') {
     local = argv.local;
   } else {
-    let hasPackageJson = await fs.pathExists(
+    const hasPackageJson = await fs.pathExists(
       path.join(process.cwd(), 'package.json')
     );
 
@@ -397,7 +399,7 @@ async function create(argv: yargs.Arguments<any>) {
       type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
-      // @ts-ignore: this is supported, but types are wrong
+      // @ts-expect-error this is supported, but types are wrong
       initial: async (previous: string) => {
         try {
           const username = await githubUsername(previous);
@@ -415,7 +417,6 @@ async function create(argv: yargs.Arguments<any>) {
       type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
-      // @ts-ignore: this is supported, but types are wrong
       initial: (_: string, answers: Answers) => {
         if (/^https?:\/\/github.com\/[^/]+/.test(answers.authorUrl)) {
           return `${answers.authorUrl}/${answers.slug
@@ -550,9 +551,9 @@ async function create(argv: yargs.Arguments<any>) {
 
   try {
     version = await Promise.race([
-      new Promise<string>((resolve) =>
-        setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000)
-      ),
+      new Promise<string>((resolve) => {
+        setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
+      }),
       spawn('npm', ['view', 'react-native-builder-bob', 'dist-tags.latest']),
     ]);
   } catch (e) {
@@ -870,8 +871,8 @@ async function create(argv: yargs.Arguments<any>) {
         .map(
           ([script, { name, color }]) => `
       ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
-            ':'
-          )}
+        ':'
+      )}
 
         ${kleur.gray('$')} yarn example ${script}`
         )
@@ -884,7 +885,7 @@ async function create(argv: yargs.Arguments<any>) {
     );
   }
 }
-// eslint-disable-next-line babel/no-unused-expressions
+
 yargs
   .command('$0 [name]', 'create a react native library', args, create)
   .demandCommand()
