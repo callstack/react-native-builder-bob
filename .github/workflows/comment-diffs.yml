@@ -26,13 +26,9 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Monorepo install
+      - name: Setup
         uses: ./.github/actions/setup
-        with:
-          cache-npm-cache: true
-          cache-install-state: false 
-          cache-node-modules: false
-
+      
       - name: Build crnl
         run: |
           yarn workspace create-react-native-library prepare
@@ -74,8 +70,8 @@ jobs:
             done
           done
       
-      - name: Setup again
-        run: yarn install
+      - name: Setup
+        uses: ./.github/actions/setup
       
       - name: Remove old build and build again
         run: |
