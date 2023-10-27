@@ -18,7 +18,7 @@ type <%- project.name -%>Props = {
 
 const ComponentName = '<%- project.name -%>View';
 
-export default UIManager.getViewManagerConfig(ComponentName) != null
+export UIManager.getViewManagerConfig(ComponentName) != null
   ? requireNativeComponent<<%- project.name -%>Props>(ComponentName)
   : () => {
       throw new Error(LINKING_ERROR);
