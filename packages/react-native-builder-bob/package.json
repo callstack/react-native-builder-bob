@@ -1,6 +1,6 @@
 {
   "name": "react-native-builder-bob",
-  "version": "0.20.4",
+  "version": "0.23.1",
   "description": "CLI to build JavaScript files for React Native libraries",
   "keywords": [
     "react-native",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/callstack/react-native-builder-bob/issues"
   },
-  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
+  "homepage": "https://callstack.github.io/react-native-builder-bob/build",
   "main": "lib/index.js",
   "bin": {
     "bob": "bin/bob"
@@ -26,14 +26,14 @@
     "lib"
   ],
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 18.0.0"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "prepack": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
@@ -55,9 +55,6 @@
     "prompts": "^2.4.2",
     "which": "^2.0.2",
     "yargs": "^17.5.1"
-  },
-  "optionalDependencies": {
-    "jetifier": "^2.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

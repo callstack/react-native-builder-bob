@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
       "create-react-native-library": [
         "./packages/create-react-native-library/src"
@@ -12,7 +12,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "lib": ["esnext", "dom"],
@@ -28,7 +27,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "verbatimModuleSyntax": true
   },
   "exclude": ["lib", "packages/create-react-native-library/templates"]
 }

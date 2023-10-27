@@ -1,10 +1,10 @@
 {
   "name": "<%- project.slug -%>",
   "version": "0.1.0",
-  "description": "test",
+  "description": "<%- project.description %>",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
@@ -14,7 +14,6 @@
     "ios",
     "cpp",
     "*.podspec",
-    "!lib/typescript/example",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -27,22 +26,19 @@
     "!**/.*"
   ],
   "scripts": {
+<% if (example !== 'none') { -%>
+    "example": "yarn workspace <%- project.slug -%>-example",
+<% } -%>
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build",
-    "release": "release-it",
-    "example": "yarn --cwd example",
-<% if (example === 'native' && turborepo) { -%>
-    "build:android": "cd example/android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
-    "build:ios": "cd example/ios && xcodebuild -workspace <%- project.name %>Example.xcworkspace -scheme <%- project.name %>Example -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
-<% } -%>
 <% if (example === 'native') { -%>
-    "bootstrap": "yarn example && yarn install && yarn example pods",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
 <% } else { -%>
-    "bootstrap": "yarn example && yarn install"
+    "clean": "del-cli lib",
 <% } -%>
+    "prepare": "bob build",
+    "release": "release-it"
   },
   "keywords": [
     "react-native",
@@ -60,9 +56,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.2.2",
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-community/eslint-config": "^3.0.2",
+    "@evilmartians/lefthook": "^1.5.0",
+    "@react-native/eslint-config": "^0.72.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
@@ -73,16 +69,18 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
+<% if (example === 'native') { -%>
     "pod-install": "^0.1.0",
+<% } -%>
     "prettier": "^2.0.5",
     "react": "17.0.2",
     "react-native": "0.70.0",
     "react-native-builder-bob": "^<%- bob.version %>",
     "release-it": "^15.0.0",
-<% if (turborepo) { -%>
-    "turbo": "^1.6.3",
+<% if (example === 'native') { -%>
+    "turbo": "^1.10.7",
 <% } -%>
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.2"
   },
   "resolutions": {
     "@types/react": "17.0.21"
@@ -91,10 +89,15 @@
     "react": "*",
     "react-native": "*"
   },
+<% if (example !== 'none') { -%>
+  "workspaces": [
+    "example"
+  ],
+<% } -%>
+  "packageManager": "yarn@3.6.1",
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 18.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
@@ -127,7 +130,7 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@react-native-community",
+      "@react-native",
       "prettier"
     ],
     "rules": {

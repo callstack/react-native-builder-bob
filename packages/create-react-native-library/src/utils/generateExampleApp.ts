@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
-import spawn from 'cross-spawn';
 import path from 'path';
 import https from 'https';
+import { spawn } from './spawn';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -18,7 +18,7 @@ const FILES_TO_DELETE = [
 ];
 
 const PACKAGES_TO_REMOVE = [
-  '@react-native-community/eslint-config',
+  '@react-native/eslint-config',
   '@tsconfig/react-native',
   '@types/jest',
   '@types/react',
@@ -34,28 +34,34 @@ const PACKAGES_TO_REMOVE = [
 ];
 
 const PACKAGES_TO_ADD_DEV = {
-  'babel-plugin-module-resolver': '^4.1.0',
+  'babel-plugin-module-resolver': '^5.0.0',
 };
 
 const PACKAGES_TO_ADD_WEB = {
-  'react-dom': '18.1.0',
-  'react-native-web': '~0.18.9',
+  'react-dom': '18.2.0',
+  'react-native-web': '~0.18.10',
 };
 
 const PACKAGES_TO_ADD_WEB_DEV = {
-  '@expo/webpack-config': '^0.17.2',
+  '@expo/webpack-config': '^18.0.1',
   'babel-loader': '^8.1.0',
+};
+
+const PACKAGES_TO_ADD_NATIVE_DEV = {
+  'pod-install': '^0.1.0',
 };
 
 export default async function generateExampleApp({
   type,
   dest,
+  slug,
   projectName,
   arch,
   reactNativeVersion = 'latest',
 }: {
   type: 'expo' | 'native';
   dest: string;
+  slug: string;
   projectName: string;
   arch: 'new' | 'mixed' | 'legacy';
   reactNativeVersion?: string;
@@ -73,30 +79,14 @@ export default async function generateExampleApp({
           '--version',
           reactNativeVersion,
           '--skip-install',
+          '--npm',
         ]
       : // `npx create-expo-app example --no-install`
         ['create-expo-app@latest', directory, '--no-install'];
 
-  await new Promise((resolve, reject) => {
-    const child = spawn('npx', args, {
-      cwd: dest,
-      env: { ...process.env, npm_config_yes: 'true' },
-    });
-
-    let stderr = '';
-
-    child.stderr?.setEncoding('utf8');
-    child.stderr?.on('data', (data) => {
-      stderr += data;
-    });
-
-    child.once('error', reject);
-    child.once('close', resolve);
-    child.once('exit', (code) => {
-      if (code === 1) {
-        reject(new Error(stderr));
-      }
-    });
+  await spawn('npx', args, {
+    cwd: dest,
+    env: { ...process.env, npm_config_yes: 'true' },
   });
 
   // Remove unnecessary files and folders
@@ -109,6 +99,8 @@ export default async function generateExampleApp({
     await fs.readFile(path.join(directory, 'package.json'), 'utf8')
   );
 
+  pkg.name = `${slug}-example`;
+
   // Remove Jest config for now
   delete pkg.jest;
 
@@ -117,8 +109,14 @@ export default async function generateExampleApp({
   delete scripts.test;
   delete scripts.lint;
 
+  const SCRIPTS_TO_ADD = {
+    'build:android':
+      'cd android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a',
+    'build:ios': `cd ios && xcodebuild -workspace ${projectName}Example.xcworkspace -scheme ${projectName}Example -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO`,
+  };
+
   if (type === 'native') {
-    scripts.pods = 'pod-install --quiet';
+    Object.assign(scripts, SCRIPTS_TO_ADD);
   }
 
   PACKAGES_TO_REMOVE.forEach((name) => {
@@ -166,12 +164,13 @@ export default async function generateExampleApp({
     });
 
     scripts.web = 'expo start --web';
+  } else {
+    Object.assign(devDependencies, PACKAGES_TO_ADD_NATIVE_DEV);
   }
 
-  await fs.writeFile(
-    path.join(directory, 'package.json'),
-    JSON.stringify(pkg, null, 2)
-  );
+  await fs.writeJSON(path.join(directory, 'package.json'), pkg, {
+    spaces: 2,
+  });
 
   // If the library is on new architecture, enable new arch for iOS and Android
   if (arch === 'new') {

@@ -13,10 +13,11 @@ export type Input = {
   report: Report;
 };
 
-export type Target = 'aar' | 'commonjs' | 'module' | 'typescript';
+export type Target = 'commonjs' | 'module' | 'typescript';
 
 export type Options = {
   source?: string;
   output?: string;
   targets?: (Target | [Target, object])[];
+  exclude?: string;
 };

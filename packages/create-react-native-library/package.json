@@ -1,6 +1,6 @@
 {
   "name": "create-react-native-library",
-  "version": "0.28.0",
+  "version": "0.34.2",
   "description": "CLI to scaffold React Native libraries",
   "keywords": [
     "react-native",
@@ -22,24 +22,22 @@
   "bugs": {
     "url": "https://github.com/callstack/react-native-builder-bob/issues"
   },
-  "homepage": "https://github.com/callstack/react-native-builder-bob/blob/main/README.md",
+  "homepage": "https://callstack.github.io/react-native-builder-bob/create",
   "main": "lib/index.js",
-  "bin": {
-    "create-react-native-library": "bin/create-react-native-library"
-  },
+  "bin": "bin/create-react-native-library",
   "files": [
     "lib",
     "templates"
   ],
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 18.0.0"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "prepack": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start"
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --ignore '**/__tests__/**' --source-maps --delete-dir-on-start"
   },
   "dependencies": {
     "cross-spawn": "^7.0.3",
@@ -52,9 +50,6 @@
     "prompts": "^2.4.2",
     "validate-npm-package-name": "^4.0.0",
     "yargs": "^17.5.1"
-  },
-  "optionalDependencies": {
-    "jetifier": "^2.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

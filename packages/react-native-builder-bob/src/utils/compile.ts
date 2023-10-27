@@ -12,6 +12,8 @@ type Options = Input & {
   sourceMaps?: boolean;
   copyFlow?: boolean;
   modules: 'commonjs' | false;
+  field: 'main' | 'module';
+  exclude: string;
 };
 
 export default async function compile({
@@ -20,16 +22,18 @@ export default async function compile({
   output,
   babelrc = false,
   configFile = false,
+  exclude,
   modules,
   copyFlow,
   sourceMaps = true,
   report,
+  field,
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
     absolute: true,
     nodir: true,
-    ignore: '**/{__tests__,__fixtures__,__mocks__}/**',
+    ignore: exclude,
   });
 
   report.info(
@@ -37,6 +41,30 @@ export default async function compile({
       path.relative(root, source)
     )} with ${kleur.blue('babel')}`
   );
+
+  const pkg = JSON.parse(
+    await fs.readFile(path.join(root, 'package.json'), 'utf-8')
+  );
+
+  if (copyFlow) {
+    if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
+      report.warn(
+        `The ${kleur.blue(
+          'copyFlow'
+        )} option was specified, but couldn't find ${kleur.blue(
+          'flow-bin'
+        )} in ${kleur.blue(
+          'package.json'
+        )}.\nIf the project is using ${kleur.blue(
+          'flow'
+        )}, then make sure you have added ${kleur.blue(
+          'flow-bin'
+        )} to your ${kleur.blue(
+          'devDependencies'
+        )}, otherwise remove the ${kleur.blue('copyFlow')} option.`
+      );
+    }
+  }
 
   await Promise.all(
     files.map(async (filepath) => {
@@ -81,7 +109,7 @@ export default async function compile({
                         'not android <= 4.4',
                         'not samsung <= 4',
                       ],
-                      node: '16',
+                      node: '18',
                     },
                     useBuiltIns: false,
                     modules,
@@ -108,7 +136,7 @@ export default async function compile({
         // Don't inline the source code, it can be retrieved from the source file
         result.map.sourcesContent = undefined;
 
-        fs.writeFileSync(mapFilename, JSON.stringify(result.map));
+        await fs.writeJSON(mapFilename, result.map);
       }
 
       await fs.writeFile(outputFilename, code);
@@ -120,4 +148,76 @@ export default async function compile({
   );
 
   report.success(`Wrote files to ${kleur.blue(path.relative(root, output))}`);
+
+  const getGeneratedEntryPath = async () => {
+    if (pkg.source) {
+      const indexName =
+        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') + '.js';
+
+      const potentialPath = path.join(
+        output,
+        path.dirname(path.relative(source, path.join(root, pkg.source))),
+        indexName
+      );
+
+      if (await fs.pathExists(potentialPath)) {
+        return path.relative(root, potentialPath);
+      }
+    }
+
+    return null;
+  };
+
+  if (field in pkg) {
+    try {
+      require.resolve(path.join(root, pkg[field]));
+    } catch (e: unknown) {
+      if (
+        e != null &&
+        typeof e === 'object' &&
+        'code' in e &&
+        e.code === 'MODULE_NOT_FOUND'
+      ) {
+        const generatedEntryPath = await getGeneratedEntryPath();
+
+        if (!generatedEntryPath) {
+          report.warn(
+            `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
+              'source'
+            )} field in your ${kleur.blue('package.json')}.`
+          );
+        }
+
+        report.error(
+          `The ${kleur.blue(field)} field in ${kleur.blue(
+            'package.json'
+          )} points to a non-existent file: ${kleur.blue(
+            pkg[field]
+          )}.\nVerify the path points to the correct file under ${kleur.blue(
+            path.relative(root, output)
+          )}${
+            generatedEntryPath
+              ? ` (found ${kleur.blue(generatedEntryPath)}).`
+              : '.'
+          }`
+        );
+
+        throw new Error(`Found incorrect path in '${field}' field.`);
+      }
+
+      throw e;
+    }
+  } else {
+    const generatedEntryPath = await getGeneratedEntryPath();
+
+    report.warn(
+      `No ${kleur.blue(field)} field found in ${kleur.blue(
+        'package.json'
+      )}. Consider ${
+        generatedEntryPath
+          ? `pointing it to ${kleur.blue(generatedEntryPath)}`
+          : 'adding it'
+      } so that consumers of your package can use it.`
+    );
+  }
 }

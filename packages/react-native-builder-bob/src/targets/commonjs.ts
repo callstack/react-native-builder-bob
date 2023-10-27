@@ -11,12 +11,14 @@ type Options = Input & {
     sourceMaps?: boolean;
     copyFlow?: boolean;
   };
+  exclude: string;
 };
 
 export default async function build({
   root,
   source,
   output,
+  exclude,
   options,
   report,
 }: Options) {
@@ -31,7 +33,9 @@ export default async function build({
     root,
     source,
     output,
+    exclude,
     modules: 'commonjs',
     report,
+    field: 'main',
   });
 }

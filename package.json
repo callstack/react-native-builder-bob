@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "docs"
   ],
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",
@@ -9,26 +10,27 @@
     "type": "git",
     "url": "git+https://github.com/react-navigation/react-navigation.git"
   },
+  "packageManager": "yarn@3.6.1",
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 18.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepack -- --watch'"
+    "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
+    "docs": "yarn workspace docs"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.7",
     "@commitlint/config-conventional": "^17.0.2",
+    "@evilmartians/lefthook": "^1.5.0",
     "@lerna-lite/cli": "^1.13.0",
     "@lerna-lite/run": "^1.13.0",
     "commitlint": "^17.0.2",
     "concurrently": "^7.2.2",
-    "eslint": "^8.18.0",
-    "eslint-config-satya164": "^3.1.11",
-    "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
+    "eslint": "^8.52.0",
+    "eslint-config-satya164": "^3.2.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "commitlint": {
     "extends": [

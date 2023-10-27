@@ -5,29 +5,25 @@ import dedent from 'dedent';
 import yargs from 'yargs';
 import { cosmiconfigSync } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
-import prompts, { PromptObject } from './utils/prompts';
+import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
-import buildAAR from './targets/aar';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import type { Options } from './types';
 
-// eslint-disable-next-line import/no-commonjs
+// eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
 
 const root = process.cwd();
 const explorer = cosmiconfigSync(name, {
-  searchPlaces: ['package.json', `bob.config.js`],
+  searchPlaces: ['package.json', `bob.config.js`, 'bob.config.cjs'],
 });
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
-// eslint-disable-next-line babel/no-unused-expressions
 yargs
   .command('init', 'configure the package to use bob', {}, async () => {
-    const pak = path.join(root, 'package.json');
-
     if (isGitDirty()) {
       const { shouldContinue } = await prompts({
         type: 'confirm',
@@ -37,14 +33,32 @@ yargs
       });
 
       if (!shouldContinue) {
-        process.exit(1);
+        process.exit(0);
       }
     }
+
+    const pak = path.join(root, 'package.json');
 
     if (!(await fs.pathExists(pak))) {
       logger.exit(
         `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
       );
+    }
+
+    const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
+    const result = explorer.search();
+
+    if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
+      const { shouldContinue } = await prompts({
+        type: 'confirm',
+        name: 'shouldContinue',
+        message: `The project seems to be already configured with bob. Do you want to overwrite the existing configuration?`,
+        initial: false,
+      });
+
+      if (!shouldContinue) {
+        process.exit(0);
+      }
     }
 
     const { source } = await prompts({
@@ -71,8 +85,6 @@ yargs
       );
       return;
     }
-
-    const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
 
     pkg.devDependencies = Object.fromEntries(
       [
@@ -109,11 +121,6 @@ yargs
             value: 'typescript',
             selected: /\.tsx?$/.test(entryFile),
           },
-          {
-            title: 'aar - bundle android code to a binary',
-            value: 'aar',
-            selected: false,
-          },
         ],
         validate: (input: string) => Boolean(input.length),
       },
@@ -145,6 +152,7 @@ yargs
         ? path.join(output, target, 'index.js')
         : path.join(source, entryFile),
       'react-native': path.join(source, entryFile),
+      'source': path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
@@ -163,40 +171,40 @@ yargs
         });
 
         if (tsconfig) {
-          await fs.writeFile(
+          await fs.writeJSON(
             path.join(root, 'tsconfig.json'),
-            JSON.stringify(
-              {
-                compilerOptions: {
-                  allowUnreachableCode: false,
-                  allowUnusedLabels: false,
-                  esModuleInterop: true,
-                  forceConsistentCasingInFileNames: true,
-                  jsx: 'react',
-                  lib: ['esnext'],
-                  module: 'esnext',
-                  moduleResolution: 'node',
-                  noFallthroughCasesInSwitch: true,
-                  noImplicitReturns: true,
-                  noImplicitUseStrict: false,
-                  noStrictGenericChecks: false,
-                  noUnusedLocals: true,
-                  noUnusedParameters: true,
-                  resolveJsonModule: true,
-                  skipLibCheck: true,
-                  strict: true,
-                  target: 'esnext',
-                },
+            {
+              compilerOptions: {
+                rootDir: '.',
+                allowUnreachableCode: false,
+                allowUnusedLabels: false,
+                esModuleInterop: true,
+                forceConsistentCasingInFileNames: true,
+                jsx: 'react',
+                lib: ['esnext'],
+                module: 'esnext',
+                moduleResolution: 'node',
+                noFallthroughCasesInSwitch: true,
+                noImplicitReturns: true,
+                noImplicitUseStrict: false,
+                noStrictGenericChecks: false,
+                noUncheckedIndexedAccess: true,
+                noUnusedLocals: true,
+                noUnusedParameters: true,
+                resolveJsonModule: true,
+                skipLibCheck: true,
+                strict: true,
+                target: 'esnext',
+                verbatimModuleSyntax: true,
               },
-              null,
-              2
-            )
+            },
+            { spaces: 2 }
           );
         }
       }
     }
 
-    const prepack = 'bob build';
+    const prepare = 'bob build';
     const files = [
       source,
       output,
@@ -224,20 +232,20 @@ yargs
       }
     }
 
-    if (pkg.scripts?.prepack && pkg.scripts.prepack !== prepack) {
+    if (pkg.scripts?.prepare && pkg.scripts.prepare !== prepare) {
       const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
-        message: `Your package.json has the 'scripts.prepack' field set to '${pkg.scripts.prepack}'. Do you want to replace it with '${prepack}'?`,
+        message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'. Do you want to replace it with '${prepare}'?`,
         initial: true,
       });
 
       if (replace) {
-        pkg.scripts.prepack = prepack;
+        pkg.scripts.prepare = prepare;
       }
     } else {
       pkg.scripts = pkg.scripts || {};
-      pkg.scripts.prepack = prepack;
+      pkg.scripts.prepare = prepare;
     }
 
     if (
@@ -269,7 +277,7 @@ yargs
       output,
       targets: targets.map((t: string) => {
         if (t === target && flow) {
-          return [t, { flow }];
+          return [t, { copyFlow: true }];
         }
 
         return t;
@@ -296,7 +304,9 @@ yargs
       pkg.eslintIgnore.push(`${output}/`);
     }
 
-    await fs.writeFile(pak, JSON.stringify(pkg, null, 2));
+    await fs.writeJSON(pak, pkg, {
+      spaces: 2,
+    });
 
     const ignorefiles = [
       path.join(root, '.gitignore'),
@@ -316,6 +326,10 @@ yargs
       }
     }
 
+    const packageManager = (await fs.pathExists(path.join(root, 'yarn.lock')))
+      ? 'yarn'
+      : 'npm';
+
     console.log(
       dedent(`
       Project ${kleur.yellow(pkg.name)} configured successfully!
@@ -324,7 +338,7 @@ yargs
         `${kleur.bold('Perform last steps')} by running`
       )}${kleur.gray(':')}
 
-        ${kleur.gray(':')} yarn
+        ${kleur.gray('$')} ${packageManager} install
 
       ${kleur.yellow('Good luck!')}
     `)
@@ -372,6 +386,9 @@ yargs
       );
     }
 
+    const exclude =
+      options.exclude ?? '**/{__tests__,__fixtures__,__mocks__}/**';
+
     const report = {
       info: logger.info,
       warn: logger.warn,
@@ -386,20 +403,12 @@ yargs
       report.info(`Building target ${kleur.blue(targetName)}`);
 
       switch (targetName) {
-        case 'aar':
-          await buildAAR({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'aar'),
-            options: targetOptions,
-            report,
-          });
-          break;
         case 'commonjs':
           await buildCommonJS({
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'commonjs'),
+            exclude,
             options: targetOptions,
             report,
           });
@@ -409,6 +418,7 @@ yargs
             root,
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'module'),
+            exclude,
             options: targetOptions,
             report,
           });

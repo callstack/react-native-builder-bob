@@ -1,9 +1,18 @@
 import kleur from 'kleur';
 
 const logger =
-  (type: string, color: Function) =>
+  (type: string, color: kleur.Color) =>
   (...messages: unknown[]) => {
-    console.log(color(kleur.bold(type)), ...messages);
+    console.log(
+      color(kleur.bold(type)),
+      ...messages.map((message) => {
+        if (typeof message === 'string') {
+          return message.split('\n').join(`\n  `);
+        } else {
+          return message;
+        }
+      })
+    );
   };
 
 export const info = logger('ℹ', kleur.blue);

@@ -27,31 +27,6 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 <% } -%>
 
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
-import groovy.json.JsonSlurper
-
-// https://github.com/callstack/react-native-builder-bob/discussions/359
-def registrationCompat = {
-  def reactNativeManifest = file("$projectDir/../node_modules/react-native/package.json").exists()
-    ? file("$projectDir/../node_modules/react-native/package.json") // developer mode, to run example app
-    : file("$projectDir/../../react-native/package.json")
-  def reactNativeVersion = new JsonSlurper().parseText(reactNativeManifest.text).version as String
-  // Fabric was introduced at react-native@0.68, full CMake support were introduced at react-native@0.71
-  // Use Android.mk for compatibility with react-native@0.68/0.69
-  reactNativeVersion.matches('(0.68.*|0.69.*)')
-}()
-
-def codegenViewLibraryName = "<%- project.name + 'View' -%>"
-def codegenViewModuleName = {
-  // Autolink for Fabric uses codegenConfig.name in package.json since react-native@0.70
-  // Use codegenViewLibraryName for compatibility with react-native@0.68/0.69
-  def libraryManifestJson = new JsonSlurper().parseText(file("$projectDir/../package.json").text)
-  registrationCompat ? codegenViewLibraryName : libraryManifestJson.codegenConfig.name
-}()
-<% } -%>
-
-def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
-
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
 }
@@ -64,8 +39,27 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
 }
 
+def supportsNamespace() {
+  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
+  def major = parsed[0].toInteger()
+  def minor = parsed[1].toInteger()
+
+  // Namespace support was added in 7.3.0
+  return (major == 7 && minor >= 3) || major >= 8
+}
+
 android {
-<% if (project.cpp || (project.view && (project.arch === "new" || project.arch === "mixed"))) { -%>
+  if (supportsNamespace()) {
+    namespace "com.<%- project.package -%>"
+
+    sourceSets {
+      main {
+        manifest.srcFile "src/main/AndroidManifestNew.xml"
+      }
+    }
+  }
+
+<% if (project.cpp) { -%>
   ndkVersion getExtOrDefault("ndkVersion")
 <% } -%>
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
@@ -73,10 +67,10 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
-    buildConfigField "String", "CODEGEN_MODULE_REGISTRATION", (isNewArchitectureEnabled() && registrationCompat ? "\"${codegenViewModuleName}_registration\"" : "null")
 <% } -%>
+
 <% if (project.cpp) { -%>
     externalNativeBuild {
       cmake {
@@ -84,43 +78,23 @@ android {
         abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
       }
     }
-<% } else if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
-    if (isNewArchitectureEnabled() && registrationCompat) {
-      def reactAndroidProject = project(':ReactAndroid')
-      externalNativeBuild {
-        ndkBuild {
-          arguments "APP_PLATFORM=android-21",
-                    "APP_STL=c++_shared",
-                    "NDK_TOOLCHAIN_VERSION=clang",
-                    "GENERATED_SRC_DIR=$buildDir/generated/source", // for react_codegen_* in this library's codegen/jni
-                    "PROJECT_BUILD_DIR=${appProject.buildDir}", // for REACT_NDK_EXPORT_DIR in ReactAndroid's Android-prebuilt.mk
-                    "REACT_ANDROID_DIR=${reactAndroidProject.projectDir}",
-                    "REACT_ANDROID_BUILD_DIR=${reactAndroidProject.buildDir}",
-                    "CODEGEN_MODULE_NAME=$codegenViewModuleName"
-          cFlags "-Wall", "-Werror", "-fexceptions", "-frtti", "-DWITH_INSPECTOR=1"
-          cppFlags "-std=c++17"
-          targets "${codegenViewModuleName}_registration"
-        }
-      }
-    }
 <% } -%>
   }
 <% if (project.cpp) { -%>
+
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
     }
   }
-<% } else if (project.view && (project.arch === "new" || project.arch === "mixed")) { -%>
-  if (isNewArchitectureEnabled() && registrationCompat) {
-    // We configure the NDK build only if you decide to opt-in for the New Architecture.
-    externalNativeBuild {
-      ndkBuild {
-        path "Android.mk"
-      }
-    }
+<% } -%>
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
+
+  buildFeatures {
+    buildConfig true
   }
 <% } -%>
+
   buildTypes {
     release {
       minifyEnabled false
@@ -135,8 +109,8 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
 <% if (project.arch === "new") { -%>
+
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -148,6 +122,7 @@ android {
     }
   }
 <% } else if (project.arch === "mixed") { -%>
+
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
@@ -183,14 +158,12 @@ dependencies {
 <% } -%>
 }
 
+<% if (project.arch === "new" || project.arch === "mixed") { -%>
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-<% if (project.view && (project.arch === "new" || project.arch === "mixed")) { %>
-    libraryName = codegenViewLibraryName
-<% } else { -%>
     libraryName = "<%- project.view ? project.name + 'View' : project.name -%>"
-<% } -%>
     codegenJavaPackageName = "com.<%- project.package -%>"
   }
 }
+<% } -%>
