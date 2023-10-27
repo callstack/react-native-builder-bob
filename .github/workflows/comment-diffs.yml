@@ -119,13 +119,13 @@ jobs:
             done
           done
 
-      - name: Remove everything
+      - name: Remove everything in the working directory
         run: for i in $(ls) ; do rm -rf "$i"; done;
 
       - name: Create new empty repo
         run: git init
 
-      - name: Initiate diffs
+      - name: Create diffs
         id: create-diffs
         run: |
           # Source all the configuration values to load $languages, $types, and $exclude
@@ -136,7 +136,7 @@ jobs:
 
           # Set author
           git config --global user.email "text@test.com"
-          git config --global user.name "Github actions test"
+          git config --global user.name "create-react-native-library diff generator action"
 
           function copy_commit_diff(){
             library_type=$1
@@ -195,10 +195,9 @@ jobs:
 
               # Add output to file
               # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
+ 
+              # Write the diff to the output file
               git diff HEAD~ >> $output_file
-              echo "$output_file"
-
-              cat "$output_file"
             fi
           }
 
