@@ -121,8 +121,8 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
-            ${{ env.work_dir }}/**/yarn.lock
-          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir)) }}
+            ${{ env.work_dir }}/yarn.lock
+          key: ${{ runner.os }}-library-yarn-${{ hashFiles(format('{0}/**/package.json', env.work_dir), format('!{0}/node_modules/**', env.work_dir)) }}
           restore-keys: |
             ${{ runner.os }}-library-yarn-
 
@@ -159,7 +159,7 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/.turbo
-          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
           restore-keys: |
             ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
 
@@ -241,7 +241,7 @@ jobs:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
             ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/**/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
           restore-keys: |
             ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-
             ${{ runner.os }}-library-cocoapods-
