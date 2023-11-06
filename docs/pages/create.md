@@ -31,13 +31,15 @@ After the project is created, you can find the development workflow in the gener
 
 ## Local library
 
-While the default templates are for libraries that are published to npm, you can also create a local library that is not published, but used locally in your app. The local library is created outside of the `android` and `ios` folders and makes use of autolinking to integrate with your app. It also doesn't include a separate example app and additional dependencies that are configured in the default templates. This is an alternative approach to the setup mentioned in [React Native docs](https://reactnative.dev).
+While the default templates are for libraries that are published to npm, you can also create a local library that is not published, but used locally in your app.
 
 If you run `create-react-native-library` in an existing project containing a `package.json`, it'll be automatically detected and you'll be asked if you want to create a local library. You can also pass the `--local` flag to the command to explicitly create a local library:
 
 ```sh
 npx create-react-native-library@latest awesome-library --local
 ```
+
+The local library is created outside of the `android` and `ios` folders and makes use of autolinking to integrate with your app. It also doesn't include a separate example app and additional dependencies that are configured in the default templates. This is an alternative approach to the setup mentioned in [React Native docs](https://reactnative.dev).
 
 The advantages of this approach are:
 
@@ -56,3 +58,13 @@ By default, the generated library is automatically linked to the project using `
 ```
 
 This creates a symlink to the library under `node_modules` which makes autolinking work. But if you're using a monorepo or have non-standard setup, you'll need to manually set up the package to be linked to your app based on your project setup.
+
+## Writing native code
+
+Once the project is created, you can follow the official React Native docs to learn the API for writing native modules and components:
+
+- [Native Modules](https://reactnative.dev/docs/native-modules-intro)
+- [Native UI Components for Android](https://reactnative.dev/docs/native-components-android)
+- [Native UI Components for iOS](https://reactnative.dev/docs/native-components-ios)
+- [Turbo Modules](https://reactnative.dev/docs/the-new-architecture/pillars-turbomodules)
+- [Fabric Components](https://reactnative.dev/docs/the-new-architecture/pillars-fabric-components)

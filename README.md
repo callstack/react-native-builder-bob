@@ -49,7 +49,7 @@ The documentation for the project is under `docs` directory. To run the document
 yarn docs dev
 ```
 
-## Acknowledgements
+## Acknowledgments
 
 Thanks to the authors of these libraries for inspiration:
 
