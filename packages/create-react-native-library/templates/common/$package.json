@@ -37,7 +37,7 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
-    "prepare": "bob build",
+    "prepack": "bob build",
     "release": "release-it"
   },
   "keywords": [
