@@ -61,10 +61,14 @@ yarn add --dev react-native-builder-bob
 
    Note that there is a difference between `prepare` and `prepack` scripts:
 
-   - `prepare` is run when the package is published, as well as when its is installed from a git URL. It may also run when dependencies are installed based on the package manager.
-   - `prepack` only runs when the package is packed for publishing.
+   - `prepare` is run when:
+     - The package is published with Yarn 1 (`yarn publish`), npm (`npm publish`) or pnpm (`pnpm publish`)
+     - The package is installed from a GIT URL with Yarn 1 (`yarn add <git-url>`), npm (`npm install <git-url>`) or pnpm (`pnpm add <git-url>`)
+   - `prepack` is run when:
+     - The package is published with any package manager (`yarn publish`, `npm publish`, `pnpm publish`)
+     - The package is installed from a GIT URL with Yarn 4 (`yarn add package-name@<git-url>`)
 
-   If you are not sure which one to use, we recommend going with `prepare`.
+   If you are not sure which one to use, we recommend going with `prepare` as it works during both publishing and installing from GIT with more package managers.
 
 1. Configure the appropriate entry points:
 
