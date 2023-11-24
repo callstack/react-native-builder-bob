@@ -39,6 +39,8 @@ body:
       label: Link to repro
       description: |
         Provide a link to a repository that contains the project with the issue.
+    validations:
+      required: true
 
   - type: textarea
     attributes:
