@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.2...create-react-native-library@0.34.3) (2023-11-24)
+
+### Bug Fixes
+
+- adjust lefthook config ([62b7e77](https://github.com/callstack/react-native-builder-bob/commit/62b7e77c43a99c32c27266921355765a1e33c42b)) - by @satya164
+- remove unused cmake abiFilters ([#486](https://github.com/callstack/react-native-builder-bob/issues/486)) ([7582485](https://github.com/callstack/react-native-builder-bob/commit/75824857f52ccad094831bea55fd72a007b829df)) - by @Sunbreak
+
 ## [0.34.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.1...create-react-native-library@0.34.2) (2023-10-19)
 
 **Note:** Version bump only for package create-react-native-library
