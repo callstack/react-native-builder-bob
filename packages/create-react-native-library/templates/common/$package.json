@@ -45,7 +45,10 @@
     "ios",
     "android"
   ],
-  "repository": "<%- repo -%>",
+  "repository": {
+    "type": "git",
+    "url": "git+<%- repo -%>.git"
+  },
   "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "MIT",
   "bugs": {
