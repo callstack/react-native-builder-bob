@@ -133,8 +133,6 @@ jobs:
           touch yarn.lock # Without this Yarn will fail due to the parent directory being a Yarn workspace
           rm -f example/yarn.lock # Workaround for cached yarn.lock from older version
           yarn install --no-immutable
-        env:
-          POD_INSTALL: 0
 
       - name: Get build target
         working-directory: ${{ env.work_dir }}
