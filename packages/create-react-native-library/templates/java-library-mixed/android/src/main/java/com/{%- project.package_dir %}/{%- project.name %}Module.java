@@ -21,7 +21,7 @@ public class <%- project.name -%>Module extends <%- project.name -%>Spec {
 
 <% if (project.cpp) { -%>
   static {
-    System.loadLibrary("cpp");
+    System.loadLibrary("<%- project.identifier -%>");
   }
 
   public static native double nativeMultiply(double a, double b);
