@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.3...create-react-native-library@0.35.0) (2023-12-06)
+
+### Bug Fixes
+
+- remove CMake warning ([#500](https://github.com/callstack/react-native-builder-bob/issues/500)) ([1ee886a](https://github.com/callstack/react-native-builder-bob/commit/1ee886a8674756d20bddae6f98be3aebc2cbcc5c)) - by @dcangulo
+- remove npm publish warning ([#502](https://github.com/callstack/react-native-builder-bob/issues/502)) ([6780418](https://github.com/callstack/react-native-builder-bob/commit/678041874f9f045b272c707f7f1437bcefcab6f3)) - by @dcangulo
+
+### Features
+
+- add support for react native 0.73 ([45e2424](https://github.com/callstack/react-native-builder-bob/commit/45e242435a458193171387a46fa0a22dc7f4e3fa)) - by @satya164
+
 ## [0.34.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.2...create-react-native-library@0.34.3) (2023-11-24)
 
 ### Bug Fixes
