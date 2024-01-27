@@ -85,6 +85,9 @@
 <% } -%>
     "typescript": "^5.0.2"
   },
+  "overrides": {
+    "@types/react": "17.0.21"
+  },
   "resolutions": {
     "@types/react": "17.0.21"
   },
