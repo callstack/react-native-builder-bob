@@ -47,10 +47,6 @@ const PACKAGES_TO_ADD_WEB_DEV = {
   'babel-loader': '^8.1.0',
 };
 
-const PACKAGES_TO_ADD_NATIVE_DEV = {
-  'pod-install': '^0.1.0',
-};
-
 export default async function generateExampleApp({
   type,
   dest,
@@ -164,8 +160,6 @@ export default async function generateExampleApp({
     });
 
     scripts.web = 'expo start --web';
-  } else {
-    Object.assign(devDependencies, PACKAGES_TO_ADD_NATIVE_DEV);
   }
 
   await fs.writeJSON(path.join(directory, 'package.json'), pkg, {

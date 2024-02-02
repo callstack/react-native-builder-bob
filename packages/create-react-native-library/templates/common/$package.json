@@ -72,9 +72,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
-<% if (example === 'native') { -%>
-    "pod-install": "^0.1.0",
-<% } -%>
     "prettier": "^2.0.5",
     "react": "17.0.2",
     "react-native": "0.70.0",

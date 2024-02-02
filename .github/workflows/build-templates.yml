@@ -248,7 +248,8 @@ jobs:
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
         run: |
-          yarn pod-install example/ios
+          cd example/ios
+          pod install
         env:
           NO_FLIPPER: 1
 
