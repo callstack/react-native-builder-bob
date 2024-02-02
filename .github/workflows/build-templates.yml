@@ -22,8 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu
-          - macos
+          - ubuntu-latest
+          - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
           - module-legacy
           - module-mixed
@@ -37,9 +37,9 @@ jobs:
           - kotlin-objc
           - kotlin-swift
         exclude:
-          - os: macos
+          - os: macos-14
             language: kotlin-objc
-          - os: macos
+          - os: macos-14
             language: kotlin-swift
           - type: module-new
             language: java-swift
@@ -58,25 +58,25 @@ jobs:
           - type: view-mixed
             language: kotlin-swift
         include:
-          - os: ubuntu
+          - os: ubuntu-latest
             type: library
             language: js
-          - os: ubuntu
+          - os: ubuntu-latest
             type: module-legacy
             language: cpp
-          - os: ubuntu
+          - os: ubuntu-latest
             type: module-mixed
             language: cpp
-          - os: ubuntu
+          - os: ubuntu-latest
             type: module-new
             language: cpp
-          - os: macos
+          - os: macos-14
             type: module-legacy
             language: cpp
-          - os: macos
+          - os: macos-14
             type: module-mixed
             language: cpp
-          - os: macos
+          - os: macos-14
             type: module-new
             language: cpp
 
@@ -84,7 +84,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -138,14 +138,14 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu ]]; then
+          if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
             if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "android_build=1" >> $GITHUB_ENV
             fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos ]]; then
+          if [[ ${{ matrix.os }} == macos-14 ]]; then
             if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
