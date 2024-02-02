@@ -207,7 +207,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       - name: Finalize Android SDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
