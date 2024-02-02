@@ -226,6 +226,8 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build example (Android)
+        env:
+          JAVA_OPTS: "-XX:MaxHeapSize=6g"
         if: env.android_build == 1
         working-directory: ${{ env.work_dir }}
         run: |
