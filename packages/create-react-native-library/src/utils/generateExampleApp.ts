@@ -33,6 +33,11 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
+const ADD_DUMMY_SWIFT_FILE = path.resolve(
+  __dirname,
+  '../../src/add-dummy-swift-file.rb'
+);
+
 const PACKAGES_TO_ADD_DEV = {
   'babel-plugin-module-resolver': '^5.0.0',
 };
@@ -54,6 +59,7 @@ export default async function generateExampleApp({
   projectName,
   arch,
   reactNativeVersion = 'latest',
+  swift = false,
 }: {
   type: 'expo' | 'native';
   dest: string;
@@ -61,6 +67,7 @@ export default async function generateExampleApp({
   projectName: string;
   arch: 'new' | 'mixed' | 'legacy';
   reactNativeVersion?: string;
+  swift?: boolean;
 }) {
   const directory = path.join(dest, 'example');
   const args =
@@ -84,6 +91,18 @@ export default async function generateExampleApp({
     cwd: dest,
     env: { ...process.env, npm_config_yes: 'true' },
   });
+
+  if (swift && process.platform === 'darwin') {
+    await spawn(
+      'ruby',
+      [
+        ADD_DUMMY_SWIFT_FILE,
+        path.join(directory, 'ios', `${projectName}Example.xcodeproj`),
+        `${projectName}Example`,
+      ],
+      {}
+    );
+  }
 
   // Remove unnecessary files and folders
   for (const file of FILES_TO_DELETE) {
