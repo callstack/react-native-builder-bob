@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "11.0" }
+  s.platforms    = { :ios => min_ios_version_supported }
   s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
 
 <% if (project.cpp) { -%>
