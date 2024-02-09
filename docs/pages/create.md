@@ -31,7 +31,28 @@ After the project is created, you can find the development workflow in the gener
 
 ## Local library
 
-While the default templates are for libraries that are published to npm, you can also create a local library that is not published, but used locally in your app.
+While the default templates are for libraries that are published to npm, you can also create a local library that is not published but used locally in your app.
+
+You'd typically use a local library when:
+
+- You're building a native library for your app and don't want to publish it to npm.
+- You want to be able to easily copy the library to other projects.
+- You're in a monorepo and want to keep the library code in the same repository as the app.
+- You're using Expo, but want to use vanilla React Native API for native modules and components.
+
+The structure of the app with a local library may look like this:
+
+```sh
+MyApp
+├── node_modules
+├── modules              <-- folder for your local libraries
+│   └── awesome-library  <-- your local library
+├── android
+├── ios
+├── src
+├── index.js
+└── package.json
+```
 
 If you run `create-react-native-library` in an existing project containing a `package.json`, it'll be automatically detected and you'll be asked if you want to create a local library. You can also pass the `--local` flag to the command to explicitly create a local library:
 
