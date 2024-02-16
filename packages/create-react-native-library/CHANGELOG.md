@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.35.0...create-react-native-library@0.35.1) (2024-02-16)
+
+### Bug Fixes
+
+- jsi no template error ([#516](https://github.com/callstack/react-native-builder-bob/issues/516)) ([836d1a9](https://github.com/callstack/react-native-builder-bob/commit/836d1a9da4f5c7897a184f7361bd64b18161a64d)), closes [/github.com/facebook/react-native/blob/main/packages/react-native/ReactCommon/jsi/jsi/jsi.h#L1122](https://github.com//github.com/facebook/react-native/blob/main/packages/react-native/ReactCommon/jsi/jsi/jsi.h/issues/L1122) [/github.com/facebook/react-native/blob/main/packages/react-native/ReactCommon/jsi/jsi/CMakeLists.txt#L6](https://github.com//github.com/facebook/react-native/blob/main/packages/react-native/ReactCommon/jsi/jsi/CMakeLists.txt/issues/L6) - by @dcangulo
+- remove engines from the generated library ([29d446b](https://github.com/callstack/react-native-builder-bob/commit/29d446b5a62afdb527f439a4cc34b2751b2928de)) - by @satya164
+
 # [0.35.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.34.3...create-react-native-library@0.35.0) (2023-12-06)
 
 ### Bug Fixes
