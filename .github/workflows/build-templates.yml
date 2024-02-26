@@ -88,7 +88,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -117,7 +117,7 @@ jobs:
 
       - name: Cache dependencies of library
         id: library-yarn-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
@@ -153,7 +153,7 @@ jobs:
 
       - name: Cache turborepo
         if: env.android_build == 1 || env.ios_build == 1
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.work_dir }}/.turbo
@@ -204,7 +204,7 @@ jobs:
 
       - name: Install JDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -216,7 +216,7 @@ jobs:
 
       - name: Cache Gradle
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/wrapper
@@ -236,7 +236,7 @@ jobs:
       - name: Cache cocoapods
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
         id: library-cocoapods-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
