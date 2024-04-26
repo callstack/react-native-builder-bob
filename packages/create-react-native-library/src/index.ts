@@ -801,9 +801,13 @@ async function create(argv: yargs.Arguments<any>) {
   };
 
   spinner.text = 'Writing metadata';
-  fs.writeJsonSync(path.join(folder, 'crnl.json'), metadata, {
-    spaces: 2,
-  });
+  fs.writeJsonSync(
+    path.join(folder, 'create-react-native-library.json'),
+    metadata,
+    {
+      spaces: 2,
+    }
+  );
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(
