@@ -10,6 +10,7 @@ import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
+import { version as crnlVersion } from '../package.json';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -793,7 +794,6 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  const crnlVersion = fs.readJsonSync('../package.json').version;
   const metadata: Metadata = {
     crnlVersion,
     languages,

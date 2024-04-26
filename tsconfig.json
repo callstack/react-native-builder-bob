@@ -1,4 +1,9 @@
 {
+  "include": [
+    "packages/create-react-native-library/src",
+    "packages/create-react-native-library/package.json",
+    "packages/react-native-builder-bob/src"
+  ],
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
