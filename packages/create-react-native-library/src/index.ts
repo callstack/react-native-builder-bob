@@ -10,6 +10,7 @@ import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
+import { version as crnlVersion } from '../package.json';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -105,6 +106,12 @@ type ProjectType =
   | 'view-new'
   | 'view-legacy'
   | 'library';
+
+type Metadata = {
+  crnlVersion: string;
+  projectType: ProjectType;
+  languages: ProjectLanguages;
+};
 
 type Answers = {
   slug: string;
@@ -786,6 +793,17 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
   }
+
+  const metadata: Metadata = {
+    crnlVersion,
+    languages,
+    projectType: type,
+  };
+
+  spinner.text = 'Writing metadata';
+  fs.writeJsonSync(path.join(folder, 'crnl.json'), metadata, {
+    spaces: 2,
+  });
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(
