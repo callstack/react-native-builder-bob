@@ -107,12 +107,6 @@ type ProjectType =
   | 'view-legacy'
   | 'library';
 
-type Metadata = {
-  crnlVersion: string;
-  projectType: ProjectType;
-  languages: ProjectLanguages;
-};
-
 type Answers = {
   slug: string;
   description: string;
@@ -501,18 +495,7 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  const {
-    slug,
-    description,
-    authorName,
-    authorEmail,
-    authorUrl,
-    repoUrl,
-    type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'java-objc',
-    example: hasExample,
-    reactNativeVersion,
-  } = {
+  const answers = {
     ...argv,
     ...(await prompts(
       Object.entries(questions)
@@ -552,6 +535,19 @@ async function create(argv: yargs.Arguments<any>) {
         })
     )),
   } as Answers;
+
+  const {
+    slug,
+    description,
+    authorName,
+    authorEmail,
+    authorUrl,
+    repoUrl,
+    type = 'module-mixed',
+    languages = type === 'library' ? 'js' : 'java-objc',
+    example: hasExample,
+    reactNativeVersion,
+  } = answers;
 
   // Get latest version of Bob from NPM
   let version: string;
@@ -794,16 +790,38 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  const metadata: Metadata = {
-    crnlVersion,
-    languages,
-    projectType: type,
-  };
+  // Some of the passed args can already be derived from the generated package.json file.
+  const ignoredArgs: ArgName[] = [
+    'slug',
+    'description',
+    'author-name',
+    'author-email',
+    'author-url',
+    'repo-url',
+    'example',
+    'react-native-version',
+  ];
+  const ignoredAnswers = ignoredArgs.map((argName) => questions[argName]?.name);
+  const standardArgs = ['_', '$0', 'name'];
 
-  spinner.text = 'Writing metadata';
+  const filteredAnswers = Object.fromEntries(
+    Object.entries(answers).filter(
+      ([answer]) =>
+        !(
+          ignoredArgs.includes(answer as ArgName) ||
+          // The answers object we have also has the 'name' properties of answers
+          // @ts-expect-error: TS assumes we might try to select the validate function
+          ignoredAnswers.includes(answer) ||
+          // The answers object has the standard yargs arguments, we omit them
+          standardArgs.includes(answer)
+        )
+    )
+  );
+  filteredAnswers.version = crnlVersion;
+
   fs.writeJsonSync(
     path.join(folder, 'create-react-native-library.json'),
-    metadata,
+    filteredAnswers,
     {
       spaces: 2,
     }
