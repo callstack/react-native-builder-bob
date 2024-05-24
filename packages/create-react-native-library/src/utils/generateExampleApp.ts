@@ -77,8 +77,14 @@ export default async function generateExampleApp({
           '--skip-install',
           '--npm',
         ]
-      : // `npx create-expo-app example --no-install`
-        ['create-expo-app@latest', directory, '--no-install'];
+      : // `npx create-expo-app example --no-install --template blank`
+        [
+          'create-expo-app@latest',
+          directory,
+          '--no-install',
+          '--template',
+          'blank',
+        ];
 
   await spawn('npx', args, {
     cwd: dest,
