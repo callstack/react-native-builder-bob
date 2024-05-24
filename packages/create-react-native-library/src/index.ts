@@ -819,13 +819,11 @@ async function create(argv: yargs.Arguments<any>) {
   );
   filteredAnswers.version = crnlVersion;
 
-  fs.writeJsonSync(
-    path.join(folder, 'create-react-native-library.json'),
-    filteredAnswers,
-    {
-      spaces: 2,
-    }
-  );
+  const createdPackageJson = fs.readJsonSync(path.join(folder, 'package.json'));
+  createdPackageJson['create-react-native-library'] = filteredAnswers;
+  fs.writeJsonSync(path.join(folder, 'package.json'), createdPackageJson, {
+    spaces: 2,
+  });
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(
