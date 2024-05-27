@@ -1,9 +1,4 @@
 {
-  "include": [
-    "packages/create-react-native-library/src",
-    "packages/create-react-native-library/package.json",
-    "packages/react-native-builder-bob/src"
-  ],
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
@@ -13,7 +8,6 @@
       "react-native-builder-bob": ["./packages/react-native-builder-bob/src"]
     },
     "outDir": "./typescript",
-    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
