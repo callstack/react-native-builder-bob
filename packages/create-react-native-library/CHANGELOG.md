@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.36.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.35.1...create-react-native-library@0.36.0) (2024-05-29)
+
+### Bug Fixes
+
+- add abiFilters to the native template ([#546](https://github.com/callstack/react-native-builder-bob/issues/546)) ([c7dfe9e](https://github.com/callstack/react-native-builder-bob/commit/c7dfe9ee8d088eb847ab7b29ba87221662f7f49d)) - by @j-piasecki
+- podspec file indentation ([#530](https://github.com/callstack/react-native-builder-bob/issues/530)) ([148fda0](https://github.com/callstack/react-native-builder-bob/commit/148fda0b46a56e8f8d83a91e182592299063fbb1)) - by @olessavluk
+
+### Features
+
+- **crnl:** pass --template blank to create-expo-app ([#558](https://github.com/callstack/react-native-builder-bob/issues/558)) ([87f32b8](https://github.com/callstack/react-native-builder-bob/commit/87f32b81cc3cf353080870984192dfc90251dc51)) - by @atlj
+
 ## [0.35.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.35.0...create-react-native-library@0.35.1) (2024-02-16)
 
 ### Bug Fixes
