@@ -108,6 +108,7 @@ type ProjectType =
   | 'library';
 
 type Answers = {
+  name: string;
   slug: string;
   description: string;
   authorName: string;
@@ -266,7 +267,10 @@ const args: Record<ArgName, yargs.Options> = {
 
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function create(argv: yargs.Arguments<any>) {
+async function create(_argv: yargs.Arguments<any>) {
+  const {_, $0, ...argv} = _argv;
+
+
   let local = false;
 
   if (typeof argv.local === 'boolean') {
@@ -357,7 +361,7 @@ async function create(argv: yargs.Arguments<any>) {
   const basename = path.basename(folder);
 
   const questions: Record<
-    ArgName,
+    keyof Answers,
     Omit<PromptObject<keyof Answers>, 'validate'> & {
       validate?: (value: string) => boolean | string;
     }
@@ -381,14 +385,14 @@ async function create(argv: yargs.Arguments<any>) {
       message: 'What is the description for the package?',
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'author-name': {
+    'authorName': {
       type: local ? null : 'text',
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: name,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'author-email': {
+    'authorEmail': {
       type: local ? null : 'text',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
@@ -396,7 +400,7 @@ async function create(argv: yargs.Arguments<any>) {
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
-    'author-url': {
+    'authorUrl': {
       type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
@@ -414,7 +418,7 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'repo-url': {
+    'repoUrl': {
       type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
@@ -457,7 +461,7 @@ async function create(argv: yargs.Arguments<any>) {
       continue;
     }
 
-    const question = questions[key as ArgName];
+    const question = questions[key as keyof Answers];
 
     if (question == null) {
       continue;
@@ -791,18 +795,17 @@ async function create(argv: yargs.Arguments<any>) {
   }
 
   // Some of the passed args can already be derived from the generated package.json file.
-  const ignoredArgs: ArgName[] = [
+  const ignoredAnswers: Array<keyof Answers> = [
+    'name',
     'slug',
     'description',
-    'author-name',
-    'author-email',
-    'author-url',
-    'repo-url',
+    'authorName',
+    'authorEmail',
+    'authorUrl',
+    'repoUrl',
     'example',
-    'react-native-version',
+    'reactNativeVersion',
   ];
-  const ignoredAnswers = ignoredArgs.map((argName) => questions[argName]?.name);
-  const standardArgs = ['_', '$0', 'name'];
 
   type AnswerEntries<T extends keyof Answers = keyof Answers> = [
     T,
@@ -813,11 +816,7 @@ async function create(argv: yargs.Arguments<any>) {
     (Object.entries(answers) as AnswerEntries).filter(
       ([answer]) =>
         !(
-          ignoredArgs.includes(answer as ArgName) ||
-          // The answers object we have also has the 'name' properties of answers
-          ignoredAnswers.includes(answer) ||
-          // The answers object has the standard yargs arguments, we omit them
-          standardArgs.includes(answer)
+          ignoredAnswers.includes(answer)
         )
     )
   );
@@ -949,5 +948,9 @@ yargs
     }
 
     process.exit(1);
+  })
+  .parserConfiguration({
+    // don't pass kebab-case args to handler.
+    'strip-dashed': true,
   })
   .strict().argv;
