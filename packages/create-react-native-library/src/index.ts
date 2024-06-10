@@ -361,13 +361,11 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const basename = path.basename(folder);
 
-  const questions: Record<
-    keyof Answers,
-    Omit<PromptObject<keyof Answers>, 'validate'> & {
-      validate?: (value: string) => boolean | string;
-    }
-  > = {
-    slug: {
+  const questions: (Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
+    validate?: (value: string) => boolean | string;
+    name: string;
+  })[] = [
+    {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
@@ -380,20 +378,20 @@ async function create(_argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    description: {
+    {
       type: 'text',
       name: 'description',
       message: 'What is the description for the package?',
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    authorName: {
+    {
       type: local ? null : 'text',
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: name,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    authorEmail: {
+    {
       type: local ? null : 'text',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
@@ -401,7 +399,7 @@ async function create(_argv: yargs.Arguments<any>) {
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
-    authorUrl: {
+    {
       type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
@@ -419,7 +417,7 @@ async function create(_argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    repoUrl: {
+    {
       type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
@@ -434,13 +432,13 @@ async function create(_argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    type: {
+    {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
       choices: TYPE_CHOICES,
     },
-    languages: {
+    {
       type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
@@ -454,7 +452,7 @@ async function create(_argv: yargs.Arguments<any>) {
         });
       },
     },
-  };
+  ];
 
   // Validate arguments passed to the CLI
   for (const [key, value] of Object.entries(argv)) {
@@ -462,7 +460,7 @@ async function create(_argv: yargs.Arguments<any>) {
       continue;
     }
 
-    const question = questions[key as keyof Answers];
+    const question = questions.find((q) => q.name === key);
 
     if (question == null) {
       continue;
@@ -504,27 +502,33 @@ async function create(_argv: yargs.Arguments<any>) {
     ...argv,
     local,
     ...(await prompts(
-      Object.entries(questions)
-        .filter(([k, v]) => {
+      questions
+        .filter((question) => {
           // Skip questions which are passed as parameter and pass validation
-          if (argv[k] != null && v.validate?.(argv[k]) !== false) {
+          if (
+            argv[question.name] != null &&
+            question.validate?.(argv[question.name]) !== false
+          ) {
             return false;
           }
 
           // Skip questions with a single choice
-          if (Array.isArray(v.choices) && v.choices.length === 1) {
+          if (
+            Array.isArray(question.choices) &&
+            question.choices.length === 1
+          ) {
             return false;
           }
 
           return true;
         })
-        .map(([, v]) => {
-          const { type, choices } = v;
+        .map((question) => {
+          const { type, choices } = question;
 
           // Skip dynamic questions with a single choice
           if (type === 'select' && typeof choices === 'function') {
             return {
-              ...v,
+              ...question,
               type: (prev, values, prompt) => {
                 const result = choices(prev, { ...argv, ...values }, prompt);
 
@@ -537,7 +541,7 @@ async function create(_argv: yargs.Arguments<any>) {
             };
           }
 
-          return v;
+          return question;
         })
     )),
   } as Answers;
