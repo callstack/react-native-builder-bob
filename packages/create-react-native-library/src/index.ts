@@ -804,23 +804,27 @@ async function create(argv: yargs.Arguments<any>) {
   const ignoredAnswers = ignoredArgs.map((argName) => questions[argName]?.name);
   const standardArgs = ['_', '$0', 'name'];
 
-  const filteredAnswers = Object.fromEntries(
-    Object.entries(answers).filter(
+  type AnswerEntries<T extends keyof Answers = keyof Answers> = [
+    T,
+    Answers[T],
+  ][];
+
+  const libraryMetadata = Object.fromEntries(
+    (Object.entries(answers) as AnswerEntries).filter(
       ([answer]) =>
         !(
           ignoredArgs.includes(answer as ArgName) ||
           // The answers object we have also has the 'name' properties of answers
-          // @ts-expect-error: TS assumes we might try to select the validate function
           ignoredAnswers.includes(answer) ||
           // The answers object has the standard yargs arguments, we omit them
           standardArgs.includes(answer)
         )
     )
   );
-  filteredAnswers.version = crnlVersion;
+  libraryMetadata.version = crnlVersion;
 
   const libraryPackageJson = await fs.readJson(path.join(folder, 'package.json'));
-  libraryPackageJson['create-react-native-library'] = filteredAnswers;
+  libraryPackageJson['create-react-native-library'] = libraryMetadata;
   await fs.writeJson(path.join(folder, 'package.json'), libraryPackageJson, {
     spaces: 2,
   });
