@@ -819,9 +819,9 @@ async function create(argv: yargs.Arguments<any>) {
   );
   filteredAnswers.version = crnlVersion;
 
-  const createdPackageJson = fs.readJsonSync(path.join(folder, 'package.json'));
-  createdPackageJson['create-react-native-library'] = filteredAnswers;
-  fs.writeJsonSync(path.join(folder, 'package.json'), createdPackageJson, {
+  const libraryPackageJson = fs.readJsonSync(path.join(folder, 'package.json'));
+  libraryPackageJson['create-react-native-library'] = filteredAnswers;
+  fs.writeJsonSync(path.join(folder, 'package.json'), libraryPackageJson, {
     spaces: 2,
   });
 
