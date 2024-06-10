@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-<% if (project.view) { -%>
+<% if (project.view && project.module) { -%>
+import { StyleSheet, View, Text } from 'react-native';
+import { <%- project.name -%>View, multiply } from '<%- project.slug -%>';
+<% } else if (project.view) { -%>
 import { StyleSheet, View } from 'react-native';
 import { <%- project.name -%>View } from '<%- project.slug -%>';
 <% } else { -%>
@@ -8,7 +11,22 @@ import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from '<%- project.slug -%>';
 <% } -%>
 
-<% if (project.view) { -%>
+<% if (project.view && project.module) { -%>
+export default function App() {
+  const [result, setResult] = React.useState<number | undefined>();
+
+  React.useEffect(() => {
+    multiply(3, 7).then(setResult);
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Result: {result}</Text>
+      <<%- project.name -%>View color="#32a852" style={styles.box} />
+    </View>
+  );
+}
+<% } else if (project.view) { -%>
 export default function App() {
   return (
     <View style={styles.container}>
