@@ -268,8 +268,8 @@ const args: Record<ArgName, yargs.Options> = {
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function create(_argv: yargs.Arguments<any>) {
-  const {_, $0, ...argv} = _argv;
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _, $0, ...argv } = _argv;
 
   let local = false;
 
@@ -366,7 +366,7 @@ async function create(_argv: yargs.Arguments<any>) {
       validate?: (value: string) => boolean | string;
     }
   > = {
-    'slug': {
+    slug: {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
@@ -379,20 +379,20 @@ async function create(_argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    'description': {
+    description: {
       type: 'text',
       name: 'description',
       message: 'What is the description for the package?',
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'authorName': {
+    authorName: {
       type: local ? null : 'text',
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: name,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'authorEmail': {
+    authorEmail: {
       type: local ? null : 'text',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
@@ -400,7 +400,7 @@ async function create(_argv: yargs.Arguments<any>) {
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
-    'authorUrl': {
+    authorUrl: {
       type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
@@ -418,7 +418,7 @@ async function create(_argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'repoUrl': {
+    repoUrl: {
       type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
@@ -433,13 +433,13 @@ async function create(_argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'type': {
+    type: {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
       choices: TYPE_CHOICES,
     },
-    'languages': {
+    languages: {
       type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
@@ -795,7 +795,7 @@ async function create(_argv: yargs.Arguments<any>) {
   }
 
   // Some of the passed args can already be derived from the generated package.json file.
-  const ignoredAnswers: Array<keyof Answers> = [
+  const ignoredAnswers: (keyof Answers)[] = [
     'name',
     'slug',
     'description',
@@ -814,15 +814,14 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const libraryMetadata = Object.fromEntries(
     (Object.entries(answers) as AnswerEntries).filter(
-      ([answer]) =>
-        !(
-          ignoredAnswers.includes(answer)
-        )
+      ([answer]) => !ignoredAnswers.includes(answer)
     )
   );
   libraryMetadata.version = version;
 
-  const libraryPackageJson = await fs.readJson(path.join(folder, 'package.json'));
+  const libraryPackageJson = await fs.readJson(
+    path.join(folder, 'package.json')
+  );
   libraryPackageJson['create-react-native-library'] = libraryMetadata;
   await fs.writeJson(path.join(folder, 'package.json'), libraryPackageJson, {
     spaces: 2,
