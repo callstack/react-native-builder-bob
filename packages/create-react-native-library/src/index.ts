@@ -10,7 +10,7 @@ import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
-import { version as crnlVersion } from '../package.json';
+import { version } from '../package.json';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -554,10 +554,10 @@ async function create(_argv: yargs.Arguments<any>) {
   } = answers;
 
   // Get latest version of Bob from NPM
-  let version: string;
+  let bobVersion: string;
 
   try {
-    version = await Promise.race([
+    bobVersion = await Promise.race([
       new Promise<string>((resolve) => {
         setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
       }),
@@ -565,7 +565,7 @@ async function create(_argv: yargs.Arguments<any>) {
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
-    version = FALLBACK_BOB_VERSION;
+    bobVersion = FALLBACK_BOB_VERSION;
   }
 
   const moduleType = type.startsWith('view-') ? 'view' : 'module';
@@ -597,7 +597,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const options = {
     bob: {
-      version: version || FALLBACK_BOB_VERSION,
+      version: bobVersion || FALLBACK_BOB_VERSION,
     },
     project: {
       slug,
@@ -820,7 +820,7 @@ async function create(_argv: yargs.Arguments<any>) {
         )
     )
   );
-  libraryMetadata.version = crnlVersion;
+  libraryMetadata.version = version;
 
   const libraryPackageJson = await fs.readJson(path.join(folder, 'package.json'));
   libraryPackageJson['create-react-native-library'] = libraryMetadata;
