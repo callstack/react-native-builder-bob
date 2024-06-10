@@ -119,6 +119,7 @@ type Answers = {
   type?: ProjectType;
   example?: boolean;
   reactNativeVersion?: string;
+  local?: boolean;
 };
 
 const LANGUAGE_CHOICES: {
@@ -501,6 +502,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const answers = {
     ...argv,
+    local,
     ...(await prompts(
       Object.entries(questions)
         .filter(([k, v]) => {
@@ -805,6 +807,7 @@ async function create(_argv: yargs.Arguments<any>) {
     'repoUrl',
     'example',
     'reactNativeVersion',
+    'local',
   ];
 
   type AnswerEntries<T extends keyof Answers = keyof Answers> = [
