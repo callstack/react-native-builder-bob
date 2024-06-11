@@ -29,7 +29,6 @@ jobs:
           - module-mixed
           - module-new
           - view-legacy
-          - view-mixed
           - view-new
           - view-module-mixed
         language:
@@ -39,11 +38,9 @@ jobs:
           - type: module-new
             language: kotlin-swift
           - type: module-mixed
-            language: kotlin-swift
           - type: view-new
             language: kotlin-swift
           - type: view-mixed
-            language: kotlin-swift
           - type: view-module-mixed
             language: kotlin-swift
         include:

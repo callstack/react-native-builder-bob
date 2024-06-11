@@ -40,9 +40,7 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
@@ -53,7 +51,6 @@ const NATIVE_FILES = {
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
   view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/objc-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
@@ -64,9 +61,7 @@ const OBJC_FILES = {
 const KOTLIN_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
@@ -98,7 +93,6 @@ type ProjectType =
   | 'module-legacy'
   | 'module-new'
   | 'module-mixed'
-  | 'view-mixed'
   | 'view-new'
   | 'view-legacy'
   | 'library'
@@ -128,8 +122,6 @@ const LANGUAGE_CHOICES: {
     types: [
       'module-legacy',
       'module-new',
-      'module-mixed',
-      'view-mixed',
       'view-new',
       'view-legacy',
       'view-module-mixed',
@@ -163,7 +155,7 @@ const TYPE_CHOICES: {
   {
     title: 'Fabric view and Turbo module with backward compat',
     value: 'view-module-mixed',
-    description: NEWARCH_DESCRIPTION,
+    description: BACKCOMPAT_DESCRIPTION,
   },
   {
     title: 'JavaScript library',
@@ -181,19 +173,9 @@ const TYPE_CHOICES: {
     description: 'bridge for native views to JS',
   },
   {
-    title: 'Turbo module with backward compat',
-    value: 'module-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-  },
-  {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view with backward compat',
-    value: 'view-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
   },
   {
     title: 'Fabric view',
@@ -488,7 +470,7 @@ async function create(argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     repoUrl,
-    type = 'module-mixed',
+    type = 'view-module-mixed',
     languages = type === 'library' ? 'js' : 'kotlin-objc',
     example: hasExample,
     reactNativeVersion,
@@ -556,9 +538,7 @@ async function create(argv: yargs.Arguments<any>) {
   const arch =
     type === 'module-new' || type === 'view-new'
       ? 'new'
-      : type === 'module-mixed' ||
-        type === 'view-mixed' ||
-        type === 'view-module-mixed'
+      : type === 'module-mixed' || type === 'view-module-mixed'
       ? 'mixed'
       : 'legacy';
 
@@ -706,7 +686,7 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
-    if (moduleType === 'view_module') {
+    if (arch === 'mixed') {
       // View module doesn't have legacy or a new arch only version.
       await copyDir(NATIVE_FILES['view_module_mixed'], folder);
       await copyDir(OBJC_FILES['view_module_mixed'], folder);
