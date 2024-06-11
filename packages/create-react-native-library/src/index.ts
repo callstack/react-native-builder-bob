@@ -39,9 +39,7 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/native-library-new'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
-  view_new: path.resolve(__dirname, '../templates/native-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/native-view-library-mixed'
@@ -51,7 +49,6 @@ const NATIVE_FILES = {
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
   view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
-  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/objc-view-library-mixed'
@@ -60,9 +57,7 @@ const OBJC_FILES = {
 
 const KOTLIN_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/kotlin-view-library-mixed'
@@ -93,10 +88,10 @@ type ProjectType =
   | 'module-legacy'
   | 'module-new'
   | 'module-mixed'
-  | 'view-new'
   | 'view-legacy'
   | 'library'
-  | 'view-module-mixed';
+  | 'view-module-mixed'
+  | 'view-module-new';
 
 type Answers = {
   slug: string;
@@ -121,10 +116,9 @@ const LANGUAGE_CHOICES: {
     value: 'kotlin-objc',
     types: [
       'module-legacy',
-      'module-new',
-      'view-new',
       'view-legacy',
       'view-module-mixed',
+      'view-module-new'
     ],
   },
   {
@@ -158,6 +152,11 @@ const TYPE_CHOICES: {
     description: BACKCOMPAT_DESCRIPTION,
   },
   {
+    title: 'Fabric view and Turbo module',
+    value: 'view-module-mixed',
+    description: NEWARCH_DESCRIPTION,
+  },
+  {
     title: 'JavaScript library',
     value: 'library',
     description: 'supports Expo Go and Web',
@@ -176,12 +175,7 @@ const TYPE_CHOICES: {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view',
-    value: 'view-new',
-    description: NEWARCH_DESCRIPTION,
-  },
+  }
 ];
 
 const args: Record<ArgName, yargs.Options> = {
@@ -536,7 +530,7 @@ async function create(argv: yargs.Arguments<any>) {
     ? 'view'
     : 'module';
   const arch =
-    type === 'module-new' || type === 'view-new'
+    type === 'module-new' || type === 'view-module-new'
       ? 'new'
       : type === 'module-mixed' || type === 'view-module-mixed'
       ? 'mixed'

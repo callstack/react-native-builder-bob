@@ -29,18 +29,14 @@ jobs:
           - module-mixed
           - module-new
           - view-legacy
-          - view-new
           - view-module-mixed
+          - view-module-new
         language:
           - kotlin-objc
           - kotlin-swift
         exclude:
           - type: module-new
-            language: kotlin-swift
           - type: module-mixed
-          - type: view-new
-            language: kotlin-swift
-          - type: view-mixed
           - type: view-module-mixed
             language: kotlin-swift
         include:
