@@ -25,29 +25,21 @@ jobs:
           - ubuntu-latest
           - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
-          - module-legacy
-          - module-mixed
-          - module-new
-          - view-legacy
           - view-module-mixed
           - view-module-new
+          - view-module-legacy
         language:
           - kotlin-objc
-          - kotlin-swift
-        exclude:
-          - type: module-legacy
-          - type: module-mixed
-          - type: module-new
-          - type: view-module-legacy
-            language: kotlin-swift
-          - type: view-module-mixed
-            language: kotlin-swift
-          - type: view-module-new
-            language: kotlin-swift
         include:
           - os: ubuntu-latest
             type: library
             language: js
+          - os: macos-latest
+            type: view-legacy
+            language: kotlin-swift
+          - os: macos-latest
+            type: module-legacy
+            language: kotlin-swift
           - os: ubuntu-latest
             type: module-legacy
             language: cpp
@@ -124,7 +116,7 @@ jobs:
 
           # Build iOS for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == macos-14 ]]; then
-            echo "ios_build=1" >> $GITHUB_ENV
+              echo "ios_build=1" >> $GITHUB_ENV
           fi
 
       - name: Cache turborepo

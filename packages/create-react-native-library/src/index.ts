@@ -104,11 +104,11 @@ type ArgName =
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 type ProjectType =
+  | 'library'
   | 'module-legacy'
   | 'module-mixed'
   | 'module-new'
   | 'view-legacy'
-  | 'library'
   | 'view-module-legacy'
   | 'view-module-mixed'
   | 'view-module-new';
