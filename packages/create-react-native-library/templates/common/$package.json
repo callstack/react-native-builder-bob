@@ -169,7 +169,7 @@
 <% if (project.arch !== 'legacy') { -%>
   },
   "codegenConfig": {
-    "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
+    "name": "RN<%- project.name -%>Spec",
     "type": <%- project.view && project.module ? '"all"' : project.view ? '"components"': '"modules"' %>,
     "jsSrcsDir": "src"
 <% } -%>
