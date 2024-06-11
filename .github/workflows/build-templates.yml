@@ -31,31 +31,20 @@ jobs:
           - view-legacy
           - view-mixed
           - view-new
+          - view-module-mixed
         language:
-          - java-objc
-          - java-swift
           - kotlin-objc
           - kotlin-swift
         exclude:
-          - os: macos-14
-            language: kotlin-objc
-          - os: macos-14
-            language: kotlin-swift
-          - type: module-new
-            language: java-swift
           - type: module-new
             language: kotlin-swift
           - type: module-mixed
-            language: java-swift
-          - type: module-mixed
             language: kotlin-swift
-          - type: view-new
-            language: java-swift
           - type: view-new
             language: kotlin-swift
           - type: view-mixed
-            language: java-swift
-          - type: view-mixed
+            language: kotlin-swift
+          - type: view-module-mixed
             language: kotlin-swift
         include:
           - os: ubuntu-latest
@@ -146,9 +135,7 @@ jobs:
 
           # Build iOS for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == macos-14 ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
-              echo "ios_build=1" >> $GITHUB_ENV
-            fi
+            echo "ios_build=1" >> $GITHUB_ENV
           fi
 
       - name: Cache turborepo
