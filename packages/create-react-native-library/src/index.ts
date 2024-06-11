@@ -187,6 +187,11 @@ const TYPE_CHOICES: {
     description: 'bridge for native APIs to JS',
   },
   {
+    title: 'Native view',
+    value: 'view-legacy',
+    description: 'bridge for native views to JS',
+  },
+  {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
