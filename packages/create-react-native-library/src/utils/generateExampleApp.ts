@@ -172,30 +172,44 @@ export default async function generateExampleApp({
     spaces: 2,
   });
 
-  // If the library is on new architecture, enable new arch for iOS and Android
-  if (arch === 'new') {
-    // Android
-    // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
-    const gradleProperties = await fs.readFile(
+  if (type === 'native') {
+    let gradleProperties = await fs.readFile(
       path.join(directory, 'android', 'gradle.properties'),
       'utf8'
     );
 
+    // Disable Jetifier.
+    // Remove this when the app template is updated.
+    gradleProperties = gradleProperties.replace(
+      'android.enableJetifier=true',
+      'android.enableJetifier=false'
+    );
+
+    // If the library is on new architecture, enable new arch for iOS and Android
+    if (arch === 'new') {
+      // iOS
+      // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
+      const podfile = await fs.readFile(
+        path.join(directory, 'ios', 'Podfile'),
+        'utf8'
+      );
+
+      await fs.writeFile(
+        path.join(directory, 'ios', 'Podfile'),
+        "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
+      );
+
+      // Android
+      // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
+      gradleProperties = gradleProperties.replace(
+        'newArchEnabled=false',
+        'newArchEnabled=true'
+      );
+    }
+
     await fs.writeFile(
       path.join(directory, 'android', 'gradle.properties'),
-      gradleProperties.replace('newArchEnabled=false', 'newArchEnabled=true')
-    );
-
-    // iOS
-    // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
-    const podfile = await fs.readFile(
-      path.join(directory, 'ios', 'Podfile'),
-      'utf8'
-    );
-
-    await fs.writeFile(
-      path.join(directory, 'ios', 'Podfile'),
-      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
+      gradleProperties
     );
   }
 }
