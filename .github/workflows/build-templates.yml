@@ -35,9 +35,14 @@ jobs:
           - kotlin-objc
           - kotlin-swift
         exclude:
-          - type: module-new
+          - type: module-legacy
           - type: module-mixed
+          - type: module-new
+          - type: view-module-legacy
+            language: kotlin-swift
           - type: view-module-mixed
+            language: kotlin-swift
+          - type: view-module-new
             language: kotlin-swift
         include:
           - os: ubuntu-latest
@@ -50,15 +55,6 @@ jobs:
             type: module-mixed
             language: cpp
           - os: ubuntu-latest
-            type: module-new
-            language: cpp
-          - os: macos-14
-            type: module-legacy
-            language: cpp
-          - os: macos-14
-            type: module-mixed
-            language: cpp
-          - os: macos-14
             type: module-new
             language: cpp
 

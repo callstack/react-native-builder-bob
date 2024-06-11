@@ -6,7 +6,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const <%- project.name -%> = NativeModules.<%- project.name %>
+export const <%- project.name -%> = NativeModules.<%- project.name %>
   ? NativeModules.<%- project.name %>
   : new Proxy(
       {},
@@ -16,7 +16,3 @@ const <%- project.name -%> = NativeModules.<%- project.name %>
         },
       }
     );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return <%- project.name -%>.multiply(a, b);
-}

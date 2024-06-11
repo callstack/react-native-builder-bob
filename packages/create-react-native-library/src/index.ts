@@ -38,29 +38,48 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 );
 
 const NATIVE_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
+  view_module_legacy: path.resolve(
+    __dirname,
+    '../templates/native-view-library-legacy'
+  ),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/native-view-library-mixed'
+  ),
+  view_module_new: path.resolve(
+    __dirname,
+    '../templates/native-view-library-new'
   ),
 } as const;
 
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
-  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
+  view_module_legacy: path.resolve(
+    __dirname,
+    '../templates/objc-view-library-legacy'
+  ),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/objc-view-library-mixed'
   ),
+  view_module_new: path.resolve(
+    __dirname,
+    '../templates/objc-view-library-new'
+  ),
 } as const;
 
 const KOTLIN_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
-  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  view_module_legacy: path.resolve(
+    __dirname,
+    '../templates/kotlin-view-library-legacy'
+  ),
   view_module_mixed: path.resolve(
     __dirname,
     '../templates/kotlin-view-library-mixed'
+  ),
+  view_module_new: path.resolve(
+    __dirname,
+    '../templates/kotlin-view-library-new'
   ),
 } as const;
 
@@ -86,10 +105,11 @@ type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 type ProjectType =
   | 'module-legacy'
-  | 'module-new'
   | 'module-mixed'
+  | 'module-new'
   | 'view-legacy'
   | 'library'
+  | 'view-module-legacy'
   | 'view-module-mixed'
   | 'view-module-new';
 
@@ -114,12 +134,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: [
-      'module-legacy',
-      'view-legacy',
-      'view-module-mixed',
-      'view-module-new'
-    ],
+    types: ['view-module-legacy', 'view-module-mixed', 'view-module-new'],
   },
   {
     title: 'Kotlin & Swift',
@@ -157,6 +172,11 @@ const TYPE_CHOICES: {
     description: NEWARCH_DESCRIPTION,
   },
   {
+    title: 'Native module and Native view',
+    value: 'view-module-legacy',
+    description: 'bridge for native APIs and views to JS',
+  },
+  {
     title: 'JavaScript library',
     value: 'library',
     description: 'supports Expo Go and Web',
@@ -167,15 +187,10 @@ const TYPE_CHOICES: {
     description: 'bridge for native APIs to JS',
   },
   {
-    title: 'Native view',
-    value: 'view-legacy',
-    description: 'bridge for native views to JS',
-  },
-  {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
-  }
+  },
 ];
 
 const args: Record<ArgName, yargs.Options> = {
