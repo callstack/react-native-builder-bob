@@ -192,6 +192,11 @@ const TYPE_CHOICES: {
     description: 'bridge for native views to JS',
   },
   {
+    title: 'Turbo module with backward compat',
+    value: 'module-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
+  {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
