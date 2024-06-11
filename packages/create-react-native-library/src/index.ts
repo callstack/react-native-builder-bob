@@ -168,7 +168,7 @@ const TYPE_CHOICES: {
   },
   {
     title: 'Fabric view and Turbo module',
-    value: 'view-module-mixed',
+    value: 'view-module-new',
     description: NEWARCH_DESCRIPTION,
   },
   {
