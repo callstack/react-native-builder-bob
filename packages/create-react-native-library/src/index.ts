@@ -229,7 +229,7 @@ const TYPE_CHOICES: {
   },
   {
     title: 'Fabric view',
-    value: 'view-module-mixed',
+    value: 'view-new',
     description: NEWARCH_DESCRIPTION,
   },
 ];
