@@ -60,6 +60,9 @@ jobs:
           - os: macos-14
             type: module-legacy
             language: kotlin-swift
+          - os: ubuntu-latest
+            type: library
+            language: js
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
