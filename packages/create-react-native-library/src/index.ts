@@ -565,17 +565,11 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type.startsWith('view-module-')
-    ? 'view-module'
-    : type.startsWith('view-')
-    ? 'view'
-    : 'module';
-  const arch =
-    type === 'module-new' || type === 'view-module-new'
-      ? 'new'
-      : type === 'module-mixed' || type === 'view-module-mixed'
-      ? 'mixed'
-      : 'legacy';
+  const arch = type.endsWith('new')
+    ? 'new'
+    : type.endsWith('mixed')
+    ? 'mixed'
+    : 'legacy';
 
   const example =
     hasExample && !local ? (type === 'library' ? 'expo' : 'native') : 'none';
@@ -619,8 +613,8 @@ async function create(argv: yargs.Arguments<any>) {
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
-      view: moduleType === 'view' || moduleType === 'view-module',
-      module: moduleType === 'module' || moduleType === 'view-module',
+      view: type.includes('view'),
+      module: type.includes('module'),
     },
     author: {
       name: authorName,
