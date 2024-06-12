@@ -299,6 +299,23 @@ if (isNewArchitectureEnabled()) {
     preBuild.dependsOn invokeLibraryCodegen
 }`;
 
+const XCODE_INVOKE_CODEGEN_ACTION = `
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Invoke Codegen"
+               scriptText = "cd &quot;$WORKSPACE_PATH/../../../&quot; &amp;&amp; yarn codegen&#10;">
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>`;
+
+const PODSPEC_INVOKE_CODEGEN_SCRIPT = `
+  pre_install do |installer|
+    system("cd ../../ && yarn codegen")
+  end
+`;
+
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function create(_argv: yargs.Arguments<any>) {
@@ -841,6 +858,47 @@ async function create(_argv: yargs.Arguments<any>) {
       appBuildGradle += GRADLE_INVOKE_CODEGEN_TASK;
 
       await fs.writeFile(appBuildGradlePath, appBuildGradle);
+
+      const exampleAppBuildSchemePath = path.join(
+        folder,
+        'example',
+        'ios',
+        `${options.project.name}Example.xcodeproj`,
+        'xcshareddata',
+        'xcschemes',
+        `${options.project.name}Example.xcscheme`
+      );
+
+      // Add a prebuild action to invoke codegen
+      const exampleAppBuildScheme = (
+        await fs.readFile(exampleAppBuildSchemePath)
+      )
+        .toString()
+        .split('\n');
+      // Used XCode to determine where it inserts the actions
+      const actionTargetLineIndex = exampleAppBuildScheme.findIndex((line) =>
+        line.includes('<BuildActionEntries>')
+      );
+      exampleAppBuildScheme.splice(
+        actionTargetLineIndex,
+        0,
+        XCODE_INVOKE_CODEGEN_ACTION
+      );
+
+      await fs.writeFile(
+        exampleAppBuildSchemePath,
+        exampleAppBuildScheme.join('\n')
+      );
+
+      // Add a preinstall action to the podfile that invokes codegen
+      const podfilePath = path.join(folder, 'example', 'ios', 'Podfile');
+      const podfile = (await fs.readFile(podfilePath)).toString().split('\n');
+      const podfilePostInstallIndex = podfile.findIndex((line) =>
+        line.includes('post_install do |installer|')
+      );
+      podfile.splice(podfilePostInstallIndex, 0, PODSPEC_INVOKE_CODEGEN_SCRIPT);
+
+      await fs.writeFile(podfilePath, podfile.join('\n'));
     }
   }
 
