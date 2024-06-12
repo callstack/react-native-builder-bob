@@ -78,6 +78,13 @@ const OBJC_FILES = {
 } as const;
 
 const KOTLIN_FILES = {
+  'module-legacy': path.resolve(
+    __dirname,
+    '../templates/kotlin-library-legacy'
+  ),
+  'module-new': path.resolve(__dirname, '../templates/kotlin-library-new'),
+  'module-mixed': path.resolve(__dirname, '../templates/kotlin-library-mixed'),
+  'view-legacy': path.resolve(__dirname, '../templates/kotlin-view-legacy'),
   'view-module-legacy': path.resolve(
     __dirname,
     '../templates/kotlin-view-library-legacy'
@@ -90,13 +97,6 @@ const KOTLIN_FILES = {
     __dirname,
     '../templates/kotlin-view-library-new'
   ),
-  'view-legacy': path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  'module-legacy': path.resolve(
-    __dirname,
-    '../templates/kotlin-library-legacy'
-  ),
-  'module-new': path.resolve(__dirname, '../templates/kotlin-library-new'),
-  'module-mixed': path.resolve(__dirname, '../templates/kotlin-library-mixed'),
 } as const;
 
 const SWIFT_FILES = {
