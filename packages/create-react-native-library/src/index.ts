@@ -285,6 +285,20 @@ const args: Record<ArgName, yargs.Options> = {
   },
 };
 
+const GRADLE_INVOKE_CODEGEN_TASK = `
+def isNewArchitectureEnabled() {
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+}
+
+if (isNewArchitectureEnabled()) {
+    // Since our library doesn't invoke codegen automatically we need to do it here.
+    tasks.register('invokeLibraryCodegen', Exec) {
+        workingDir "$rootDir/../../"
+        commandLine "yarn", "codegen"
+    }
+    preBuild.dependsOn invokeLibraryCodegen
+}`;
+
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function create(_argv: yargs.Arguments<any>) {
@@ -813,6 +827,20 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies.react;
       rootPackageJson.devDependencies['react-native'] =
         examplePackageJson.dependencies['react-native'];
+    }
+
+    if (arch !== 'legacy') {
+      const appBuildGradlePath = path.join(
+        folder,
+        'example',
+        'android',
+        'app',
+        'build.gradle'
+      );
+      let appBuildGradle = (await fs.readFile(appBuildGradlePath)).toString();
+      appBuildGradle += GRADLE_INVOKE_CODEGEN_TASK;
+
+      await fs.writeFile(appBuildGradlePath, appBuildGradle);
     }
   }
 
