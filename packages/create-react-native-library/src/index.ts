@@ -115,7 +115,8 @@ type ArgName =
   | 'type'
   | 'local'
   | 'example'
-  | 'react-native-version';
+  | 'react-native-version'
+  | 'use-recommended-template';
 
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
@@ -129,6 +130,14 @@ type ProjectType =
   | 'view-module-mixed'
   | 'view-module-new';
 
+const RECOMMENDED_TEMPLATE: {
+  type: ProjectType;
+  languages: ProjectLanguages;
+} = {
+  type: 'view-module-mixed',
+  languages: 'kotlin-objc',
+};
+
 type Answers = {
   slug: string;
   description: string;
@@ -140,6 +149,7 @@ type Answers = {
   type?: ProjectType;
   example?: boolean;
   reactNativeVersion?: string;
+  useRecommendedTemplate?: boolean;
 };
 
 const LANGUAGE_CHOICES: {
@@ -264,6 +274,10 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'Whether to create an example app',
     type: 'boolean',
     default: true,
+  },
+  'use-recommended-template': {
+    description: 'Whether to use the recommended template, A backward compatible Fabric view and Turbo module with Kotlin and Objective-C',
+    type: 'boolean',
   },
 };
 
@@ -432,17 +446,37 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
+    'use-recommended-template': {
+      type: 'confirm',
+      name: 'useRecommendedTemplate',
+      message: 'Do you want to use the recommended template?',
+      initial: true,
+    },
     'type': {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
-      choices: TYPE_CHOICES,
+      choices: (_, values) => {
+        if (values.useRecommendedTemplate) {
+          return TYPE_CHOICES.filter((choice) => {
+            return choice.value === RECOMMENDED_TEMPLATE.type;
+          });
+        }
+
+        return TYPE_CHOICES;
+      },
     },
     'languages': {
       type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
+        if (values.useRecommendedTemplate) {
+          return LANGUAGE_CHOICES.filter((choice) => {
+            return choice.value === RECOMMENDED_TEMPLATE.languages;
+          });
+        }
+
         return LANGUAGE_CHOICES.filter((choice) => {
           if (choice.types) {
             return choice.types.includes(values.type);
