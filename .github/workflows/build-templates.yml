@@ -115,9 +115,7 @@ jobs:
         run: |
           # Build Android for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "android_build=1" >> $GITHUB_ENV
-            fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
