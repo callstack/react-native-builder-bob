@@ -122,12 +122,12 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
+          if [[ ${{ matrix.os }} == ubuntu-latest ]] && [[ ${{ matrix.language }} != js ]] ; then
               echo "android_build=1" >> $GITHUB_ENV
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos-14 ]]; then
+          if [[ ${{ matrix.os }} == macos-14 ]] && [[ ${{ matrix.language }} != js ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
           fi
 
