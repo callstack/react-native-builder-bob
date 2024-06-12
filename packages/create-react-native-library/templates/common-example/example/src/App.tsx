@@ -11,54 +11,30 @@ import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from '<%- project.slug -%>';
 <% } -%>
 
-<% if (project.view && project.module) { -%>
-export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-      <<%- project.name -%>View color="#32a852" style={styles.box} />
-    </View>
-  );
-}
-<% } else if (project.view) { -%>
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <<%- project.name -%>View color="#32a852" style={styles.box} />
-    </View>
-  );
-}
-<% } else if (project.arch === 'new' && project.module) { -%>
+<% if (project.arch === 'new' && project.module) { -%>
 const result = multiply(3, 7);
 
+<% } -%>
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
-  );
-}
-<% } else { -%>
-export default function App() {
+<% if (project.arch !== 'new' && project.module) { -%>
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
     multiply(3, 7).then(setResult);
   }, []);
 
+<% } -%>
   return (
     <View style={styles.container}>
+<% if (project.module) { -%>
       <Text>Result: {result}</Text>
+<% } -%>
+<% if (project.view) { -%>
+      <<%- project.name -%>View color="#32a852" style={styles.box} />
+<% } -%>
     </View>
   );
 }
-<% } -%>
 
 const styles = StyleSheet.create({
   container: {
