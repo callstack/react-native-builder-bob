@@ -130,14 +130,6 @@ type ProjectType =
   | 'view-module-mixed'
   | 'view-module-new';
 
-const RECOMMENDED_TEMPLATE: {
-  type: ProjectType;
-  languages: ProjectLanguages;
-} = {
-  type: 'view-module-mixed',
-  languages: 'kotlin-objc',
-};
-
 type Answers = {
   slug: string;
   description: string;
@@ -158,7 +150,7 @@ const LANGUAGE_CHOICES: {
   types: ProjectType[];
 }[] = [
   {
-    title: 'Kotlin & Objective-C',
+    title: `Kotlin & Objective-C`,
     value: 'kotlin-objc',
     types: ['view-module-legacy', 'view-module-mixed', 'view-module-new'],
   },
@@ -188,7 +180,7 @@ const TYPE_CHOICES: {
   description: string;
 }[] = [
   {
-    title: 'Fabric view and Turbo module with backward compat',
+    title: `Fabric view and Turbo module with backward compat`,
     value: 'view-module-mixed',
     description: BACKCOMPAT_DESCRIPTION,
   },
@@ -228,6 +220,18 @@ const TYPE_CHOICES: {
     description: NEWARCH_DESCRIPTION,
   },
 ];
+
+const RECOMMENDED_TEMPLATE: {
+  type: ProjectType;
+  languages: ProjectLanguages;
+  description: string;
+} = {
+  type: 'view-module-mixed',
+  languages: 'kotlin-objc',
+  description: `Recommended template is a ${kleur.bold(
+    'Fabric view and Turbo module with backward compat'
+  )} with ${kleur.bold('Kotlin & Objective-C')}.`,
+};
 
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
@@ -276,7 +280,7 @@ const args: Record<ArgName, yargs.Options> = {
     default: true,
   },
   'use-recommended-template': {
-    description: 'Whether to use the recommended template, A backward compatible Fabric view and Turbo module with Kotlin and Objective-C',
+    description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}`,
     type: 'boolean',
   },
 };
@@ -447,10 +451,20 @@ async function create(argv: yargs.Arguments<any>) {
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     'use-recommended-template': {
-      type: 'confirm',
+      type: 'select',
       name: 'useRecommendedTemplate',
-      message: 'Do you want to use the recommended template?',
-      initial: true,
+      message: 'Do you want to customize the library type and languages?',
+      choices: [
+        {
+          title: 'Use recommended defaults',
+          value: true,
+          description: RECOMMENDED_TEMPLATE.description,
+        },
+        {
+          title: 'Customize',
+          value: false,
+        },
+      ],
     },
     'type': {
       type: 'select',
@@ -458,12 +472,19 @@ async function create(argv: yargs.Arguments<any>) {
       message: 'What type of library do you want to develop?',
       choices: (_, values) => {
         if (values.useRecommendedTemplate) {
-          return TYPE_CHOICES.filter((choice) => {
-            return choice.value === RECOMMENDED_TEMPLATE.type;
-          });
+          return TYPE_CHOICES.filter(
+            (choice) => choice.value === RECOMMENDED_TEMPLATE.type
+          );
         }
 
-        return TYPE_CHOICES;
+        return TYPE_CHOICES.map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.type
+            ? {
+                ...choice,
+                title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
+              }
+            : choice
+        );
       },
     },
     'languages': {
@@ -483,7 +504,14 @@ async function create(argv: yargs.Arguments<any>) {
           }
 
           return true;
-        });
+        }).map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.languages
+            ? {
+                ...choice,
+                title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
+              }
+            : choice
+        );
       },
     },
   };
