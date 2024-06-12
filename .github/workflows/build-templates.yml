@@ -35,7 +35,7 @@ jobs:
           - kotlin-objc
           - cpp
         exclude:
-          - type: viw-module-legacy
+          - type: view-module-legacy
             language: cpp
           - type: view-module-mixed
             language: cpp
