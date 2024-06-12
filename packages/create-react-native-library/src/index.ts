@@ -38,54 +38,70 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 );
 
 const NATIVE_FILES = {
-  view_module_legacy: path.resolve(
+  'module-legacy': path.resolve(
+    __dirname,
+    '../templates/native-library-legacy'
+  ),
+  'module-new': path.resolve(__dirname, '../templates/native-library-new'),
+  'module-mixed': path.resolve(__dirname, '../templates/native-library-mixed'),
+  'view-legacy': path.resolve(__dirname, '../templates/native-view-legacy'),
+  'view-module-legacy': path.resolve(
     __dirname,
     '../templates/native-view-library-legacy'
   ),
-  view_module_mixed: path.resolve(
+  'view-module-mixed': path.resolve(
     __dirname,
     '../templates/native-view-library-mixed'
   ),
-  view_module_new: path.resolve(
+  'view-module-new': path.resolve(
     __dirname,
     '../templates/native-view-library-new'
   ),
 } as const;
 
 const OBJC_FILES = {
-  module_common: path.resolve(__dirname, '../templates/objc-library'),
-  view_module_legacy: path.resolve(
+  'module-legacy': path.resolve(__dirname, '../templates/objc-library'),
+  'module-mixed': path.resolve(__dirname, '../templates/objc-library'),
+  'module-new': path.resolve(__dirname, '../templates/objc-library'),
+  'view-module-legacy': path.resolve(
     __dirname,
     '../templates/objc-view-library-legacy'
   ),
-  view_module_mixed: path.resolve(
+  'view-module-mixed': path.resolve(
     __dirname,
     '../templates/objc-view-library-mixed'
   ),
-  view_module_new: path.resolve(
+  'view-module-new': path.resolve(
     __dirname,
     '../templates/objc-view-library-new'
   ),
 } as const;
 
 const KOTLIN_FILES = {
-  view_module_legacy: path.resolve(
+  'view-module-legacy': path.resolve(
     __dirname,
     '../templates/kotlin-view-library-legacy'
   ),
-  view_module_mixed: path.resolve(
+  'view-module-mixed': path.resolve(
     __dirname,
     '../templates/kotlin-view-library-mixed'
   ),
-  view_module_new: path.resolve(
+  'view-module-new': path.resolve(
     __dirname,
     '../templates/kotlin-view-library-new'
   ),
+  'view-legacy': path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  'module-legacy': path.resolve(
+    __dirname,
+    '../templates/kotlin-library-legacy'
+  ),
+  'module-new': path.resolve(__dirname, '../templates/kotlin-library-new'),
+  'module-mixed': path.resolve(__dirname, '../templates/kotlin-library-mixed'),
 } as const;
 
 const SWIFT_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/swift-library-legacy'),
-  view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
+  'module-legacy': path.resolve(__dirname, '../templates/swift-library-legacy'),
+  'view-legacy': path.resolve(__dirname, '../templates/swift-view-legacy'),
 } as const;
 
 type ArgName =
@@ -549,9 +565,9 @@ async function create(argv: yargs.Arguments<any>) {
     version = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type.startsWith('view-module')
-    ? 'view_module'
-    : type.startsWith('view')
+  const moduleType = type.startsWith('view-module-')
+    ? 'view-module'
+    : type.startsWith('view-')
     ? 'view'
     : 'module';
   const arch =
@@ -603,8 +619,8 @@ async function create(argv: yargs.Arguments<any>) {
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
-      view: moduleType === 'view' || moduleType === 'view_module',
-      module: moduleType === 'module' || moduleType === 'view_module',
+      view: moduleType === 'view' || moduleType === 'view-module',
+      module: moduleType === 'module' || moduleType === 'view-module',
     },
     author: {
       name: authorName,
@@ -688,7 +704,7 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  if (languages === 'js') {
+  if (type === 'library') {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
@@ -705,32 +721,22 @@ async function create(argv: yargs.Arguments<any>) {
       await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
-    if (arch === 'mixed') {
-      // View module doesn't have legacy or a new arch only version.
-      await copyDir(NATIVE_FILES['view_module_mixed'], folder);
-      await copyDir(OBJC_FILES['view_module_mixed'], folder);
-      await copyDir(KOTLIN_FILES['view_module_mixed'], folder);
+    await copyDir(NATIVE_FILES[type], folder);
+
+    if (
+      type === 'view-legacy' ||
+      (type === 'module-legacy' && options.project.swift)
+    ) {
+      await copyDir(SWIFT_FILES[type], folder);
     } else {
-      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+      await copyDir(OBJC_FILES[type], folder);
+    }
 
-      if (options.project.swift) {
-        await copyDir(SWIFT_FILES[`${moduleType}_legacy`], folder);
-      } else {
-        if (moduleType === 'module') {
-          await copyDir(OBJC_FILES[`${moduleType}_common`], folder);
-        } else {
-          await copyDir(OBJC_FILES[`view_${arch}`], folder);
-        }
-      }
+    await copyDir(KOTLIN_FILES[type], folder);
 
-      const templateType = `${moduleType}_${arch}` as const;
-
-      await copyDir(KOTLIN_FILES[templateType], folder);
-
-      if (options.project.cpp) {
-        await copyDir(CPP_FILES, folder);
-        await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
-      }
+    if (options.project.cpp) {
+      await copyDir(CPP_FILES, folder);
+      await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
     }
   }
 
