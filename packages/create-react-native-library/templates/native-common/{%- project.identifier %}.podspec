@@ -18,6 +18,8 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}"
 <% } else if (project.swift) { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+<% } else if (project.arch !== "legacy") { -%>
+  s.source_files = "ios/**/*.{h,m,mm,cpp}"
 <% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm}"
 <% } -%>
