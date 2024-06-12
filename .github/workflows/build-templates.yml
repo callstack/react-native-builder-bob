@@ -25,36 +25,41 @@ jobs:
           - ubuntu-latest
           - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
+          - module-legacy
+          - module-mixed
+          - module-new
+          - view-module-legacy
           - view-module-mixed
           - view-module-new
-          - view-module-legacy
         language:
           - kotlin-objc
+          - cpp
+        exclude:
+          - type: viw-module-legacy
+            language: cpp
+          - type: view-module-mixed
+            language: cpp
+          - type: view-module-new
+            language: cpp
+          - type: module-legacy
+            language: kotlin-objc
+          - type: module-mixed
+            language: kotlin-objc
+          - type: module-new
+            language: kotlin-objc
         include:
           - os: ubuntu-latest
-            type: library
-            language: js
-          - os: macos-latest
             type: view-legacy
             language: kotlin-swift
-          - os: macos-latest
-            type: module-legacy
-            language: kotlin-swift
-          - os: ubuntu-latest
+          - os: macos-14
             type: view-legacy
             language: kotlin-swift
           - os: ubuntu-latest
             type: module-legacy
             language: kotlin-swift
-          - os: ubuntu-latest
+          - os: macos-14
             type: module-legacy
-            language: cpp
-          - os: ubuntu-latest
-            type: module-mixed
-            language: cpp
-          - os: ubuntu-latest
-            type: module-new
-            language: cpp
+            language: kotlin-swift
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
