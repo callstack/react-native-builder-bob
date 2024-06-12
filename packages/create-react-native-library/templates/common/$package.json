@@ -37,7 +37,12 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
+<% if (project.arch !== 'legacy') { -%>
+    "codegen": "react-native codegen",
+    "prepare": "bob build && yarn codegen",
+<% } else { -%>
     "prepare": "bob build",
+<% } -%>
     "release": "release-it"
   },
   "keywords": [
@@ -177,7 +182,7 @@
       "android": "android/generated"
     },
     "android": {
-      "javaPackageName": "<com.<%- project.package %>"
+      "javaPackageName": "com.<%- project.package %>"
     },
     "includesGeneratedCode": true
 <% } -%>
