@@ -41,6 +41,12 @@ jobs:
             type: module-legacy
             language: kotlin-swift
           - os: ubuntu-latest
+            type: view-legacy
+            language: kotlin-swift
+          - os: ubuntu-latest
+            type: module-legacy
+            language: kotlin-swift
+          - os: ubuntu-latest
             type: module-legacy
             language: cpp
           - os: ubuntu-latest
