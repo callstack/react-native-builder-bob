@@ -16,7 +16,7 @@ const result = multiply(3, 7);
 
 <% } -%>
 export default function App() {
-<% if (project.arch !== 'new' && project.module) { -%>
+<% if ((project.arch !== 'new' && project.module) || !project.native) { -%>
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
@@ -26,7 +26,7 @@ export default function App() {
 <% } -%>
   return (
     <View style={styles.container}>
-<% if (project.module) { -%>
+<% if (project.module || !project.native) { -%>
       <Text>Result: {result}</Text>
 <% } -%>
 <% if (project.view) { -%>
