@@ -116,7 +116,7 @@ type ArgName =
   | 'local'
   | 'example'
   | 'react-native-version'
-  | 'use-recommended-template';
+  | 'with-recommended-options';
 
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
@@ -141,7 +141,7 @@ type Answers = {
   type?: ProjectType;
   example?: boolean;
   reactNativeVersion?: string;
-  useRecommendedTemplate?: boolean;
+  withRecommendedOptions?: boolean;
 };
 
 const LANGUAGE_CHOICES: {
@@ -228,9 +228,7 @@ const RECOMMENDED_TEMPLATE: {
 } = {
   type: 'view-module-mixed',
   languages: 'kotlin-objc',
-  description: `Recommended template is a ${kleur.bold(
-    'Fabric view and Turbo module with backward compat'
-  )} with ${kleur.bold('Kotlin & Objective-C')}.`,
+  description: `Backward compatible Fabric view & Turbo module with Kotlin & Objective-C`,
 };
 
 const args: Record<ArgName, yargs.Options> = {
@@ -279,7 +277,7 @@ const args: Record<ArgName, yargs.Options> = {
     type: 'boolean',
     default: true,
   },
-  'use-recommended-template': {
+  'with-recommended-options': {
     description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}`,
     type: 'boolean',
   },
@@ -450,9 +448,9 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'use-recommended-template': {
+    'with-recommended-options': {
       type: 'select',
-      name: 'useRecommendedTemplate',
+      name: 'withRecommendedOptions',
       message: 'Do you want to customize the library type and languages?',
       choices: [
         {
@@ -471,7 +469,7 @@ async function create(argv: yargs.Arguments<any>) {
       name: 'type',
       message: 'What type of library do you want to develop?',
       choices: (_, values) => {
-        if (values.useRecommendedTemplate) {
+        if (values.withRecommendedOptions) {
           return TYPE_CHOICES.filter(
             (choice) => choice.value === RECOMMENDED_TEMPLATE.type
           );
@@ -492,7 +490,7 @@ async function create(argv: yargs.Arguments<any>) {
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
-        if (values.useRecommendedTemplate) {
+        if (values.withRecommendedOptions) {
           return LANGUAGE_CHOICES.filter((choice) => {
             return choice.value === RECOMMENDED_TEMPLATE.languages;
           });
