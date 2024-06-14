@@ -10,6 +10,7 @@ import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
+import { patchExampleAppCodegen } from './utils/patchExampleAppCodegen';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -761,6 +762,10 @@ async function create(argv: yargs.Arguments<any>) {
     await fs.writeJSON(path.join(folder, 'package.json'), rootPackageJson, {
       spaces: 2,
     });
+
+    if (arch !== 'legacy') {
+      patchExampleAppCodegen(folder, options.project.name);
+    }
   }
 
   if (!local) {

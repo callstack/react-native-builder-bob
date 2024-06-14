@@ -37,7 +37,12 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
+<% if (project.arch !== 'legacy') { -%>
+    "codegen": "react-native codegen && node scripts/patch-codegen-java-package.cjs",
+    "prepare": "bob build && yarn codegen",
+<% } else { -%>
     "prepare": "bob build",
+<% } -%>
     "release": "release-it"
   },
   "keywords": [
@@ -171,7 +176,15 @@
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
     "type": <%- project.view ? '"components"': '"modules"' %>,
-    "jsSrcsDir": "src"
+    "jsSrcsDir": "src",
+    "outputDir": {
+      "ios": "ios/generated",
+      "android": "android/generated"
+    },
+    "android": {
+      "javaPackageName": "com.<%- project.package %>"
+    },
+    "includesGeneratedCode": true
 <% } -%>
   }
 }
