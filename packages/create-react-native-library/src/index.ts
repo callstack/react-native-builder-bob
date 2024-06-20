@@ -118,7 +118,8 @@ type ArgName =
   | 'type'
   | 'local'
   | 'example'
-  | 'react-native-version';
+  | 'react-native-version'
+  | 'with-recommended-options';
 
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
@@ -145,6 +146,7 @@ type Answers = {
   example?: ExampleType;
   reactNativeVersion?: string;
   local?: boolean;
+  withRecommendedOptions?: boolean;
 };
 
 const LANGUAGE_CHOICES: {
@@ -153,7 +155,7 @@ const LANGUAGE_CHOICES: {
   types: ProjectType[];
 }[] = [
   {
-    title: 'Kotlin & Objective-C',
+    title: `Kotlin & Objective-C`,
     value: 'kotlin-objc',
     types: ['view-module-legacy', 'view-module-mixed', 'view-module-new'],
   },
@@ -242,6 +244,16 @@ const TYPE_CHOICES: {
   },
 ];
 
+const RECOMMENDED_TEMPLATE: {
+  type: ProjectType;
+  languages: ProjectLanguages;
+  description: string;
+} = {
+  type: 'view-module-mixed',
+  languages: 'kotlin-objc',
+  description: `Backward compatible Fabric view & Turbo module with Kotlin & Objective-C`,
+};
+
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
@@ -287,6 +299,10 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
+  },
+  'with-recommended-options': {
+    description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}`,
+    type: 'boolean',
   },
 };
 
@@ -465,22 +481,66 @@ async function create(_argv: yargs.Arguments<any>) {
     },
     {
       type: 'select',
+      name: 'withRecommendedOptions',
+      message: 'Do you want to customize the library type and languages?',
+      choices: [
+        {
+          title: 'Use recommended defaults',
+          value: true,
+          description: RECOMMENDED_TEMPLATE.description,
+        },
+        {
+          title: 'Customize',
+          value: false,
+        },
+      ],
+    },
+    {
+      type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
-      choices: TYPE_CHOICES,
+      choices: (_, values) => {
+        if (values.withRecommendedOptions) {
+          return TYPE_CHOICES.filter(
+            (choice) => choice.value === RECOMMENDED_TEMPLATE.type
+          );
+        }
+
+        return TYPE_CHOICES.map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.type
+            ? {
+                ...choice,
+                title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
+              }
+            : choice
+        );
+      },
     },
     {
       type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
+        if (values.withRecommendedOptions) {
+          return LANGUAGE_CHOICES.filter((choice) => {
+            return choice.value === RECOMMENDED_TEMPLATE.languages;
+          });
+        }
+
         return LANGUAGE_CHOICES.filter((choice) => {
           if (choice.types) {
             return choice.types.includes(values.type);
           }
 
           return true;
-        });
+        }).map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.languages
+            ? {
+                ...choice,
+                title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
+              }
+            : choice
+        );
       },
     },
   ];
