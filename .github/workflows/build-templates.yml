@@ -30,71 +30,50 @@ jobs:
           - ubuntu-latest
           - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
-          - module-legacy
-          - module-mixed
-          - module-new
-          - view-legacy
-          - view-mixed
-          - view-new
+          - module
+          - view
+          - view-module
         language:
           - kotlin-objc
-          - kotlin-swift
+          - cpp
         arch:
           - auto
         exclude:
-          - type: module-new
-            language: kotlin-swift
-          - type: module-mixed
-            language: kotlin-swift
-          - type: view-new
-            language: kotlin-swift
-          - type: view-mixed
-            language: kotlin-swift
+          - type: view
+            language: cpp
+          - type: view-module
+            language: cpp
+          - type: module
+            language: kotlin-objc
         include:
+          - os: ubuntu-latest
+            type: view
+            language: kotlin-swift
+            arch: auto
+          - os: macos-14
+            type: view
+            language: kotlin-swift
+            arch: auto
+          - os: ubuntu-latest
+            type: module
+            language: kotlin-swift
+            arch: auto
           - os: ubuntu-latest
             type: library
             language: js
             arch: auto
           - os: ubuntu-latest
-            type: module-mixed
+            type: view-module
             language: kotlin-objc
             arch: new
           - os: macos-14
-            type: module-mixed
+            type: view-module
             language: kotlin-objc
             arch: new
           - os: ubuntu-latest
-            type: view-mixed
+            type: view
             language: kotlin-objc
             arch: new
-          - os: macos-14
-            type: view-mixed
-            language: kotlin-objc
-            arch: new
-          - os: ubuntu-latest
-            type: module-legacy
-            language: cpp
-            arch: auto
-          - os: ubuntu-latest
-            type: module-mixed
-            language: cpp
-            arch: auto
-          - os: ubuntu-latest
-            type: module-new
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-legacy
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-mixed
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-new
-            language: cpp
-            arch: auto
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}
@@ -171,17 +150,13 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+          if [[ ${{ matrix.os }} == ubuntu-latest ]] && [[ ${{ matrix.language }} != js ]] ; then
               echo "android_build=1" >> $GITHUB_ENV
-            fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos-14 ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+          if [[ ${{ matrix.os }} == macos-14 ]] && [[ ${{ matrix.language }} != js ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
-            fi
           fi
 
       - name: Cache turborepo

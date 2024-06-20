@@ -41,33 +41,70 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 );
 
 const NATIVE_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/native-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/native-view-new'),
+  'module-legacy': path.resolve(
+    __dirname,
+    '../templates/native-library-legacy'
+  ),
+  'module-new': path.resolve(__dirname, '../templates/native-library-new'),
+  'module-mixed': path.resolve(__dirname, '../templates/native-library-mixed'),
+  'view-legacy': path.resolve(__dirname, '../templates/native-view-legacy'),
+  'view-module-legacy': path.resolve(
+    __dirname,
+    '../templates/native-view-library-legacy'
+  ),
+  'view-module-mixed': path.resolve(
+    __dirname,
+    '../templates/native-view-library-mixed'
+  ),
+  'view-module-new': path.resolve(
+    __dirname,
+    '../templates/native-view-library-new'
+  ),
 } as const;
 
 const OBJC_FILES = {
-  module_common: path.resolve(__dirname, '../templates/objc-library'),
-  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
+  'module-legacy': path.resolve(__dirname, '../templates/objc-library'),
+  'module-mixed': path.resolve(__dirname, '../templates/objc-library'),
+  'module-new': path.resolve(__dirname, '../templates/objc-library'),
+  'view-module-legacy': path.resolve(
+    __dirname,
+    '../templates/objc-view-library-legacy'
+  ),
+  'view-module-mixed': path.resolve(
+    __dirname,
+    '../templates/objc-view-library-mixed'
+  ),
+  'view-module-new': path.resolve(
+    __dirname,
+    '../templates/objc-view-library-new'
+  ),
 } as const;
 
 const KOTLIN_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
+  'module-legacy': path.resolve(
+    __dirname,
+    '../templates/kotlin-library-legacy'
+  ),
+  'module-new': path.resolve(__dirname, '../templates/kotlin-library-new'),
+  'module-mixed': path.resolve(__dirname, '../templates/kotlin-library-mixed'),
+  'view-legacy': path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  'view-module-legacy': path.resolve(
+    __dirname,
+    '../templates/kotlin-view-library-legacy'
+  ),
+  'view-module-mixed': path.resolve(
+    __dirname,
+    '../templates/kotlin-view-library-mixed'
+  ),
+  'view-module-new': path.resolve(
+    __dirname,
+    '../templates/kotlin-view-library-new'
+  ),
 } as const;
 
 const SWIFT_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/swift-library-legacy'),
-  view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
+  'module-legacy': path.resolve(__dirname, '../templates/swift-library-legacy'),
+  'view-legacy': path.resolve(__dirname, '../templates/swift-view-legacy'),
 } as const;
 
 type ArgName =
@@ -86,13 +123,14 @@ type ArgName =
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 type ProjectType =
+  | 'library'
   | 'module-legacy'
-  | 'module-new'
   | 'module-mixed'
-  | 'view-mixed'
-  | 'view-new'
+  | 'module-new'
   | 'view-legacy'
-  | 'library';
+  | 'view-module-legacy'
+  | 'view-module-mixed'
+  | 'view-module-new';
 
 type Answers = {
   name: string;
@@ -117,14 +155,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: [
-      'module-legacy',
-      'module-new',
-      'module-mixed',
-      'view-mixed',
-      'view-new',
-      'view-legacy',
-    ],
+    types: ['view-module-legacy', 'view-module-mixed', 'view-module-new'],
   },
   {
     title: 'Kotlin & Swift',
@@ -170,6 +201,21 @@ const TYPE_CHOICES: {
   description: string;
 }[] = [
   {
+    title: 'Fabric view and Turbo module with backward compat',
+    value: 'view-module-mixed',
+    description: BACKCOMPAT_DESCRIPTION,
+  },
+  {
+    title: 'Fabric view and Turbo module',
+    value: 'view-module-new',
+    description: NEWARCH_DESCRIPTION,
+  },
+  {
+    title: 'Native module and Native view',
+    value: 'view-module-legacy',
+    description: 'bridge for native APIs and views to JS',
+  },
+  {
     title: 'JavaScript library',
     value: 'library',
     description: 'supports Expo Go and Web',
@@ -192,16 +238,6 @@ const TYPE_CHOICES: {
   {
     title: 'Turbo module',
     value: 'module-new',
-    description: NEWARCH_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view with backward compat',
-    value: 'view-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view',
-    value: 'view-new',
     description: NEWARCH_DESCRIPTION,
   },
 ];
@@ -599,13 +635,11 @@ async function create(_argv: yargs.Arguments<any>) {
     bobVersion = FALLBACK_BOB_VERSION;
   }
 
-  const moduleType = type.startsWith('view-') ? 'view' : 'module';
-  const arch =
-    type === 'module-new' || type === 'view-new'
-      ? 'new'
-      : type === 'module-mixed' || type === 'view-mixed'
-      ? 'mixed'
-      : 'legacy';
+  const arch = type.endsWith('new')
+    ? 'new'
+    : type.endsWith('mixed')
+    ? 'mixed'
+    : 'legacy';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
@@ -646,8 +680,8 @@ async function create(_argv: yargs.Arguments<any>) {
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
-      view: moduleType === 'view',
-      module: moduleType === 'module',
+      view: type.includes('view'),
+      module: type.includes('module'),
     },
     author: {
       name: authorName,
@@ -735,7 +769,7 @@ async function create(_argv: yargs.Arguments<any>) {
     }
   }
 
-  if (languages === 'js') {
+  if (type === 'library') {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
@@ -745,25 +779,18 @@ async function create(_argv: yargs.Arguments<any>) {
       await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
-    if (moduleType === 'module') {
-      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+    await copyDir(NATIVE_FILES[type], folder);
+
+    if (
+      type === 'view-legacy' ||
+      (type === 'module-legacy' && options.project.swift)
+    ) {
+      await copyDir(SWIFT_FILES[type], folder);
     } else {
-      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+      await copyDir(OBJC_FILES[type], folder);
     }
 
-    if (options.project.swift) {
-      await copyDir(SWIFT_FILES[`${moduleType}_legacy`], folder);
-    } else {
-      if (moduleType === 'module') {
-        await copyDir(OBJC_FILES[`${moduleType}_common`], folder);
-      } else {
-        await copyDir(OBJC_FILES[`view_${arch}`], folder);
-      }
-    }
-
-    const templateType = `${moduleType}_${arch}` as const;
-
-    await copyDir(KOTLIN_FILES[templateType], folder);
+    await copyDir(KOTLIN_FILES[type], folder);
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
