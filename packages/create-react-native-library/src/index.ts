@@ -180,7 +180,7 @@ const TYPE_CHOICES: {
   description: string;
 }[] = [
   {
-    title: `Fabric view and Turbo module with backward compat`,
+    title: 'Fabric view and Turbo module with backward compat',
     value: 'view-module-mixed',
     description: BACKCOMPAT_DESCRIPTION,
   },

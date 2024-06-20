@@ -18,7 +18,8 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 <<%- project.name -%>View color="tomato" />
 ```
-<% } else if (project.arch === 'new' && project.module) { -%>
+<% } -%>
+<% if (project.module && project.arch === 'new') { -%>
 
 ```js
 import { multiply } from '<%- project.slug -%>';
@@ -27,7 +28,7 @@ import { multiply } from '<%- project.slug -%>';
 
 const result = multiply(3, 7);
 ```
-<% } else { -%>
+<% } else if (project.module) { -%>
 ```js
 import { multiply } from '<%- project.slug -%>';
 
