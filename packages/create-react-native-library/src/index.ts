@@ -139,10 +139,16 @@ type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
-  example?: boolean;
+  example?: ExampleType;
   reactNativeVersion?: string;
   withRecommendedOptions?: boolean;
 };
+
+export enum ExampleType {
+  Vanilla = 'vanilla',
+  TestApp = 'test-app',
+  Expo = 'expo',
+}
 
 const LANGUAGE_CHOICES: {
   title: string;
@@ -273,9 +279,10 @@ const args: Record<ArgName, yargs.Options> = {
     type: 'boolean',
   },
   'example': {
-    description: 'Whether to create an example app',
-    type: 'boolean',
-    default: true,
+    description: 'Type of the app to create',
+    type: 'string',
+    choices: ['vanilla', 'test-app'],
+    default: 'vanilla',
   },
   'with-recommended-options': {
     description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}`,
@@ -632,7 +639,11 @@ async function create(argv: yargs.Arguments<any>) {
     : 'legacy';
 
   const example =
-    hasExample && !local ? (type === 'library' ? 'expo' : 'native') : 'none';
+    hasExample && !local
+      ? type === 'library'
+        ? ExampleType.Expo
+        : hasExample
+      : null;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
@@ -718,7 +729,7 @@ async function create(argv: yargs.Arguments<any>) {
   await fs.mkdirp(folder);
 
   if (reactNativeVersion != null) {
-    if (example === 'expo') {
+    if (example === ExampleType.Expo) {
       console.warn(
         `${kleur.yellow('⚠')} Ignoring --react-native-version for Expo example`
       );
@@ -733,7 +744,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   const spinner = ora().start();
 
-  if (example !== 'none') {
+  if (example) {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
@@ -753,7 +764,7 @@ async function create(argv: yargs.Arguments<any>) {
   } else {
     await copyDir(COMMON_FILES, folder);
 
-    if (example !== 'none') {
+    if (example) {
       await copyDir(COMMON_EXAMPLE_FILES, folder);
     }
   }
@@ -762,7 +773,7 @@ async function create(argv: yargs.Arguments<any>) {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
-    if (example !== 'none') {
+    if (example) {
       await copyDir(
         path.join(EXAMPLE_FILES, 'example'),
         path.join(folder, 'example')
@@ -771,7 +782,7 @@ async function create(argv: yargs.Arguments<any>) {
 
     await copyDir(NATIVE_COMMON_FILES, folder);
 
-    if (example !== 'none') {
+    if (example) {
       await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
@@ -794,7 +805,7 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  if (example !== 'none') {
+  if (example) {
     // Set `react` and `react-native` versions of root `package.json` from example `package.json`
     const examplePackageJson = await fs.readJSON(
       path.join(folder, 'example', 'package.json')

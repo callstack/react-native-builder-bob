@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
 import { spawn } from './spawn';
+import { ExampleType } from './../index';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -55,7 +56,7 @@ export default async function generateExampleApp({
   arch,
   reactNativeVersion = 'latest',
 }: {
-  type: 'expo' | 'native';
+  type: ExampleType;
   dest: string;
   slug: string;
   projectName: string;
@@ -63,33 +64,60 @@ export default async function generateExampleApp({
   reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
-  const args =
-    type === 'native'
-      ? // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
-        [
-          '--package',
-          `react-native-test-app@latest`,
-          'init',
-          '--name',
-          `${projectName}Example`,
-          `--destination`,
-          directory,
-          ...(reactNativeVersion !== 'latest'
-            ? ['--version', reactNativeVersion]
-            : []),
-          '--platform',
-          'ios',
-          '--platform',
-          'android',
-        ]
-      : // `npx create-expo-app example --no-install --template blank`
-        [
-          'create-expo-app@latest',
-          directory,
-          '--no-install',
-          '--template',
-          'blank',
-        ];
+
+  // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
+  const testAppArgs = [
+    '--package',
+    `react-native-test-app@latest`,
+    'init',
+    '--name',
+    `${projectName}Example`,
+    `--destination`,
+    directory,
+    ...(reactNativeVersion !== 'latest'
+      ? ['--version', reactNativeVersion]
+      : []),
+    '--platform',
+    'ios',
+    '--platform',
+    'android',
+  ];
+
+  // `npx react-native init <projectName> --directory example --skip-install`
+  const vanillaArgs = [
+    'react-native@latest',
+    'init',
+    `${projectName}Example`,
+    '--directory',
+    directory,
+    '--version',
+    reactNativeVersion,
+    '--skip-install',
+    '--npm',
+  ];
+
+  // `npx create-expo-app example --no-install --template blank`
+  const expoArgs = [
+    'create-expo-app@latest',
+    directory,
+    '--no-install',
+    '--template',
+    'blank',
+  ];
+
+  let args: string[] = [];
+
+  switch (type) {
+    case ExampleType.Vanilla:
+      args = vanillaArgs;
+      break;
+    case ExampleType.TestApp:
+      args = testAppArgs;
+      break;
+    case ExampleType.Expo:
+      args = expoArgs;
+      break;
+  }
 
   await spawn('npx', args, {
     env: { ...process.env, npm_config_yes: 'true' },
@@ -121,7 +149,7 @@ export default async function generateExampleApp({
     'build:ios': `cd ios && xcodebuild -workspace ${projectName}Example.xcworkspace -scheme ${projectName}Example -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO`,
   };
 
-  if (type === 'native') {
+  if (type !== ExampleType.Expo) {
     Object.assign(scripts, SCRIPTS_TO_ADD);
   }
 
@@ -132,7 +160,7 @@ export default async function generateExampleApp({
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 
-  if (type === 'expo') {
+  if (type === ExampleType.Expo) {
     const sdkVersion = dependencies.expo.split('.')[0].replace(/[^\d]/, '');
 
     let bundledNativeModules: Record<string, string>;
@@ -176,7 +204,7 @@ export default async function generateExampleApp({
     spaces: 2,
   });
 
-  if (type === 'native') {
+  if (type !== ExampleType.Expo) {
     let gradleProperties = await fs.readFile(
       path.join(directory, 'android', 'gradle.properties'),
       'utf8'
