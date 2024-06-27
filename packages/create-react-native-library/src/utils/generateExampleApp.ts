@@ -65,17 +65,22 @@ export default async function generateExampleApp({
   const directory = path.join(dest, 'example');
   const args =
     type === 'native'
-      ? // `npx react-native init <projectName> --directory example --skip-install`
+      ? // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
         [
-          'react-native@latest',
+          '--package',
+          `react-native-test-app@latest`,
           'init',
+          '--name',
           `${projectName}Example`,
-          '--directory',
+          `--destination`,
           directory,
-          '--version',
-          reactNativeVersion,
-          '--skip-install',
-          '--npm',
+          ...(reactNativeVersion !== 'latest'
+            ? ['--version', reactNativeVersion]
+            : []),
+          '--platform',
+          'ios',
+          '--platform',
+          'android',
         ]
       : // `npx create-expo-app example --no-install --template blank`
         [
@@ -87,7 +92,6 @@ export default async function generateExampleApp({
         ];
 
   await spawn('npx', args, {
-    cwd: dest,
     env: { ...process.env, npm_config_yes: 'true' },
   });
 
