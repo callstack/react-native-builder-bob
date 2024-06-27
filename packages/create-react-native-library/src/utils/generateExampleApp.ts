@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
 import { spawn } from './spawn';
-import { ExampleType } from './../index';
+import type { ExampleType } from './../index';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -108,13 +108,13 @@ export default async function generateExampleApp({
   let args: string[] = [];
 
   switch (type) {
-    case ExampleType.Vanilla:
+    case 'vanilla':
       args = vanillaArgs;
       break;
-    case ExampleType.TestApp:
+    case 'test-app':
       args = testAppArgs;
       break;
-    case ExampleType.Expo:
+    case 'expo':
       args = expoArgs;
       break;
   }
@@ -149,7 +149,7 @@ export default async function generateExampleApp({
     'build:ios': `cd ios && xcodebuild -workspace ${projectName}Example.xcworkspace -scheme ${projectName}Example -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO`,
   };
 
-  if (type !== ExampleType.Expo) {
+  if (type !== 'expo') {
     Object.assign(scripts, SCRIPTS_TO_ADD);
   }
 
@@ -160,7 +160,7 @@ export default async function generateExampleApp({
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 
-  if (type === ExampleType.Expo) {
+  if (type === 'expo') {
     const sdkVersion = dependencies.expo.split('.')[0].replace(/[^\d]/, '');
 
     let bundledNativeModules: Record<string, string>;
@@ -204,7 +204,7 @@ export default async function generateExampleApp({
     spaces: 2,
   });
 
-  if (type !== ExampleType.Expo) {
+  if (type !== 'expo') {
     let gradleProperties = await fs.readFile(
       path.join(directory, 'android', 'gradle.properties'),
       'utf8'

@@ -144,11 +144,7 @@ type Answers = {
   withRecommendedOptions?: boolean;
 };
 
-export enum ExampleType {
-  Vanilla = 'vanilla',
-  TestApp = 'test-app',
-  Expo = 'expo',
-}
+export type ExampleType = 'vanilla' | 'test-app' | 'expo';
 
 const LANGUAGE_CHOICES: {
   title: string;
@@ -639,11 +635,7 @@ async function create(argv: yargs.Arguments<any>) {
     : 'legacy';
 
   const example =
-    hasExample && !local
-      ? type === 'library'
-        ? ExampleType.Expo
-        : hasExample
-      : null;
+    hasExample && !local ? (type === 'library' ? 'expo' : hasExample) : null;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
@@ -729,7 +721,7 @@ async function create(argv: yargs.Arguments<any>) {
   await fs.mkdirp(folder);
 
   if (reactNativeVersion != null) {
-    if (example === ExampleType.Expo) {
+    if (example === 'expo') {
       console.warn(
         `${kleur.yellow('⚠')} Ignoring --react-native-version for Expo example`
       );
