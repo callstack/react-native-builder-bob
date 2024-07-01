@@ -1,0 +1,10 @@
+export * as a from "a";
+export * as b from "./b.mjs";
+export * as c from "./c.mjs";
+export * as d from "./d";
+export * as e from "./e.story.mjs";
+export * as f from "../f.mjs";
+export * as pak from "..";
+export { a as a1 } from "./a.mjs";
+export * from "./b.mjs";
+export type { A } from "./a";

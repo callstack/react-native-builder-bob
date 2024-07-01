@@ -26,5 +26,8 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Test
+        run: yarn test
+
       - name: Build packages
         run: yarn lerna run prepare
