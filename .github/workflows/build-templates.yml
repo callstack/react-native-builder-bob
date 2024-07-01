@@ -183,7 +183,7 @@ jobs:
         working-directory: ${{ env.work_dir }}
         if: matrix.language == 'js'
         run: |
-          yarn example expo export:web
+          yarn example expo export --platform web
 
       - name: Install JDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
