@@ -574,6 +574,14 @@ async function create(argv: yargs.Arguments<any>) {
     ...(await prompts(
       Object.entries(questions)
         .filter(([k, v]) => {
+          // Skip 'with-recommended-options' question if type of language is passed
+          if (
+            k === 'with-recommended-options' &&
+            (argv.languages || argv.type)
+          ) {
+            return false;
+          }
+
           // Skip questions which are passed as parameter and pass validation
           if (argv[k] != null && v.validate?.(argv[k]) !== false) {
             return false;
