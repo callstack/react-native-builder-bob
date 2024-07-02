@@ -217,43 +217,56 @@ export default async function build({
         return null;
       };
 
-      if ('types' in pkg) {
-        const typesPath = path.join(root, pkg.types);
+      const fields = [
+        { name: 'types', value: pkg.types },
+        { name: "exports['.'].types", value: pkg.exports?.['.']?.types },
+      ];
 
-        if (!(await fs.pathExists(typesPath))) {
-          const generatedTypesPath = await getGeneratedTypesPath();
+      if (fields.some((field) => field.value)) {
+        await Promise.all(
+          fields.map(async ({ name, value }) => {
+            if (!value) {
+              return;
+            }
 
-          if (!generatedTypesPath) {
-            report.warn(
-              `Failed to detect the entry point for the generated types. Make sure you have a valid ${kleur.blue(
-                'source'
-              )} field in your ${kleur.blue('package.json')}.`
-            );
-          }
+            const typesPath = path.join(root, value);
 
-          report.error(
-            `The ${kleur.blue('types')} field in ${kleur.blue(
-              'package.json'
-            )} points to a non-existent file: ${kleur.blue(
-              pkg.types
-            )}.\nVerify the path points to the correct file under ${kleur.blue(
-              path.relative(root, output)
-            )}${
-              generatedTypesPath
-                ? ` (found ${kleur.blue(generatedTypesPath)}).`
-                : '.'
-            }`
-          );
+            if (!(await fs.pathExists(typesPath))) {
+              const generatedTypesPath = await getGeneratedTypesPath();
 
-          throw new Error("Found incorrect path in 'types' field.");
-        }
+              if (!generatedTypesPath) {
+                report.warn(
+                  `Failed to detect the entry point for the generated types. Make sure you have a valid ${kleur.blue(
+                    'source'
+                  )} field in your ${kleur.blue('package.json')}.`
+                );
+              }
+
+              report.error(
+                `The ${kleur.blue(name)} field in ${kleur.blue(
+                  'package.json'
+                )} points to a non-existent file: ${kleur.blue(
+                  value
+                )}.\nVerify the path points to the correct file under ${kleur.blue(
+                  path.relative(root, output)
+                )}${
+                  generatedTypesPath
+                    ? ` (found ${kleur.blue(generatedTypesPath)}).`
+                    : '.'
+                }`
+              );
+
+              throw new Error(`Found incorrect path in '${name}' field.`);
+            }
+          })
+        );
       } else {
         const generatedTypesPath = await getGeneratedTypesPath();
 
         report.warn(
-          `No ${kleur.blue('types')} field found in ${kleur.blue(
-            'package.json'
-          )}.\nConsider ${
+          `No ${kleur.blue(
+            fields.map((field) => field.name).join(' or ')
+          )} field found in ${kleur.blue('package.json')}.\nConsider ${
             generatedTypesPath
               ? `pointing it to ${kleur.blue(generatedTypesPath)}`
               : 'adding it'

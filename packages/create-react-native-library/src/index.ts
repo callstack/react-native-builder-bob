@@ -11,7 +11,7 @@ import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
 
-const FALLBACK_BOB_VERSION = '0.20.0';
+const FALLBACK_BOB_VERSION = '0.24.0';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,

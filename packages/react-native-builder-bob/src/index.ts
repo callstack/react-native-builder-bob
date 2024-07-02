@@ -147,16 +147,17 @@ yargs
         ? targets[0]
         : undefined;
 
-    const entries: { [key: string]: string } = {
-      'main': target
-        ? path.join(output, target, 'index.js')
+    const entries: {
+      [key in 'source' | 'main' | 'module' | 'types']?: string;
+    } = {
+      source: path.join(source, entryFile),
+      main: target
+        ? path.join(output, target, 'index.cjs')
         : path.join(source, entryFile),
-      'react-native': path.join(source, entryFile),
-      'source': path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
-      entries.module = path.join(output, 'module', 'index.js');
+      entries.module = path.join(output, 'module', 'index.mjs');
     }
 
     if (targets.includes('typescript')) {
@@ -180,10 +181,10 @@ yargs
                 allowUnusedLabels: false,
                 esModuleInterop: true,
                 forceConsistentCasingInFileNames: true,
-                jsx: 'react',
-                lib: ['esnext'],
-                module: 'esnext',
-                moduleResolution: 'node',
+                jsx: 'react-jsx',
+                lib: ['ESNext'],
+                module: 'ESNext',
+                moduleResolution: 'Bundler',
                 noFallthroughCasesInSwitch: true,
                 noImplicitReturns: true,
                 noImplicitUseStrict: false,
@@ -194,7 +195,7 @@ yargs
                 resolveJsonModule: true,
                 skipLibCheck: true,
                 strict: true,
-                target: 'esnext',
+                target: 'ESNext',
                 verbatimModuleSyntax: true,
               },
             },
@@ -214,7 +215,7 @@ yargs
     ];
 
     for (const key in entries) {
-      const entry = entries[key];
+      const entry = entries[key as keyof typeof entries];
 
       if (pkg[key] && pkg[key] !== entry) {
         const { replace } = await prompts({
@@ -229,6 +230,41 @@ yargs
         }
       } else {
         pkg[key] = entry;
+      }
+    }
+
+    if (Object.values(entries).some((entry) => entry.endsWith('.ms'))) {
+      let replace = false;
+
+      if (pkg.exports) {
+        replace = (
+          await prompts({
+            type: 'confirm',
+            name: 'replace',
+            message: `Your package.json has 'exports' field set. Do you want to replace it?`,
+            initial: true,
+          })
+        ).replace;
+      } else {
+        replace = true;
+      }
+
+      if (replace) {
+        pkg.exports = {
+          '.': {},
+        };
+
+        if (entries.types) {
+          pkg.exports['.'].types = entries.types;
+        }
+
+        if (entries.module) {
+          pkg.exports['.'].import = entries.module;
+        }
+
+        if (entries.main) {
+          pkg.exports['.'].require = entries.main;
+        }
       }
     }
 
