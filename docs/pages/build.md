@@ -73,11 +73,17 @@ yarn add --dev react-native-builder-bob
 1. Configure the appropriate entry points:
 
    ```json
-   "main": "lib/commonjs/index.js",
-   "module": "lib/module/index.js",
-   "react-native": "src/index.ts",
-   "types": "lib/typescript/src/index.d.ts",
-   "source": "src/index.ts",
+   "source": "./src/index.tsx",
+   "main": "./lib/commonjs/index.cjs",
+   "module": "./lib/module/index.mjs",
+   "types": "./lib/typescript/src/index.d.ts",
+   "exports": {
+     ".": {
+       "types": "./typescript/src/index.d.ts",
+       "require": "./commonjs/index.cjs",
+       "import": "./module/index.mjs"
+     }
+   },
    "files": [
      "lib",
      "src"
@@ -88,7 +94,6 @@ yarn add --dev react-native-builder-bob
 
    - `main`: The entry point for the commonjs build. This is used by Node - such as tests, SSR etc.
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
-   - `react-native`: The entry point for the React Native apps. This is used by Metro. It's common to point to the source code here as it can make debugging easier.
    - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to type check the code using your library.
    - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
    - `files`: The files to include in the package when publishing with `npm`.
@@ -150,7 +155,7 @@ Various targets to build for. The available targets are:
 
 Enable compiling source files with Babel and use commonjs module system.
 
-This is useful for running the code in Node (SSR, tests etc.). The output file should be referenced in the `main` field of `package.json`.
+This is useful for running the code in Node (SSR, tests etc.). The output file should be referenced in the `main` field and `exports['.'].require` field of `package.json`.
 
 By default, the code is compiled to support last 2 versions of modern browsers. It also strips TypeScript and Flow annotations, and compiles JSX. You can customize the environments to compile for by using a [browserslist config](https://github.com/browserslist/browserslist#config-file).
 
@@ -174,7 +179,7 @@ Example:
 
 Enable compiling source files with Babel and use ES module system. This is essentially same as the `commonjs` target and accepts the same options, but leaves the `import`/`export` statements in your code.
 
-This is useful for bundlers which understand ES modules and can tree-shake. The output file should be referenced in the `module` field of `package.json`.
+This is useful for bundlers which understand ES modules and can tree-shake. The output file should be referenced in the `module` field and `exports['.'].import` field of `package.json`.
 
 Example:
 
@@ -197,6 +202,8 @@ Example:
 ```json
 ["typescript", { "project": "tsconfig.build.json" }]
 ```
+
+The output file should be referenced in the `types` field or `exports['.'].types` field of `package.json`.
 
 ## Commands
 
