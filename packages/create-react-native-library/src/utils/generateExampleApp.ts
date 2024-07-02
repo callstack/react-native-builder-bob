@@ -63,7 +63,7 @@ export default async function generateExampleApp({
     type === 'native'
       ? // `npx react-native init <projectName> --directory example --skip-install`
         [
-          'react-native@latest',
+          `react-native@${reactNativeVersion}`,
           'init',
           `${projectName}Example`,
           '--directory',
