@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 <% if (project.view && project.module) { -%>
 import { StyleSheet, View, Text } from 'react-native';
 import { <%- project.name -%>View, multiply } from '<%- project.slug -%>';

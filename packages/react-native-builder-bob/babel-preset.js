@@ -27,7 +27,12 @@ module.exports = function (api, options, cwd) {
           modules: options.modules || false,
         },
       ],
-      require.resolve('@babel/preset-react'),
+      [
+        require.resolve('@babel/preset-react'),
+        {
+          runtime: 'automatic',
+        },
+      ],
       require.resolve('@babel/preset-typescript'),
       require.resolve('@babel/preset-flow'),
     ],
