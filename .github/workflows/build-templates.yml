@@ -121,6 +121,15 @@ jobs:
           rm -f example/yarn.lock # Workaround for cached yarn.lock from older version
           yarn install --no-immutable
 
+      - name: Use local version of react-native-builder-bob
+        run: |
+          cd packages/react-native-builder-bob
+          npm pack
+          tgz=$(ls react-native-builder-bob-*.tgz)
+          cd -
+          cd ${{ env.work_dir }}
+          yarn add --dev ../packages/react-native-builder-bob/$tgz
+
       - name: Get build target
         working-directory: ${{ env.work_dir }}
         run: |
