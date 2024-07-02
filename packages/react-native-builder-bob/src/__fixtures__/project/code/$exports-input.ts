@@ -10,3 +10,9 @@ export { a as a1 } from "./a";
 export * from "./b";
 
 export type { A } from "./a";
+
+export const foo = "foo";
+
+const bar = "bar";
+
+export { bar };

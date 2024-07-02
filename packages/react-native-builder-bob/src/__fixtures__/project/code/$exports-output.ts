@@ -8,3 +8,6 @@ export * as pak from "..";
 export { a as a1 } from "./a.mjs";
 export * from "./b.mjs";
 export type { A } from "./a";
+export const foo = "foo";
+const bar = "bar";
+export { bar };
