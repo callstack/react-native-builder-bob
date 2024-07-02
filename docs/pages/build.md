@@ -156,7 +156,9 @@ By default, the code is compiled to support last 2 versions of modern browsers. 
 
 In addition, the following options are supported:
 
-- `configFile` & `babelrc` (`boolean`): To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option if you have a `.babelrc`. This may break the default configuration, so use these options only if you know what you're doing.
+- `configFile` (`boolean` | `string`): To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration. You can extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/babel-preset.js) preset.
+
+- `babelrc` (`boolean`): You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files.
 
 - `copyFlow` (`boolean`): If your source code is written in [Flow](http://www.typescriptlang.org/), You can specify the `copyFlow` option to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
 
