@@ -4,7 +4,9 @@ export * as c from "./c";
 export * as d from "./d";
 export * as e from "./e.story";
 export * as f from "../f";
-export * as pak from "..";
+export * as pac from "..";
+export * as pak from "../";
+export * as pax from "../index";
 
 export { a as a1 } from "./a";
 export * from "./b";

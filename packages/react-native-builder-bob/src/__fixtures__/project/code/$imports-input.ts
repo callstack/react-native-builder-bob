@@ -5,7 +5,9 @@ import c from "./c";
 import d from "./d";
 import e from "./e.story";
 import f from "../f";
-import pak from "..";
+import pac from "..";
+import pak from "../";
+import pax from "../index";
 
 import { a as a1 } from "./a";
 import * as b1 from "./b";

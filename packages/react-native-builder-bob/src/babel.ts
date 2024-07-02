@@ -12,19 +12,18 @@ type Options = {
   extension?: 'cjs' | 'mjs';
 };
 
-const fileCache = new Map<string, string>();
+const isFile = (filename: string): boolean => {
+  const exists =
+    fs.lstatSync(filename, { throwIfNoEntry: false })?.isFile() ?? false;
 
-const doesFileExist = (filename: string): boolean => {
-  if (fileCache.has(filename)) {
-    return true;
-  }
+  return exists;
+};
 
-  try {
-    fs.accessSync(filename, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
+const isDirectory = (filename: string): boolean => {
+  const exists =
+    fs.lstatSync(filename, { throwIfNoEntry: false })?.isDirectory() ?? false;
+
+  return exists;
 };
 
 const isTypeImport = (
@@ -113,17 +112,30 @@ export default function (
 
     // Add extension if .ts file or file with extension exists
     if (
-      doesFileExist(`${filename}.ts`) ||
-      doesFileExist(`${filename}.tsx`) ||
-      doesFileExist(`${filename}.${extension}`)
+      isFile(`${filename}.ts`) ||
+      isFile(`${filename}.tsx`) ||
+      isFile(`${filename}.${extension}`)
     ) {
       node.source.value += `.${extension}`;
       return;
     }
 
     // Replace .ts extension with .js if .ts file exists
-    if (doesFileExist(filename)) {
+    if (isFile(filename)) {
       node.source.value = node.source.value.replace(/\.tsx?$/, `.${extension}`);
+      return;
+    }
+
+    if (
+      isDirectory(filename) &&
+      (isFile(path.join(filename, 'index.ts')) ||
+        isFile(path.join(filename, 'index.tsx')) ||
+        isFile(path.join(filename, `index.${extension}`)))
+    ) {
+      node.source.value = node.source.value.replace(
+        /\/?$/,
+        `/index.${extension}`
+      );
       return;
     }
   }
