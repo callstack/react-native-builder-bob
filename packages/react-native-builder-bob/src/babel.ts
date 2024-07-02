@@ -111,9 +111,10 @@ export default function (
       node.source.value
     );
 
-    // Add .js extension if .ts file or file with extension exists
+    // Add extension if .ts file or file with extension exists
     if (
       doesFileExist(`${filename}.ts`) ||
+      doesFileExist(`${filename}.tsx`) ||
       doesFileExist(`${filename}.${extension}`)
     ) {
       node.source.value += `.${extension}`;
@@ -122,7 +123,7 @@ export default function (
 
     // Replace .ts extension with .js if .ts file exists
     if (doesFileExist(filename)) {
-      node.source.value = node.source.value.replace(/\.ts$/, `.${extension}`);
+      node.source.value = node.source.value.replace(/\.tsx?$/, `.${extension}`);
       return;
     }
   }
