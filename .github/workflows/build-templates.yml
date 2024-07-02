@@ -144,7 +144,7 @@ jobs:
           tgz=$(ls react-native-builder-bob-*.tgz)
           cd -
           cd ${{ env.work_dir }}
-          yarn add --dev ../packages/react-native-builder-bob/$tgz
+          YARN_CHECKSUM_BEHAVIOR=ignore yarn add --dev ../packages/react-native-builder-bob/$tgz
 
       - name: Get build target
         working-directory: ${{ env.work_dir }}
