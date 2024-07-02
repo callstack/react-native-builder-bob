@@ -2,11 +2,17 @@
   "name": "<%- project.slug -%>",
   "version": "0.1.0",
   "description": "<%- project.description %>",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.cjs",
+  "module": "./lib/module/index.mjs",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "import": "./lib/module/index.mjs",
+      "require": "./lib/commonjs/index.cjs"
+    }
+  },
   "files": [
     "src",
     "lib",

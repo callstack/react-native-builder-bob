@@ -36,6 +36,5 @@ export default async function build({
     exclude,
     modules: 'commonjs',
     report,
-    field: 'main',
   });
 }
