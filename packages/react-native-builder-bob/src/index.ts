@@ -188,7 +188,7 @@ yargs
                 allowUnusedLabels: false,
                 esModuleInterop: true,
                 forceConsistentCasingInFileNames: true,
-                jsx: 'react',
+                jsx: 'react-jsx',
                 lib: ['ESNext'],
                 module: 'ESNext',
                 moduleResolution: 'Bundler',
