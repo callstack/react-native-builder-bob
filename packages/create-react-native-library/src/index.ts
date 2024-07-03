@@ -8,7 +8,9 @@ import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
-import generateExampleApp from './utils/generateExampleApp';
+import generateExampleApp, {
+  type ExampleType,
+} from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 
@@ -117,7 +119,7 @@ type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
-  example?: boolean;
+  example?: ExampleType;
   reactNativeVersion?: string;
   local?: boolean;
 };
@@ -172,6 +174,24 @@ const LANGUAGE_CHOICES: {
     types: ['library'],
   },
 ];
+
+const EXAMPLE_CHOICES = [
+  {
+    title: 'Test app',
+    value: 'test-app',
+    description: "app's native code is abstracted away",
+  },
+  {
+    title: 'Vanilla',
+    value: 'vanilla',
+    description: "provides access to app's native code",
+  },
+  {
+    title: 'Expo',
+    value: 'expo',
+    description: 'managed expo project with web support',
+  },
+] as const;
 
 const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
 const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
@@ -260,9 +280,9 @@ const args: Record<ArgName, yargs.Options> = {
     type: 'boolean',
   },
   'example': {
-    description: 'Whether to create an example app',
-    type: 'boolean',
-    default: true,
+    description: 'Type of the example app to create',
+    type: 'string',
+    choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
 };
 
@@ -452,51 +472,76 @@ async function create(_argv: yargs.Arguments<any>) {
         });
       },
     },
+    {
+      type: 'select',
+      name: 'example',
+      message: 'What type of example app do you want to create?',
+      choices: (_, values) => {
+        return EXAMPLE_CHOICES.filter((choice) => {
+          if (values.type) {
+            return values.type === 'library'
+              ? choice.value === 'expo'
+              : choice.value !== 'expo';
+          }
+
+          return true;
+        });
+      },
+    },
   ];
 
+  const validate = (answers: Answers) => {
+    for (const [key, value] of Object.entries(answers)) {
+      if (value == null) {
+        continue;
+      }
+
+      const question = questions.find((q) => q.name === key);
+
+      if (question == null) {
+        continue;
+      }
+
+      let valid = question.validate ? question.validate(String(value)) : true;
+
+      // We also need to guard against invalid choices
+      // If we don't already have a validation message to provide a better error
+      if (typeof valid !== 'string' && 'choices' in question) {
+        const choices =
+          typeof question.choices === 'function'
+            ? question.choices(
+                undefined,
+                // @ts-expect-error: it complains about optional values, but it should be fine
+                answers,
+                question
+              )
+            : question.choices;
+
+        if (choices && !choices.some((choice) => choice.value === value)) {
+          valid = `Supported values are - ${choices.map((c) =>
+            kleur.green(c.value)
+          )}`;
+        }
+      }
+
+      if (valid !== true) {
+        let message = `Invalid value ${kleur.red(
+          String(value)
+        )} passed for ${kleur.blue(key)}`;
+
+        if (typeof valid === 'string') {
+          message += `: ${valid}`;
+        }
+
+        console.log(message);
+
+        process.exit(1);
+      }
+    }
+  };
+
   // Validate arguments passed to the CLI
-  for (const [key, value] of Object.entries(argv)) {
-    if (value == null) {
-      continue;
-    }
-
-    const question = questions.find((q) => q.name === key);
-
-    if (question == null) {
-      continue;
-    }
-
-    let valid = question.validate ? question.validate(String(value)) : true;
-
-    // We also need to guard against invalid choices
-    // If we don't already have a validation message to provide a better error
-    if (typeof valid !== 'string' && 'choices' in question) {
-      const choices =
-        typeof question.choices === 'function'
-          ? question.choices(undefined, argv, question)
-          : question.choices;
-
-      if (choices && !choices.some((choice) => choice.value === value)) {
-        valid = `Supported values are - ${choices.map((c) =>
-          kleur.green(c.value)
-        )}`;
-      }
-    }
-
-    if (valid !== true) {
-      let message = `Invalid value ${kleur.red(
-        String(value)
-      )} passed for ${kleur.blue(key)}`;
-
-      if (typeof valid === 'string') {
-        message += `: ${valid}`;
-      }
-
-      console.log(message);
-
-      process.exit(1);
-    }
-  }
+  validate(argv);
 
   const answers = {
     ...argv,
@@ -546,6 +591,8 @@ async function create(_argv: yargs.Arguments<any>) {
     )),
   } as Answers;
 
+  validate(answers);
+
   const {
     slug,
     description,
@@ -555,7 +602,7 @@ async function create(_argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
-    example: hasExample,
+    example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
     reactNativeVersion,
   } = answers;
 
@@ -581,9 +628,6 @@ async function create(_argv: yargs.Arguments<any>) {
       : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
-
-  const example =
-    hasExample && !local ? (type === 'library' ? 'expo' : 'native') : 'none';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
