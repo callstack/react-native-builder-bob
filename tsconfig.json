@@ -8,7 +8,6 @@
       "react-native-builder-bob": ["./packages/react-native-builder-bob/src"]
     },
     "outDir": "./typescript",
-    "composite": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
