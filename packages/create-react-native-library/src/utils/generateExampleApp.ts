@@ -2,7 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
 import { spawn } from './spawn';
-import type { ExampleType } from './../index';
+
+export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -39,13 +40,9 @@ const PACKAGES_TO_ADD_DEV = {
 };
 
 const PACKAGES_TO_ADD_WEB = {
+  '@expo/metro-runtime': '~3.2.1',
   'react-dom': '18.2.0',
   'react-native-web': '~0.18.10',
-};
-
-const PACKAGES_TO_ADD_WEB_DEV = {
-  '@expo/webpack-config': '^18.0.1',
-  'babel-loader': '^8.1.0',
 };
 
 export default async function generateExampleApp({
@@ -191,10 +188,6 @@ export default async function generateExampleApp({
 
     Object.entries(PACKAGES_TO_ADD_WEB).forEach(([name, version]) => {
       dependencies[name] = bundledNativeModules[name] || version;
-    });
-
-    Object.entries(PACKAGES_TO_ADD_WEB_DEV).forEach(([name, version]) => {
-      devDependencies[name] = bundledNativeModules[name] || version;
     });
 
     scripts.web = 'expo start --web';

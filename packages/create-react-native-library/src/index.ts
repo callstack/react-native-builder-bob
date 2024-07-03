@@ -8,8 +8,11 @@ import ora from 'ora';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
-import generateExampleApp from './utils/generateExampleApp';
+import generateExampleApp, {
+  type ExampleType,
+} from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
+import { version } from '../package.json';
 
 const FALLBACK_BOB_VERSION = '0.20.0';
 
@@ -107,6 +110,7 @@ type ProjectType =
   | 'library';
 
 type Answers = {
+  name: string;
   slug: string;
   description: string;
   authorName: string;
@@ -117,9 +121,8 @@ type Answers = {
   type?: ProjectType;
   example?: ExampleType;
   reactNativeVersion?: string;
+  local?: boolean;
 };
-
-export type ExampleType = 'vanilla' | 'test-app' | 'expo';
 
 const LANGUAGE_CHOICES: {
   title: string;
@@ -172,6 +175,24 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
+const EXAMPLE_CHOICES = [
+  {
+    title: 'Test app',
+    value: 'test-app',
+    description: "app's native code is abstracted away",
+  },
+  {
+    title: 'Vanilla',
+    value: 'vanilla',
+    description: "provides access to app's native code",
+  },
+  {
+    title: 'Expo',
+    value: 'expo',
+    description: 'managed expo project with web support',
+  },
+] as const;
+
 const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
 const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
 
@@ -217,24 +238,6 @@ const TYPE_CHOICES: {
   },
 ];
 
-const EXAMPLE_CHOICES = [
-  {
-    title: 'Test app',
-    value: 'test-app',
-    description: "app's native code is abstracted away",
-  },
-  {
-    title: 'Vanilla',
-    value: 'vanilla',
-    description: "provides access to app's native code",
-  },
-  {
-    title: 'Expo',
-    value: 'expo',
-    description: 'managed expo project with web support',
-  },
-] as const;
-
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
@@ -277,7 +280,7 @@ const args: Record<ArgName, yargs.Options> = {
     type: 'boolean',
   },
   'example': {
-    description: 'Type of the app to create',
+    description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
@@ -285,7 +288,10 @@ const args: Record<ArgName, yargs.Options> = {
 
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function create(argv: yargs.Arguments<any>) {
+async function create(_argv: yargs.Arguments<any>) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _, $0, ...argv } = _argv;
+
   let local = false;
 
   if (typeof argv.local === 'boolean') {
@@ -375,13 +381,11 @@ async function create(argv: yargs.Arguments<any>) {
 
   const basename = path.basename(folder);
 
-  const questions: Record<
-    ArgName,
-    Omit<PromptObject<keyof Answers>, 'validate'> & {
-      validate?: (value: string) => boolean | string;
-    }
-  > = {
-    'slug': {
+  const questions: (Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
+    validate?: (value: string) => boolean | string;
+    name: string;
+  })[] = [
+    {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
@@ -394,20 +398,20 @@ async function create(argv: yargs.Arguments<any>) {
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
     },
-    'description': {
+    {
       type: 'text',
       name: 'description',
       message: 'What is the description for the package?',
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'author-name': {
+    {
       type: local ? null : 'text',
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: name,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
-    'author-email': {
+    {
       type: local ? null : 'text',
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
@@ -415,7 +419,7 @@ async function create(argv: yargs.Arguments<any>) {
       validate: (input) =>
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
-    'author-url': {
+    {
       type: local ? null : 'text',
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
@@ -433,7 +437,7 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'repo-url': {
+    {
       type: local ? null : 'text',
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
@@ -448,13 +452,13 @@ async function create(argv: yargs.Arguments<any>) {
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
-    'type': {
+    {
       type: 'select',
       name: 'type',
       message: 'What type of library do you want to develop?',
       choices: TYPE_CHOICES,
     },
-    'languages': {
+    {
       type: 'select',
       name: 'languages',
       message: 'Which languages do you want to use?',
@@ -468,7 +472,7 @@ async function create(argv: yargs.Arguments<any>) {
         });
       },
     },
-    'example': {
+    {
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
@@ -484,7 +488,7 @@ async function create(argv: yargs.Arguments<any>) {
         });
       },
     },
-  };
+  ];
 
   const validate = (answers: Answers) => {
     for (const [key, value] of Object.entries(answers)) {
@@ -492,7 +496,7 @@ async function create(argv: yargs.Arguments<any>) {
         continue;
       }
 
-      const question = questions[key as ArgName];
+      const question = questions.find((q) => q.name === key);
 
       if (question == null) {
         continue;
@@ -514,9 +518,9 @@ async function create(argv: yargs.Arguments<any>) {
             : question.choices;
 
         if (choices && !choices.some((choice) => choice.value === value)) {
-          valid = `Supported values are - ${choices
-            .map((c) => kleur.green(c.value))
-            .join(', ')}`;
+          valid = `Supported values are - ${choices.map((c) =>
+            kleur.green(c.value)
+          )}`;
         }
       }
 
@@ -541,36 +545,35 @@ async function create(argv: yargs.Arguments<any>) {
 
   const answers = {
     ...argv,
+    local,
     ...(await prompts(
-      Object.entries(questions)
-        .filter(([k, v]) => {
-          // Skip 'with-recommended-options' question if type of language is passed
+      questions
+        .filter((question) => {
+          // Skip questions which are passed as parameter and pass validation
           if (
-            k === 'with-recommended-options' &&
-            (argv.languages || argv.type)
+            argv[question.name] != null &&
+            question.validate?.(argv[question.name]) !== false
           ) {
             return false;
           }
 
-          // Skip questions which are passed as parameter and pass validation
-          if (argv[k] != null && v.validate?.(argv[k]) !== false) {
-            return false;
-          }
-
           // Skip questions with a single choice
-          if (Array.isArray(v.choices) && v.choices.length === 1) {
+          if (
+            Array.isArray(question.choices) &&
+            question.choices.length === 1
+          ) {
             return false;
           }
 
           return true;
         })
-        .map(([, v]) => {
-          const { type, choices } = v;
+        .map((question) => {
+          const { type, choices } = question;
 
           // Skip dynamic questions with a single choice
           if (type === 'select' && typeof choices === 'function') {
             return {
-              ...v,
+              ...question,
               type: (prev, values, prompt) => {
                 const result = choices(prev, { ...argv, ...values }, prompt);
 
@@ -583,7 +586,7 @@ async function create(argv: yargs.Arguments<any>) {
             };
           }
 
-          return v;
+          return question;
         })
     )),
   } as Answers;
@@ -599,15 +602,15 @@ async function create(argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'java-objc',
-    example = local ? null : type === 'library' ? 'expo' : 'test-app',
+    example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
     reactNativeVersion,
   } = answers;
 
   // Get latest version of Bob from NPM
-  let version: string;
+  let bobVersion: string;
 
   try {
-    version = await Promise.race([
+    bobVersion = await Promise.race([
       new Promise<string>((resolve) => {
         setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
       }),
@@ -615,7 +618,7 @@ async function create(argv: yargs.Arguments<any>) {
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
-    version = FALLBACK_BOB_VERSION;
+    bobVersion = FALLBACK_BOB_VERSION;
   }
 
   const moduleType = type.startsWith('view-') ? 'view' : 'module';
@@ -644,7 +647,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   const options = {
     bob: {
-      version: version || FALLBACK_BOB_VERSION,
+      version: bobVersion || FALLBACK_BOB_VERSION,
     },
     project: {
       slug,
@@ -726,7 +729,7 @@ async function create(argv: yargs.Arguments<any>) {
 
   const spinner = ora().start();
 
-  if (example) {
+  if (example !== 'none') {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
@@ -746,7 +749,7 @@ async function create(argv: yargs.Arguments<any>) {
   } else {
     await copyDir(COMMON_FILES, folder);
 
-    if (example) {
+    if (example !== 'none') {
       await copyDir(COMMON_EXAMPLE_FILES, folder);
     }
   }
@@ -755,7 +758,7 @@ async function create(argv: yargs.Arguments<any>) {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
-    if (example) {
+    if (example !== 'none') {
       await copyDir(
         path.join(EXAMPLE_FILES, 'example'),
         path.join(folder, 'example')
@@ -764,7 +767,7 @@ async function create(argv: yargs.Arguments<any>) {
 
     await copyDir(NATIVE_COMMON_FILES, folder);
 
-    if (example) {
+    if (example !== 'none') {
       await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
@@ -798,7 +801,7 @@ async function create(argv: yargs.Arguments<any>) {
     }
   }
 
-  if (example) {
+  if (example !== 'none') {
     // Set `react` and `react-native` versions of root `package.json` from example `package.json`
     const examplePackageJson = await fs.readJSON(
       path.join(folder, 'example', 'package.json')
@@ -840,6 +843,40 @@ async function create(argv: yargs.Arguments<any>) {
       }
     }
   }
+
+  // Some of the passed args can already be derived from the generated package.json file.
+  const ignoredAnswers: (keyof Answers)[] = [
+    'name',
+    'slug',
+    'description',
+    'authorName',
+    'authorEmail',
+    'authorUrl',
+    'repoUrl',
+    'example',
+    'reactNativeVersion',
+    'local',
+  ];
+
+  type AnswerEntries<T extends keyof Answers = keyof Answers> = [
+    T,
+    Answers[T],
+  ][];
+
+  const libraryMetadata = Object.fromEntries(
+    (Object.entries(answers) as AnswerEntries).filter(
+      ([answer]) => !ignoredAnswers.includes(answer)
+    )
+  );
+  libraryMetadata.version = version;
+
+  const libraryPackageJson = await fs.readJson(
+    path.join(folder, 'package.json')
+  );
+  libraryPackageJson['create-react-native-library'] = libraryMetadata;
+  await fs.writeJson(path.join(folder, 'package.json'), libraryPackageJson, {
+    spaces: 2,
+  });
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(
@@ -961,5 +998,9 @@ yargs
     }
 
     process.exit(1);
+  })
+  .parserConfiguration({
+    // don't pass kebab-case args to handler.
+    'strip-dashed': true,
   })
   .strict().argv;
