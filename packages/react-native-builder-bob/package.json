@@ -23,7 +23,8 @@
   },
   "files": [
     "bin",
-    "lib"
+    "lib",
+    "babel-preset.js"
   ],
   "engines": {
     "node": ">= 18.0.0"
@@ -33,7 +34,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start"
+    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start",
+    "test": "jest"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/lib/"
+    ]
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
@@ -58,6 +65,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
+    "@jest/globals": "^29.7.0",
     "@types/babel__core": "^7.1.19",
     "@types/browserslist": "^4.15.0",
     "@types/cross-spawn": "^6.0.2",
@@ -69,6 +77,7 @@
     "@types/prompts": "^2.0.14",
     "@types/which": "^2.0.1",
     "@types/yargs": "^17.0.10",
-    "concurrently": "^7.2.2"
+    "concurrently": "^7.2.2",
+    "jest": "^29.7.0"
   }
 }

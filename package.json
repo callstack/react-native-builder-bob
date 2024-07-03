@@ -18,6 +18,7 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
+    "test": "yarn workspace react-native-builder-bob test",
     "docs": "yarn workspace docs"
   },
   "devDependencies": {
@@ -48,7 +49,8 @@
     "node_modules/",
     "coverage/",
     "lib/",
-    "templates/"
+    "templates/",
+    "__fixtures__/"
   ],
   "prettier": {
     "singleQuote": true,
