@@ -217,6 +217,24 @@ const TYPE_CHOICES: {
   },
 ];
 
+const EXAMPLE_CHOICES = [
+  {
+    title: 'Test app',
+    value: 'test-app',
+    description: "app's native code is abstracted away",
+  },
+  {
+    title: 'Vanilla',
+    value: 'vanilla',
+    description: "provides access to app's native code",
+  },
+  {
+    title: 'Expo',
+    value: 'expo',
+    description: 'managed expo project with web support',
+  },
+] as const;
+
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
@@ -261,8 +279,7 @@ const args: Record<ArgName, yargs.Options> = {
   'example': {
     description: 'Type of the app to create',
     type: 'string',
-    choices: ['vanilla', 'test-app'],
-    default: 'vanilla',
+    choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
 };
 
@@ -451,64 +468,78 @@ async function create(argv: yargs.Arguments<any>) {
         });
       },
     },
+    'example': {
+      type: 'select',
+      name: 'example',
+      message: 'What type of example app do you want to create?',
+      choices: (_, values) => {
+        return EXAMPLE_CHOICES.filter((choice) => {
+          if (values.type) {
+            return values.type === 'library'
+              ? choice.value === 'expo'
+              : choice.value !== 'expo';
+          }
+
+          return true;
+        });
+      },
+    },
+  };
+
+  const validate = (answers: Answers) => {
+    for (const [key, value] of Object.entries(answers)) {
+      if (value == null) {
+        continue;
+      }
+
+      const question = questions[key as ArgName];
+
+      if (question == null) {
+        continue;
+      }
+
+      let valid = question.validate ? question.validate(String(value)) : true;
+
+      // We also need to guard against invalid choices
+      // If we don't already have a validation message to provide a better error
+      if (typeof valid !== 'string' && 'choices' in question) {
+        const choices =
+          typeof question.choices === 'function'
+            ? question.choices(
+                undefined,
+                // @ts-expect-error: it complains about optional values, but it should be fine
+                answers,
+                question
+              )
+            : question.choices;
+
+        if (choices && !choices.some((choice) => choice.value === value)) {
+          valid = `Supported values are - ${choices
+            .map((c) => kleur.green(c.value))
+            .join(', ')}`;
+        }
+      }
+
+      if (valid !== true) {
+        let message = `Invalid value ${kleur.red(
+          String(value)
+        )} passed for ${kleur.blue(key)}`;
+
+        if (typeof valid === 'string') {
+          message += `: ${valid}`;
+        }
+
+        console.log(message);
+
+        process.exit(1);
+      }
+    }
   };
 
   // Validate arguments passed to the CLI
-  for (const [key, value] of Object.entries(argv)) {
-    if (value == null) {
-      continue;
-    }
+  validate(argv);
 
-    const question = questions[key as ArgName];
-
-    if (question == null) {
-      continue;
-    }
-
-    let valid = question.validate ? question.validate(String(value)) : true;
-
-    // We also need to guard against invalid choices
-    // If we don't already have a validation message to provide a better error
-    if (typeof valid !== 'string' && 'choices' in question) {
-      const choices =
-        typeof question.choices === 'function'
-          ? question.choices(undefined, argv, question)
-          : question.choices;
-
-      if (choices && !choices.some((choice) => choice.value === value)) {
-        valid = `Supported values are - ${choices.map((c) =>
-          kleur.green(c.value)
-        )}`;
-      }
-    }
-
-    if (valid !== true) {
-      let message = `Invalid value ${kleur.red(
-        String(value)
-      )} passed for ${kleur.blue(key)}`;
-
-      if (typeof valid === 'string') {
-        message += `: ${valid}`;
-      }
-
-      console.log(message);
-
-      process.exit(1);
-    }
-  }
-
-  const {
-    slug,
-    description,
-    authorName,
-    authorEmail,
-    authorUrl,
-    repoUrl,
-    type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'java-objc',
-    example: hasExample,
-    reactNativeVersion,
-  } = {
+  const answers = {
     ...argv,
     ...(await prompts(
       Object.entries(questions)
@@ -557,6 +588,21 @@ async function create(argv: yargs.Arguments<any>) {
     )),
   } as Answers;
 
+  validate(answers);
+
+  const {
+    slug,
+    description,
+    authorName,
+    authorEmail,
+    authorUrl,
+    repoUrl,
+    type = 'module-mixed',
+    languages = type === 'library' ? 'js' : 'java-objc',
+    example = local ? null : type === 'library' ? 'expo' : 'test-app',
+    reactNativeVersion,
+  } = answers;
+
   // Get latest version of Bob from NPM
   let version: string;
 
@@ -579,9 +625,6 @@ async function create(argv: yargs.Arguments<any>) {
       : type === 'module-mixed' || type === 'view-mixed'
       ? 'mixed'
       : 'legacy';
-
-  const example =
-    hasExample && !local ? (type === 'library' ? 'expo' : hasExample) : null;
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
