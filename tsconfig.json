@@ -30,5 +30,9 @@
     "target": "esnext",
     "verbatimModuleSyntax": true
   },
-  "exclude": ["lib", "packages/create-react-native-library/templates"]
+  "exclude": [
+    "lib",
+    "packages/react-native-builder-bob/src/__fixtures__",
+    "packages/create-react-native-library/templates"
+  ]
 }
