@@ -11,6 +11,9 @@ on:
   pull_request:
     branches:
       - main
+  merge_group:
+    types:
+      - checks_requested
 
 jobs:
   build:
@@ -28,41 +31,57 @@ jobs:
           - module-legacy
           - module-mixed
           - module-new
-          - view-module-legacy
-          - view-module-mixed
-          - view-module-new
+          - view-legacy
+          - view-mixed
+          - view-new
         language:
+          - java-objc
+          - java-swift
           - kotlin-objc
-          - cpp
+          - kotlin-swift
         exclude:
-          - type: view-module-legacy
-            language: cpp
-          - type: view-module-mixed
-            language: cpp
-          - type: view-module-new
-            language: cpp
-          - type: module-legacy
+          - os: macos-14
             language: kotlin-objc
-          - type: module-mixed
-            language: kotlin-objc
+          - os: macos-14
+            language: kotlin-swift
           - type: module-new
-            language: kotlin-objc
+            language: java-swift
+          - type: module-new
+            language: kotlin-swift
+          - type: module-mixed
+            language: java-swift
+          - type: module-mixed
+            language: kotlin-swift
+          - type: view-new
+            language: java-swift
+          - type: view-new
+            language: kotlin-swift
+          - type: view-mixed
+            language: java-swift
+          - type: view-mixed
+            language: kotlin-swift
         include:
-          - os: ubuntu-latest
-            type: view-legacy
-            language: kotlin-swift
-          - os: macos-14
-            type: view-legacy
-            language: kotlin-swift
-          - os: ubuntu-latest
-            type: module-legacy
-            language: kotlin-swift
-          - os: macos-14
-            type: module-legacy
-            language: kotlin-swift
           - os: ubuntu-latest
             type: library
             language: js
+          - os: ubuntu-latest
+            type: module-legacy
+            language: cpp
+          - os: ubuntu-latest
+            type: module-mixed
+            language: cpp
+          - os: ubuntu-latest
+            type: module-new
+            language: cpp
+          - os: macos-14
+            type: module-legacy
+            language: cpp
+          - os: macos-14
+            type: module-mixed
+            language: cpp
+          - os: macos-14
+            type: module-new
+            language: cpp
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
@@ -118,17 +137,30 @@ jobs:
           rm -f example/yarn.lock # Workaround for cached yarn.lock from older version
           yarn install --no-immutable
 
+      - name: Use local version of react-native-builder-bob
+        run: |
+          cd packages/react-native-builder-bob
+          npm pack
+          tgz=$(ls react-native-builder-bob-*.tgz)
+          cd -
+          cd ${{ env.work_dir }}
+          YARN_CHECKSUM_BEHAVIOR=ignore yarn add --dev ../packages/react-native-builder-bob/$tgz
+
       - name: Get build target
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu-latest ]] && [[ ${{ matrix.language }} != js ]] ; then
+          if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
+            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "android_build=1" >> $GITHUB_ENV
+            fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos-14 ]] && [[ ${{ matrix.language }} != js ]]; then
+          if [[ ${{ matrix.os }} == macos-14 ]]; then
+            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Cache turborepo
@@ -180,7 +212,7 @@ jobs:
         working-directory: ${{ env.work_dir }}
         if: matrix.language == 'js'
         run: |
-          yarn example expo export:web
+          yarn example expo export --platform web
 
       - name: Install JDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1

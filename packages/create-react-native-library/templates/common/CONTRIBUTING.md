@@ -26,7 +26,7 @@ It is configured to use the local version of the library, so any changes you mak
 <% if (project.native) { -%>
 If you want to use Android Studio or XCode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcworkspace` in XCode and find the source files at `Pods > Development Pods > <%- project.slug -%>`.
 
-To edit the the Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
+To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
 
 <% } -%>
 You can use various commands from the root directory to work with the project.

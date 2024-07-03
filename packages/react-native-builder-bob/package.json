@@ -23,7 +23,8 @@
   },
   "files": [
     "bin",
-    "lib"
+    "lib",
+    "babel-preset.js"
   ],
   "engines": {
     "node": ">= 18.0.0"

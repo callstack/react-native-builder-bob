@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
-import browserslist from 'browserslist';
 import glob from 'glob';
 import type { Input } from '../types';
 
@@ -92,33 +91,7 @@ export default async function compile({
         ...(babelrc || configFile
           ? null
           : {
-              presets: [
-                [
-                  require.resolve('@babel/preset-env'),
-                  {
-                    targets: browserslist.findConfig(root) ?? {
-                      browsers: [
-                        '>1%',
-                        'last 2 chrome versions',
-                        'last 2 edge versions',
-                        'last 2 firefox versions',
-                        'last 2 safari versions',
-                        'not dead',
-                        'not ie <= 11',
-                        'not op_mini all',
-                        'not android <= 4.4',
-                        'not samsung <= 4',
-                      ],
-                      node: '18',
-                    },
-                    useBuiltIns: false,
-                    modules,
-                  },
-                ],
-                require.resolve('@babel/preset-react'),
-                require.resolve('@babel/preset-typescript'),
-                require.resolve('@babel/preset-flow'),
-              ],
+              presets: [[require.resolve('../../babel-preset'), { modules }]],
             }),
       });
 
