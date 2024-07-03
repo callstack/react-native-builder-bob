@@ -30,7 +30,6 @@ const COMMON_LOCAL_FILES = path.resolve(__dirname, '../templates/common-local');
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
-const EXAMPLE_FILES = path.resolve(__dirname, '../templates/example-legacy');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
@@ -758,13 +757,6 @@ async function create(_argv: yargs.Arguments<any>) {
     await copyDir(JS_FILES, folder);
     await copyDir(EXPO_FILES, folder);
   } else {
-    if (example !== 'none') {
-      await copyDir(
-        path.join(EXAMPLE_FILES, 'example'),
-        path.join(folder, 'example')
-      );
-    }
-
     await copyDir(NATIVE_COMMON_FILES, folder);
 
     if (example !== 'none') {
