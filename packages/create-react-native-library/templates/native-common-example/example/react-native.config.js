@@ -12,8 +12,15 @@ module.exports = {
     },
     ios: {
       sourceDir: 'ios',
+      automaticPodsInstallation: true,
     },
   }),
+<% } else { -%>
+  project: {
+    ios: {
+      automaticPodsInstallation: true,
+    },
+  },
 <% } -%>
   dependencies: {
     [pak.name]: {
