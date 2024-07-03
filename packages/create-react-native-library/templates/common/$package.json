@@ -26,13 +26,13 @@
     "!**/.*"
   ],
   "scripts": {
-<% if (example !== 'none') { -%>
+<% if (example) { -%>
     "example": "yarn workspace <%- project.slug -%>-example",
 <% } -%>
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-<% if (example === 'native') { -%>
+<% if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
 <% } else { -%>
     "clean": "del-cli lib",
@@ -76,7 +76,7 @@
     "react-native": "0.73.0",
     "react-native-builder-bob": "^<%- bob.version %>",
     "release-it": "^15.0.0",
-<% if (example === 'native') { -%>
+<% if (example !== 'expo') { -%>
     "turbo": "^1.10.7",
 <% } -%>
     "typescript": "^5.2.2"
@@ -88,7 +88,7 @@
     "react": "*",
     "react-native": "*"
   },
-<% if (example !== 'none') { -%>
+<% if (example) { -%>
   "workspaces": [
     "example"
   ],
