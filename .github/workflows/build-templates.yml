@@ -116,6 +116,7 @@ jobs:
             --repo-url https://test.test \
             --type ${{ matrix.type }} \
             --languages ${{ matrix.language }} \
+            --example ${{ matrix.language == 'js' && 'expo' || 'vanilla' }} \
             --no-local
 
       - name: Cache dependencies of library
