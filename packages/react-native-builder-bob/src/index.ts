@@ -28,7 +28,7 @@ yargs
       const { shouldContinue } = await prompts({
         type: 'confirm',
         name: 'shouldContinue',
-        message: `The working directory is not clean. You should commit or stash your changes before configuring bob. Continue anyway?`,
+        message: `The working directory is not clean.\n  You should commit or stash your changes before configuring bob.\n  Continue anyway?`,
         initial: false,
       });
 
@@ -41,7 +41,7 @@ yargs
 
     if (!(await fs.pathExists(pak))) {
       logger.exit(
-        `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
+        `Couldn't find a 'package.json' file in '${root}'.\n  Are you in a project folder?`
       );
     }
 
@@ -52,7 +52,7 @@ yargs
       const { shouldContinue } = await prompts({
         type: 'confirm',
         name: 'shouldContinue',
-        message: `The project seems to be already configured with bob. Do you want to overwrite the existing configuration?`,
+        message: `The project seems to be already configured with bob.\n  Do you want to overwrite the existing configuration?`,
         initial: false,
       });
 
@@ -81,7 +81,7 @@ yargs
 
     if (!entryFile) {
       logger.exit(
-        `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'. Please re-run the CLI after creating it.`
+        `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'.\n  Please re-run the CLI after creating it.`
       );
       return;
     }
@@ -174,7 +174,7 @@ yargs
         const { tsconfig } = await prompts({
           type: 'confirm',
           name: 'tsconfig',
-          message: `You have enabled 'typescript' compilation, but we couldn't find a 'tsconfig.json' in project root. Generate one?`,
+          message: `You have enabled 'typescript' compilation, but we couldn't find a 'tsconfig.json' in project root.\n  Generate one?`,
           initial: true,
         });
 
@@ -228,7 +228,7 @@ yargs
         const { replace } = await prompts({
           type: 'confirm',
           name: 'replace',
-          message: `Your package.json has the '${key}' field set to '${pkg[key]}'. Do you want to replace it with '${entry}'?`,
+          message: `Your package.json has the '${key}' field set to '${pkg[key]}'.\n  Do you want to replace it with '${entry}'?`,
           initial: true,
         });
 
@@ -243,12 +243,23 @@ yargs
     if (Object.values(entries).some((entry) => entry.endsWith('.mjs'))) {
       let replace = false;
 
-      if (pkg.exports) {
+      const exports = {
+        '.': {
+          ...(entries.types ? { types: entries.types } : null),
+          ...(entries.module ? { import: entries.module } : null),
+          ...(entries.main ? { require: entries.main } : null),
+        },
+      };
+
+      if (
+        pkg.exports &&
+        JSON.stringify(pkg.exports) !== JSON.stringify(exports)
+      ) {
         replace = (
           await prompts({
             type: 'confirm',
             name: 'replace',
-            message: `Your package.json has 'exports' field set. Do you want to replace it?`,
+            message: `Your package.json has 'exports' field set.\n  Do you want to replace it?`,
             initial: true,
           })
         ).replace;
@@ -257,21 +268,24 @@ yargs
       }
 
       if (replace) {
-        pkg.exports = {
-          '.': {},
-        };
+        pkg.exports = exports;
+      }
+    }
 
-        if (entries.types) {
-          pkg.exports['.'].types = entries.types;
-        }
+    if (
+      pkg['react-native'] &&
+      (pkg['react-native'].startsWith(source) ||
+        pkg['react-native'].startsWith(`./${source}`))
+    ) {
+      const { remove } = await prompts({
+        type: 'confirm',
+        name: 'remove',
+        message: `Your package.json has the 'react-native' field pointing to source code.\n  This can cause problems when customizing babel configuration.\n  Do you want to remove it?`,
+        initial: true,
+      });
 
-        if (entries.module) {
-          pkg.exports['.'].import = entries.module;
-        }
-
-        if (entries.main) {
-          pkg.exports['.'].require = entries.main;
-        }
+      if (remove) {
+        delete pkg['react-native'];
       }
     }
 
@@ -279,7 +293,7 @@ yargs
       const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
-        message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'. Do you want to replace it with '${prepare}'?`,
+        message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'.\n  Do you want to replace it with '${prepare}'?`,
         initial: true,
       });
 
@@ -299,7 +313,7 @@ yargs
       const { update } = await prompts({
         type: 'confirm',
         name: 'update',
-        message: `Your package.json already has a 'files' field. Do you want to update it?`,
+        message: `Your package.json already has a 'files' field.\n  Do you want to update it?`,
         initial: true,
       });
 
