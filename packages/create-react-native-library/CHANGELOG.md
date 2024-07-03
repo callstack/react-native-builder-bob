@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.36.0...create-react-native-library@0.37.0) (2024-07-03)
+
+### Bug Fixes
+
+- disable jetifier for generated native examples ([#563](https://github.com/callstack/react-native-builder-bob/issues/563)) ([3676c71](https://github.com/callstack/react-native-builder-bob/commit/3676c715c7f3aa809aa969657305ac915e5f4cbf)) - by @atlj
+- don't ask about defaults if language or type is passed ([567aaaf](https://github.com/callstack/react-native-builder-bob/commit/567aaafe5070726fda6e8dd5d4a7f2ea6b8398a7)) - by @satya164
+- use the corresponding react-native init version ([#581](https://github.com/callstack/react-native-builder-bob/issues/581)) ([1ff7d0c](https://github.com/callstack/react-native-builder-bob/commit/1ff7d0cf559f3eae118c0f6dc0d4533422d515f7)), closes [#580](https://github.com/callstack/react-native-builder-bob/issues/580) - by @TatianaKapos
+
+### Features
+
+- ask to use recommended template ([#564](https://github.com/callstack/react-native-builder-bob/issues/564)) ([71f3874](https://github.com/callstack/react-native-builder-bob/commit/71f3874bd5cfbe0560c444054f09c7f4babbeb81)) - by @atlj
+- **crnl:** store metadata with new projects ([#551](https://github.com/callstack/react-native-builder-bob/issues/551)) ([cb8f969](https://github.com/callstack/react-native-builder-bob/commit/cb8f96997ecfea4c0923b4e6a055cc7d0e300696)) - by @atlj
+- merge view+module native templates ([#562](https://github.com/callstack/react-native-builder-bob/issues/562)) ([a75cf32](https://github.com/callstack/react-native-builder-bob/commit/a75cf32890804bcfc20819df4fdfe5bd4fafb7f2)) - by @atlj
+- use metro for web bundling in js library template ([#574](https://github.com/callstack/react-native-builder-bob/issues/574)) ([6422571](https://github.com/callstack/react-native-builder-bob/commit/64225716553181a84a3da129c01a572ef4e05a06)) - by @satya164
+
 # [0.36.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.35.1...create-react-native-library@0.36.0) (2024-05-29)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.23.2...react-native-builder-bob@0.24.0) (2024-07-03)
+
+### Features
+
+- add a babel-plugin to add extensions to imports and handle aliases ([#576](https://github.com/callstack/react-native-builder-bob/issues/576)) ([923435b](https://github.com/callstack/react-native-builder-bob/commit/923435b0c8bd4cf08e6f76952a7c77e2f466d5c9)) - by @satya164
+- expose the babel preset at react-native-builder-bob/babel-preset ([48129ea](https://github.com/callstack/react-native-builder-bob/commit/48129ea52c3c2999f409f0e874c7294b30d66bd4)) - by @satya164
+
 ## [0.23.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.23.1...react-native-builder-bob@0.23.2) (2023-11-24)
 
 **Note:** Version bump only for package react-native-builder-bob
