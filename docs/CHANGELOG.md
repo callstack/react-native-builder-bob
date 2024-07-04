@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-next.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.0-next.0...docs@0.1.0-next.1) (2024-07-04)
+
+### Features
+
+- make the esm option configurable ([29c668d](https://github.com/callstack/react-native-builder-bob/commit/29c668df245156087da67d52c5b8d62e4dda2c28)) - by @
+
 # [0.1.0-next.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.0.6...docs@0.1.0-next.0) (2024-07-04)
 
 ### Features
