@@ -27,7 +27,7 @@ const isDirectory = (filename: string): boolean => {
 };
 
 const isModule = (filename: string, ext: string): boolean => {
-  const exts = ['ts', 'tsx', ext];
+  const exts = ['.js', '.ts', '.jsx', '.tsx', ext];
 
   // Metro won't resolve these extensions if explicit extension is provided
   // So we can't add extension to these files
