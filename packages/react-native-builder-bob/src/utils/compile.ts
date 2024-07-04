@@ -6,11 +6,12 @@ import glob from 'glob';
 import type { Input } from '../types';
 
 type Options = Input & {
+  esm?: boolean;
   babelrc?: boolean | null;
   configFile?: string | false | null;
   sourceMaps?: boolean;
   copyFlow?: boolean;
-  modules: 'commonjs' | false;
+  modules: 'commonjs' | 'preserve';
   exclude: string;
 };
 
@@ -18,6 +19,7 @@ export default async function compile({
   root,
   source,
   output,
+  esm = false,
   babelrc = false,
   configFile = false,
   exclude,
@@ -63,7 +65,11 @@ export default async function compile({
     }
   }
 
-  const outputExtension = modules === 'commonjs' ? '.cjs' : '.mjs';
+  const outputExtension = esm
+    ? modules === 'commonjs'
+      ? '.cjs'
+      : '.mjs'
+    : '.js';
 
   await Promise.all(
     files.map(async (filepath) => {
@@ -91,7 +97,9 @@ export default async function compile({
         ...(babelrc || configFile
           ? null
           : {
-              presets: [[require.resolve('../../babel-preset'), { modules }]],
+              presets: [
+                [require.resolve('../../babel-preset'), { modules, esm }],
+              ],
             }),
       });
 
@@ -144,14 +152,40 @@ export default async function compile({
 
   const fields =
     modules === 'commonjs'
-      ? [
-          { name: 'main', value: pkg.main },
-          { name: "exports['.'].require", value: pkg.exports?.['.']?.require },
-        ]
-      : [
-          { name: 'module', value: pkg.module },
-          { name: "exports['.'].import", value: pkg.exports?.['.']?.import },
-        ];
+      ? [{ name: 'main', value: pkg.main }]
+      : [{ name: 'module', value: pkg.module }];
+
+  if (esm) {
+    if (modules === 'commonjs') {
+      fields.push({
+        name: "exports['.'].require",
+        value: pkg.exports?.['.']?.require,
+      });
+    } else {
+      fields.push({
+        name: "exports['.'].import",
+        value: pkg.exports?.['.']?.import,
+      });
+    }
+  } else {
+    if (modules === 'commonjs' && pkg.exports?.['.']?.require) {
+      report.warn(
+        `The ${kleur.blue('esm')} option is disabled, but the ${kleur.blue(
+          "exports['.'].require"
+        )} field is set in ${kleur.blue(
+          'package.json'
+        )}. This is likely a mistake.`
+      );
+    } else if (modules === 'preserve' && pkg.exports?.['.']?.import) {
+      report.warn(
+        `The ${kleur.blue('esm')} option is disabled, but the ${kleur.blue(
+          "exports['.'].import"
+        )} field is set in ${kleur.blue(
+          'package.json'
+        )}. This is likely a mistake.`
+      );
+    }
+  }
 
   if (fields.some((field) => field.value)) {
     await Promise.all(

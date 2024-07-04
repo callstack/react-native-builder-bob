@@ -6,6 +6,7 @@ import type { Input } from '../types';
 
 type Options = Input & {
   options?: {
+    esm?: boolean;
     babelrc?: boolean | null;
     configFile?: string | false | null;
     sourceMaps?: boolean;

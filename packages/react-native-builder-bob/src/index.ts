@@ -151,15 +151,22 @@ yargs
       [key in 'source' | 'main' | 'module' | 'types']?: string;
     } = {
       source: `./${path.join(source, entryFile)}`,
-      main: `./${
-        target
-          ? path.join(output, target, 'index.cjs')
-          : path.join(source, entryFile)
-      }`,
     };
 
+    let esm = false;
+
     if (targets.includes('module')) {
+      esm = true;
+
+      if (targets.includes('commonjs')) {
+        entries.main = `./${path.join(output, 'commonjs', 'index.cjs')}`;
+      }
+
       entries.module = `./${path.join(output, 'module', 'index.mjs')}`;
+    } else if (targets.includes('commonjs')) {
+      entries.main = `./${path.join(output, 'commonjs', 'index.js')}`;
+    } else {
+      entries.main = entries.source;
     }
 
     if (targets.includes('typescript')) {
@@ -240,7 +247,7 @@ yargs
       }
     }
 
-    if (Object.values(entries).some((entry) => entry.endsWith('.mjs'))) {
+    if (esm) {
       let replace = false;
 
       const exports = {
@@ -335,6 +342,10 @@ yargs
       targets: targets.map((t: string) => {
         if (t === target && flow) {
           return [t, { copyFlow: true }];
+        }
+
+        if (t === 'commonjs' || t === 'module') {
+          return [t, { esm }];
         }
 
         return t;

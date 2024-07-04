@@ -42,8 +42,8 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
-       "commonjs",
-       "module",
+       ["commonjs", { "esm" : true }],
+       ["module", { "esm" : true }],
        "typescript",
      ]
    }
