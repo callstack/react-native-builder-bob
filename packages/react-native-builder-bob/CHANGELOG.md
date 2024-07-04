@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0-next.5](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0-next.4...react-native-builder-bob@0.25.0-next.5) (2024-07-04)
+
+### Bug Fixes
+
+- fix typo when checking extensions ([b6a9efe](https://github.com/callstack/react-native-builder-bob/commit/b6a9efe648413603a77cf03503b474484ed8cd01)) - by @
+
 # [0.25.0-next.4](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0-next.3...react-native-builder-bob@0.25.0-next.4) (2024-07-04)
 
 ### Features
