@@ -26,6 +26,20 @@ const isDirectory = (filename: string): boolean => {
   return exists;
 };
 
+const isModule = (filename: string, ext: string): boolean => {
+  const exts = ['ts', 'tsx', ext];
+
+  // Metro won't resolve these extensions if explicit extension is provided
+  // So we can't add extension to these files
+  const additional = ['native', 'android', 'ios', 'web'];
+
+  return exts.some(
+    (ext) =>
+      isFile(`${filename}.${ext}`) &&
+      additional.every((add) => !isFile(`${filename}.${add}.${ext}`))
+  );
+};
+
 const isTypeImport = (
   node: ImportDeclaration | ExportNamedDeclaration | ExportAllDeclaration
 ) =>
@@ -110,27 +124,22 @@ export default function (
       node.source.value
     );
 
-    // Add extension if .ts file or file with extension exists
-    if (
-      isFile(`${filename}.ts`) ||
-      isFile(`${filename}.tsx`) ||
-      isFile(`${filename}.${extension}`)
-    ) {
-      node.source.value += `.${extension}`;
-      return;
-    }
-
-    // Replace .ts extension with .js if .ts file exists
+    // Replace .ts extension with .js if file with extension is explicitly imported
     if (isFile(filename)) {
       node.source.value = node.source.value.replace(/\.tsx?$/, `.${extension}`);
       return;
     }
 
+    // Add extension if .ts file or file with extension exists
+    if (isModule(filename, extension)) {
+      node.source.value += `.${extension}`;
+      return;
+    }
+
+    // Expand folder imports to index and add extension
     if (
       isDirectory(filename) &&
-      (isFile(path.join(filename, 'index.ts')) ||
-        isFile(path.join(filename, 'index.tsx')) ||
-        isFile(path.join(filename, `index.${extension}`)))
+      isModule(path.join(filename, 'index'), extension)
     ) {
       node.source.value = node.source.value.replace(
         /\/?$/,
