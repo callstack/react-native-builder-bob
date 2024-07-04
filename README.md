@@ -49,6 +49,34 @@ The documentation for the project is under `docs` directory. To run the document
 yarn docs dev
 ```
 
+## Publishing
+
+Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna-lite/lerna-lite/blob/main/packages/version/README.md#remote-client-auth-tokens). Then run:
+
+```sh
+yarn lerna publish
+```
+
+This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
+
+When releasing a pre-release version, we need to:
+
+- Update `lerna.json` to set the `preId` (e.g. `next`) and `preDistTag` (e.g. `next`) fields, and potentially the `allowBranch` field.
+- Run the following command:
+
+```sh
+yarn lerna publish --preid next
+```
+
+When releasing a stable version, we need to:
+
+- Remove the `preId` and `preDistTag` fields from `lerna.json`.
+- Run the following command:
+
+```sh
+yarn lerna publish --conventional-commits --conventional-graduate
+```
+
 ## Acknowledgments
 
 Thanks to the authors of these libraries for inspiration:
