@@ -8,8 +8,20 @@ import type {
 } from '@babel/types';
 
 type Options = {
-  alias?: Record<string, string>;
+  /**
+   * Extension to add to the imports
+   * For commonjs use 'cjs' and for esm use 'mjs'
+   * NodeJS requires explicit extension for esm
+   * The `cjs` extension avoids disambiguity when package.json has "type": "module"
+   */
   extension?: 'cjs' | 'mjs';
+  /**
+   * Out of tree platforms to support
+   * For `import './file'`, we skip adding extension if `file.${platform}.ts` exists
+   * This is necessary for the platform specific extensions to be resolve correctly
+   * Bundlers won't resolve the platform specific extension if explicit extension is present
+   */
+  platforms?: string[];
 };
 
 const isFile = (filename: string): boolean => {
@@ -26,23 +38,12 @@ const isDirectory = (filename: string): boolean => {
   return exists;
 };
 
-const isModule = (filename: string, ext: string): boolean => {
-  const exts = ['js', 'ts', 'jsx', 'tsx', ext];
-
-  // Metro won't resolve these extensions if explicit extension is provided
-  // So we can't add extension to these files
-  const platforms = [
-    'native',
-    'android',
-    'ios',
-    'windows',
-    'macos',
-    'visionos',
-    'web',
-    'tv',
-    'android.tv',
-    'ios.tv',
-  ];
+const isModule = (
+  filename: string,
+  extension: string,
+  platforms: string[]
+): boolean => {
+  const exts = ['js', 'ts', 'jsx', 'tsx', extension];
 
   return exts.some(
     (ext) =>
@@ -67,47 +68,23 @@ const assertFilename: (
 
 export default function (
   api: ConfigAPI,
-  { alias, extension }: Options
+  {
+    extension,
+    platforms = [
+      'native',
+      'android',
+      'ios',
+      'windows',
+      'macos',
+      'visionos',
+      'web',
+      'tv',
+      'android.tv',
+      'ios.tv',
+    ],
+  }: Options
 ): PluginObj {
   api.assertVersion(7);
-
-  function aliasImports(
-    {
-      node,
-    }: NodePath<
-      ImportDeclaration | ExportNamedDeclaration | ExportAllDeclaration
-    >,
-    state: PluginPass
-  ) {
-    if (
-      alias == null ||
-      // Skip type imports as they'll be removed
-      isTypeImport(node) ||
-      // Skip imports without a source
-      !node.source?.value
-    ) {
-      return;
-    }
-
-    assertFilename(state.filename);
-
-    const root = state.cwd;
-    const source = node.source.value;
-
-    for (const [key, value] of Object.entries(alias)) {
-      if (source === key || source.startsWith(`${key}/`)) {
-        const resolved = value.startsWith('.')
-          ? path.relative(
-              path.dirname(state.filename),
-              path.resolve(root, value)
-            )
-          : value;
-
-        node.source.value = source.replace(key, resolved);
-        return;
-      }
-    }
-  }
 
   function addExtension(
     {
@@ -142,7 +119,7 @@ export default function (
     }
 
     // Add extension if .ts file or file with extension exists
-    if (isModule(filename, extension)) {
+    if (isModule(filename, extension, platforms)) {
       node.source.value += `.${extension}`;
       return;
     }
@@ -150,7 +127,7 @@ export default function (
     // Expand folder imports to index and add extension
     if (
       isDirectory(filename) &&
-      isModule(path.join(filename, 'index'), extension)
+      isModule(path.join(filename, 'index'), extension, platforms)
     ) {
       node.source.value = node.source.value.replace(
         /\/?$/,
@@ -161,18 +138,15 @@ export default function (
   }
 
   return {
-    name: '@builder-bob/babel-plugin',
+    name: 'react-native-builder-bob',
     visitor: {
       ImportDeclaration(path, state) {
-        aliasImports(path, state);
         addExtension(path, state);
       },
       ExportNamedDeclaration(path, state) {
-        aliasImports(path, state);
         addExtension(path, state);
       },
       ExportAllDeclaration(path, state) {
-        aliasImports(path, state);
         addExtension(path, state);
       },
     },
