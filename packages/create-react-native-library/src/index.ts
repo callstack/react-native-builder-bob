@@ -802,6 +802,10 @@ async function create(_argv: yargs.Arguments<any>) {
       path.join(folder, 'package.json')
     );
 
+    if (!rootPackageJson.dependencies) {
+      rootPackageJson.dependencies = {};
+    }
+
     rootPackageJson.devDependencies.react =
       examplePackageJson.dependencies.react;
     rootPackageJson.devDependencies['react-native'] =
