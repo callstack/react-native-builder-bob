@@ -793,13 +793,12 @@ async function create(_argv: yargs.Arguments<any>) {
     }
   }
 
+  const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
+
   if (example !== 'none') {
     // Set `react` and `react-native` versions of root `package.json` from example `package.json`
     const examplePackageJson = await fs.readJSON(
       path.join(folder, 'example', 'package.json')
-    );
-    const rootPackageJson = await fs.readJSON(
-      path.join(folder, 'package.json')
     );
 
     if (!rootPackageJson.devDependencies) {
@@ -810,34 +809,6 @@ async function create(_argv: yargs.Arguments<any>) {
       examplePackageJson.dependencies.react;
     rootPackageJson.devDependencies['react-native'] =
       examplePackageJson.dependencies['react-native'];
-
-    await fs.writeJSON(path.join(folder, 'package.json'), rootPackageJson, {
-      spaces: 2,
-    });
-  }
-
-  if (!local) {
-    let isInGitRepo = false;
-
-    try {
-      isInGitRepo =
-        (await spawn('git', ['rev-parse', '--is-inside-work-tree'])) === 'true';
-    } catch (e) {
-      // Ignore error
-    }
-
-    if (!isInGitRepo) {
-      try {
-        await spawn('git', ['init'], { cwd: folder });
-        await spawn('git', ['branch', '-M', 'main'], { cwd: folder });
-        await spawn('git', ['add', '.'], { cwd: folder });
-        await spawn('git', ['commit', '-m', 'chore: initial commit'], {
-          cwd: folder,
-        });
-      } catch (e) {
-        // Ignore error
-      }
-    }
   }
 
   // Some of the passed args can already be derived from the generated package.json file.
@@ -864,15 +835,37 @@ async function create(_argv: yargs.Arguments<any>) {
       ([answer]) => !ignoredAnswers.includes(answer)
     )
   );
-  libraryMetadata.version = version;
 
-  const libraryPackageJson = await fs.readJson(
-    path.join(folder, 'package.json')
-  );
-  libraryPackageJson['create-react-native-library'] = libraryMetadata;
-  await fs.writeJson(path.join(folder, 'package.json'), libraryPackageJson, {
+  libraryMetadata.version = version;
+  rootPackageJson['create-react-native-library'] = libraryMetadata;
+
+  await fs.writeJson(path.join(folder, 'package.json'), rootPackageJson, {
     spaces: 2,
   });
+
+  if (!local) {
+    let isInGitRepo = false;
+
+    try {
+      isInGitRepo =
+        (await spawn('git', ['rev-parse', '--is-inside-work-tree'])) === 'true';
+    } catch (e) {
+      // Ignore error
+    }
+
+    if (!isInGitRepo) {
+      try {
+        await spawn('git', ['init'], { cwd: folder });
+        await spawn('git', ['branch', '-M', 'main'], { cwd: folder });
+        await spawn('git', ['add', '.'], { cwd: folder });
+        await spawn('git', ['commit', '-m', 'chore: initial commit'], {
+          cwd: folder,
+        });
+      } catch (e) {
+        // Ignore error
+      }
+    }
+  }
 
   spinner.succeed(
     `Project created successfully at ${kleur.yellow(
