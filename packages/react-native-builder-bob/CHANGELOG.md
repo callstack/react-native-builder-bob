@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0-next.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0-next.2...react-native-builder-bob@0.25.0-next.3) (2024-07-04)
+
+### Bug Fixes
+
+- handle more out of tree plaforms ([72bb72d](https://github.com/callstack/react-native-builder-bob/commit/72bb72de51797673f8c3df733a74ed9e04b48f47)) - by @satya164
+
 # [0.25.0-next.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0-next.1...react-native-builder-bob@0.25.0-next.2) (2024-07-04)
 
 ### Bug Fixes
