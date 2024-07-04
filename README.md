@@ -65,7 +65,7 @@ When releasing a pre-release version, we need to:
 - Run the following command:
 
 ```sh
-yarn lerna publish --preid next
+yarn lerna publish --conventional-commits --conventional-prerelease --preid next
 ```
 
 When releasing a stable version, we need to:
