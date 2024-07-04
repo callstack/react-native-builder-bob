@@ -2,7 +2,14 @@
 
 const browserslist = require('browserslist');
 
+/**
+ * Babel preset for React Native Builder Bob
+ * @param {'commonjs' | 'preserve'} options.modules - Whether to compile modules to CommonJS or preserve them
+ * @param {Boolean} options.esm - Whether to output ES module compatible code, e.g. by adding extension to import/export statements
+ */
 module.exports = function (api, options, cwd) {
+  const cjs = options.modules === 'commonjs';
+
   return {
     presets: [
       [
@@ -24,7 +31,7 @@ module.exports = function (api, options, cwd) {
             node: '18',
           },
           useBuiltIns: false,
-          modules: options.modules || false,
+          modules: cjs ? 'commonjs' : false,
         },
       ],
       [
@@ -35,6 +42,14 @@ module.exports = function (api, options, cwd) {
       ],
       require.resolve('@babel/preset-typescript'),
       require.resolve('@babel/preset-flow'),
+    ],
+    plugins: [
+      [
+        require.resolve('./lib/babel'),
+        {
+          extension: options.esm ? (cjs ? 'cjs' : 'mjs') : undefined,
+        },
+      ],
     ],
   };
 };
