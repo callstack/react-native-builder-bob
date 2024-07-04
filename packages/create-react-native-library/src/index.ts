@@ -801,14 +801,16 @@ async function create(_argv: yargs.Arguments<any>) {
       path.join(folder, 'example', 'package.json')
     );
 
-    if (!rootPackageJson.devDependencies) {
-      rootPackageJson.devDependencies = {};
+    if (
+      examplePackageJson.dependencies?.react &&
+      examplePackageJson.dependencies?.['react-native']
+    ) {
+      rootPackageJson.devDependencies = rootPackageJson.devDependencies || {};
+      rootPackageJson.devDependencies.react =
+        examplePackageJson.dependencies.react;
+      rootPackageJson.devDependencies['react-native'] =
+        examplePackageJson.dependencies['react-native'];
     }
-
-    rootPackageJson.devDependencies.react =
-      examplePackageJson.dependencies.react;
-    rootPackageJson.devDependencies['react-native'] =
-      examplePackageJson.dependencies['react-native'];
   }
 
   // Some of the passed args can already be derived from the generated package.json file.
