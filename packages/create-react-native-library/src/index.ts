@@ -802,8 +802,8 @@ async function create(_argv: yargs.Arguments<any>) {
       path.join(folder, 'package.json')
     );
 
-    if (!rootPackageJson.dependencies) {
-      rootPackageJson.dependencies = {};
+    if (!rootPackageJson.devDependencies) {
+      rootPackageJson.devDependencies = {};
     }
 
     rootPackageJson.devDependencies.react =
