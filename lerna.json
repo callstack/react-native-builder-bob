@@ -7,12 +7,14 @@
     "publish": {
       "graphType": "all",
       "syncWorkspaceLock": true,
-      "allowBranch": "main",
+      "allowBranch": "next",
       "allowPeerDependenciesUpdate": true,
       "conventionalCommits": true,
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",
-      "message": "chore: publish"
+      "message": "chore: publish",
+      "preId": "next",
+      "preDistTag": "next"
     }
   }
 }
