@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0-next.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.24.0...react-native-builder-bob@0.25.0-next.0) (2024-07-04)
+
+### Features
+
+- add ESM support for generated project ([#583](https://github.com/callstack/react-native-builder-bob/issues/583)) ([fb1da66](https://github.com/callstack/react-native-builder-bob/commit/fb1da66ce5da36f57255d6da9eff91b32b932307)) - by @satya164
+
 # [0.24.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.23.2...react-native-builder-bob@0.24.0) (2024-07-03)
 
 ### Features
