@@ -3,7 +3,7 @@ import { transformFileAsync } from '@babel/core';
 import fs from 'node:fs';
 import path from 'node:path';
 
-it.each(['imports', 'exports'])(`adds .js extension to %s`, async (name) => {
+it.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
   const filepath = path.resolve(
     __dirname,
     `../__fixtures__/project/code/$${name}-input.ts`
