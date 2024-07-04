@@ -3,6 +3,8 @@
 const browserslist = require('browserslist');
 
 module.exports = function (api, options, cwd) {
+  const cjs = options.modules === 'commonjs';
+
   return {
     presets: [
       [
@@ -24,12 +26,25 @@ module.exports = function (api, options, cwd) {
             node: '18',
           },
           useBuiltIns: false,
-          modules: options.modules || false,
+          modules: cjs ? 'commonjs' : false,
         },
       ],
-      require.resolve('@babel/preset-react'),
+      [
+        require.resolve('@babel/preset-react'),
+        {
+          runtime: 'automatic',
+        },
+      ],
       require.resolve('@babel/preset-typescript'),
       require.resolve('@babel/preset-flow'),
+    ],
+    plugins: [
+      [
+        require.resolve('./lib/babel'),
+        {
+          extension: cjs ? 'cjs' : 'mjs',
+        },
+      ],
     ],
   };
 };

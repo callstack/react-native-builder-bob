@@ -11,7 +11,6 @@ type Options = Input & {
   sourceMaps?: boolean;
   copyFlow?: boolean;
   modules: 'commonjs' | false;
-  field: 'main' | 'module';
   exclude: string;
 };
 
@@ -26,7 +25,6 @@ export default async function compile({
   copyFlow,
   sourceMaps = true,
   report,
-  field,
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
@@ -65,11 +63,13 @@ export default async function compile({
     }
   }
 
+  const outputExtension = modules === 'commonjs' ? '.cjs' : '.mjs';
+
   await Promise.all(
     files.map(async (filepath) => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
-        .replace(/\.(jsx?|tsx?)$/, '.js');
+        .replace(/\.(jsx?|tsx?)$/, outputExtension);
 
       await fs.mkdirp(path.dirname(outputFilename));
 
@@ -125,7 +125,8 @@ export default async function compile({
   const getGeneratedEntryPath = async () => {
     if (pkg.source) {
       const indexName =
-        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') + '.js';
+        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') +
+        outputExtension;
 
       const potentialPath = path.join(
         output,
@@ -141,52 +142,71 @@ export default async function compile({
     return null;
   };
 
-  if (field in pkg) {
-    try {
-      require.resolve(path.join(root, pkg[field]));
-    } catch (e: unknown) {
-      if (
-        e != null &&
-        typeof e === 'object' &&
-        'code' in e &&
-        e.code === 'MODULE_NOT_FOUND'
-      ) {
-        const generatedEntryPath = await getGeneratedEntryPath();
+  const fields =
+    modules === 'commonjs'
+      ? [
+          { name: 'main', value: pkg.main },
+          { name: "exports['.'].require", value: pkg.exports?.['.']?.require },
+        ]
+      : [
+          { name: 'module', value: pkg.module },
+          { name: "exports['.'].import", value: pkg.exports?.['.']?.import },
+        ];
 
-        if (!generatedEntryPath) {
-          report.warn(
-            `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
-              'source'
-            )} field in your ${kleur.blue('package.json')}.`
-          );
+  if (fields.some((field) => field.value)) {
+    await Promise.all(
+      fields.map(async ({ name, value }) => {
+        if (!value) {
+          return;
         }
 
-        report.error(
-          `The ${kleur.blue(field)} field in ${kleur.blue(
-            'package.json'
-          )} points to a non-existent file: ${kleur.blue(
-            pkg[field]
-          )}.\nVerify the path points to the correct file under ${kleur.blue(
-            path.relative(root, output)
-          )}${
-            generatedEntryPath
-              ? ` (found ${kleur.blue(generatedEntryPath)}).`
-              : '.'
-          }`
-        );
+        try {
+          require.resolve(path.join(root, value));
+        } catch (e: unknown) {
+          if (
+            e != null &&
+            typeof e === 'object' &&
+            'code' in e &&
+            e.code === 'MODULE_NOT_FOUND'
+          ) {
+            const generatedEntryPath = await getGeneratedEntryPath();
 
-        throw new Error(`Found incorrect path in '${field}' field.`);
-      }
+            if (!generatedEntryPath) {
+              report.warn(
+                `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
+                  'source'
+                )} field in your ${kleur.blue('package.json')}.`
+              );
+            }
 
-      throw e;
-    }
+            report.error(
+              `The ${kleur.blue(name)} field in ${kleur.blue(
+                'package.json'
+              )} points to a non-existent file: ${kleur.blue(
+                value
+              )}.\nVerify the path points to the correct file under ${kleur.blue(
+                path.relative(root, output)
+              )}${
+                generatedEntryPath
+                  ? ` (found ${kleur.blue(generatedEntryPath)}).`
+                  : '.'
+              }`
+            );
+
+            throw new Error(`Found incorrect path in '${name}' field.`);
+          }
+
+          throw e;
+        }
+      })
+    );
   } else {
     const generatedEntryPath = await getGeneratedEntryPath();
 
     report.warn(
-      `No ${kleur.blue(field)} field found in ${kleur.blue(
-        'package.json'
-      )}. Consider ${
+      `No ${kleur.blue(
+        fields.map((field) => field.name).join(' or ')
+      )} field found in ${kleur.blue('package.json')}. Consider ${
         generatedEntryPath
           ? `pointing it to ${kleur.blue(generatedEntryPath)}`
           : 'adding it'
