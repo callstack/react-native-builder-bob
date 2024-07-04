@@ -92,15 +92,18 @@ yarn add --dev react-native-builder-bob
 
    Here is what each of these fields mean:
 
+   - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
    - `main`: The entry point for the commonjs build. This is used by Node - such as tests, SSR etc.
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
    - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to type check the code using your library.
-   - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
    - `files`: The files to include in the package when publishing with `npm`.
+   - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers.
 
    Make sure to change specify correct files according to the targets you have enabled.
 
-   **NOTE**: If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
+   > The `exports` field also requires the `esm` option to be enabled for the [`commonjs`](#commonjs) and [`module`](#module) targets. In addition, the file extensions of the generated files will be `.js` instead of `.cjs` and `.mjs` if the `esm` option is not enabled.
+
+   > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
 1. Add the output directory to `.gitignore` and `.eslintignore`
 
@@ -155,11 +158,13 @@ Various targets to build for. The available targets are:
 
 Enable compiling source files with Babel and use commonjs module system.
 
-This is useful for running the code in Node (SSR, tests etc.). The output file should be referenced in the `main` field and `exports['.'].require` field of `package.json`.
+This is useful for running the code in Node (SSR, tests etc.). The output file should be referenced in the `main` field and `exports['.'].require` (when `esm: true`) field of `package.json`.
 
-By default, the code is compiled to support last 2 versions of modern browsers. It also strips TypeScript and Flow annotations, and compiles JSX. You can customize the environments to compile for by using a [browserslist config](https://github.com/browserslist/browserslist#config-file).
+By default, the code is compiled to support the last 2 versions of modern browsers. It also strips TypeScript and Flow annotations as well as compiles JSX. You can customize the environments to compile for by using a [browserslist config](https://github.com/browserslist/browserslist#config-file).
 
 In addition, the following options are supported:
+
+- `esm` (`boolean`): Enabling this option will output ES modules compatible code for Node.js 12+, modern browsers and other tools that support `package.json`'s `exports` field. This mainly adds file extensions to the imports and exports. Note that file extensions are not added when importing a file that may have platform-specific extensions (e.g. `.android.ts`). In addition, the generated files will have `.cjs` (commonjs) and `.mjs` (modules) extensions instead of `.js` - this is necessary to disambiguate between the two formats.
 
 - `configFile` (`boolean` | `string`): To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration. You can extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/babel-preset.js) preset.
 
@@ -172,19 +177,19 @@ In addition, the following options are supported:
 Example:
 
 ```json
-["commonjs", { "configFile": true, "copyFlow": true }]
+["commonjs", { "esm": true, "copyFlow": true }]
 ```
 
 #### `module`
 
 Enable compiling source files with Babel and use ES module system. This is essentially same as the `commonjs` target and accepts the same options, but leaves the `import`/`export` statements in your code.
 
-This is useful for bundlers which understand ES modules and can tree-shake. The output file should be referenced in the `module` field and `exports['.'].import` field of `package.json`.
+This is useful for bundlers which understand ES modules and can tree-shake. The output file should be referenced in the `module` field and `exports['.'].import` (when `esm: true`) field of `package.json`.
 
 Example:
 
 ```json
-["module", { "configFile": true }]
+["module", { "esm": true, "sourceMaps": false }]
 ```
 
 #### `typescript`
