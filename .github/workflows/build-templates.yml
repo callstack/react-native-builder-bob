@@ -200,8 +200,6 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           yarn typecheck
-        # FIXME: Remove this once we fix the typecheck errors
-        continue-on-error: true
 
       - name: Test library
         working-directory: ${{ env.work_dir }}
