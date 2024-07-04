@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.37.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.37.0...create-react-native-library@0.37.1) (2024-07-04)
+
+### Bug Fixes
+
+- devDependencies doesn't exist in rootPackageJson ([#584](https://github.com/callstack/react-native-builder-bob/issues/584)) ([5a089f1](https://github.com/callstack/react-native-builder-bob/commit/5a089f1e1fb614fcdd8b6b6a54fdc69d77d7a3d9)) - by @iMokhles
+
 # [0.37.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.36.0...create-react-native-library@0.37.0) (2024-07-03)
 
 ### Bug Fixes
