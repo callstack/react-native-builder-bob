@@ -31,12 +31,23 @@ const isModule = (filename: string, ext: string): boolean => {
 
   // Metro won't resolve these extensions if explicit extension is provided
   // So we can't add extension to these files
-  const additional = ['native', 'android', 'ios', 'web'];
+  const platforms = [
+    'native',
+    'android',
+    'ios',
+    'windows',
+    'macos',
+    'visionos',
+    'web',
+    'tv',
+    'android.tv',
+    'ios.tv',
+  ];
 
   return exts.some(
     (ext) =>
       isFile(`${filename}.${ext}`) &&
-      additional.every((add) => !isFile(`${filename}.${add}.${ext}`))
+      platforms.every((platform) => !isFile(`${filename}.${platform}.${ext}`))
   );
 };
 
