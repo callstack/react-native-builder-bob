@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 
+// This is added to the example app's build.gradle file to invoke codegen before every build
 const GRADLE_INVOKE_CODEGEN_TASK = `
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
@@ -15,6 +16,7 @@ if (isNewArchitectureEnabled()) {
     preBuild.dependsOn invokeLibraryCodegen
 }`;
 
+// This is added to the example app's xcscheme file to invoke codegen before every build
 const XCODE_INVOKE_CODEGEN_ACTION = `
       <PreActions>
          <ExecutionAction
@@ -26,6 +28,8 @@ const XCODE_INVOKE_CODEGEN_ACTION = `
          </ExecutionAction>
       </PreActions>`;
 
+// You need to have the files before calling pod install otherwise they won't be registered in your pod.
+// So we add a pre_install hook to the podfile that invokes codegen
 const PODSPEC_INVOKE_CODEGEN_SCRIPT = `
   pre_install do |installer|
     system("cd ../../ && npx bob build --target codegen")
