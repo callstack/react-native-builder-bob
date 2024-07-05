@@ -80,8 +80,8 @@ yarn add --dev react-native-builder-bob
    "exports": {
      ".": {
        "types": "./typescript/src/index.d.ts",
-       "require": "./commonjs/index.cjs",
-       "import": "./module/index.mjs"
+       "import": "./module/index.mjs",
+       "require": "./commonjs/index.cjs"
      }
    },
    "files": [
@@ -93,9 +93,9 @@ yarn add --dev react-native-builder-bob
    Here is what each of these fields mean:
 
    - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
-   - `main`: The entry point for the commonjs build. This is used by Node - such as tests, SSR etc.
+   - `main`: The entry point for the CommonJS build. This is used by Node - such as tests, SSR etc.
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
-   - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to type check the code using your library.
+   - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to typecheck the code using your library.
    - `files`: The files to include in the package when publishing with `npm`.
    - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers.
 
@@ -156,7 +156,7 @@ Various targets to build for. The available targets are:
 
 #### `commonjs`
 
-Enable compiling source files with Babel and use commonjs module system.
+Enable compiling source files with Babel and use CommonJS module system.
 
 This is useful for running the code in Node (SSR, tests etc.). The output file should be referenced in the `main` field and `exports['.'].require` (when `esm: true`) field of `package.json`.
 
@@ -168,9 +168,9 @@ In addition, the following options are supported:
 
 Setting this option to `true` will output ES modules compatible code for Node.js 12+, modern browsers and other tools that support `package.json`'s `exports` field.
 
-This mainly adds file extensions to the imports and exports. Note that file extensions are not added when importing a file that may have platform-specific extensions (e.g. `.android.ts`). In addition, the generated files will have `.cjs` (commonjs) and `.mjs` (modules) extensions instead of `.js` - this is necessary to disambiguate between the two formats.
+This mainly adds file extensions to the imports and exports. Note that file extensions are not added when importing a file that may have platform-specific extensions (e.g. `.android.ts`) to avoid breaking tools. In addition, the generated files will have `.cjs` (CommonJS) and `.mjs` (ES modules) extensions instead of `.js` - this is necessary to disambiguate between the two formats.
 
-If you use TypeScript, also make sure to set `"moduleResolution": "Bundler"` in your `tsconfig.json` file. You may also need to set `"react/react-in-jsx-scope": "off"` if you're using ESLint with the React plugin.
+If you use TypeScript, also make sure to set `"moduleResolution": "Bundler"` in your `tsconfig.json` file.
 
 ##### `configFile`
 
@@ -196,9 +196,9 @@ Example:
 
 #### `module`
 
-Enable compiling source files with Babel and use ES module system. This is essentially same as the `commonjs` target and accepts the same options, but leaves the `import`/`export` statements in your code.
+Enable compiling source files with Babel and use ES module system. This is essentially the same as the `commonjs` target and accepts the same options, but leaves the `import`/`export` statements in your code.
 
-This is useful for bundlers which understand ES modules and can tree-shake. The output file should be referenced in the `module` field and `exports['.'].import` (when `esm: true`) field of `package.json`.
+This is useful for bundlers that understand ES modules and can tree-shake. The output file should be referenced in the `module` field and `exports['.'].import` (when `esm: true`) field of `package.json`.
 
 Example:
 
