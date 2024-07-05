@@ -10,7 +10,7 @@ if (isNewArchitectureEnabled()) {
     // Since our library doesn't invoke codegen automatically we need to do it here.
     tasks.register('invokeLibraryCodegen', Exec) {
         workingDir "$rootDir/../../"
-        commandLine "npx", "bob", "build", "--target codegen"
+        commandLine "npx", "bob", "build", "--target", "codegen"
     }
     preBuild.dependsOn invokeLibraryCodegen
 }`;
