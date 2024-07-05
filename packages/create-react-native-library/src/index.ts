@@ -713,15 +713,19 @@ async function create(_argv: yargs.Arguments<any>) {
   await fs.mkdirp(folder);
 
   if (reactNativeVersion != null) {
-    if (example === 'expo') {
-      console.warn(
-        `${kleur.yellow('⚠')} Ignoring --react-native-version for Expo example`
-      );
-    } else {
+    if (example === 'vanilla') {
       console.log(
         `${kleur.blue('ℹ')} Using ${kleur.cyan(
           `react-native@${reactNativeVersion}`
         )} for the example`
+      );
+    } else {
+      console.warn(
+        `${kleur.yellow(
+          '⚠'
+        )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
+          example
+        )}`
       );
     }
   }
@@ -734,9 +738,8 @@ async function create(_argv: yargs.Arguments<any>) {
     await generateExampleApp({
       type: example,
       dest: folder,
-      slug: options.project.slug,
-      projectName: options.project.name,
       arch,
+      project: options.project,
       reactNativeVersion,
     });
   }

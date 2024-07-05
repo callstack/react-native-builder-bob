@@ -48,16 +48,18 @@ const PACKAGES_TO_ADD_WEB = {
 export default async function generateExampleApp({
   type,
   dest,
-  slug,
-  projectName,
   arch,
+  project,
   reactNativeVersion = 'latest',
 }: {
   type: ExampleType;
   dest: string;
-  slug: string;
-  projectName: string;
   arch: 'new' | 'mixed' | 'legacy';
+  project: {
+    slug: string;
+    name: string;
+    package: string;
+  };
   reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
@@ -68,7 +70,7 @@ export default async function generateExampleApp({
     `react-native-test-app@latest`,
     'init',
     '--name',
-    `${projectName}Example`,
+    `${project.name}Example`,
     `--destination`,
     directory,
     ...(reactNativeVersion !== 'latest'
@@ -84,7 +86,9 @@ export default async function generateExampleApp({
   const vanillaArgs = [
     `react-native@${reactNativeVersion}`,
     'init',
-    `${projectName}Example`,
+    `${project.name}Example`,
+    '--package-name',
+    `${project.package}.example`,
     '--directory',
     directory,
     '--version',
@@ -126,11 +130,9 @@ export default async function generateExampleApp({
   }
 
   // Patch the example app's package.json
-  const pkg = JSON.parse(
-    await fs.readFile(path.join(directory, 'package.json'), 'utf8')
-  );
+  const pkg = await fs.readJSON(path.join(directory, 'package.json'));
 
-  pkg.name = `${slug}-example`;
+  pkg.name = `${project.slug}-example`;
 
   // Remove Jest config for now
   delete pkg.jest;
@@ -143,7 +145,7 @@ export default async function generateExampleApp({
   const SCRIPTS_TO_ADD = {
     'build:android':
       'react-native build-android --extra-params "--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a"',
-    'build:ios': `react-native build-ios --scheme ${projectName}Example --mode Debug --extra-params "-sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"`,
+    'build:ios': `react-native build-ios --scheme ${project.name}Example --mode Debug --extra-params "-sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"`,
   };
 
   if (type === 'vanilla') {
@@ -167,6 +169,17 @@ export default async function generateExampleApp({
     Object.assign(scripts, {
       'build:android': androidBuild,
       'build:ios': iosBuild,
+    });
+
+    const app = await fs.readJSON(path.join(directory, 'app.json'));
+
+    app.android = app.android || {};
+    app.android.package = `${project.package}.example`;
+    app.ios = app.ios || {};
+    app.ios.bundleIdentifier = `${project.package}.example`;
+
+    await fs.writeJSON(path.join(directory, 'app.json'), app, {
+      spaces: 2,
     });
   }
 
@@ -211,6 +224,17 @@ export default async function generateExampleApp({
     });
 
     scripts.web = 'expo start --web';
+
+    const app = await fs.readJSON(path.join(directory, 'app.json'));
+
+    app.expo.android = app.expo.android || {};
+    app.expo.android.package = `${project.package}.example`;
+    app.expo.ios = app.expo.ios || {};
+    app.expo.ios.bundleIdentifier = `${project.package}.example`;
+
+    await fs.writeJSON(path.join(directory, 'app.json'), app, {
+      spaces: 2,
+    });
   }
 
   await fs.writeJSON(path.join(directory, 'package.json'), pkg, {
