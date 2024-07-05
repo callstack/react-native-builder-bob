@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.37.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.37.1...create-react-native-library@0.37.2) (2024-07-05)
+
+### Bug Fixes
+
+- fix `build:ios/android` commands in test-app example ([#585](https://github.com/callstack/react-native-builder-bob/issues/585)) ([f89fd66](https://github.com/callstack/react-native-builder-bob/commit/f89fd669b2a1a07a770e12998dabea345bec7a34)) - by @szymonrybczak
+
 ## [0.37.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.37.0...create-react-native-library@0.37.1) (2024-07-04)
 
 ### Bug Fixes
