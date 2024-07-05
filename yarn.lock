@@ -3841,6 +3841,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mock-fs@npm:^4.13.4":
+  version: 4.13.4
+  resolution: "@types/mock-fs@npm:4.13.4"
+  dependencies:
+    "@types/node": "*"
+  checksum: 9f886d67186da2e5cdabc32835c49ede9749146768e22c7f0f2548587e5201235d3726adef917fa6efbb9b73ad51278858a5d34e7cdc0a4b413c8396b37c350d
+  languageName: node
+  linkType: hard
+
 "@types/ms@npm:*":
   version: 0.7.32
   resolution: "@types/ms@npm:0.7.32"
@@ -11520,6 +11529,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mock-fs@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "mock-fs@npm:5.2.0"
+  checksum: c25835247bd26fa4e0189addd61f98973f61a72741e4d2a5694b143a2069b84978443a7ac0fdb1a71aead99273ec22ff4e9c968de11bbd076db020264c5b8312
+  languageName: node
+  linkType: hard
+
 "modify-values@npm:^1.0.0":
   version: 1.0.1
   resolution: "modify-values@npm:1.0.1"
@@ -12844,6 +12860,7 @@ __metadata:
     "@types/fs-extra": ^9.0.13
     "@types/glob": ^7.2.0
     "@types/json5": ^2.2.0
+    "@types/mock-fs": ^4.13.4
     "@types/prompts": ^2.0.14
     "@types/which": ^2.0.1
     "@types/yargs": ^17.0.10
@@ -12859,6 +12876,7 @@ __metadata:
     jest: ^29.7.0
     json5: ^2.2.1
     kleur: ^4.1.4
+    mock-fs: ^5.2.0
     prompts: ^2.4.2
     which: ^2.0.2
     yargs: ^17.5.1
