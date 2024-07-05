@@ -146,8 +146,28 @@ export default async function generateExampleApp({
     'build:ios': `react-native build-ios --scheme ${projectName}Example --mode Debug --extra-params "-sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"`,
   };
 
-  if (type !== 'expo') {
+  if (type === 'vanilla') {
     Object.assign(scripts, SCRIPTS_TO_ADD);
+  } else if (type === 'test-app') {
+    // `react-native-test-app` doesn't bundle application by default in 'Release' mode and also `bundle` command doesn't create a directory.
+    // `mkdist` script should be removed after stable React Native major contains this fix: https://github.com/facebook/react-native/pull/45182.
+
+    const androidBuild = [
+      'npm run mkdist',
+      'react-native bundle --entry-file index.js --platform android --dev true --bundle-output dist/main.android.jsbundle --assets-dest dist',
+      SCRIPTS_TO_ADD['build:android'],
+    ].join(' && ');
+
+    const iosBuild = [
+      'npm run mkdist',
+      'react-native bundle --entry-file index.js --platform ios --dev true --bundle-output dist/main.ios.jsbundle --assets-dest dist',
+      SCRIPTS_TO_ADD['build:android'],
+    ].join(' && ');
+
+    Object.assign(scripts, {
+      'build:android': androidBuild,
+      'build:ios': iosBuild,
+    });
   }
 
   PACKAGES_TO_REMOVE.forEach((name) => {
