@@ -180,10 +180,12 @@
         {
           "project": "tsconfig.build.json"
         }
+<% if (project.arch !== 'legacy') { -%>
       ],
-  <% if (project.arch !== 'legacy') { -%>
       "codegen"
-  <% } -%>
+<% } else { -%>
+      ]
+<% } -%>
     ]
 <% if (project.arch !== 'legacy') { -%>
   },
