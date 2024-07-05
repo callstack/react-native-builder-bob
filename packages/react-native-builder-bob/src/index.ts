@@ -11,6 +11,8 @@ import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import type { Options } from './types';
+import { patchCodegen } from './utils/patchCodegen';
+import spawn from 'cross-spawn';
 
 // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
@@ -505,6 +507,33 @@ yargs
       }
     }
   })
+  .command(
+    'codegen',
+    'generate codegen from typescript specs',
+    {},
+    async () => {
+      const packageJsonPath = path.resolve(root, 'package.json');
+      if (!(await fs.pathExists(packageJsonPath))) {
+        logger.exit(
+          `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
+        );
+      }
+
+      spawn.sync('npx', ['react-native', 'codegen'], {
+        stdio: 'inherit',
+      });
+
+      patchCodegen(root);
+
+      console.log(
+        dedent`
+        ${kleur.green('Codegen patched successfully!')}
+
+        ${kleur.yellow('Good luck!')}
+      `
+      );
+    }
+  )
   .demandCommand()
   .recommendCommands()
   .strict().argv;
