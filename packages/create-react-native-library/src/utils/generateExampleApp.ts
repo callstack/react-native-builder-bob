@@ -269,11 +269,22 @@ export default async function generateExampleApp({
       );
 
       // Android
-      // Change newArchEnabled=false to newArchEnabled=true in example/android/gradle.properties
-      gradleProperties = gradleProperties.replace(
-        'newArchEnabled=false',
-        'newArchEnabled=true'
-      );
+      // Make sure newArchEnabled=true is present in android/gradle.properties
+      if (gradleProperties.split('\n').includes('#newArchEnabled=true')) {
+        gradleProperties = gradleProperties.replace(
+          '#newArchEnabled=true',
+          'newArchEnabled=true'
+        );
+      } else if (
+        gradleProperties.split('\n').includes('newArchEnabled=false')
+      ) {
+        gradleProperties = gradleProperties.replace(
+          'newArchEnabled=false',
+          'newArchEnabled=true'
+        );
+      } else {
+        gradleProperties += '\nnewArchEnabled=true';
+      }
     }
 
     await fs.writeFile(
