@@ -10,9 +10,18 @@ import * as logger from './utils/logger';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import type { Options } from './types';
-import { patchCodegen } from './utils/patchCodegen';
-import spawn from 'cross-spawn';
+import buildCodegen from './targets/codegen';
+import type { Options, Target } from './types';
+
+type ArgName = 'target';
+
+const args: Record<ArgName, yargs.Options> = {
+  target: {
+    type: 'string',
+    description: 'The target to build',
+    choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[],
+  },
+};
 
 // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
@@ -414,7 +423,7 @@ yargs
     `)
     );
   })
-  .command('build', 'build files for publishing', {}, async (argv) => {
+  .command('build', 'build files for publishing', args, async (argv) => {
     const result = explorer.search();
 
     if (!result?.config) {
@@ -467,6 +476,11 @@ yargs
     };
 
     for (const target of options.targets!) {
+      const targetArg = argv.target;
+      if (targetArg && target !== targetArg) {
+        continue;
+      }
+
       const targetName = Array.isArray(target) ? target[0] : target;
       const targetOptions = Array.isArray(target) ? target[1] : undefined;
 
@@ -502,38 +516,19 @@ yargs
             report,
           });
           break;
+        case 'codegen':
+          await buildCodegen({
+            root,
+            source: path.resolve(root, source as string),
+            output: path.resolve(root, output as string, 'typescript'),
+            report,
+          });
+          break;
         default:
           logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
       }
     }
   })
-  .command(
-    'codegen',
-    'generate codegen from typescript specs',
-    {},
-    async () => {
-      const packageJsonPath = path.resolve(root, 'package.json');
-      if (!(await fs.pathExists(packageJsonPath))) {
-        logger.exit(
-          `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
-        );
-      }
-
-      spawn.sync('npx', ['react-native', 'codegen'], {
-        stdio: 'inherit',
-      });
-
-      patchCodegen(root);
-
-      console.log(
-        dedent`
-        ${kleur.green('Codegen patched successfully!')}
-
-        ${kleur.yellow('Good luck!')}
-      `
-      );
-    }
-  )
   .demandCommand()
   .recommendCommands()
   .strict().argv;

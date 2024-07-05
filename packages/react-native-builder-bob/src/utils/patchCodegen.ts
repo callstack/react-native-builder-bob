@@ -17,14 +17,14 @@ export async function patchCodegen(projectPath: string) {
     packageJson.codegenConfig.outputDir.android;
   if (!codegenAndroidPath) {
     throw new Error(
-      '[Builder Bob] You need to define codegenConfig.outputDir.android in your package.json'
+      'You need to define codegenConfig.outputDir.android in your package.json'
     );
   }
   codegenAndroidPath = path.resolve(projectPath, codegenAndroidPath);
 
   if (!(await fs.pathExists(codegenAndroidPath))) {
     throw new Error(
-      `[Builder Bob] Could not find ${codegenAndroidPath}. Make sure you are in the correct directory and react-native codegen works properly.`
+      `Could not find ${codegenAndroidPath}. Make sure you are in the correct directory and react-native codegen works properly.`
     );
   }
 
@@ -32,7 +32,7 @@ export async function patchCodegen(projectPath: string) {
     packageJson.codegenConfig.android.javaPackageName;
   if (!codegenJavaPackageName) {
     throw new Error(
-      '[Builder Bob] You need to define codegenConfig.android.javaPackageName in your package.json'
+      'You need to define codegenConfig.android.javaPackageName in your package.json'
     );
   }
 

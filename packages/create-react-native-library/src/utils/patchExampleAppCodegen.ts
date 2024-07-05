@@ -10,7 +10,7 @@ if (isNewArchitectureEnabled()) {
     // Since our library doesn't invoke codegen automatically we need to do it here.
     tasks.register('invokeLibraryCodegen', Exec) {
         workingDir "$rootDir/../../"
-        commandLine "yarn", "codegen"
+        commandLine "npx", "bob", "build", "--target codegen"
     }
     preBuild.dependsOn invokeLibraryCodegen
 }`;
@@ -21,14 +21,14 @@ const XCODE_INVOKE_CODEGEN_ACTION = `
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Invoke Codegen"
-               scriptText = "cd &quot;$WORKSPACE_PATH/../../../&quot; &amp;&amp; yarn codegen&#10;">
+               scriptText = "cd &quot;$WORKSPACE_PATH/../../../&quot; &amp;&amp; npx bob build --target codegen&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>`;
 
 const PODSPEC_INVOKE_CODEGEN_SCRIPT = `
   pre_install do |installer|
-    system("cd ../../ && yarn codegen")
+    system("cd ../../ && npx bob build --target codegen")
   end
 `;
 

@@ -13,7 +13,7 @@ export type Input = {
   report: Report;
 };
 
-export type Target = 'commonjs' | 'module' | 'typescript';
+export type Target = 'commonjs' | 'module' | 'typescript' | 'codegen';
 
 export type Options = {
   source?: string;

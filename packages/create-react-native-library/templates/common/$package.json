@@ -43,12 +43,7 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
-<% if (project.arch !== 'legacy') { -%>
-    "codegen": "bob codegen",
-    "prepare": "bob build && yarn codegen",
-<% } else { -%>
     "prepare": "bob build",
-<% } -%>
     "release": "release-it"
   },
   "keywords": [
@@ -185,7 +180,8 @@
         {
           "project": "tsconfig.build.json"
         }
-      ]
+      ],
+      "codegen"
     ]
 <% if (project.arch !== 'legacy') { -%>
   },
