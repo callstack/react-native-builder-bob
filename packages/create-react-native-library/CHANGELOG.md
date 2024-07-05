@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.37.2...create-react-native-library@0.38.0) (2024-07-05)
+
+### Bug Fixes
+
+- avoid using react-native field ([c30fd49](https://github.com/callstack/react-native-builder-bob/commit/c30fd497b68e2b690c63f2bf077439ea7a973bd9)) - by @satya164
+- update the package name and bundleIdentifier for example app ([93a7d04](https://github.com/callstack/react-native-builder-bob/commit/93a7d04c6c43a34572d416f4af75ea427001bce4)) - by @
+
+### Features
+
+- add ESM support for generated project ([#583](https://github.com/callstack/react-native-builder-bob/issues/583)) ([933a3b3](https://github.com/callstack/react-native-builder-bob/commit/933a3b38e0c8426111f956518edd4488c8ed75bc)) - by @satya164
+- switch to new jsx runtime ([0595213](https://github.com/callstack/react-native-builder-bob/commit/0595213e4814c9bc34c270ef89bf31f8e0bd9bed)) - by @satya164
+
 ## [0.37.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.37.1...create-react-native-library@0.37.2) (2024-07-05)
 
 ### Bug Fixes
