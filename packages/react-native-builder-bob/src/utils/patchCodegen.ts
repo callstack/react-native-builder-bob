@@ -83,7 +83,7 @@ export async function patchCodegen(projectPath: string) {
     })
   );
 
-  await fs.rmdir(path.resolve(codegenAndroidPath, 'java/com/facebook'), {
+  await fs.rm(path.resolve(codegenAndroidPath, 'java/com/facebook'), {
     recursive: true,
   });
 }
