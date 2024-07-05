@@ -148,11 +148,10 @@ yargs
         : undefined;
 
     const entries: { [key: string]: string } = {
-      'main': target
+      main: target
         ? path.join(output, target, 'index.js')
         : path.join(source, entryFile),
-      'react-native': path.join(source, entryFile),
-      'source': path.join(source, entryFile),
+      source: path.join(source, entryFile),
     };
 
     if (targets.includes('module')) {
@@ -229,6 +228,23 @@ yargs
         }
       } else {
         pkg[key] = entry;
+      }
+    }
+
+    if (
+      pkg['react-native'] &&
+      (pkg['react-native'].startsWith(source) ||
+        pkg['react-native'].startsWith(`./${source}`))
+    ) {
+      const { remove } = await prompts({
+        type: 'confirm',
+        name: 'remove',
+        message: `Your package.json has the 'react-native' field pointing to source code.\n  This can cause problems when customizing babel configuration.\n  Do you want to remove it?`,
+        initial: true,
+      });
+
+      if (remove) {
+        delete pkg['react-native'];
       }
     }
 

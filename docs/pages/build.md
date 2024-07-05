@@ -75,7 +75,6 @@ yarn add --dev react-native-builder-bob
    ```json
    "main": "lib/commonjs/index.js",
    "module": "lib/module/index.js",
-   "react-native": "src/index.ts",
    "types": "lib/typescript/src/index.d.ts",
    "source": "src/index.ts",
    "files": [
@@ -88,7 +87,6 @@ yarn add --dev react-native-builder-bob
 
    - `main`: The entry point for the commonjs build. This is used by Node - such as tests, SSR etc.
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
-   - `react-native`: The entry point for the React Native apps. This is used by Metro. It's common to point to the source code here as it can make debugging easier.
    - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to type check the code using your library.
    - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
    - `files`: The files to include in the package when publishing with `npm`.
