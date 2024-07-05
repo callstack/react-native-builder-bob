@@ -164,6 +164,9 @@
     "source": "src",
     "output": "lib",
     "targets": [
+<% if (project.arch !== 'legacy') { -%>
+      "codegen",
+<% } -%>
       [
         "commonjs",
         {
@@ -180,12 +183,7 @@
         {
           "project": "tsconfig.build.json"
         }
-<% if (project.arch !== 'legacy') { -%>
-      ],
-      "codegen"
-<% } else { -%>
       ]
-<% } -%>
     ]
 <% if (project.arch !== 'legacy') { -%>
   },
