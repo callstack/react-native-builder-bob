@@ -181,7 +181,9 @@
           "project": "tsconfig.build.json"
         }
       ],
+  <% if (project.arch !== 'legacy') { -%>
       "codegen"
+  <% } -%>
     ]
 <% if (project.arch !== 'legacy') { -%>
   },
