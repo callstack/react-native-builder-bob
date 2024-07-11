@@ -50,7 +50,7 @@
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",
     "browserslist": "^4.20.4",
-    "cosmiconfig": "^7.0.1",
+    "cosmiconfig": "^9.0.0",
     "cross-spawn": "^7.0.3",
     "dedent": "^0.7.0",
     "del": "^6.1.1",

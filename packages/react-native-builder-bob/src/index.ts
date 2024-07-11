@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import kleur from 'kleur';
 import dedent from 'dedent';
 import yargs from 'yargs';
-import { cosmiconfigSync } from 'cosmiconfig';
+import { cosmiconfig } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
@@ -16,8 +16,14 @@ import type { Options } from './types';
 const { name, version } = require('../package.json');
 
 const root = process.cwd();
-const explorer = cosmiconfigSync(name, {
-  searchPlaces: ['package.json', `bob.config.js`, 'bob.config.cjs'],
+const explorer = cosmiconfig(name, {
+  stopDir: root,
+  searchPlaces: [
+    'package.json',
+    'bob.config.mjs',
+    'bob.config.cjs',
+    'bob.config.js',
+  ],
 });
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
@@ -46,7 +52,7 @@ yargs
     }
 
     const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
-    const result = explorer.search();
+    const result = await explorer.search();
 
     if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
       const { shouldContinue } = await prompts({
@@ -413,7 +419,7 @@ yargs
     );
   })
   .command('build', 'build files for publishing', {}, async (argv) => {
-    const result = explorer.search();
+    const result = await explorer.search();
 
     if (!result?.config) {
       logger.exit(
