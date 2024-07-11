@@ -159,10 +159,10 @@ yargs
       esm = true;
 
       if (targets.includes('commonjs')) {
-        entries.main = `./${path.join(output, 'commonjs', 'index.cjs')}`;
+        entries.main = `./${path.join(output, 'commonjs', 'index.js')}`;
       }
 
-      entries.module = `./${path.join(output, 'module', 'index.mjs')}`;
+      entries.module = `./${path.join(output, 'module', 'index.js')}`;
     } else if (targets.includes('commonjs')) {
       entries.main = `./${path.join(output, 'commonjs', 'index.js')}`;
     } else {

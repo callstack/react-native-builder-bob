@@ -47,7 +47,7 @@ module.exports = function (api, options, cwd) {
       [
         require.resolve('./lib/babel'),
         {
-          extension: options.esm ? (cjs ? 'cjs' : 'mjs') : undefined,
+          extension: options.esm ? 'js' : undefined,
         },
       ],
     ],

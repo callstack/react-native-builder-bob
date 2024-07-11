@@ -14,7 +14,7 @@ type Options = {
    * NodeJS requires explicit extension for esm
    * The `cjs` extension avoids disambiguity when package.json has "type": "module"
    */
-  extension?: 'cjs' | 'mjs';
+  extension?: 'js' | 'cjs' | 'mjs';
   /**
    * Out of tree platforms to support
    * For `import './file'`, we skip adding extension if `file.${platform}.ts` exists

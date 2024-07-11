@@ -65,11 +65,15 @@ export default async function compile({
     }
   }
 
-  const outputExtension = esm
-    ? modules === 'commonjs'
-      ? '.cjs'
-      : '.mjs'
-    : '.js';
+  await fs.mkdirp(output);
+
+  if (esm) {
+    await fs.writeJSON(path.join(output, 'package.json'), {
+      type: modules === 'commonjs' ? 'commonjs' : 'module',
+    });
+  }
+
+  const outputExtension = '.js';
 
   await Promise.all(
     files.map(async (filepath) => {
