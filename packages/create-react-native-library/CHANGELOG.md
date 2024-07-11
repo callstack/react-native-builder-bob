@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.1...create-react-native-library@0.38.2) (2024-07-11)
+
+### Bug Fixes
+
+- bump fallback bob version ([42efae5](https://github.com/callstack/react-native-builder-bob/commit/42efae5f63af05c6564021bbc907ce6d5a7dcc05)) - by @
+- use an alternative approach to support ESM ([0c5582b](https://github.com/callstack/react-native-builder-bob/commit/0c5582bb66f5581693e8e9913f80d2fd40d4d7c5)) - by @
+
 ## [0.38.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.0...create-react-native-library@0.38.1) (2024-07-05)
 
 ### Bug Fixes
