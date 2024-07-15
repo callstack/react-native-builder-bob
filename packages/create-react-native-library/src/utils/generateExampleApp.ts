@@ -91,8 +91,8 @@ export default async function generateExampleApp({
     `${project.package}.example`,
     '--directory',
     directory,
-    '--version',
-    reactNativeVersion,
+    '--template',
+    '@react-native-community/template@next',
     '--skip-install',
     '--npm',
   ];
