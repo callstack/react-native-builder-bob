@@ -152,27 +152,22 @@ type Answers = {
 const LANGUAGE_CHOICES: {
   title: string;
   value: ProjectLanguages;
-  types: ProjectType[];
 }[] = [
   {
-    title: `Kotlin & Objective-C`,
+    title: `Objective-C & Kotlin Library`,
     value: 'kotlin-objc',
-    types: ['view-module-legacy', 'view-module-mixed', 'view-module-new'],
   },
   {
-    title: 'Kotlin & Swift',
+    title: 'Swift & Kotlin Library',
     value: 'kotlin-swift',
-    types: ['module-legacy', 'view-legacy'],
   },
   {
-    title: 'C++ for Android & iOS',
+    title: 'C++ Module',
     value: 'cpp',
-    types: ['module-legacy', 'module-mixed', 'module-new'],
   },
   {
-    title: 'JavaScript for Android, iOS & Web',
+    title: 'JavaScript Module',
     value: 'js',
-    types: ['library'],
   },
 ];
 
@@ -201,46 +196,55 @@ const TYPE_CHOICES: {
   title: string;
   value: ProjectType;
   description: string;
+  languages: ProjectLanguages[];
 }[] = [
   {
     title: 'Fabric view and Turbo module with backward compat',
     value: 'view-module-mixed',
     description: BACKCOMPAT_DESCRIPTION,
+    languages: ['kotlin-objc'],
   },
   {
     title: 'Fabric view and Turbo module',
     value: 'view-module-new',
     description: NEWARCH_DESCRIPTION,
+    languages: ['kotlin-objc'],
   },
   {
     title: 'Native module and Native view',
     value: 'view-module-legacy',
     description: 'bridge for native APIs and views to JS',
+    languages: ['kotlin-objc'],
   },
   {
     title: 'JavaScript library',
     value: 'library',
     description: 'supports Expo Go and Web',
+    languages: ['js'],
   },
   {
     title: 'Native module',
     value: 'module-legacy',
     description: 'bridge for native APIs to JS',
+    languages: ['cpp', 'kotlin-swift'],
   },
   {
     title: 'Native view',
     value: 'view-legacy',
     description: 'bridge for native views to JS',
+    languages: ['cpp', 'kotlin-swift'],
   },
   {
     title: 'Turbo module with backward compat',
     value: 'module-mixed',
     description: BACKCOMPAT_DESCRIPTION,
+    languages: ['cpp'],
   },
   {
     title: 'Turbo module',
     value: 'module-new',
     description: NEWARCH_DESCRIPTION,
+    languages: ['cpp'],
   },
 ];
 
@@ -497,17 +501,17 @@ async function create(_argv: yargs.Arguments<any>) {
     },
     {
       type: 'select',
-      name: 'type',
-      message: 'What type of library do you want to develop?',
+      name: 'languages',
+      message: 'Which languages do you want to use?',
       choices: (_, values) => {
         if (values.withRecommendedOptions) {
-          return TYPE_CHOICES.filter(
-            (choice) => choice.value === RECOMMENDED_TEMPLATE.type
-          );
+          return LANGUAGE_CHOICES.filter((choice) => {
+            return choice.value === RECOMMENDED_TEMPLATE.languages;
+          });
         }
 
-        return TYPE_CHOICES.map((choice) =>
-          choice.value === RECOMMENDED_TEMPLATE.type
+        return LANGUAGE_CHOICES.map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.languages
             ? {
                 ...choice,
                 title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
@@ -518,23 +522,19 @@ async function create(_argv: yargs.Arguments<any>) {
     },
     {
       type: 'select',
-      name: 'languages',
-      message: 'Which languages do you want to use?',
+      name: 'type',
+      message: 'What type of library do you want to develop?',
       choices: (_, values) => {
         if (values.withRecommendedOptions) {
-          return LANGUAGE_CHOICES.filter((choice) => {
-            return choice.value === RECOMMENDED_TEMPLATE.languages;
-          });
+          return TYPE_CHOICES.filter(
+            (choice) => choice.value === RECOMMENDED_TEMPLATE.type
+          );
         }
 
-        return LANGUAGE_CHOICES.filter((choice) => {
-          if (choice.types) {
-            return choice.types.includes(values.type);
-          }
-
-          return true;
-        }).map((choice) =>
-          choice.value === RECOMMENDED_TEMPLATE.languages
+        return TYPE_CHOICES.filter((choice) =>
+          choice.languages.includes(values.languages)
+        ).map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.type
             ? {
                 ...choice,
                 title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
