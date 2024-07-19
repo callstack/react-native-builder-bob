@@ -279,6 +279,10 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'URL for the repository',
     type: 'string',
   },
+  'with-recommended-options': {
+    description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}. This can't be used with --type and --languages.`,
+    type: 'boolean',
+  },
   'languages': {
     description: 'Languages you want to use',
     choices: LANGUAGE_CHOICES.map(({ value }) => value),
@@ -299,10 +303,6 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
-  },
-  'with-recommended-options': {
-    description: `Whether to use the recommended template. ${RECOMMENDED_TEMPLATE.description}`,
-    type: 'boolean',
   },
 };
 
@@ -565,6 +565,27 @@ async function create(_argv: yargs.Arguments<any>) {
   }
 
   const validate = (answers: Answers) => {
+    // Throw a better error message if the user tries to use recommended options with custom options
+    if (
+      answers.withRecommendedOptions &&
+      (answers.type !== undefined || answers.languages !== undefined)
+    ) {
+      const faultyArguments = [
+        answers.type !== undefined && kleur.red('--type ' + answers.type),
+        answers.languages !== undefined &&
+          kleur.red('--languages ' + answers.languages),
+      ].filter(Boolean);
+
+      console.log(
+        `You have provided ${kleur.yellow(
+          '--with-recommended-options'
+        )}. Please remove the following argument${
+          faultyArguments.length === 1 ? '' : 's'
+        }: ${faultyArguments.join(', ')}`
+      );
+      process.exit(1);
+    }
+
     for (const [key, value] of Object.entries(answers)) {
       if (value == null) {
         continue;
