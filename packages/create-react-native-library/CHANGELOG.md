@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.2...create-react-native-library@0.38.3) (2024-07-22)
+
+### Bug Fixes
+
+- hide select example question when creating local library ([#594](https://github.com/callstack/react-native-builder-bob/issues/594)) ([ac95039](https://github.com/callstack/react-native-builder-bob/commit/ac9503965015ea5c65d9b7c95e7345fd4ef586ac)) - by @szymonrybczak
+
 ## [0.38.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.1...create-react-native-library@0.38.2) (2024-07-11)
 
 ### Bug Fixes
