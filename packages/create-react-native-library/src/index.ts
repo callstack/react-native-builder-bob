@@ -471,7 +471,10 @@ async function create(_argv: yargs.Arguments<any>) {
         });
       },
     },
-    {
+  ];
+
+  if (!local) {
+    questions.push({
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
@@ -486,8 +489,8 @@ async function create(_argv: yargs.Arguments<any>) {
           return true;
         });
       },
-    },
-  ];
+    });
+  }
 
   const validate = (answers: Answers) => {
     for (const [key, value] of Object.entries(answers)) {
