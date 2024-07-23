@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.3...create-react-native-library@0.38.4) (2024-07-23)
+
+### Bug Fixes
+
+- add correct script on Android ([#596](https://github.com/callstack/react-native-builder-bob/issues/596)) ([bf38b29](https://github.com/callstack/react-native-builder-bob/commit/bf38b29fba5a40130615a3cbc82a40155b0ef251)) - by @szymonrybczak
+- exclude output folder from typescript ([7e00f2b](https://github.com/callstack/react-native-builder-bob/commit/7e00f2bb5d0f59a02b65cb53a700ed19f0de5393)) - by @satya164
+
+## [0.38.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.2...create-react-native-library@0.38.3) (2024-07-22)
+
+### Bug Fixes
+
+- hide select example question when creating local library ([#594](https://github.com/callstack/react-native-builder-bob/issues/594)) ([ac95039](https://github.com/callstack/react-native-builder-bob/commit/ac9503965015ea5c65d9b7c95e7345fd4ef586ac)) - by @szymonrybczak
+
+## [0.38.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.1...create-react-native-library@0.38.2) (2024-07-11)
+
+### Bug Fixes
+
+- bump fallback bob version ([42efae5](https://github.com/callstack/react-native-builder-bob/commit/42efae5f63af05c6564021bbc907ce6d5a7dcc05)) - by @
+- use an alternative approach to support ESM ([0c5582b](https://github.com/callstack/react-native-builder-bob/commit/0c5582bb66f5581693e8e9913f80d2fd40d4d7c5)) - by @
+
 ## [0.38.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.0...create-react-native-library@0.38.1) (2024-07-05)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.0...docs@0.1.1) (2024-07-11)
+
+### Bug Fixes
+
+- use an alternative approach to support ESM ([0c5582b](https://github.com/callstack/react-native-builder-bob/commit/0c5582bb66f5581693e8e9913f80d2fd40d4d7c5)) - by @
+
 # [0.1.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.0.6...docs@0.1.0) (2024-07-05)
 
 ### Bug Fixes

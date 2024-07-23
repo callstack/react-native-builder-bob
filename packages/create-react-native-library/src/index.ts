@@ -15,7 +15,7 @@ import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 import { patchExampleAppCodegen } from './utils/patchExampleAppCodegen';
 
-const FALLBACK_BOB_VERSION = '0.25.0';
+const FALLBACK_BOB_VERSION = '0.26.0';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
@@ -472,7 +472,10 @@ async function create(_argv: yargs.Arguments<any>) {
         });
       },
     },
-    {
+  ];
+
+  if (!local) {
+    questions.push({
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
@@ -487,8 +490,8 @@ async function create(_argv: yargs.Arguments<any>) {
           return true;
         });
       },
-    },
-  ];
+    });
+  }
 
   const validate = (answers: Answers) => {
     for (const [key, value] of Object.entries(answers)) {
