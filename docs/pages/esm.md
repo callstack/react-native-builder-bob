@@ -9,8 +9,8 @@ You can verify whether ESM support is enabled by checking the configuration for 
   "source": "src",
   "output": "lib",
   "targets": [
-    ["commonjs", { "esm" : true }],
-    ["module", { "esm" : true }],
+    ["commonjs", { "esm": true }],
+    ["module", { "esm": true }],
     "typescript",
   ]
 }
