@@ -15,7 +15,7 @@ import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 import { patchExampleAppCodegen } from './utils/patchExampleAppCodegen';
 
-const FALLBACK_BOB_VERSION = '0.25.0';
+const FALLBACK_BOB_VERSION = '0.29.0';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
@@ -47,15 +47,6 @@ const NATIVE_FILES = {
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
-} as const;
-
-const JAVA_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/java-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/java-view-new'),
 } as const;
 
 const OBJC_FILES = {
@@ -92,13 +83,7 @@ type ArgName =
   | 'example'
   | 'react-native-version';
 
-type ProjectLanguages =
-  | 'java-objc'
-  | 'java-swift'
-  | 'kotlin-objc'
-  | 'kotlin-swift'
-  | 'cpp'
-  | 'js';
+type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 type ProjectType =
   | 'module-legacy'
@@ -142,25 +127,8 @@ const LANGUAGE_CHOICES: {
     ],
   },
   {
-    title: 'Java & Objective-C',
-    value: 'java-objc',
-    types: [
-      'module-legacy',
-      'module-new',
-      'module-mixed',
-      'view-mixed',
-      'view-new',
-      'view-legacy',
-    ],
-  },
-  {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['module-legacy', 'view-legacy'],
-  },
-  {
-    title: 'Java & Swift',
-    value: 'java-swift',
     types: ['module-legacy', 'view-legacy'],
   },
   {
@@ -291,6 +259,13 @@ const args: Record<ArgName, yargs.Options> = {
 async function create(_argv: yargs.Arguments<any>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _, $0, ...argv } = _argv;
+
+  // Prefetch bob version in background while asking questions
+  const bobVersionPromise = spawn('npm', [
+    'view',
+    'react-native-builder-bob',
+    'dist-tags.latest',
+  ]);
 
   let local = false;
 
@@ -472,7 +447,10 @@ async function create(_argv: yargs.Arguments<any>) {
         });
       },
     },
-    {
+  ];
+
+  if (!local) {
+    questions.push({
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
@@ -487,8 +465,8 @@ async function create(_argv: yargs.Arguments<any>) {
           return true;
         });
       },
-    },
-  ];
+    });
+  }
 
   const validate = (answers: Answers) => {
     for (const [key, value] of Object.entries(answers)) {
@@ -601,7 +579,7 @@ async function create(_argv: yargs.Arguments<any>) {
     authorUrl,
     repoUrl,
     type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'java-objc',
+    languages = type === 'library' ? 'js' : 'kotlin-objc',
     example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
     reactNativeVersion,
   } = answers;
@@ -614,7 +592,7 @@ async function create(_argv: yargs.Arguments<any>) {
       new Promise<string>((resolve) => {
         setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
       }),
-      spawn('npm', ['view', 'react-native-builder-bob', 'dist-tags.latest']),
+      bobVersionPromise,
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
@@ -667,8 +645,7 @@ async function create(_argv: yargs.Arguments<any>) {
       native: languages !== 'js',
       arch,
       cpp: languages === 'cpp',
-      kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
-      swift: languages === 'java-swift' || languages === 'kotlin-swift',
+      swift: languages === 'kotlin-swift',
       view: moduleType === 'view',
       module: moduleType === 'module',
     },
@@ -741,6 +718,7 @@ async function create(_argv: yargs.Arguments<any>) {
       dest: folder,
       arch,
       project: options.project,
+      bobVersion,
       reactNativeVersion,
     });
   }
@@ -785,11 +763,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
     const templateType = `${moduleType}_${arch}` as const;
 
-    if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES[templateType], folder);
-    } else {
-      await copyDir(JAVA_FILES[templateType], folder);
-    }
+    await copyDir(KOTLIN_FILES[templateType], folder);
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);

@@ -17,11 +17,11 @@ module.exports = function (api, options, cwd) {
         {
           targets: browserslist.findConfig(cwd) || {
             browsers: [
-              '>1%',
-              'last 2 chrome versions',
-              'last 2 edge versions',
-              'last 2 firefox versions',
-              'last 2 safari versions',
+              '> 1%',
+              'chrome 109',
+              'edge 124',
+              'firefox 127',
+              'safari 17.4',
               'not dead',
               'not ie <= 11',
               'not op_mini all',
@@ -44,10 +44,11 @@ module.exports = function (api, options, cwd) {
       require.resolve('@babel/preset-flow'),
     ],
     plugins: [
+      require.resolve('@babel/plugin-transform-strict-mode'),
       [
         require.resolve('./lib/babel'),
         {
-          extension: options.esm ? (cjs ? 'cjs' : 'mjs') : undefined,
+          extension: options.esm ? 'js' : undefined,
         },
       ],
     ],

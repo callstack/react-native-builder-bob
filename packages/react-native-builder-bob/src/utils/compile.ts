@@ -15,6 +15,8 @@ type Options = Input & {
   exclude: string;
 };
 
+const sourceExt = /\.([cm])?[jt]sx?$/;
+
 export default async function compile({
   root,
   source,
@@ -65,21 +67,20 @@ export default async function compile({
     }
   }
 
-  const outputExtension = esm
-    ? modules === 'commonjs'
-      ? '.cjs'
-      : '.mjs'
-    : '.js';
+  await fs.mkdirp(output);
+  await fs.writeJSON(path.join(output, 'package.json'), {
+    type: modules === 'commonjs' ? 'commonjs' : 'module',
+  });
 
   await Promise.all(
     files.map(async (filepath) => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
-        .replace(/\.(jsx?|tsx?)$/, outputExtension);
+        .replace(sourceExt, '.$1js');
 
       await fs.mkdirp(path.dirname(outputFilename));
 
-      if (!/\.(jsx?|tsx?)$/.test(filepath)) {
+      if (!sourceExt.test(filepath)) {
         // Copy files which aren't source code
         fs.copy(filepath, outputFilename);
         return;
@@ -98,7 +99,15 @@ export default async function compile({
           ? null
           : {
               presets: [
-                [require.resolve('../../babel-preset'), { modules, esm }],
+                [
+                  require.resolve('../../babel-preset'),
+                  {
+                    modules:
+                      // If a file is explicitly marked as ESM, then preserve the syntax
+                      /\.m[jt]s$/.test(filepath) ? 'preserve' : modules,
+                    esm,
+                  },
+                ],
               ],
             }),
       });
@@ -132,18 +141,20 @@ export default async function compile({
 
   const getGeneratedEntryPath = async () => {
     if (pkg.source) {
-      const indexName =
-        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') +
-        outputExtension;
+      for (const ext of ['.js', '.cjs', '.mjs']) {
+        const indexName =
+          // The source field may not have an extension, so we add it instead of replacing directly
+          path.basename(pkg.source).replace(sourceExt, '') + ext;
 
-      const potentialPath = path.join(
-        output,
-        path.dirname(path.relative(source, path.join(root, pkg.source))),
-        indexName
-      );
+        const potentialPath = path.join(
+          output,
+          path.dirname(path.relative(source, path.join(root, pkg.source))),
+          indexName
+        );
 
-      if (await fs.pathExists(potentialPath)) {
-        return path.relative(root, potentialPath);
+        if (await fs.pathExists(potentialPath)) {
+          return path.relative(root, potentialPath);
+        }
       }
     }
 
@@ -157,15 +168,29 @@ export default async function compile({
 
   if (esm) {
     if (modules === 'commonjs') {
-      fields.push({
-        name: "exports['.'].require",
-        value: pkg.exports?.['.']?.require,
-      });
+      fields.push(
+        typeof pkg.exports?.['.']?.require === 'string'
+          ? {
+              name: "exports['.'].require",
+              value: pkg.exports?.['.']?.require,
+            }
+          : {
+              name: "exports['.'].require.default",
+              value: pkg.exports?.['.']?.require?.default,
+            }
+      );
     } else {
-      fields.push({
-        name: "exports['.'].import",
-        value: pkg.exports?.['.']?.import,
-      });
+      fields.push(
+        typeof pkg.exports?.['.']?.import === 'string'
+          ? {
+              name: "exports['.'].import",
+              value: pkg.exports?.['.']?.import,
+            }
+          : {
+              name: "exports['.'].import.default",
+              value: pkg.exports?.['.']?.import?.default,
+            }
+      );
     }
   } else {
     if (modules === 'commonjs' && pkg.exports?.['.']?.require) {
@@ -192,6 +217,18 @@ export default async function compile({
       fields.map(async ({ name, value }) => {
         if (!value) {
           return;
+        }
+
+        if (name.startsWith('exports') && value && !/^\.\//.test(value)) {
+          report.error(
+            `The ${kleur.blue(name)} field in ${kleur.blue(
+              `package.json`
+            )} should be a relative path starting with ${kleur.blue(
+              './'
+            )}. Found: ${kleur.blue(value)}`
+          );
+
+          throw new Error(`Found incorrect path in '${name}' field.`);
         }
 
         try {
@@ -238,13 +275,13 @@ export default async function compile({
     const generatedEntryPath = await getGeneratedEntryPath();
 
     report.warn(
-      `No ${kleur.blue(
-        fields.map((field) => field.name).join(' or ')
-      )} field found in ${kleur.blue('package.json')}. Consider ${
+      `No ${fields
+        .map((field) => kleur.blue(field.name))
+        .join(' or ')} field found in ${kleur.blue('package.json')}. Consider ${
         generatedEntryPath
-          ? `pointing it to ${kleur.blue(generatedEntryPath)}`
-          : 'adding it'
-      } so that consumers of your package can use it.`
+          ? `pointing to ${kleur.blue(generatedEntryPath)}`
+          : `adding ${fields.length > 1 ? 'them' : 'it'}`
+      } so that consumers of your package can import your package.`
     );
   }
 }

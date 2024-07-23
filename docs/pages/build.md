@@ -42,9 +42,9 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
-       ["commonjs", { "esm" : true }],
-       ["module", { "esm" : true }],
-       "typescript",
+       ["commonjs", { "esm": true }],
+       ["module", { "esm": true }],
+       ["typescript", { "esm": true }]
      ]
    }
    ```
@@ -74,14 +74,19 @@ yarn add --dev react-native-builder-bob
 
    ```json
    "source": "./src/index.tsx",
-   "main": "./lib/commonjs/index.cjs",
-   "module": "./lib/module/index.mjs",
-   "types": "./lib/typescript/src/index.d.ts",
+   "main": "./lib/commonjs/index.js",
+   "module": "./lib/module/index.js",
+   "types": "./lib/typescript/commonjs/src/index.d.ts",
    "exports": {
      ".": {
-       "types": "./typescript/src/index.d.ts",
-       "import": "./module/index.mjs",
-       "require": "./commonjs/index.cjs"
+       "import": {
+         "types": "./lib/typescript/module/src/index.d.ts",
+         "default": "./lib/module/index.js"
+       },
+       "require": {
+         "types": "./lib/typescript/commonjs/src/index.d.ts",
+         "default": "./lib/commonjs/index.js"
+       }
      }
    },
    "files": [
@@ -97,11 +102,9 @@ yarn add --dev react-native-builder-bob
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
    - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to typecheck the code using your library.
    - `files`: The files to include in the package when publishing with `npm`.
-   - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers.
+   - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers. See [the ESM support guide](./esm.md) for more details.
 
    Make sure to change specify correct files according to the targets you have enabled.
-
-   > The `exports` field also requires the `esm` option to be enabled for the [`commonjs`](#commonjs) and [`module`](#module) targets. In addition, the file extensions of the generated files will be `.js` instead of `.cjs` and `.mjs` if the `esm` option is not enabled.
 
    > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
@@ -168,9 +171,7 @@ In addition, the following options are supported:
 
 Setting this option to `true` will output ES modules compatible code for Node.js 12+, modern browsers and other tools that support `package.json`'s `exports` field.
 
-This mainly adds file extensions to the imports and exports. Note that file extensions are not added when importing a file that may have platform-specific extensions (e.g. `.android.ts`) to avoid breaking tools. In addition, the generated files will have `.cjs` (CommonJS) and `.mjs` (ES modules) extensions instead of `.js` - this is necessary to disambiguate between the two formats.
-
-If you use TypeScript, also make sure to set `"moduleResolution": "Bundler"` in your `tsconfig.json` file.
+See the [ESM support](./esm.md) guide for more details.
 
 ##### `configFile`
 
@@ -227,6 +228,12 @@ Example:
 ```
 
 The output file should be referenced in the `types` field or `exports['.'].types` field of `package.json`.
+
+##### `esm`
+
+Setting this option to `true` will output 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
+
+See the [ESM support](./esm.md) guide for more details.
 
 ## Commands
 

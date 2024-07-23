@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.29.0...react-native-builder-bob@0.29.1) (2024-08-12)
+
+### Bug Fixes
+
+- always use example app's babel config. closes [#611](https://github.com/callstack/react-native-builder-bob/issues/611) ([9a471e6](https://github.com/callstack/react-native-builder-bob/commit/9a471e63e414f8cbbfce83e999f6829ede7b2d0f)) - by @
+
+# [0.29.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.1...react-native-builder-bob@0.29.0) (2024-08-01)
+
+### Bug Fixes
+
+- ensure assets are registered correctly ([#608](https://github.com/callstack/react-native-builder-bob/issues/608)) ([ab999bf](https://github.com/callstack/react-native-builder-bob/commit/ab999bfdbf195a4df1a1b2c81fcef252cda861f6)), closes [#607](https://github.com/callstack/react-native-builder-bob/issues/607) - by @satya164
+- update babel preset to include class transforms for hermes ([#606](https://github.com/callstack/react-native-builder-bob/issues/606)) ([f0a7a2f](https://github.com/callstack/react-native-builder-bob/commit/f0a7a2f998f7d803e1faf3bc162206f3ed16e9a8)), closes [#605](https://github.com/callstack/react-native-builder-bob/issues/605) - by @satya164
+
+### Features
+
+- add esm build option for typescript ([#603](https://github.com/callstack/react-native-builder-bob/issues/603)) ([fd43167](https://github.com/callstack/react-native-builder-bob/commit/fd4316745303fd41036e392b9fa4747f1679bacf)) - by @satya164
+
+## [0.28.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.0...react-native-builder-bob@0.28.1) (2024-07-27)
+
+### Bug Fixes
+
+- read source directory from bob config ([77df6cd](https://github.com/callstack/react-native-builder-bob/commit/77df6cd3d4ffd81da5501c1251d6b45c6f095873)) - by @
+
+# [0.28.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.27.0...react-native-builder-bob@0.28.0) (2024-07-26)
+
+### Bug Fixes
+
+- always create package.json with type regardless of esm option ([#598](https://github.com/callstack/react-native-builder-bob/issues/598)) ([5b45554](https://github.com/callstack/react-native-builder-bob/commit/5b455542fec82fa9edfb41c0da0ddceb4e72c485)) - by @satya164
+
+### Features
+
+- export babel and metro configs to reduce boilerplate ([#600](https://github.com/callstack/react-native-builder-bob/issues/600)) ([d6cb1ce](https://github.com/callstack/react-native-builder-bob/commit/d6cb1ce6c9ea15fe0c1e5623c84370bffb25878f)) - by @satya164
+- use the bob preset for the library during dev ([#599](https://github.com/callstack/react-native-builder-bob/issues/599)) ([3a4e724](https://github.com/callstack/react-native-builder-bob/commit/3a4e7240e9cabcdf76f45724485dbffa79daa011)) - by @satya164
+
+# [0.27.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.26.0...react-native-builder-bob@0.27.0) (2024-07-23)
+
+### Features
+
+- support mts, cts, mjs and cts files in source code ([#595](https://github.com/callstack/react-native-builder-bob/issues/595)) ([d522793](https://github.com/callstack/react-native-builder-bob/commit/d5227939badbd71c42c308b7f5a71cff38807ba0)) - by @satya164
+
+# [0.26.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0...react-native-builder-bob@0.26.0) (2024-07-11)
+
+### Bug Fixes
+
+- use an alternative approach to support ESM ([0c5582b](https://github.com/callstack/react-native-builder-bob/commit/0c5582bb66f5581693e8e9913f80d2fd40d4d7c5)) - by @
+
+### Features
+
+- support ESM config for bob ([9b41a62](https://github.com/callstack/react-native-builder-bob/commit/9b41a626cf661a9967b20a5290515c4690d493b7)) - by @
+
 # [0.25.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.24.0...react-native-builder-bob@0.25.0) (2024-07-05)
 
 ### Bug Fixes

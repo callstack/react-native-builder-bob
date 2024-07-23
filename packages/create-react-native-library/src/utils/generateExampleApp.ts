@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
 import { spawn } from './spawn';
+import sortObjectKeys from './sortObjectKeys';
 
 export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
 
@@ -35,10 +36,6 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
-const PACKAGES_TO_ADD_DEV = {
-  'babel-plugin-module-resolver': '^5.0.0',
-};
-
 const PACKAGES_TO_ADD_WEB = {
   '@expo/metro-runtime': '~3.2.1',
   'react-dom': '18.2.0',
@@ -50,6 +47,7 @@ export default async function generateExampleApp({
   dest,
   arch,
   project,
+  bobVersion,
   reactNativeVersion = 'latest',
 }: {
   type: ExampleType;
@@ -60,6 +58,7 @@ export default async function generateExampleApp({
     name: string;
     package: string;
   };
+  bobVersion: string;
   reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
@@ -82,9 +81,9 @@ export default async function generateExampleApp({
     'android',
   ];
 
-  // `npx react-native init <projectName> --directory example --skip-install`
+  // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
   const vanillaArgs = [
-    `react-native@${reactNativeVersion}`,
+    `@react-native-community/cli`,
     'init',
     `${project.name}Example`,
     '--package-name',
@@ -163,7 +162,7 @@ export default async function generateExampleApp({
     const iosBuild = [
       'npm run mkdist',
       'react-native bundle --entry-file index.js --platform ios --dev true --bundle-output dist/main.ios.jsbundle --assets-dest dist',
-      SCRIPTS_TO_ADD['build:android'],
+      SCRIPTS_TO_ADD['build:ios'],
     ].join(' && ');
 
     Object.assign(scripts, {
@@ -187,6 +186,10 @@ export default async function generateExampleApp({
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete devDependencies[name];
   });
+
+  const PACKAGES_TO_ADD_DEV = {
+    'react-native-builder-bob': `^${bobVersion}`,
+  };
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 
@@ -235,6 +238,12 @@ export default async function generateExampleApp({
     await fs.writeJSON(path.join(directory, 'app.json'), app, {
       spaces: 2,
     });
+  }
+
+  for (const field of ['dependencies', 'devDependencies']) {
+    if (pkg[field]) {
+      pkg[field] = sortObjectKeys(pkg[field]);
+    }
   }
 
   await fs.writeJSON(path.join(directory, 'package.json'), pkg, {

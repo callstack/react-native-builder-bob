@@ -1,6 +1,6 @@
 {
   "name": "react-native-builder-bob",
-  "version": "0.25.0",
+  "version": "0.29.1",
   "description": "CLI to build JavaScript files for React Native libraries",
   "keywords": [
     "react-native",
@@ -24,7 +24,9 @@
   "files": [
     "bin",
     "lib",
-    "babel-preset.js"
+    "babel-preset.js",
+    "metro-config.js",
+    "babel-config.js"
   ],
   "engines": {
     "node": ">= 18.0.0"
@@ -43,28 +45,31 @@
     ]
   },
   "dependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/plugin-proposal-class-properties": "^7.17.12",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-flow": "^7.17.12",
-    "@babel/preset-react": "^7.17.12",
-    "@babel/preset-typescript": "^7.17.12",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-strict-mode": "^7.24.7",
+    "@babel/preset-env": "^7.25.2",
+    "@babel/preset-flow": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "babel-plugin-module-resolver": "^5.0.2",
     "browserslist": "^4.20.4",
-    "cosmiconfig": "^7.0.1",
+    "cosmiconfig": "^9.0.0",
     "cross-spawn": "^7.0.3",
     "dedent": "^0.7.0",
     "del": "^6.1.1",
+    "escape-string-regexp": "^4.0.0",
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",
     "is-git-dirty": "^2.0.1",
     "json5": "^2.2.1",
     "kleur": "^4.1.4",
+    "metro-config": "^0.80.9",
     "prompts": "^2.4.2",
     "which": "^2.0.2",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
+    "@babel/cli": "^7.24.8",
     "@jest/globals": "^29.7.0",
     "@types/babel__core": "^7.1.19",
     "@types/browserslist": "^4.15.0",

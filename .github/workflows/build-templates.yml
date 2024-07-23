@@ -37,56 +37,67 @@ jobs:
           - view-mixed
           - view-new
         language:
-          - java-objc
-          - java-swift
           - kotlin-objc
           - kotlin-swift
+        arch:
+          - auto
         exclude:
-          - os: macos-14
-            language: kotlin-objc
-          - os: macos-14
-            language: kotlin-swift
-          - type: module-new
-            language: java-swift
           - type: module-new
             language: kotlin-swift
           - type: module-mixed
-            language: java-swift
-          - type: module-mixed
             language: kotlin-swift
           - type: view-new
-            language: java-swift
-          - type: view-new
             language: kotlin-swift
-          - type: view-mixed
-            language: java-swift
           - type: view-mixed
             language: kotlin-swift
         include:
           - os: ubuntu-latest
             type: library
             language: js
+            arch: auto
+          - os: ubuntu-latest
+            type: module-mixed
+            language: kotlin-objc
+            arch: new
+          - os: macos-14
+            type: module-mixed
+            language: kotlin-objc
+            arch: new
+          - os: ubuntu-latest
+            type: view-mixed
+            language: kotlin-objc
+            arch: new
+          - os: macos-14
+            type: view-mixed
+            language: kotlin-objc
+            arch: new
           - os: ubuntu-latest
             type: module-legacy
             language: cpp
+            arch: auto
           - os: ubuntu-latest
             type: module-mixed
             language: cpp
+            arch: auto
           - os: ubuntu-latest
             type: module-new
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-legacy
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-mixed
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-new
             language: cpp
+            arch: auto
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -98,13 +109,20 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Set environment variables
+        run: |
+          if [[ "${{ matrix.arch }}" == "new" ]]; then
+            echo "RCT_NEW_ARCH_ENABLED=1" >> $GITHUB_ENV
+            echo "ORG_GRADLE_PROJECT_newArchEnabled=true" >> $GITHUB_ENV
+          fi
+
       - name: Build package
         run: |
           yarn workspace create-react-native-library prepare
 
       - name: Get working directory
         run: |
-          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
+          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}" >> $GITHUB_ENV
 
       - name: Create library
         run: |
@@ -161,7 +179,7 @@ jobs:
 
           # Build iOS for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == macos-14 ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == java-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
           fi
@@ -172,9 +190,9 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/.turbo
-          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
           restore-keys: |
-            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
+            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-
 
       - name: Check turborepo cache
         if: env.android_build == 1 || env.ios_build == 1
@@ -262,13 +280,13 @@ jobs:
             ${{ runner.os }}-library-cocoapods-
 
       - name: Install cocoapods
+        env:
+          NO_FLIPPER: 1
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
         run: |
           cd example/ios
           pod install
-        env:
-          NO_FLIPPER: 1
 
       - name: Build example (iOS)
         if: env.ios_build == 1

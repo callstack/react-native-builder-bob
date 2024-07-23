@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.2.0...docs@0.2.1) (2024-08-12)
+
+**Note:** Version bump only for package docs
+
+# [0.2.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.2...docs@0.2.0) (2024-08-01)
+
+### Features
+
+- add esm build option for typescript ([#603](https://github.com/callstack/react-native-builder-bob/issues/603)) ([fd43167](https://github.com/callstack/react-native-builder-bob/commit/fd4316745303fd41036e392b9fa4747f1679bacf)) - by @satya164
+
+## [0.1.2](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.1...docs@0.1.2) (2024-07-26)
+
+### Bug Fixes
+
+- always create package.json with type regardless of esm option ([#598](https://github.com/callstack/react-native-builder-bob/issues/598)) ([5b45554](https://github.com/callstack/react-native-builder-bob/commit/5b455542fec82fa9edfb41c0da0ddceb4e72c485)) - by @satya164
+
+## [0.1.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.0...docs@0.1.1) (2024-07-11)
+
+### Bug Fixes
+
+- use an alternative approach to support ESM ([0c5582b](https://github.com/callstack/react-native-builder-bob/commit/0c5582bb66f5581693e8e9913f80d2fd40d4d7c5)) - by @
+
 # [0.1.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.0.6...docs@0.1.0) (2024-07-05)
 
 ### Bug Fixes

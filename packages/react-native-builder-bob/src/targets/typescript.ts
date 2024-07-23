@@ -9,7 +9,18 @@ import { platform } from 'os';
 import type { Input } from '../types';
 
 type Options = Input & {
-  options?: { project?: string; tsc?: string };
+  options?: {
+    esm?: boolean;
+    project?: string;
+    tsc?: string;
+  };
+};
+
+type Field = {
+  name: string;
+  value: string | undefined;
+  output: string | undefined;
+  error: boolean;
 };
 
 export default async function build({
@@ -37,14 +48,6 @@ export default async function build({
 
         if (config.compilerOptions) {
           const conflicts: string[] = [];
-
-          if (config.compilerOptions.noEmit !== undefined) {
-            conflicts.push('compilerOptions.noEmit');
-          }
-
-          if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-            conflicts.push('compilerOptions.emitDeclarationOnly');
-          }
 
           if (config.compilerOptions.declarationDir) {
             conflicts.push('compilerOptions.declarationDir');
@@ -164,17 +167,26 @@ export default async function build({
       // Ignore
     }
 
+    const outputs = options?.esm
+      ? {
+          commonjs: path.join(output, 'commonjs'),
+          module: path.join(output, 'module'),
+        }
+      : { commonjs: output };
+
     const result = spawn.sync(
       tsc,
       [
         '--pretty',
         '--declaration',
         '--declarationMap',
+        '--noEmit',
+        'false',
         '--emitDeclarationOnly',
         '--project',
         project,
         '--outDir',
-        output,
+        outputs.commonjs,
       ],
       {
         stdio: 'inherit',
@@ -185,6 +197,18 @@ export default async function build({
     if (result.status === 0) {
       await del([tsbuildinfo]);
 
+      if (outputs?.module) {
+        // When ESM compatible output is enabled, we need to generate 2 builds for commonjs and esm
+        // In this case we copy the already generated types, and add `package.json` with `type` field
+        await fs.copy(outputs.commonjs, outputs.module);
+        await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
+          type: 'commonjs',
+        });
+        await fs.writeJSON(path.join(outputs.module, 'package.json'), {
+          type: 'module',
+        });
+      }
+
       report.success(
         `Wrote definition files to ${kleur.blue(path.relative(root, output))}`
       );
@@ -193,16 +217,51 @@ export default async function build({
         await fs.readFile(path.join(root, 'package.json'), 'utf-8')
       );
 
-      const getGeneratedTypesPath = async () => {
+      const fields: Field[] = [
+        {
+          name: 'types',
+          value: pkg.types,
+          output: outputs.commonjs,
+          error: false,
+        },
+        ...(pkg.exports?.['.']?.types
+          ? [
+              {
+                name: "exports['.'].types",
+                value: pkg.exports?.['.']?.types,
+                output: outputs.commonjs,
+                error: options?.esm === true,
+              },
+            ]
+          : []),
+        {
+          name: "exports['.'].import.types",
+          value: pkg.exports?.['.']?.import?.types,
+          output: outputs.module,
+          error: !options?.esm,
+        },
+        {
+          name: "exports['.'].require.types",
+          value: pkg.exports?.['.']?.require?.types,
+          output: outputs.commonjs,
+          error: !options?.esm,
+        },
+      ];
+
+      const getGeneratedTypesPath = async (field: Field) => {
+        if (!field.output || field.error) {
+          return null;
+        }
+
         if (pkg.source) {
           const indexDTsName =
             path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') + '.d.ts';
 
           const potentialPaths = [
-            path.join(output, path.dirname(pkg.source), indexDTsName),
+            path.join(field.output, path.dirname(pkg.source), indexDTsName),
             path.join(
-              output,
-              path.dirname(path.relative(source, path.join(root, pkg.source))),
+              field.output,
+              path.relative(source, path.join(root, path.dirname(pkg.source))),
               indexDTsName
             ),
           ];
@@ -217,36 +276,50 @@ export default async function build({
         return null;
       };
 
-      const fields = [
-        { name: 'types', value: pkg.types },
-        { name: "exports['.'].types", value: pkg.exports?.['.']?.types },
-      ];
-
-      if (fields.some((field) => field.value)) {
+      const invalidFieldNames = (
         await Promise.all(
-          fields.map(async ({ name, value }) => {
-            if (!value) {
-              return;
-            }
-
-            const typesPath = path.join(root, value);
-
-            if (!(await fs.pathExists(typesPath))) {
-              const generatedTypesPath = await getGeneratedTypesPath();
-
-              if (!generatedTypesPath) {
+          fields.map(async (field) => {
+            if (field.error) {
+              if (field.value) {
                 report.warn(
-                  `Failed to detect the entry point for the generated types. Make sure you have a valid ${kleur.blue(
-                    'source'
-                  )} field in your ${kleur.blue('package.json')}.`
+                  `The ${kleur.blue(field.name)} field in ${kleur.blue(
+                    `package.json`
+                  )} should not be set when the ${kleur.blue(
+                    'esm'
+                  )} option is ${options?.esm ? 'enabled' : 'disabled'}.`
                 );
               }
 
+              return null;
+            }
+
+            if (
+              field.name.startsWith('exports') &&
+              field.value &&
+              !/^\.\//.test(field.value)
+            ) {
               report.error(
-                `The ${kleur.blue(name)} field in ${kleur.blue(
+                `The ${kleur.blue(field.name)} field in ${kleur.blue(
+                  `package.json`
+                )} should be a relative path starting with ${kleur.blue(
+                  './'
+                )}. Found: ${kleur.blue(field.value)}`
+              );
+
+              return field.name;
+            }
+
+            if (
+              field.value &&
+              !(await fs.pathExists(path.join(root, field.value)))
+            ) {
+              const generatedTypesPath = await getGeneratedTypesPath(field);
+
+              report.error(
+                `The ${kleur.blue(field.name)} field in ${kleur.blue(
                   'package.json'
                 )} points to a non-existent file: ${kleur.blue(
-                  value
+                  field.value
                 )}.\nVerify the path points to the correct file under ${kleur.blue(
                   path.relative(root, output)
                 )}${
@@ -256,21 +329,43 @@ export default async function build({
                 }`
               );
 
-              throw new Error(`Found incorrect path in '${name}' field.`);
+              return field.name;
             }
+
+            return null;
           })
+        )
+      ).filter((name): name is string => name != null);
+
+      if (invalidFieldNames.length) {
+        throw new Error(
+          `Found errors for fields: ${invalidFieldNames.join(', ')}.`
         );
-      } else {
-        const generatedTypesPath = await getGeneratedTypesPath();
+      }
+
+      const validFields = fields.filter((field) => !field.error);
+
+      if (validFields.every((field) => field.value == null)) {
+        const suggestedTypesPaths = (
+          await Promise.all(
+            validFields.map((field) => getGeneratedTypesPath(field))
+          )
+        )
+          .filter((path): path is string => path != null)
+          .filter((path, i, self) => self.indexOf(path) === i);
 
         report.warn(
-          `No ${kleur.blue(
-            fields.map((field) => field.name).join(' or ')
-          )} field found in ${kleur.blue('package.json')}.\nConsider ${
-            generatedTypesPath
-              ? `pointing it to ${kleur.blue(generatedTypesPath)}`
-              : 'adding it'
-          } so that consumers of your package can use the types.`
+          `No ${validFields
+            .map((field) => kleur.blue(field.name))
+            .join(' or ')} field found in ${kleur.blue(
+            'package.json'
+          )}. Consider ${
+            suggestedTypesPaths.length
+              ? `pointing to ${suggestedTypesPaths
+                  .map((path) => kleur.blue(path))
+                  .join(' or ')}`
+              : `adding ${validFields.length > 1 ? 'them' : 'it'}`
+          } so that consumers of your package can use the typescript definitions.`
         );
       }
     } else {
