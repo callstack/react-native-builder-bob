@@ -15,6 +15,8 @@ type Options = Input & {
   exclude: string;
 };
 
+const sourceExt = /\.([cm])?[jt]sx?$/;
+
 export default async function compile({
   root,
   source,
@@ -73,17 +75,15 @@ export default async function compile({
     });
   }
 
-  const outputExtension = '.js';
-
   await Promise.all(
     files.map(async (filepath) => {
       const outputFilename = path
         .join(output, path.relative(source, filepath))
-        .replace(/\.(jsx?|tsx?)$/, outputExtension);
+        .replace(sourceExt, '.$1js');
 
       await fs.mkdirp(path.dirname(outputFilename));
 
-      if (!/\.(jsx?|tsx?)$/.test(filepath)) {
+      if (!sourceExt.test(filepath)) {
         // Copy files which aren't source code
         fs.copy(filepath, outputFilename);
         return;
@@ -102,7 +102,15 @@ export default async function compile({
           ? null
           : {
               presets: [
-                [require.resolve('../../babel-preset'), { modules, esm }],
+                [
+                  require.resolve('../../babel-preset'),
+                  {
+                    modules:
+                      // If a file is explicitly marked as ESM, then preserve the syntax
+                      /\.m[jt]s$/.test(filepath) ? 'preserve' : modules,
+                    esm,
+                  },
+                ],
               ],
             }),
       });
@@ -136,18 +144,20 @@ export default async function compile({
 
   const getGeneratedEntryPath = async () => {
     if (pkg.source) {
-      const indexName =
-        path.basename(pkg.source).replace(/\.(jsx?|tsx?)$/, '') +
-        outputExtension;
+      for (const ext of ['.js', '.cjs', '.mjs']) {
+        const indexName =
+          // The source field may not have an extension, so we add it instead of replacing directly
+          path.basename(pkg.source).replace(sourceExt, '') + ext;
 
-      const potentialPath = path.join(
-        output,
-        path.dirname(path.relative(source, path.join(root, pkg.source))),
-        indexName
-      );
+        const potentialPath = path.join(
+          output,
+          path.dirname(path.relative(source, path.join(root, pkg.source))),
+          indexName
+        );
 
-      if (await fs.pathExists(potentialPath)) {
-        return path.relative(root, potentialPath);
+        if (await fs.pathExists(potentialPath)) {
+          return path.relative(root, potentialPath);
+        }
       }
     }
 
