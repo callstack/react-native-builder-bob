@@ -163,7 +163,7 @@ export default async function generateExampleApp({
     const iosBuild = [
       'npm run mkdist',
       'react-native bundle --entry-file index.js --platform ios --dev true --bundle-output dist/main.ios.jsbundle --assets-dest dist',
-      SCRIPTS_TO_ADD['build:android'],
+      SCRIPTS_TO_ADD['build:ios'],
     ].join(' && ');
 
     Object.assign(scripts, {
