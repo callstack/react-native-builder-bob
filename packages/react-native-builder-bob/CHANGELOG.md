@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.26.0...react-native-builder-bob@0.27.0) (2024-07-23)
+
+### Features
+
+- support mts, cts, mjs and cts files in source code ([#595](https://github.com/callstack/react-native-builder-bob/issues/595)) ([d522793](https://github.com/callstack/react-native-builder-bob/commit/d5227939badbd71c42c308b7f5a71cff38807ba0)) - by @satya164
+
 # [0.26.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.25.0...react-native-builder-bob@0.26.0) (2024-07-11)
 
 ### Bug Fixes
