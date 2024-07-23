@@ -42,8 +42,8 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
-       ["commonjs", { "esm" : true }],
-       ["module", { "esm" : true }],
+       ["commonjs", { "esm": true }],
+       ["module", { "esm": true }],
        "typescript",
      ]
    }
@@ -166,9 +166,7 @@ In addition, the following options are supported:
 
 Setting this option to `true` will output ES modules compatible code for Node.js 12+, modern browsers and other tools that support `package.json`'s `exports` field.
 
-This mainly adds file extensions to the imports and exports. Note that file extensions are not added when importing a file that may have platform-specific extensions (e.g. `.android.ts`) to avoid breaking tools.
-
-If you use TypeScript, also make sure to set `"moduleResolution": "Bundler"` in your `tsconfig.json` file.
+See the [ESM support](./esm.md) guide for more details.
 
 ##### `configFile`
 
