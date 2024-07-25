@@ -16,12 +16,9 @@ You can verify whether ESM support is enabled by checking the configuration for 
 }
 ```
 
-The `"esm": true` option enables ESM-compatible output. Here's what it does:
+The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files.
 
-- It adds the `.js` extension to the import statements in the generated files.
-- It creates a `package.json` file in the output directory with the content: `{ "type": "module" }`
-
-In addition, it's necessary to specify `"moduleResolution": "Bundler"` in your `tsconfig.json` file:
+It's recommended to specify `"moduleResolution": "Bundler"` in your `tsconfig.json` file as well:
 
 ```json
 {

@@ -68,12 +68,9 @@ export default async function compile({
   }
 
   await fs.mkdirp(output);
-
-  if (esm) {
-    await fs.writeJSON(path.join(output, 'package.json'), {
-      type: modules === 'commonjs' ? 'commonjs' : 'module',
-    });
-  }
+  await fs.writeJSON(path.join(output, 'package.json'), {
+    type: modules === 'commonjs' ? 'commonjs' : 'module',
+  });
 
   await Promise.all(
     files.map(async (filepath) => {
