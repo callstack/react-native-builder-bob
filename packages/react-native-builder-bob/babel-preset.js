@@ -44,6 +44,7 @@ module.exports = function (api, options, cwd) {
       require.resolve('@babel/preset-flow'),
     ],
     plugins: [
+      require.resolve('@babel/plugin-transform-strict-mode'),
       [
         require.resolve('./lib/babel'),
         {

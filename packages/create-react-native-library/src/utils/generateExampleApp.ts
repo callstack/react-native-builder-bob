@@ -35,10 +35,6 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
-const PACKAGES_TO_ADD_DEV = {
-  'babel-plugin-module-resolver': '^5.0.0',
-};
-
 const PACKAGES_TO_ADD_WEB = {
   '@expo/metro-runtime': '~3.2.1',
   'react-dom': '18.2.0',
@@ -50,6 +46,7 @@ export default async function generateExampleApp({
   dest,
   arch,
   project,
+  bobVersion,
   reactNativeVersion = 'latest',
 }: {
   type: ExampleType;
@@ -60,6 +57,7 @@ export default async function generateExampleApp({
     name: string;
     package: string;
   };
+  bobVersion: string;
   reactNativeVersion?: string;
 }) {
   const directory = path.join(dest, 'example');
@@ -187,6 +185,11 @@ export default async function generateExampleApp({
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete devDependencies[name];
   });
+
+  const PACKAGES_TO_ADD_DEV = {
+    'babel-plugin-module-resolver': '^5.0.0',
+    'react-native-builder-bob': `^${bobVersion}`,
+  };
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 

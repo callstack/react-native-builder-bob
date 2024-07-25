@@ -743,6 +743,7 @@ async function create(_argv: yargs.Arguments<any>) {
       dest: folder,
       arch,
       project: options.project,
+      bobVersion,
       reactNativeVersion,
     });
   }
