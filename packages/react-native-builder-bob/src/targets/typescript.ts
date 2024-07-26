@@ -38,14 +38,6 @@ export default async function build({
         if (config.compilerOptions) {
           const conflicts: string[] = [];
 
-          if (config.compilerOptions.noEmit !== undefined) {
-            conflicts.push('compilerOptions.noEmit');
-          }
-
-          if (config.compilerOptions.emitDeclarationOnly !== undefined) {
-            conflicts.push('compilerOptions.emitDeclarationOnly');
-          }
-
           if (config.compilerOptions.declarationDir) {
             conflicts.push('compilerOptions.declarationDir');
           }
@@ -170,6 +162,8 @@ export default async function build({
         '--pretty',
         '--declaration',
         '--declarationMap',
+        '--noEmit',
+        'false',
         '--emitDeclarationOnly',
         '--project',
         project,

@@ -36,7 +36,7 @@
     "example": "yarn workspace <%- project.slug -%>-example",
 <% } -%>
     "test": "jest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
 <% if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
