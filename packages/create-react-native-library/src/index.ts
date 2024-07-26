@@ -14,7 +14,7 @@ import generateExampleApp, {
 import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 
-const FALLBACK_BOB_VERSION = '0.26.0';
+const FALLBACK_BOB_VERSION = '0.28.0';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
