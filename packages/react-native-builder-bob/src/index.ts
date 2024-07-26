@@ -10,7 +10,18 @@ import * as logger from './utils/logger';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import type { Options } from './types';
+import buildCodegen from './targets/codegen';
+import type { Options, Target } from './types';
+
+type ArgName = 'target';
+
+const args: Record<ArgName, yargs.Options> = {
+  target: {
+    type: 'string',
+    description: 'The target to build',
+    choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[],
+  },
+};
 
 // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
@@ -418,7 +429,7 @@ yargs
     `)
     );
   })
-  .command('build', 'build files for publishing', {}, async (argv) => {
+  .command('build', 'build files for publishing', args, async (argv) => {
     const result = await explorer.search();
 
     if (!result?.config) {
@@ -471,6 +482,11 @@ yargs
     };
 
     for (const target of options.targets!) {
+      const targetArg = argv.target;
+      if (targetArg && target !== targetArg) {
+        continue;
+      }
+
       const targetName = Array.isArray(target) ? target[0] : target;
       const targetOptions = Array.isArray(target) ? target[1] : undefined;
 
@@ -503,6 +519,14 @@ yargs
             source: path.resolve(root, source as string),
             output: path.resolve(root, output as string, 'typescript'),
             options: targetOptions,
+            report,
+          });
+          break;
+        case 'codegen':
+          await buildCodegen({
+            root,
+            source: path.resolve(root, source as string),
+            output: path.resolve(root, output as string, 'typescript'),
             report,
           });
           break;
