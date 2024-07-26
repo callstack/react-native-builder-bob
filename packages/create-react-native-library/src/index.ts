@@ -259,6 +259,13 @@ async function create(_argv: yargs.Arguments<any>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _, $0, ...argv } = _argv;
 
+  // Prefetch bob version in background while asking questions
+  const bobVersionPromise = spawn('npm', [
+    'view',
+    'react-native-builder-bob',
+    'dist-tags.latest',
+  ]);
+
   let local = false;
 
   if (typeof argv.local === 'boolean') {
@@ -584,7 +591,7 @@ async function create(_argv: yargs.Arguments<any>) {
       new Promise<string>((resolve) => {
         setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
       }),
-      spawn('npm', ['view', 'react-native-builder-bob', 'dist-tags.latest']),
+      bobVersionPromise,
     ]);
   } catch (e) {
     // Fallback to a known version if we couldn't fetch
