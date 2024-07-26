@@ -1,5 +1,5 @@
 const path = require('path');
-const pak = require('../package.json');
+const pkg = require('../package.json');
 <% if (example === 'test-app') { -%>
 const { configureProjects } = require('react-native-test-app');
 <% } -%>
@@ -23,7 +23,7 @@ module.exports = {
   },
 <% } -%>
   dependencies: {
-    [pak.name]: {
+    [pkg.name]: {
       root: path.join(__dirname, '..'),
     },
   },

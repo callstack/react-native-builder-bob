@@ -187,7 +187,6 @@ export default async function generateExampleApp({
   });
 
   const PACKAGES_TO_ADD_DEV = {
-    'babel-plugin-module-resolver': '^5.0.0',
     'react-native-builder-bob': `^${bobVersion}`,
   };
 
