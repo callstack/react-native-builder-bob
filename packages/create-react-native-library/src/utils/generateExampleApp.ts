@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
 import { spawn } from './spawn';
+import sortObjectKeys from './sortObjectKeys';
 
 export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
 
@@ -237,6 +238,12 @@ export default async function generateExampleApp({
     await fs.writeJSON(path.join(directory, 'app.json'), app, {
       spaces: 2,
     });
+  }
+
+  for (const field of ['dependencies', 'devDependencies']) {
+    if (pkg[field]) {
+      pkg[field] = sortObjectKeys(pkg[field]);
+    }
   }
 
   await fs.writeJSON(path.join(directory, 'package.json'), pkg, {
