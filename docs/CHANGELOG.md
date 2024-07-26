@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.1...docs@0.1.2) (2024-07-26)
+
+### Bug Fixes
+
+- always create package.json with type regardless of esm option ([#598](https://github.com/callstack/react-native-builder-bob/issues/598)) ([5b45554](https://github.com/callstack/react-native-builder-bob/commit/5b455542fec82fa9edfb41c0da0ddceb4e72c485)) - by @satya164
+
 ## [0.1.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.0...docs@0.1.1) (2024-07-11)
 
 ### Bug Fixes

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.4...create-react-native-library@0.39.0) (2024-07-26)
+
+### Bug Fixes
+
+- prefetch bob version in advance to reduce timeouts ([3a67f50](https://github.com/callstack/react-native-builder-bob/commit/3a67f50e29fee3352a7f83943e1384a37e5b9122)) - by @satya164
+- sort dependencies in example package.json ([6bcb6c8](https://github.com/callstack/react-native-builder-bob/commit/6bcb6c86ce3fe77cda644aeb9de99023473caeef)) - by @satya164
+
+### Features
+
+- export babel and metro configs to reduce boilerplate ([#600](https://github.com/callstack/react-native-builder-bob/issues/600)) ([d6cb1ce](https://github.com/callstack/react-native-builder-bob/commit/d6cb1ce6c9ea15fe0c1e5623c84370bffb25878f)) - by @satya164
+- use the bob preset for the library during dev ([#599](https://github.com/callstack/react-native-builder-bob/issues/599)) ([3a4e724](https://github.com/callstack/react-native-builder-bob/commit/3a4e7240e9cabcdf76f45724485dbffa79daa011)) - by @satya164
+
 ## [0.38.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.38.3...create-react-native-library@0.38.4) (2024-07-23)
 
 ### Bug Fixes

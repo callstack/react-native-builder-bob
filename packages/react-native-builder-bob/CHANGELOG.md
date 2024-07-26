@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.27.0...react-native-builder-bob@0.28.0) (2024-07-26)
+
+### Bug Fixes
+
+- always create package.json with type regardless of esm option ([#598](https://github.com/callstack/react-native-builder-bob/issues/598)) ([5b45554](https://github.com/callstack/react-native-builder-bob/commit/5b455542fec82fa9edfb41c0da0ddceb4e72c485)) - by @satya164
+
+### Features
+
+- export babel and metro configs to reduce boilerplate ([#600](https://github.com/callstack/react-native-builder-bob/issues/600)) ([d6cb1ce](https://github.com/callstack/react-native-builder-bob/commit/d6cb1ce6c9ea15fe0c1e5623c84370bffb25878f)) - by @satya164
+- use the bob preset for the library during dev ([#599](https://github.com/callstack/react-native-builder-bob/issues/599)) ([3a4e724](https://github.com/callstack/react-native-builder-bob/commit/3a4e7240e9cabcdf76f45724485dbffa79daa011)) - by @satya164
+
 # [0.27.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.26.0...react-native-builder-bob@0.27.0) (2024-07-23)
 
 ### Features
