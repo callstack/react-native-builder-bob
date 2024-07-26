@@ -48,15 +48,6 @@ const NATIVE_FILES = {
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
 } as const;
 
-const JAVA_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/java-library-legacy'),
-  module_new: path.resolve(__dirname, '../templates/java-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/java-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../templates/java-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/java-view-mixed'),
-  view_new: path.resolve(__dirname, '../templates/java-view-new'),
-} as const;
-
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
   view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
@@ -91,13 +82,7 @@ type ArgName =
   | 'example'
   | 'react-native-version';
 
-type ProjectLanguages =
-  | 'java-objc'
-  | 'java-swift'
-  | 'kotlin-objc'
-  | 'kotlin-swift'
-  | 'cpp'
-  | 'js';
+type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 type ProjectType =
   | 'module-legacy'
@@ -141,25 +126,8 @@ const LANGUAGE_CHOICES: {
     ],
   },
   {
-    title: 'Java & Objective-C',
-    value: 'java-objc',
-    types: [
-      'module-legacy',
-      'module-new',
-      'module-mixed',
-      'view-mixed',
-      'view-new',
-      'view-legacy',
-    ],
-  },
-  {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['module-legacy', 'view-legacy'],
-  },
-  {
-    title: 'Java & Swift',
-    value: 'java-swift',
     types: ['module-legacy', 'view-legacy'],
   },
   {
@@ -603,7 +571,7 @@ async function create(_argv: yargs.Arguments<any>) {
     authorUrl,
     repoUrl,
     type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'java-objc',
+    languages = type === 'library' ? 'js' : 'kotlin-objc',
     example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
     reactNativeVersion,
   } = answers;
@@ -669,8 +637,7 @@ async function create(_argv: yargs.Arguments<any>) {
       native: languages !== 'js',
       arch,
       cpp: languages === 'cpp',
-      kotlin: languages === 'kotlin-objc' || languages === 'kotlin-swift',
-      swift: languages === 'java-swift' || languages === 'kotlin-swift',
+      swift: languages === 'kotlin-swift',
       view: moduleType === 'view',
       module: moduleType === 'module',
     },
@@ -788,11 +755,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
     const templateType = `${moduleType}_${arch}` as const;
 
-    if (options.project.kotlin) {
-      await copyDir(KOTLIN_FILES[templateType], folder);
-    } else {
-      await copyDir(JAVA_FILES[templateType], folder);
-    }
+    await copyDir(KOTLIN_FILES[templateType], folder);
 
     if (options.project.cpp) {
       await copyDir(CPP_FILES, folder);
