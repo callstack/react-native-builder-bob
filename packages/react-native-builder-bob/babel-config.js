@@ -1,6 +1,9 @@
 /* eslint-disable import/no-commonjs */
 
 const path = require('path');
+const { cosmiconfigSync } = require('cosmiconfig');
+const { lstatSync } = require('fs');
+const { name } = require('./package.json');
 
 /**
  * Get Babel configuration for the example project.
@@ -14,22 +17,28 @@ const path = require('path');
  * @returns {import('@babel/core').TransformOptions} Babel configuration
  */
 const getConfig = (defaultConfig, { root, pkg }) => {
-  let src;
+  const explorer = cosmiconfigSync(name, {
+    stopDir: root,
+    searchPlaces: ['package.json', 'bob.config.cjs', 'bob.config.js'],
+  });
 
-  if (pkg.source.includes('/')) {
-    const segments = pkg.source.split('/');
-
-    if (segments[0] === '.') {
-      segments.shift();
-    }
-
-    src = segments[0];
-  }
+  const result = explorer.search();
+  const src = result ? result.config.source : null;
 
   if (src == null) {
-    throw new Error(
-      "Couldn't determine the source directory. Does the 'source' field in your 'package.json' point to a file within a directory?"
-    );
+    if (
+      lstatSync(path.join(root, 'bob.config.mjs'), {
+        throwIfNoEntry: false,
+      }).isFile()
+    ) {
+      throw new Error(
+        "Found a 'bob.config.mjs' file. However, ESM syntax is currently not supported for the Babel configuration."
+      );
+    } else {
+      throw new Error(
+        "Couldn't determine the source directory. Does your config specify a 'source' field?"
+      );
+    }
   }
 
   return {
