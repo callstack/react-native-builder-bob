@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.0...react-native-builder-bob@0.28.1) (2024-07-27)
+
+### Bug Fixes
+
+- read source directory from bob config ([77df6cd](https://github.com/callstack/react-native-builder-bob/commit/77df6cd3d4ffd81da5501c1251d6b45c6f095873)) - by @
+
 # [0.28.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.27.0...react-native-builder-bob@0.28.0) (2024-07-26)
 
 ### Bug Fixes
