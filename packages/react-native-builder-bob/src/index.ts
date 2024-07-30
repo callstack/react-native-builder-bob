@@ -175,13 +175,28 @@ yargs
       entries.main = entries.source;
     }
 
+    const types: {
+      [key in 'require' | 'import']?: string;
+    } = {};
+
     if (targets.includes('typescript')) {
-      entries.types = `./${path.join(
+      types.require = `./${path.join(
         output,
         'typescript',
+        'commonjs',
         source,
         'index.d.ts'
       )}`;
+
+      types.import = `./${path.join(
+        output,
+        'typescript',
+        'module',
+        source,
+        'index.d.ts'
+      )}`;
+
+      entries.types = types.require;
 
       if (!(await fs.pathExists(path.join(root, 'tsconfig.json')))) {
         const { tsconfig } = await prompts({
@@ -258,9 +273,14 @@ yargs
 
       const exports = {
         '.': {
-          ...(entries.types ? { types: entries.types } : null),
-          ...(entries.module ? { import: entries.module } : null),
-          ...(entries.main ? { require: entries.main } : null),
+          import: {
+            ...(types.import ? { types: types.import } : null),
+            ...(entries.module ? { default: entries.module } : null),
+          },
+          require: {
+            ...(types.require ? { types: types.require } : null),
+            ...(entries.main ? { default: entries.main } : null),
+          },
         },
       };
 
@@ -318,25 +338,23 @@ yargs
       pkg.scripts.prepare = prepare;
     }
 
-    if (
-      pkg.files &&
-      JSON.stringify(pkg.files.slice().sort()) !==
-        JSON.stringify(files.slice().sort())
-    ) {
-      const { update } = await prompts({
-        type: 'confirm',
-        name: 'update',
-        message: `Your package.json already has a 'files' field.\n  Do you want to update it?`,
-        initial: true,
-      });
+    if (pkg.files) {
+      const pkgFiles = pkg.files;
 
-      if (update) {
-        pkg.files = [
-          ...files,
-          ...pkg.files.filter(
-            (file: string) => !files.includes(file.replace(/\/$/g, ''))
-          ),
-        ];
+      if (files?.some((file) => !pkgFiles.includes(file))) {
+        const { update } = await prompts({
+          type: 'confirm',
+          name: 'update',
+          message: `Your package.json already has a 'files' field.\n  Do you want to update it?`,
+          initial: true,
+        });
+
+        if (update) {
+          pkg.files = [
+            ...files,
+            ...pkg.files.filter((file: string) => !files.includes(file)),
+          ];
+        }
       }
     } else {
       pkg.files = files;
@@ -350,7 +368,7 @@ yargs
           return [t, { copyFlow: true }];
         }
 
-        if (t === 'commonjs' || t === 'module') {
+        if (t === 'commonjs' || t === 'module' || t === 'typescript') {
           return [t, { esm }];
         }
 

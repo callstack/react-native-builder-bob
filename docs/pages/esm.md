@@ -11,12 +11,12 @@ You can verify whether ESM support is enabled by checking the configuration for 
   "targets": [
     ["commonjs", { "esm": true }],
     ["module", { "esm": true }],
-    "typescript",
+    ["typescript", { "esm": true }]
   ]
 }
 ```
 
-The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files.
+The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files. For TypeScript, it also generates 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
 It's recommended to specify `"moduleResolution": "Bundler"` in your `tsconfig.json` file as well:
 
@@ -43,10 +43,16 @@ There are still a few things to keep in mind if you want your library to be ESM-
   ```json
   "exports": {
     ".": {
-      "types": "./lib/typescript/src/index.d.ts",
-      "react-native": "./lib/modules/index.native.js",
-      "import": "./lib/modules/index.js",
-      "require": "./lib/commonjs/index.js"
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "react-native": "./lib/modules/index.native.js",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "react-native": "./lib/commonjs/index.native.js",
+        "default": "./lib/commonjs/index.js"
+      }
     }
   }
   ```

@@ -44,7 +44,7 @@ yarn add --dev react-native-builder-bob
      "targets": [
        ["commonjs", { "esm": true }],
        ["module", { "esm": true }],
-       "typescript",
+       ["typescript", { "esm": true }]
      ]
    }
    ```
@@ -76,12 +76,17 @@ yarn add --dev react-native-builder-bob
    "source": "./src/index.tsx",
    "main": "./lib/commonjs/index.js",
    "module": "./lib/module/index.js",
-   "types": "./lib/typescript/src/index.d.ts",
+   "types": "./lib/typescript/commonjs/src/index.d.ts",
    "exports": {
      ".": {
-       "types": "./typescript/src/index.d.ts",
-       "import": "./module/index.js",
-       "require": "./commonjs/index.js"
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
      }
    },
    "files": [
@@ -223,6 +228,12 @@ Example:
 ```
 
 The output file should be referenced in the `types` field or `exports['.'].types` field of `package.json`.
+
+##### `esm`
+
+Setting this option to `true` will output 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
+
+See the [ESM support](./esm.md) guide for more details.
 
 ## Commands
 
