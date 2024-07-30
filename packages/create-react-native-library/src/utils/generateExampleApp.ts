@@ -81,9 +81,9 @@ export default async function generateExampleApp({
     'android',
   ];
 
-  // `npx react-native init <projectName> --directory example --skip-install`
+  // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
   const vanillaArgs = [
-    `react-native@${reactNativeVersion}`,
+    `@react-native-community/cli`,
     'init',
     `${project.name}Example`,
     '--package-name',
