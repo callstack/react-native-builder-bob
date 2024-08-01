@@ -168,15 +168,29 @@ export default async function compile({
 
   if (esm) {
     if (modules === 'commonjs') {
-      fields.push({
-        name: "exports['.'].require",
-        value: pkg.exports?.['.']?.require,
-      });
+      fields.push(
+        typeof pkg.exports?.['.']?.require === 'string'
+          ? {
+              name: "exports['.'].require",
+              value: pkg.exports?.['.']?.require,
+            }
+          : {
+              name: "exports['.'].require.default",
+              value: pkg.exports?.['.']?.require?.default,
+            }
+      );
     } else {
-      fields.push({
-        name: "exports['.'].import",
-        value: pkg.exports?.['.']?.import,
-      });
+      fields.push(
+        typeof pkg.exports?.['.']?.import === 'string'
+          ? {
+              name: "exports['.'].import",
+              value: pkg.exports?.['.']?.import,
+            }
+          : {
+              name: "exports['.'].import.default",
+              value: pkg.exports?.['.']?.import?.default,
+            }
+      );
     }
   } else {
     if (modules === 'commonjs' && pkg.exports?.['.']?.require) {
@@ -203,6 +217,18 @@ export default async function compile({
       fields.map(async ({ name, value }) => {
         if (!value) {
           return;
+        }
+
+        if (name.startsWith('exports') && value && !/^\.\//.test(value)) {
+          report.error(
+            `The ${kleur.blue(name)} field in ${kleur.blue(
+              `package.json`
+            )} should be a relative path starting with ${kleur.blue(
+              './'
+            )}. Found: ${kleur.blue(value)}`
+          );
+
+          throw new Error(`Found incorrect path in '${name}' field.`);
         }
 
         try {
@@ -249,13 +275,13 @@ export default async function compile({
     const generatedEntryPath = await getGeneratedEntryPath();
 
     report.warn(
-      `No ${kleur.blue(
-        fields.map((field) => field.name).join(' or ')
-      )} field found in ${kleur.blue('package.json')}. Consider ${
+      `No ${fields
+        .map((field) => kleur.blue(field.name))
+        .join(' or ')} field found in ${kleur.blue('package.json')}. Consider ${
         generatedEntryPath
-          ? `pointing it to ${kleur.blue(generatedEntryPath)}`
-          : 'adding it'
-      } so that consumers of your package can use it.`
+          ? `pointing to ${kleur.blue(generatedEntryPath)}`
+          : `adding ${fields.length > 1 ? 'them' : 'it'}`
+      } so that consumers of your package can import your package.`
     );
   }
 }
