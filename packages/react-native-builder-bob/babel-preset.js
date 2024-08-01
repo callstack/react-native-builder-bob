@@ -17,11 +17,11 @@ module.exports = function (api, options, cwd) {
         {
           targets: browserslist.findConfig(cwd) || {
             browsers: [
-              '>1%',
-              'last 2 chrome versions',
-              'last 2 edge versions',
-              'last 2 firefox versions',
-              'last 2 safari versions',
+              '> 1%',
+              'chrome 109',
+              'edge 124',
+              'firefox 127',
+              'safari 17.4',
               'not dead',
               'not ie <= 11',
               'not op_mini all',
@@ -45,6 +45,10 @@ module.exports = function (api, options, cwd) {
     ],
     plugins: [
       require.resolve('@babel/plugin-transform-strict-mode'),
+      require.resolve('@babel/plugin-transform-private-methods'),
+      require.resolve('@babel/plugin-transform-private-property-in-object'),
+      require.resolve('@babel/plugin-transform-class-properties'),
+      require.resolve('@babel/plugin-transform-classes'),
       [
         require.resolve('./lib/babel'),
         {

@@ -52,10 +52,10 @@
     "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-typescript": "^7.17.12",
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.2",
+    "@babel/preset-typescript": "^7.24.7",
     "@commitlint/config-conventional": "^17.0.2",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "^0.7.0",
