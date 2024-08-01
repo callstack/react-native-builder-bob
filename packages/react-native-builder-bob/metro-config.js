@@ -17,7 +17,12 @@ const exclusionList = require('metro-config/src/defaults/exclusionList');
  * @returns {import('metro-config').MetroConfig} Metro configuration
  */
 const getConfig = (defaultConfig, { root, pkg, project }) => {
-  const modules = Object.keys({ ...pkg.peerDependencies });
+  const modules = [
+    // AssetsRegistry is used internally by React Native to handle asset imports
+    // This needs to be a singleton so all assets are registered to a single registry
+    '@react-native/assets-registry',
+    ...Object.keys({ ...pkg.peerDependencies }),
+  ];
 
   /**
    * Metro configuration
