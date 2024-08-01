@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.2...docs@0.2.0) (2024-08-01)
+
+### Features
+
+- add esm build option for typescript ([#603](https://github.com/callstack/react-native-builder-bob/issues/603)) ([fd43167](https://github.com/callstack/react-native-builder-bob/commit/fd4316745303fd41036e392b9fa4747f1679bacf)) - by @satya164
+
 ## [0.1.2](https://github.com/callstack/react-native-builder-bob/compare/docs@0.1.1...docs@0.1.2) (2024-07-26)
 
 ### Bug Fixes

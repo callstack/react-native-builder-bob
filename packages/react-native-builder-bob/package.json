@@ -1,6 +1,6 @@
 {
   "name": "react-native-builder-bob",
-  "version": "0.28.1",
+  "version": "0.29.0",
   "description": "CLI to build JavaScript files for React Native libraries",
   "keywords": [
     "react-native",

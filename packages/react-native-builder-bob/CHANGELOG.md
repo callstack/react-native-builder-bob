@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.1...react-native-builder-bob@0.29.0) (2024-08-01)
+
+### Bug Fixes
+
+- ensure assets are registered correctly ([#608](https://github.com/callstack/react-native-builder-bob/issues/608)) ([ab999bf](https://github.com/callstack/react-native-builder-bob/commit/ab999bfdbf195a4df1a1b2c81fcef252cda861f6)), closes [#607](https://github.com/callstack/react-native-builder-bob/issues/607) - by @satya164
+- update babel preset to include class transforms for hermes ([#606](https://github.com/callstack/react-native-builder-bob/issues/606)) ([f0a7a2f](https://github.com/callstack/react-native-builder-bob/commit/f0a7a2f998f7d803e1faf3bc162206f3ed16e9a8)), closes [#605](https://github.com/callstack/react-native-builder-bob/issues/605) - by @satya164
+
+### Features
+
+- add esm build option for typescript ([#603](https://github.com/callstack/react-native-builder-bob/issues/603)) ([fd43167](https://github.com/callstack/react-native-builder-bob/commit/fd4316745303fd41036e392b9fa4747f1679bacf)) - by @satya164
+
 ## [0.28.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.0...react-native-builder-bob@0.28.1) (2024-07-27)
 
 ### Bug Fixes
