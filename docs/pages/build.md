@@ -79,14 +79,14 @@ yarn add --dev react-native-builder-bob
    "types": "./lib/typescript/commonjs/src/index.d.ts",
    "exports": {
      ".": {
-      "import": {
-        "types": "./lib/typescript/module/src/index.d.ts",
-        "default": "./lib/module/index.js"
-      },
-      "require": {
-        "types": "./lib/typescript/commonjs/src/index.d.ts",
-        "default": "./lib/commonjs/index.js"
-      }
+       "import": {
+         "types": "./lib/typescript/module/src/index.d.ts",
+         "default": "./lib/module/index.js"
+       },
+       "require": {
+         "types": "./lib/typescript/commonjs/src/index.d.ts",
+         "default": "./lib/commonjs/index.js"
+       }
      }
    },
    "files": [
@@ -102,7 +102,7 @@ yarn add --dev react-native-builder-bob
    - `module`: The entry point for the ES module build. This is used by bundlers such as webpack.
    - `types`: The entry point for the TypeScript definitions. This is used by TypeScript to typecheck the code using your library.
    - `files`: The files to include in the package when publishing with `npm`.
-   - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers.
+   - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+ & modern browsers. See [the ESM support guide](./esm.md) for more details.
 
    Make sure to change specify correct files according to the targets you have enabled.
 

@@ -30,6 +30,39 @@ It's recommended to specify `"moduleResolution": "Bundler"` in your `tsconfig.js
 
 This means that you don't need to specify the file extension in the import statements. They'll be automatically added when possible during the build process.
 
+To make use of the output files, ensure that your `package.json` file contains the following fields:
+
+```json
+"main": "./lib/commonjs/index.js",
+"module": "./lib/module/index.js",
+"types": "./lib/typescript/commonjs/src/index.d.ts",
+"exports": {
+  ".": {
+    "import": {
+      "types": "./lib/typescript/module/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "require": {
+      "types": "./lib/typescript/commonjs/src/index.d.ts",
+      "default": "./lib/commonjs/index.js"
+    }
+  }
+},
+```
+
+The `main`, `module` and `types` fields are for legacy setups that don't support the `exports` field. See the [Manual configuration](build.md#manual-configuration) guide for more information about those fields.
+
+The `exports` field is used by modern tools and bundlers to determine the correct entry point. Here, we specify 2 conditions:
+
+- `import`: Used when the library is imported with an `import` statement or a dynamic `import()`. It should point to the ESM build.
+- `require`: Used when the library is required with a `require` call. It should point to the CommonJS build.
+
+Each condition has a `types` field - necessary for TypeScript to provide the appropriate definitions for the module system. The type definitions have slightly different semantics for CommonJS and ESM, so it's important to specify them separately.
+
+The `default` field is the fallback entry point for both conditions. It's used for the actual JS code when the library is imported or required.
+
+You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
+
 ## Guidelines
 
 There are still a few things to keep in mind if you want your library to be ESM-compatible:
