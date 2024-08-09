@@ -13,7 +13,7 @@ import generateExampleApp, {
 } from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
 import { version } from '../package.json';
-import { patchExampleAppCodegen } from './utils/patchExampleAppCodegen';
+import { addCodegenBuildScript } from './utils/addCodegenBuildScript';
 
 const FALLBACK_BOB_VERSION = '0.29.0';
 
@@ -791,7 +791,7 @@ async function create(_argv: yargs.Arguments<any>) {
     }
 
     if (arch !== 'legacy') {
-      patchExampleAppCodegen(folder, options.project.name);
+      addCodegenBuildScript(folder, options.project.name);
     }
   }
 

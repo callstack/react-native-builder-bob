@@ -40,7 +40,7 @@ const PODSPEC_INVOKE_CODEGEN_SCRIPT = `
  * Codegen isn't invoked for libraries with `includesGeneratedCode` set to `true`.
  * This patches the example app to invoke library codegen on every app build.
  */
-export async function patchExampleAppCodegen(
+export async function addCodegenBuildScript(
   libraryPath: string,
   projectName: string
 ) {

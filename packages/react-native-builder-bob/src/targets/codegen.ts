@@ -1,27 +1,18 @@
-import path from 'path';
-import fs from 'fs-extra';
-import spawn from 'cross-spawn';
 import type { Input } from '../types';
 import { patchCodegen } from '../utils/patchCodegen';
+import { spawn } from '../utils/spawn';
 
 type Options = Input;
 
 export default async function build({ root, report }: Options) {
   try {
-    const packageJsonPath = path.resolve(root, 'package.json');
-    if (!(await fs.pathExists(packageJsonPath))) {
-      throw new Error(
-        `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
-      );
-    }
-
-    spawn.sync('npx', ['react-native', 'codegen'], {
-      stdio: 'inherit',
+    await spawn('npx', ['react-native', 'codegen'], {
+      stdio: 'ignore',
     });
 
     patchCodegen(root);
 
-    report.success('Codegen patched successfully!');
+    report.success('Generated native code with codegen');
   } catch (e: unknown) {
     if (e != null && typeof e === 'object') {
       if ('stdout' in e && e.stdout != null) {
@@ -37,6 +28,6 @@ export default async function build({ root, report }: Options) {
       throw e;
     }
 
-    throw new Error('Failed generate codegen files.');
+    throw new Error('Failed generate the codegen files.');
   }
 }

@@ -1,6 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 
+const CODEGEN_DOCS =
+  'https://github.com/reactwg/react-native-new-architecture/blob/main/docs/enable-libraries-prerequisites.md#configure-codegen';
+
 /**
  * Currently, running react-native codegen generates java files with package name `com.facebook.fbreact.specs`.
  * This is a known issue in react-native itself.
@@ -17,14 +20,14 @@ export async function patchCodegen(projectPath: string) {
     packageJson.codegenConfig.outputDir.android;
   if (!codegenAndroidPath) {
     throw new Error(
-      'You need to define codegenConfig.outputDir.android in your package.json'
+      `Your package.json doesn't contain codegenConfig.outputDir.android. Please see ${CODEGEN_DOCS}`
     );
   }
   codegenAndroidPath = path.resolve(projectPath, codegenAndroidPath);
 
   if (!(await fs.pathExists(codegenAndroidPath))) {
     throw new Error(
-      `Could not find ${codegenAndroidPath}. Make sure you are in the correct directory and react-native codegen works properly.`
+      `The codegen android path defined in your package.json: ${codegenAndroidPath} doesnt' exist.`
     );
   }
 
@@ -32,7 +35,7 @@ export async function patchCodegen(projectPath: string) {
     packageJson.codegenConfig.android.javaPackageName;
   if (!codegenJavaPackageName) {
     throw new Error(
-      'You need to define codegenConfig.android.javaPackageName in your package.json'
+      `Your package.json doesn't contain codegenConfig.android.javaPackageName. Please see ${CODEGEN_DOCS}`
     );
   }
 

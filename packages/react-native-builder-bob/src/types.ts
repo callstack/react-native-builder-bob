@@ -18,6 +18,6 @@ export type Target = 'commonjs' | 'module' | 'typescript' | 'codegen';
 export type Options = {
   source?: string;
   output?: string;
-  targets?: (Target | [Target, object])[];
+  targets?: (Target | [target: Target, options: object])[];
   exclude?: string;
 };
