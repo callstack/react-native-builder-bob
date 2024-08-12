@@ -45,10 +45,6 @@ module.exports = function (api, options, cwd) {
     ],
     plugins: [
       require.resolve('@babel/plugin-transform-strict-mode'),
-      require.resolve('@babel/plugin-transform-private-methods'),
-      require.resolve('@babel/plugin-transform-private-property-in-object'),
-      require.resolve('@babel/plugin-transform-class-properties'),
-      require.resolve('@babel/plugin-transform-classes'),
       [
         require.resolve('./lib/babel'),
         {

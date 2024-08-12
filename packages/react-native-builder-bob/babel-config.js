@@ -42,15 +42,9 @@ const getConfig = (defaultConfig, { root, pkg }) => {
   }
 
   return {
+    ...defaultConfig,
     overrides: [
-      {
-        ...defaultConfig,
-        exclude: path.join(root, src),
-      },
-      {
-        include: path.join(root, src),
-        presets: [[require.resolve('./babel-preset'), { modules: 'commonjs' }]],
-      },
+      ...(defaultConfig.overrides == null ? [] : defaultConfig.overrides),
       {
         exclude: /\/node_modules\//,
         plugins: [
@@ -64,6 +58,10 @@ const getConfig = (defaultConfig, { root, pkg }) => {
             },
           ],
         ],
+      },
+      {
+        include: path.join(root, src),
+        presets: [require.resolve('./babel-preset')],
       },
     ],
   };
