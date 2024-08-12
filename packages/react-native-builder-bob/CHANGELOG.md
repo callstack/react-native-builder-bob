@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.29.0...react-native-builder-bob@0.29.1) (2024-08-12)
+
+### Bug Fixes
+
+- always use example app's babel config. closes [#611](https://github.com/callstack/react-native-builder-bob/issues/611) ([9a471e6](https://github.com/callstack/react-native-builder-bob/commit/9a471e63e414f8cbbfce83e999f6829ede7b2d0f)) - by @
+
 # [0.29.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.28.1...react-native-builder-bob@0.29.0) (2024-08-01)
 
 ### Bug Fixes
