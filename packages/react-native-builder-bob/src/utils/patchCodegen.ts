@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import type { Report } from '../types';
 
 const CODEGEN_DOCS =
   'https://github.com/reactwg/react-native-new-architecture/blob/main/docs/enable-libraries-prerequisites.md#configure-codegen';
@@ -12,10 +13,12 @@ const CODEGEN_DOCS =
  * @throws if codegenConfig.outputDir.android or codegenConfig.android.javaPackageName is not defined in package.json
  * @throws if the codegenAndroidPath does not exist
  */
-export async function patchCodegen(projectPath: string) {
-  const packageJsonPath = path.resolve(projectPath, 'package.json');
-  const packageJson = await fs.readJson(packageJsonPath);
-
+export async function patchCodegen(
+  projectPath: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  packageJson: any,
+  report: Report
+) {
   let codegenAndroidPath: string | undefined =
     packageJson.codegenConfig.outputDir.android;
   if (!codegenAndroidPath) {
@@ -46,7 +49,7 @@ export async function patchCodegen(projectPath: string) {
 
   // If this issue is ever fixed in react-native, this check will prevent the patching from running.
   if (!(await fs.pathExists(codegenJavaPath))) {
-    console.log(
+    report.info(
       `Could not find ${codegenJavaPath}. Skipping patching codegen java files.`
     );
     return;

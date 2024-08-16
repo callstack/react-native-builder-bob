@@ -1,16 +1,43 @@
+import kleur from 'kleur';
 import type { Input } from '../types';
 import { patchCodegen } from '../utils/patchCodegen';
 import { spawn } from '../utils/spawn';
+import fs from 'fs-extra';
+import path from 'path';
+import del from 'del';
 
 type Options = Input;
 
 export default async function build({ root, report }: Options) {
+  const packageJsonPath = path.resolve(root, 'package.json');
+  const packageJson = await fs.readJson(packageJsonPath);
+
+  const codegenIosPath = packageJson.codegenConfig?.outputDir?.ios;
+  if (codegenIosPath != null) {
+    report.info(
+      `Cleaning up previous iOS codegen native code at ${kleur.blue(
+        path.relative(root, codegenIosPath)
+      )}`
+    );
+    await del([codegenIosPath]);
+  }
+
+  const codegenAndroidPath = packageJson.codegenConfig?.outputDir?.android;
+  if (codegenAndroidPath != null) {
+    report.info(
+      `Cleaning up previous Android codegen native code at ${kleur.blue(
+        path.relative(root, codegenAndroidPath)
+      )}`
+    );
+    await del([codegenAndroidPath]);
+  }
+
   try {
     await spawn('npx', ['react-native', 'codegen'], {
       stdio: 'ignore',
     });
 
-    patchCodegen(root);
+    patchCodegen(root, packageJson, report);
 
     report.success('Generated native code with codegen');
   } catch (e: unknown) {

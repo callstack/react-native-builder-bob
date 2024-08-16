@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 import { patchCodegen } from '../utils/patchCodegen';
 import mockfs from 'mock-fs';
+import type { Report } from '../types';
 
 const mockPackageJson = {
   codegenConfig: {
@@ -13,6 +14,13 @@ const mockPackageJson = {
       javaPackageName: 'com.bobtest',
     },
   },
+};
+
+const mockReport: Report = {
+  info: console.log,
+  warn: console.log,
+  error: console.log,
+  success: console.log,
 };
 
 const mockJavaSpec = `
@@ -53,7 +61,7 @@ describe('patchCodegen', () => {
   });
 
   it('moves the files to correct dir', async () => {
-    await patchCodegen(mockProjectPath);
+    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -64,7 +72,7 @@ describe('patchCodegen', () => {
   });
 
   it('replaces the package name in the files', async () => {
-    await patchCodegen(mockProjectPath);
+    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -79,7 +87,7 @@ describe('patchCodegen', () => {
   });
 
   it('removes the old package dir', async () => {
-    await patchCodegen(mockProjectPath);
+    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
 
     expect(await fs.pathExists(mockCodegenSpecsPath)).toBe(false);
   });
