@@ -39,6 +39,8 @@ jobs:
         language:
           - kotlin-objc
           - kotlin-swift
+        arch:
+          - auto
         exclude:
           - type: module-new
             language: kotlin-swift
@@ -52,27 +54,50 @@ jobs:
           - os: ubuntu-latest
             type: library
             language: js
+            arch: auto
+          - os: ubuntu-latest
+            type: module-mixed
+            language: kotlin-objc
+            arch: new
+          - os: macos-14
+            type: module-mixed
+            language: kotlin-objc
+            arch: new
+          - os: ubuntu-latest
+            type: view-mixed
+            language: kotlin-objc
+            arch: new
+          - os: macos-14
+            type: view-mixed
+            language: kotlin-objc
+            arch: new
           - os: ubuntu-latest
             type: module-legacy
             language: cpp
+            arch: auto
           - os: ubuntu-latest
             type: module-mixed
             language: cpp
+            arch: auto
           - os: ubuntu-latest
             type: module-new
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-legacy
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-mixed
             language: cpp
+            arch: auto
           - os: macos-14
             type: module-new
             language: cpp
+            arch: auto
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -84,13 +109,20 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Set environment variables
+        run: |
+          if [[ "${{ matrix.arch }}" == "new" ]]; then
+            echo "RCT_NEW_ARCH_ENABLED=1" >> $GITHUB_ENV
+            echo "ORG_GRADLE_PROJECT_newArchEnabled=true" >> $GITHUB_ENV
+          fi
+
       - name: Build package
         run: |
           yarn workspace create-react-native-library prepare
 
       - name: Get working directory
         run: |
-          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
+          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}" >> $GITHUB_ENV
 
       - name: Create library
         run: |
@@ -158,9 +190,9 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/.turbo
-          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
           restore-keys: |
-            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
+            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-
 
       - name: Check turborepo cache
         if: env.android_build == 1 || env.ios_build == 1
@@ -248,13 +280,13 @@ jobs:
             ${{ runner.os }}-library-cocoapods-
 
       - name: Install cocoapods
+        env:
+          NO_FLIPPER: 1
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
         run: |
           cd example/ios
           pod install
-        env:
-          NO_FLIPPER: 1
 
       - name: Build example (iOS)
         if: env.ios_build == 1
