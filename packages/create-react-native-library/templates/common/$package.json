@@ -194,7 +194,7 @@
   },
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
-    "type": <%- project.view ? '"components"': '"modules"' %>,
+    "type": "all",
     "jsSrcsDir": "src",
     "outputDir": {
       "ios": "ios/generated",
