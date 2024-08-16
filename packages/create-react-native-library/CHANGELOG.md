@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.41.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.40.0...create-react-native-library@0.41.0) (2024-08-16)
+
+### Features
+
+* ship codegen-generated specs ([#566](https://github.com/callstack/react-native-builder-bob/issues/566)) ([a90142f](https://github.com/callstack/react-native-builder-bob/commit/a90142f471d3c39bd5f9a98c17a64ff23be9b8af)) - by @atlj
+
 # [0.40.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.39.0...create-react-native-library@0.40.0) (2024-08-01)
 
 ### Bug Fixes
