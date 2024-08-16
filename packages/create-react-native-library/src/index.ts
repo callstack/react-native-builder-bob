@@ -13,6 +13,7 @@ import generateExampleApp, {
 } from './utils/generateExampleApp';
 import { spawn } from './utils/spawn';
 import { version } from '../package.json';
+import { addCodegenBuildScript } from './utils/addCodegenBuildScript';
 
 const FALLBACK_BOB_VERSION = '0.29.0';
 
@@ -787,6 +788,10 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies.react;
       rootPackageJson.devDependencies['react-native'] =
         examplePackageJson.dependencies['react-native'];
+    }
+
+    if (arch !== 'legacy') {
+      addCodegenBuildScript(folder, options.project.name);
     }
   }
 

@@ -10,7 +10,18 @@ import * as logger from './utils/logger';
 import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import type { Options } from './types';
+import buildCodegen from './targets/codegen';
+import type { Options, Report, Target } from './types';
+
+type ArgName = 'target';
+
+const args = {
+  target: {
+    type: 'string',
+    description: 'The target to build',
+    choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[],
+  },
+} satisfies Record<ArgName, yargs.Options>;
 
 // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
@@ -25,6 +36,8 @@ const explorer = cosmiconfig(name, {
     'bob.config.js',
   ],
 });
+
+const projectPackagePath = path.resolve(root, 'package.json');
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -43,15 +56,13 @@ yargs
       }
     }
 
-    const pak = path.join(root, 'package.json');
-
-    if (!(await fs.pathExists(pak))) {
+    if (!(await fs.pathExists(projectPackagePath))) {
       logger.exit(
         `Couldn't find a 'package.json' file in '${root}'.\n  Are you in a project folder?`
       );
     }
 
-    const pkg = JSON.parse(await fs.readFile(pak, 'utf-8'));
+    const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
     const result = await explorer.search();
 
     if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
@@ -396,7 +407,7 @@ yargs
       pkg.eslintIgnore.push(`${output}/`);
     }
 
-    await fs.writeJSON(pak, pkg, {
+    await fs.writeJSON(projectPackagePath, pkg, {
       spaces: 2,
     });
 
@@ -436,7 +447,13 @@ yargs
     `)
     );
   })
-  .command('build', 'build files for publishing', {}, async (argv) => {
+  .command('build', 'build files for publishing', args, async (argv) => {
+    if (!(await fs.pathExists(projectPackagePath))) {
+      throw new Error(
+        `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
+      );
+    }
+
     const result = await explorer.search();
 
     if (!result?.config) {
@@ -488,47 +505,81 @@ yargs
       success: logger.success,
     };
 
-    for (const target of options.targets!) {
-      const targetName = Array.isArray(target) ? target[0] : target;
-      const targetOptions = Array.isArray(target) ? target[1] : undefined;
-
-      report.info(`Building target ${kleur.blue(targetName)}`);
-
-      switch (targetName) {
-        case 'commonjs':
-          await buildCommonJS({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'commonjs'),
-            exclude,
-            options: targetOptions,
-            report,
-          });
-          break;
-        case 'module':
-          await buildModule({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'module'),
-            exclude,
-            options: targetOptions,
-            report,
-          });
-          break;
-        case 'typescript':
-          await buildTypescript({
-            root,
-            source: path.resolve(root, source as string),
-            output: path.resolve(root, output as string, 'typescript'),
-            options: targetOptions,
-            report,
-          });
-          break;
-        default:
-          logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
+    if (argv.target != null) {
+      buildTarget(
+        argv.target,
+        report,
+        source as string,
+        output as string,
+        exclude
+      );
+    } else {
+      for (const target of options.targets!) {
+        buildTarget(
+          target,
+          report,
+          source as string,
+          output as string,
+          exclude
+        );
       }
     }
   })
   .demandCommand()
   .recommendCommands()
   .strict().argv;
+
+async function buildTarget(
+  target: Exclude<Options['targets'], undefined>[number],
+  report: Report,
+  source: string,
+  output: string,
+  exclude: string
+) {
+  const targetName = Array.isArray(target) ? target[0] : target;
+  const targetOptions = Array.isArray(target) ? target[1] : undefined;
+
+  report.info(`Building target ${kleur.blue(targetName)}`);
+
+  switch (targetName) {
+    case 'commonjs':
+      await buildCommonJS({
+        root,
+        source: path.resolve(root, source),
+        output: path.resolve(root, output, 'commonjs'),
+        exclude,
+        options: targetOptions,
+        report,
+      });
+      break;
+    case 'module':
+      await buildModule({
+        root,
+        source: path.resolve(root, source),
+        output: path.resolve(root, output, 'module'),
+        exclude,
+        options: targetOptions,
+        report,
+      });
+      break;
+    case 'typescript':
+      await buildTypescript({
+        root,
+        source: path.resolve(root, source),
+        output: path.resolve(root, output, 'typescript'),
+        options: targetOptions,
+        report,
+      });
+      break;
+    case 'codegen':
+      await buildCodegen({
+        root,
+        source: path.resolve(root, source),
+        output: path.resolve(root, output, 'typescript'),
+        report,
+      });
+      break;
+    default:
+      logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
+  }
+}

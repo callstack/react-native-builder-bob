@@ -168,6 +168,9 @@
     "source": "src",
     "output": "lib",
     "targets": [
+<% if (project.arch !== 'legacy') { -%>
+      "codegen",
+<% } -%>
       [
         "commonjs",
         {
@@ -191,8 +194,16 @@
   },
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
-    "type": <%- project.view ? '"components"': '"modules"' %>,
-    "jsSrcsDir": "src"
+    "type": "all",
+    "jsSrcsDir": "src",
+    "outputDir": {
+      "ios": "ios/generated",
+      "android": "android/generated"
+    },
+    "android": {
+      "javaPackageName": "com.<%- project.package %>"
+    },
+    "includesGeneratedCode": true
 <% } -%>
   }
 }

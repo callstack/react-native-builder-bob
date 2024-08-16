@@ -114,8 +114,8 @@ android {
     main {
       if (isNewArchitectureEnabled()) {
           java.srcDirs += [
-            // This is needed to build Kotlin project with NewArch enabled
-            "${project.buildDir}/generated/source/codegen/java"
+            "generated/java",
+            "generated/jni"
           ]
       }
     }
@@ -127,8 +127,9 @@ android {
       if (isNewArchitectureEnabled()) {
         java.srcDirs += [
           "src/newarch",
-          // This is needed to build Kotlin project with NewArch enabled
-          "${project.buildDir}/generated/source/codegen/java"
+          // Codegen specs
+          "generated/java",
+          "generated/jni"
         ]
       } else {
         java.srcDirs += ["src/oldarch"]
