@@ -790,7 +790,7 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies['react-native'];
     }
 
-    if (arch !== 'legacy') {
+    if (arch !== 'legacy' && example === 'vanilla') {
       addCodegenBuildScript(folder, options.project.name);
     }
   }
