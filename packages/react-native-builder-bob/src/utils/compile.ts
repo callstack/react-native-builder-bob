@@ -69,7 +69,9 @@ export default async function compile({
 
   await fs.mkdirp(output);
   await fs.writeJSON(path.join(output, 'package.json'), {
-    type: modules === 'commonjs' ? 'commonjs' : 'module',
+    // Treat code with ESM syntax as CommonJS if `esm` is not enabled
+    // This maintain compatibility with code written for CommonJS
+    type: modules === 'commonjs' || !esm ? 'commonjs' : 'module',
   });
 
   await Promise.all(
