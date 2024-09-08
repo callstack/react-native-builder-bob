@@ -3,11 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.0...react-native-builder-bob@0.30.1) (2024-09-08)
+
+### Bug Fixes
+
+- treat ESM syntax code as CommonJS if esm is not enabled ([b7a08cd](https://github.com/callstack/react-native-builder-bob/commit/b7a08cdd29e796739708f531239eba719f5c8e26)), closes [#621](https://github.com/callstack/react-native-builder-bob/issues/621) [#625](https://github.com/callstack/react-native-builder-bob/issues/625) - by @satya164
+
 # [0.30.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.29.1...react-native-builder-bob@0.30.0) (2024-08-16)
 
 ### Features
 
-* ship codegen-generated specs ([#566](https://github.com/callstack/react-native-builder-bob/issues/566)) ([a90142f](https://github.com/callstack/react-native-builder-bob/commit/a90142f471d3c39bd5f9a98c17a64ff23be9b8af)) - by @atlj
+- ship codegen-generated specs ([#566](https://github.com/callstack/react-native-builder-bob/issues/566)) ([a90142f](https://github.com/callstack/react-native-builder-bob/commit/a90142f471d3c39bd5f9a98c17a64ff23be9b8af)) - by @atlj
 
 ## [0.29.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.29.0...react-native-builder-bob@0.29.1) (2024-08-12)
 
