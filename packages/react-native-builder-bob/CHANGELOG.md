@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.1...react-native-builder-bob@0.30.2) (2024-09-08)
+
+### Bug Fixes
+
+- conditionally generate package.json ([459d156](https://github.com/callstack/react-native-builder-bob/commit/459d156d214432e92d47d1663f9f6d5477a891f2)) - by @satya164
+
 ## [0.30.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.0...react-native-builder-bob@0.30.1) (2024-09-08)
 
 ### Bug Fixes
