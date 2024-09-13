@@ -657,7 +657,6 @@ async function create(_argv: yargs.Arguments<any>) {
     repo: repoUrl,
     example,
     year: new Date().getFullYear(),
-    local,
   };
 
   const copyDir = async (source: string, dest: string) => {
