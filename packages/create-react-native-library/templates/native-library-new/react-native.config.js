@@ -5,11 +5,11 @@ module.exports = {
   dependency: {
     platforms: {
       android: {
-        <% if (example === 'vanilla') { -%>
+        <%_ if (example === 'vanilla') { -%>
         cmakeListsPath: 'generated/jni/CMakeLists.txt',
-        <% } else { -%>
+        <%_ } else { -%>
         cmakeListsPath: 'build/generated/source/codegen/jni/CMakeLists.txt',
-        <% } -%>
+        <%_ } -%>
       },
     },
   },
