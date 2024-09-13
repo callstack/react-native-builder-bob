@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.1...create-react-native-library@0.41.2) (2024-09-13)
+
+### Bug Fixes
+
+* typo in cmakeListsPath for turbo native modules ([#629](https://github.com/callstack/react-native-builder-bob/issues/629)) ([de254c6](https://github.com/callstack/react-native-builder-bob/commit/de254c64a0a172df6048c12a63ebd9f55ff9ec88)), closes [#627](https://github.com/callstack/react-native-builder-bob/issues/627) - by @withSang
+
 ## [0.41.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.0...create-react-native-library@0.41.1) (2024-09-08)
 
 ### Bug Fixes
