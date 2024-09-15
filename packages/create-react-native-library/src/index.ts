@@ -358,7 +358,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const questions: (Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
     validate?: (value: string) => boolean | string;
-    name: string;
+    name: keyof Answers;
   })[] = [
     {
       type: 'text',
@@ -521,6 +521,8 @@ async function create(_argv: yargs.Arguments<any>) {
   // Validate arguments passed to the CLI
   validate(argv);
 
+  const singleChoiceAnswers: Partial<Answers> = {};
+
   const answers = {
     ...argv,
     local,
@@ -540,6 +542,8 @@ async function create(_argv: yargs.Arguments<any>) {
             Array.isArray(question.choices) &&
             question.choices.length === 1
           ) {
+            const onlyChoice = question.choices[0]!;
+            singleChoiceAnswers[question.name] = onlyChoice.value;
             return false;
           }
 
@@ -554,8 +558,9 @@ async function create(_argv: yargs.Arguments<any>) {
               ...question,
               type: (prev, values, prompt) => {
                 const result = choices(prev, { ...argv, ...values }, prompt);
-
                 if (result && result.length === 1) {
+                  const onlyChoice = result[0]!;
+                  singleChoiceAnswers[question.name] = onlyChoice.value;
                   return null;
                 }
 
@@ -567,6 +572,7 @@ async function create(_argv: yargs.Arguments<any>) {
           return question;
         })
     )),
+    ...singleChoiceAnswers,
   } as Answers;
 
   validate(answers);
