@@ -116,6 +116,7 @@ type ArgName =
   | 'repo-url'
   | 'languages'
   | 'type'
+  | 'arch'
   | 'local'
   | 'example'
   | 'react-native-version'
@@ -123,15 +124,9 @@ type ArgName =
 
 type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
-type ProjectType =
-  | 'library'
-  | 'module-legacy'
-  | 'module-mixed'
-  | 'module-new'
-  | 'view-legacy'
-  | 'view-module-legacy'
-  | 'view-module-mixed'
-  | 'view-module-new';
+type ProjectType = 'view' | 'module' | 'view-module';
+
+type Architecture = 'legacy' | 'new' | 'mixed';
 
 type Answers = {
   name: string;
@@ -143,6 +138,7 @@ type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
+  arch?: Architecture;
   example?: ExampleType;
   reactNativeVersion?: string;
   local?: boolean;
@@ -152,24 +148,99 @@ type Answers = {
 const LANGUAGE_CHOICES: {
   title: string;
   value: ProjectLanguages;
+  supports: {
+    type: ProjectType;
+    arch: Architecture[];
+  }[];
 }[] = [
   {
     title: `Objective-C & Kotlin Library`,
     value: 'kotlin-objc',
+    supports: [
+      {
+        type: 'view-module',
+        arch: ['legacy', 'new', 'mixed'],
+      },
+    ],
   },
   {
     title: 'Swift & Kotlin Library',
     value: 'kotlin-swift',
+    supports: [
+      {
+        type: 'view',
+        arch: ['legacy'],
+      },
+      {
+        type: 'module',
+        arch: ['legacy'],
+      },
+    ],
   },
   {
     title: 'C++ Module',
     value: 'cpp',
+    supports: [
+      {
+        type: 'module',
+        arch: ['legacy', 'new', 'mixed'],
+      },
+    ],
   },
   {
     title: 'JavaScript Module',
     value: 'js',
+    supports: [],
   },
 ];
+
+const TYPE_CHOICES: {
+  title: string;
+  value: ProjectType;
+}[] = [
+  {
+    title: 'View',
+    value: 'view',
+  },
+  {
+    title: 'Module',
+    value: 'module',
+  },
+  {
+    title: 'View and Module',
+    value: 'view-module'
+  }
+];
+
+const ARCHITECTURE_CHOICES: {
+  title: string;
+  value: Architecture;
+}[] = [
+  {
+    title: 'Old architecture',
+    value: 'legacy',
+  },
+  {
+    title: 'Both new and old architectures',
+    value: 'mixed'
+  },
+  {
+    title: 'New architecture',
+    value: 'new',
+  },
+];
+
+const RECOMMENDED_TEMPLATE: {
+  type: ProjectType;
+  languages: ProjectLanguages;
+  arch: Architecture;
+  description: string;
+} = {
+  type: 'view-module',
+  languages: 'kotlin-objc',
+  arch: 'mixed',
+  description: `Backward compatible Fabric view & Turbo module with Kotlin & Objective-C`,
+};
 
 const EXAMPLE_CHOICES = [
   {
@@ -188,75 +259,6 @@ const EXAMPLE_CHOICES = [
     description: 'managed expo project with web support',
   },
 ] as const;
-
-const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
-const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
-
-const TYPE_CHOICES: {
-  title: string;
-  value: ProjectType;
-  description: string;
-  languages: ProjectLanguages[];
-}[] = [
-  {
-    title: 'Fabric view and Turbo module with backward compat',
-    value: 'view-module-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-    languages: ['kotlin-objc'],
-  },
-  {
-    title: 'Fabric view and Turbo module',
-    value: 'view-module-new',
-    description: NEWARCH_DESCRIPTION,
-    languages: ['kotlin-objc'],
-  },
-  {
-    title: 'Native module and Native view',
-    value: 'view-module-legacy',
-    description: 'bridge for native APIs and views to JS',
-    languages: ['kotlin-objc'],
-  },
-  {
-    title: 'JavaScript library',
-    value: 'library',
-    description: 'supports Expo Go and Web',
-    languages: ['js'],
-  },
-  {
-    title: 'Native module',
-    value: 'module-legacy',
-    description: 'bridge for native APIs to JS',
-    languages: ['cpp', 'kotlin-swift'],
-  },
-  {
-    title: 'Native view',
-    value: 'view-legacy',
-    description: 'bridge for native views to JS',
-    languages: ['cpp', 'kotlin-swift'],
-  },
-  {
-    title: 'Turbo module with backward compat',
-    value: 'module-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-    languages: ['cpp'],
-  },
-  {
-    title: 'Turbo module',
-    value: 'module-new',
-    description: NEWARCH_DESCRIPTION,
-    languages: ['cpp'],
-  },
-];
-
-const RECOMMENDED_TEMPLATE: {
-  type: ProjectType;
-  languages: ProjectLanguages;
-  description: string;
-} = {
-  type: 'view-module-mixed',
-  languages: 'kotlin-objc',
-  description: `Backward compatible Fabric view & Turbo module with Kotlin & Objective-C`,
-};
 
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
@@ -290,10 +292,17 @@ const args: Record<ArgName, yargs.Options> = {
   'languages': {
     description: 'Languages you want to use',
     choices: LANGUAGE_CHOICES.map(({ value }) => value),
+    type: 'string',
   },
   'type': {
     description: 'Type of library you want to develop',
     choices: TYPE_CHOICES.map(({ value }) => value),
+    type: 'array',
+  },
+  'arch': {
+    description: 'Supported React Native architectures',
+    choices: ARCHITECTURE_CHOICES.map(({ value }) => value),
+    type: 'array',
   },
   'react-native-version': {
     description: 'Version of React Native to use, uses latest if not specified',
@@ -521,8 +530,23 @@ async function create(_argv: yargs.Arguments<any>) {
       },
     },
     {
-      type: 'select',
       name: 'type',
+      type: (_, values) => {
+        const pickedLanguage = LANGUAGE_CHOICES.find(
+          (choice) => choice.value === values.languages
+        );
+
+        if (
+          pickedLanguage &&
+          pickedLanguage.supports.some(
+            (support) => support.type === 'view-module'
+          )
+        ) {
+          return 'multiselect';
+        }
+
+        return 'select';
+      },
       message: 'What type of library do you want to develop?',
       choices: (_, values) => {
         if (values.withRecommendedOptions) {
@@ -531,10 +555,64 @@ async function create(_argv: yargs.Arguments<any>) {
           );
         }
 
-        return TYPE_CHOICES.filter((choice) =>
-          choice.languages.includes(values.languages)
+        const pickedLanguageSupports = LANGUAGE_CHOICES.find(
+          (choice) => choice.value === values.languages
+        )!.supports;
+
+        const result = TYPE_CHOICES.filter((choice) =>
+          pickedLanguageSupports.some(
+            (support) => support.type === choice.value
+          )
         ).map((choice) =>
           choice.value === RECOMMENDED_TEMPLATE.type
+            ? {
+                ...choice,
+                title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
+              }
+            : choice
+        );
+
+        return result
+      },
+    },
+    {
+      name: 'arch',
+      type: (_, values) => {
+        const pickedLanguageSupports = LANGUAGE_CHOICES.find(
+          (choice) => choice.value === values.languages
+        )!.supports;
+        const supportingArchs = pickedLanguageSupports.length === 1 ? pickedLanguageSupports[0]?.arch : pickedLanguageSupports.find(
+          (supports) => supports.type === answers.type
+        )?.arch;
+
+        if (
+          supportingArchs &&
+          supportingArchs.includes('mixed')
+        ) {
+          return 'multiselect';
+        }
+
+        return 'select';
+      },
+      message: 'Which architecture(s) do you want to support?',
+      choices: (_, values) => {
+        if (values.withRecommendedOptions) {
+          return ARCHITECTURE_CHOICES.filter(
+            (choice) => choice.value === RECOMMENDED_TEMPLATE.arch
+          );
+        }
+
+        const pickedLanguageSupports = LANGUAGE_CHOICES.find(
+          (choice) => choice.value === values.languages
+        )!.supports;
+        const supportingArchs = pickedLanguageSupports.length === 1 ? pickedLanguageSupports[0]!.arch : pickedLanguageSupports.find(
+          (supports) => supports.type === answers.type
+        )!.arch;
+
+        return ARCHITECTURE_CHOICES.filter((choice) =>
+          supportingArchs.includes(choice.value)
+        ).map((choice) =>
+          choice.value === RECOMMENDED_TEMPLATE.arch
             ? {
                 ...choice,
                 title: `${choice.title} ${kleur.yellow('(Recommended)')}`,
@@ -666,7 +744,7 @@ async function create(_argv: yargs.Arguments<any>) {
           const { type, choices } = question;
 
           // Skip dynamic questions with a single choice
-          if (type === 'select' && typeof choices === 'function') {
+          if ((type === 'select' || type === 'multiselect') && typeof choices === 'function') {
             return {
               ...question,
               type: (prev, values, prompt) => {
@@ -695,9 +773,10 @@ async function create(_argv: yargs.Arguments<any>) {
     authorEmail,
     authorUrl,
     repoUrl,
-    type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'kotlin-objc',
-    example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
+    languages,
+    type,
+    arch,
+    example,
     reactNativeVersion,
   } = answers;
 
@@ -715,12 +794,6 @@ async function create(_argv: yargs.Arguments<any>) {
     // Fallback to a known version if we couldn't fetch
     bobVersion = FALLBACK_BOB_VERSION;
   }
-
-  const arch = type.endsWith('new')
-    ? 'new'
-    : type.endsWith('mixed')
-    ? 'mixed'
-    : 'legacy';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
 
