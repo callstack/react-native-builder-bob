@@ -472,58 +472,49 @@ async function create(_argv: yargs.Arguments<any>) {
 
   assertOptions(questions, argv);
 
-  const singleChoiceAnswers: Partial<Answers> = {};
+  const promptAnswers: Partial<Answers> = {};
+
+  for (const question of questions) {
+    // Skip questions which are passed as parameter and pass validation
+    if (
+      argv[question.name] != null &&
+      question.validate?.(argv[question.name]) !== false
+    ) {
+      continue;
+    }
+
+    // Don't prompt questions with a single choice
+    if (Array.isArray(question.choices) && question.choices.length === 1) {
+      const onlyChoice = question.choices[0]!;
+      promptAnswers[question.name] = onlyChoice.value;
+
+      continue;
+    }
+
+    // Don't prompt dynamic questions with a single choice
+    if (question.type === 'select' && typeof question.choices === 'function') {
+      const dynamicChoices = question.choices(
+        null,
+        { ...argv, ...promptAnswers },
+        question
+      );
+
+      if (dynamicChoices && dynamicChoices.length === 1) {
+        const onlyChoice = dynamicChoices[0]!;
+        promptAnswers[question.name] = onlyChoice.value;
+
+        continue;
+      }
+    }
+
+    const answer = await prompts(question);
+    promptAnswers[question.name] = answer[question.name];
+  }
 
   const answers = {
     ...argv,
     local,
-    ...(await prompts(
-      questions
-        .filter((question) => {
-          // Skip questions which are passed as parameter and pass validation
-          if (
-            argv[question.name] != null &&
-            question.validate?.(argv[question.name]) !== false
-          ) {
-            return false;
-          }
-
-          // Skip questions with a single choice
-          if (
-            Array.isArray(question.choices) &&
-            question.choices.length === 1
-          ) {
-            const onlyChoice = question.choices[0]!;
-            singleChoiceAnswers[question.name] = onlyChoice.value;
-            return false;
-          }
-
-          return true;
-        })
-        .map((question) => {
-          const { type, choices } = question;
-
-          // Skip dynamic questions with a single choice
-          if (type === 'select' && typeof choices === 'function') {
-            return {
-              ...question,
-              type: (prev, values, prompt) => {
-                const result = choices(prev, { ...argv, ...values }, prompt);
-                if (result && result.length === 1) {
-                  const onlyChoice = result[0]!;
-                  singleChoiceAnswers[question.name] = onlyChoice.value;
-                  return null;
-                }
-
-                return type;
-              },
-            };
-          }
-
-          return question;
-        })
-    )),
-    ...singleChoiceAnswers,
+    ...promptAnswers,
   } as Answers;
 
   assertOptions(questions, answers);
