@@ -472,7 +472,8 @@ async function create(_argv: yargs.Arguments<any>) {
 
   assertOptions(questions, argv);
 
-  const promptAnswers: Partial<Answers> = {};
+  const singleChoiceAnswers: Partial<Answers> = {};
+  const finalQuestions: Question[] = [];
 
   for (const question of questions) {
     // Skip questions which are passed as parameter and pass validation
@@ -486,34 +487,37 @@ async function create(_argv: yargs.Arguments<any>) {
     // Don't prompt questions with a single choice
     if (Array.isArray(question.choices) && question.choices.length === 1) {
       const onlyChoice = question.choices[0]!;
-      promptAnswers[question.name] = onlyChoice.value;
+      singleChoiceAnswers[question.name] = onlyChoice.value;
 
       continue;
     }
 
+    const { type, choices } = question;
+
     // Don't prompt dynamic questions with a single choice
-    if (question.type === 'select' && typeof question.choices === 'function') {
-      const dynamicChoices = question.choices(
-        null,
-        { ...argv, ...promptAnswers },
-        question
-      );
+    if (type === 'select' && typeof choices === 'function') {
+      question.type = (prev, values, prompt) => {
+        const dynamicChoices = choices(prev, { ...argv, ...values }, prompt);
 
-      if (dynamicChoices && dynamicChoices.length === 1) {
-        const onlyChoice = dynamicChoices[0]!;
-        promptAnswers[question.name] = onlyChoice.value;
+        if (dynamicChoices && dynamicChoices.length === 1) {
+          const onlyChoice = dynamicChoices[0]!;
+          singleChoiceAnswers[question.name] = onlyChoice.value;
+          return null;
+        }
 
-        continue;
-      }
+        return type;
+      };
     }
 
-    const answer = await prompts(question);
-    promptAnswers[question.name] = answer[question.name];
+    finalQuestions.push(question);
   }
+
+  const promptAnswers = await prompts(finalQuestions);
 
   const answers = {
     ...argv,
     local,
+    ...singleChoiceAnswers,
     ...promptAnswers,
   } as Answers;
 
