@@ -145,14 +145,14 @@ const LANGUAGE_CHOICES: {
 
 const EXAMPLE_CHOICES = [
   {
-    title: 'Test app',
-    value: 'test-app',
-    description: "app's native code is abstracted away",
-  },
-  {
     title: 'Vanilla',
     value: 'vanilla',
     description: "provides access to app's native code",
+  },
+  {
+    title: 'Test app',
+    value: 'test-app',
+    description: "app's native code is abstracted away",
   },
   {
     title: 'Expo',
