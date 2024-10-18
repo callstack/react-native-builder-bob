@@ -3,11 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.42.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.2...create-react-native-library@0.42.0) (2024-10-18)
+
+### Bug Fixes
+
+- make sure react-native.config.json is shipped with each library Fixes [#647](https://github.com/callstack/react-native-builder-bob/issues/647) ([#648](https://github.com/callstack/react-native-builder-bob/issues/648)) ([86fab42](https://github.com/callstack/react-native-builder-bob/commit/86fab425f93aeb0685e00d33619f6a81ca0ec0a7)), closes [/github.com/callstack/react-native-builder-bob/commit/a90142f471d3c39bd5f9a98c17a64ff23be9b8af#diff-4282562f42ade49c2eb46dee36bcbb7987322efec211330f48387a10e5514678R206](https://github.com//github.com/callstack/react-native-builder-bob/commit/a90142f471d3c39bd5f9a98c17a64ff23be9b8af/issues/diff-4282562f42ade49c2eb46dee36bcbb7987322efec211330f48387a10e5514678R206) - by @johnf
+
+### Features
+
+- make the vanilla example app the first option ([#654](https://github.com/callstack/react-native-builder-bob/issues/654)) ([cc509bb](https://github.com/callstack/react-native-builder-bob/commit/cc509bb9df23b95f6488e717b2894a14eb534007)), closes [#639](https://github.com/callstack/react-native-builder-bob/issues/639) - by @atlj
+
 ## [0.41.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.1...create-react-native-library@0.41.2) (2024-09-13)
 
 ### Bug Fixes
 
-* typo in cmakeListsPath for turbo native modules ([#629](https://github.com/callstack/react-native-builder-bob/issues/629)) ([de254c6](https://github.com/callstack/react-native-builder-bob/commit/de254c64a0a172df6048c12a63ebd9f55ff9ec88)), closes [#627](https://github.com/callstack/react-native-builder-bob/issues/627) - by @withSang
+- typo in cmakeListsPath for turbo native modules ([#629](https://github.com/callstack/react-native-builder-bob/issues/629)) ([de254c6](https://github.com/callstack/react-native-builder-bob/commit/de254c64a0a172df6048c12a63ebd9f55ff9ec88)), closes [#627](https://github.com/callstack/react-native-builder-bob/issues/627) - by @withSang
 
 ## [0.41.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.0...create-react-native-library@0.41.1) (2024-09-08)
 
