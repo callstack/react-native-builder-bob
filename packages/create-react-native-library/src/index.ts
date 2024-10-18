@@ -150,11 +150,13 @@ const EXAMPLE_CHOICES = [
     value: 'vanilla',
     description: "provides access to app's native code",
   },
-  {
-    title: 'Test app',
-    value: 'test-app',
-    description: "app's native code is abstracted away",
-  },
+  // The test app is disabled for now until proper
+  // Codegen spec shipping is implemented
+  // {
+  //   title: 'Test app',
+  //   value: 'test-app',
+  //   description: "app's native code is abstracted away",
+  // },
   {
     title: 'Expo',
     value: 'expo',
