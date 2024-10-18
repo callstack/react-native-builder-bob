@@ -108,6 +108,17 @@ yarn add --dev react-native-builder-bob
 
    > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
+1. Export package.json if needed:
+
+   If you don't have `"includesGeneratedCode": true` in your `codegenConfig`, and you ship your native library for the new architecture, you also have to add `"./package.json": "./package.json"` into the `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
+
+   ```json
+   "exports": {
+     // ...
+     "./package.json": "./package.json"
+   },
+   ```
+
 1. Add the output directory to `.gitignore` and `.eslintignore`
 
    ```gitignore
