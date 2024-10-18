@@ -12,10 +12,12 @@ type Options = Input & {
     sourceMaps?: boolean;
     copyFlow?: boolean;
   };
+  clean: boolean;
   exclude: string;
 };
 
 export default async function build({
+  clean,
   root,
   source,
   output,
@@ -23,11 +25,13 @@ export default async function build({
   options,
   report,
 }: Options) {
-  report.info(
-    `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
-  );
+  if (clean) {
+    report.info(
+      `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
+    );
 
-  await del([output]);
+    await del([output]);
+  }
 
   await compile({
     ...options,
