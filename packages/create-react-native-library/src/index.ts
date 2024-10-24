@@ -790,8 +790,23 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies['react-native'];
     }
 
-    if (arch !== 'legacy' && example === 'vanilla') {
-      addCodegenBuildScript(folder, options.project.name);
+    if (example === 'vanilla') {
+      // React Native doesn't provide the community CLI as a dependency.
+      // We have to get read the version from the example app and put to the root package json
+      const exampleCommunityCLIVersion =
+        examplePackageJson.devDependencies['@react-native-community/cli'];
+      console.assert(
+        exampleCommunityCLIVersion !== undefined,
+        "The generated example app doesn't have community CLI installed"
+      );
+
+      rootPackageJson.devDependencies = rootPackageJson.devDependencies || {};
+      rootPackageJson.devDependencies['@react-native-community/cli'] =
+        exampleCommunityCLIVersion;
+
+      if (arch !== 'legacy') {
+        addCodegenBuildScript(folder, options.project.name);
+      }
     }
   }
 
