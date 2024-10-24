@@ -33,7 +33,7 @@ export default async function build({ root, report }: Options) {
   }
 
   try {
-    await spawn('npx', ['react-native', 'codegen'], {
+    await spawn('npx', ['@react-native-community/cli', 'codegen'], {
       stdio: 'ignore',
     });
 
