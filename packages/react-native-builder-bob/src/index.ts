@@ -13,13 +13,18 @@ import buildTypescript from './targets/typescript';
 import buildCodegen from './targets/codegen';
 import type { Options, Report, Target } from './types';
 
-type ArgName = 'target';
+type ArgName = 'target' | 'clean';
 
 const args = {
   target: {
     type: 'string',
     description: 'The target to build',
-    choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[],
+    choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[], // Keep existing choices
+  },
+  clean: {
+    type: 'boolean',
+    description: 'Clean the build directory before building',
+    default: true,
   },
 } satisfies Record<ArgName, yargs.Options>;
 
@@ -507,6 +512,7 @@ yargs
 
     if (argv.target != null) {
       buildTarget(
+        argv.clean,
         argv.target,
         report,
         source as string,
@@ -516,6 +522,7 @@ yargs
     } else {
       for (const target of options.targets!) {
         buildTarget(
+          argv.clean,
           target,
           report,
           source as string,
@@ -530,6 +537,7 @@ yargs
   .strict().argv;
 
 async function buildTarget(
+  clean: boolean,
   target: Exclude<Options['targets'], undefined>[number],
   report: Report,
   source: string,
@@ -544,6 +552,7 @@ async function buildTarget(
   switch (targetName) {
     case 'commonjs':
       await buildCommonJS({
+        clean,
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'commonjs'),
@@ -554,6 +563,7 @@ async function buildTarget(
       break;
     case 'module':
       await buildModule({
+        clean,
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'module'),
@@ -564,6 +574,7 @@ async function buildTarget(
       break;
     case 'typescript':
       await buildTypescript({
+        clean,
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
@@ -573,6 +584,7 @@ async function buildTarget(
       break;
     case 'codegen':
       await buildCodegen({
+        clean,
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
