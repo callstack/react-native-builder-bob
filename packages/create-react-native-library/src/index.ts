@@ -5,6 +5,7 @@ import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import ora from 'ora';
+import assert from 'node:assert';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
@@ -795,7 +796,7 @@ async function create(_argv: yargs.Arguments<any>) {
       // We have to get read the version from the example app and put to the root package json
       const exampleCommunityCLIVersion =
         examplePackageJson.devDependencies['@react-native-community/cli'];
-      console.assert(
+      assert(
         exampleCommunityCLIVersion !== undefined,
         "The generated example app doesn't have community CLI installed"
       );
