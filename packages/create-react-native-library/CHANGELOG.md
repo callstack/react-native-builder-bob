@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.0...create-react-native-library@0.42.1) (2024-10-24)
+
+### Bug Fixes
+
+- unknown option npm when generating a vanilla example app ([#664](https://github.com/callstack/react-native-builder-bob/issues/664)) ([84430e4](https://github.com/callstack/react-native-builder-bob/commit/84430e4b63ec7549451337a94cd3461260c461f8)), closes [#663](https://github.com/callstack/react-native-builder-bob/issues/663) - by @atlj
+
 # [0.42.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.41.2...create-react-native-library@0.42.0) (2024-10-18)
 
 ### Bug Fixes
