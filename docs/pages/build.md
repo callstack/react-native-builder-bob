@@ -24,6 +24,8 @@ npx react-native-builder-bob@latest init
 
 This will ask you a few questions and add the required configuration and scripts for building the code. The code will be compiled automatically when the package is published.
 
+> Note: the `init` command doesn't add the `codegen` target yet. You can either add it manually or create a new library with `create-react-native-library`.
+
 You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
 
 ## Manual configuration
@@ -115,6 +117,8 @@ yarn add --dev react-native-builder-bob
    You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
 
    It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
+
+   > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
 
    ##### Opting out of Codegen shipping __(not recommended)__
 
