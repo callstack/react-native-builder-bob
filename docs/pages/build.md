@@ -43,6 +43,7 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
+       "codegen",
        ["commonjs", { "esm": true }],
        ["module", { "esm": true }],
        ["typescript", { "esm": true }]
@@ -109,9 +110,15 @@ yarn add --dev react-native-builder-bob
 
    > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
-1. Export package.json if needed:
+1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
 
-   If you don't have `"includesGeneratedCode": true` in your `codegenConfig`, and you ship your native library for the new architecture, you also have to add `"./package.json": "./package.json"` into the `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
+   You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
+
+   It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
+
+   ##### Opting out of Codegen shipping __(not recommended)__
+
+   If you have a reason to not ship Codegen generated scaffold code with your library, you need to remove the [codegen target](#codegen) and add `package.json` to your `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
 
    ```json
    "exports": {
