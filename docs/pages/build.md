@@ -8,6 +8,7 @@ Supported targets are:
 - ES modules build for bundlers such as [webpack](https://webpack.js.org)
 - [TypeScript](https://www.typescriptlang.org/) definitions
 - Flow definitions (copies .js files to .flow files)
+- [Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) generated scaffold code
 
 If you created a project with [`create-react-native-library`](./create.md), `react-native-builder-bob` is **already pre-configured to build your project**. You don't need to configure it again.
 
@@ -167,6 +168,12 @@ Example:
 ### `targets`
 
 Various targets to build for. The available targets are:
+
+#### `codegen`
+
+Generates the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code, which is used with the New React Native Architecture.
+
+You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
 
 #### `commonjs`
 
