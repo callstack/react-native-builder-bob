@@ -81,6 +81,7 @@ type ArgName =
   | 'languages'
   | 'type'
   | 'local'
+  | 'skip-git'
   | 'replace-directory'
   | 'example'
   | 'react-native-version';
@@ -258,6 +259,10 @@ const args: Record<ArgName, yargs.Options> = {
     description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
+  },
+  'skip-git': {
+    description: 'Skip git actions',
+    type: 'boolean',
   },
   'replace-directory': {
     description: 'Replaces the directory if it already exists.',
@@ -858,6 +863,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
     try {
       isInGitRepo =
+        !argv.skipGit &&
         (await spawn('git', ['rev-parse', '--is-inside-work-tree'])) === 'true';
     } catch (e) {
       // Ignore error
