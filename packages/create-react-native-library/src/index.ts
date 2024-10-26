@@ -160,6 +160,11 @@ const EXAMPLE_CHOICES = [
     value: 'expo',
     description: 'managed expo project with web support',
   },
+  {
+    title: 'None',
+    value: 'none',
+    description: 'no example app will be created',
+  },
 ] as const;
 
 const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
@@ -933,12 +938,16 @@ async function create(_argv: yargs.Arguments<any>) {
     );
   } else {
     const platforms = {
-      ios: { name: 'iOS', color: 'cyan' },
-      android: { name: 'Android', color: 'green' },
+      ...(example === 'none'
+        ? {}
+        : {
+            ios: { name: 'iOS', colorize: kleur.cyan },
+            android: { name: 'Android', colorize: kleur.green },
+          }),
       ...(example === 'expo'
-        ? ({ web: { name: 'Web', color: 'blue' } } as const)
+        ? { web: { name: 'Web', colorize: kleur.blue } }
         : null),
-    } as const;
+    };
 
     console.log(
       dedent(`
@@ -949,8 +958,8 @@ async function create(_argv: yargs.Arguments<any>) {
         ${kleur.gray('$')} yarn
       ${Object.entries(platforms)
         .map(
-          ([script, { name, color }]) => `
-      ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
+          ([script, { name, colorize }]) => `
+      ${colorize(`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
         ':'
       )}
 
