@@ -81,6 +81,7 @@ type ArgName =
   | 'languages'
   | 'type'
   | 'local'
+  | 'replace-directory'
   | 'example'
   | 'react-native-version';
 
@@ -258,6 +259,10 @@ const args: Record<ArgName, yargs.Options> = {
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
+  'replace-directory': {
+    description: 'Replaces the directory if it already exists.',
+    type: 'boolean',
+  },
 };
 
 // FIXME: fix the type
@@ -324,7 +329,7 @@ async function create(_argv: yargs.Arguments<any>) {
     folder = path.join(process.cwd(), answers.folder);
   }
 
-  if (await fs.pathExists(folder)) {
+  if (!argv.replaceDirectory && (await fs.pathExists(folder))) {
     console.log(
       `A folder already exists at ${kleur.blue(
         folder
