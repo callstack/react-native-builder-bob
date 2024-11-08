@@ -282,7 +282,7 @@ yargs
     if (esm) {
       let replace = false;
 
-      const exports = {
+      const exportsField = {
         '.': {
           import: {
             ...(types.import ? { types: types.import } : null),
@@ -295,9 +295,14 @@ yargs
         },
       };
 
+      if (pkg.codegenConfig && !pkg.codegenConfig.includesGeneratedCode) {
+        // @ts-expect-error The exports is not strictly types therefore it doesn't know about the package.json property
+        exportsField['./package.json'] = './package.json';
+      }
+
       if (
         pkg.exports &&
-        JSON.stringify(pkg.exports) !== JSON.stringify(exports)
+        JSON.stringify(pkg.exports) !== JSON.stringify(exportsField)
       ) {
         replace = (
           await prompts({
@@ -312,7 +317,7 @@ yargs
       }
 
       if (replace) {
-        pkg.exports = exports;
+        pkg.exports = exportsField;
       }
     }
 
