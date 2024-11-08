@@ -112,6 +112,23 @@ yarn add --dev react-native-builder-bob
 
    > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
+1. Add the output directory to `.gitignore` and `.eslintignore`
+
+   ```gitignore
+   # generated files by bob
+   lib/
+   ```
+
+   This makes sure that you don't accidentally commit the generated files to git or get lint errors for them.
+
+1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
+
+   ```json
+   "modulePathIgnorePatterns": ["<rootDir>/lib/"]
+   ```
+
+   This makes sure that Jest doesn't try to run the tests in the generated files.
+
 1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
 
    You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
@@ -130,23 +147,6 @@ yarn add --dev react-native-builder-bob
      "./package.json": "./package.json"
    },
    ```
-
-1. Add the output directory to `.gitignore` and `.eslintignore`
-
-   ```gitignore
-   # generated files by bob
-   lib/
-   ```
-
-   This makes sure that you don't accidentally commit the generated files to git or get lint errors for them.
-
-1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
-
-   ```json
-   "modulePathIgnorePatterns": ["<rootDir>/lib/"]
-   ```
-
-   This makes sure that Jest doesn't try to run the tests in the generated files.
 
 And we're done 🎉
 
