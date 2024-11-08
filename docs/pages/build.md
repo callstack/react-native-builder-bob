@@ -131,6 +131,8 @@ yarn add --dev react-native-builder-bob
 
 1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
 
+   If your library is supporting the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that are only supporting the old architecture.
+
    You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
 
    It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
