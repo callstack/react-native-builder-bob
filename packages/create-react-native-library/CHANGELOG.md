@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.43.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.3...create-react-native-library@0.43.0) (2024-11-08)
+
+### Features
+
+* disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
+
 ## [0.42.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.2...create-react-native-library@0.42.3) (2024-11-08)
 
 **Note:** Version bump only for package create-react-native-library

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.3...react-native-builder-bob@0.31.0) (2024-11-08)
+
+### Features
+
+* disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
+
 ## [0.30.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.2...react-native-builder-bob@0.30.3) (2024-10-26)
 
 ### Bug Fixes
