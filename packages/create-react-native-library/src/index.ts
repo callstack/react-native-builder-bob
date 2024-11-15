@@ -16,6 +16,7 @@ import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 import { addCodegenBuildScript } from './utils/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
+import { assertNpx } from './utils/assert';
 
 const FALLBACK_BOB_VERSION = '0.29.0';
 
@@ -342,22 +343,7 @@ async function create(_argv: yargs.Arguments<any>) {
     process.exit(1);
   }
 
-  try {
-    await spawn('npx', ['--help']);
-  } catch (error) {
-    // @ts-expect-error: TS doesn't know about `code`
-    if (error != null && error.code === 'ENOENT') {
-      console.log(
-        `Couldn't find ${kleur.blue(
-          'npx'
-        )}! Please install it by running ${kleur.blue('npm install -g npx')}`
-      );
-
-      process.exit(1);
-    } else {
-      throw error;
-    }
-  }
+  await assertNpx();
 
   let name, email;
 
