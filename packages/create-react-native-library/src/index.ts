@@ -813,7 +813,7 @@ async function create(_argv: yargs.Arguments<any>) {
         exampleCommunityCLIVersion;
 
       if (arch !== 'legacy') {
-        addCodegenBuildScript(folder, options.project.name);
+        addCodegenBuildScript(folder);
       }
     }
   }
