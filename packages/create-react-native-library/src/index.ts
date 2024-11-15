@@ -18,6 +18,7 @@ import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
+import { generateTemplateConfiguration } from './template/config';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
 
@@ -98,7 +99,7 @@ type ProjectType =
   | 'view-legacy'
   | 'library';
 
-type Answers = {
+export type Answers = {
   name: string;
   slug: string;
   description: string;
@@ -510,83 +511,17 @@ async function create(_argv: yargs.Arguments<any>) {
     local,
     ...singleChoiceAnswers,
     ...promptAnswers,
-  } as Answers;
+  } as Required<Answers>;
 
   assertOptions(questions, answers);
 
-  const {
-    slug,
-    description,
-    authorName,
-    authorEmail,
-    authorUrl,
-    repoUrl,
-    type = 'module-mixed',
-    languages = type === 'library' ? 'js' : 'kotlin-objc',
-    example = local ? 'none' : type === 'library' ? 'expo' : 'vanilla',
-    reactNativeVersion,
-  } = answers;
-
-  const moduleType = type.startsWith('view-') ? 'view' : 'module';
-  const arch =
-    type === 'module-new' || type === 'view-new'
-      ? 'new'
-      : type === 'module-mixed' || type === 'view-mixed'
-      ? 'mixed'
-      : 'legacy';
-
-  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
-
-  let namespace: string | undefined;
-
-  if (slug.startsWith('@') && slug.includes('/')) {
-    namespace = slug
-      .split('/')[0]
-      ?.replace(/[^a-z0-9]/g, '')
-      .toLowerCase();
-  }
-
-  // Create a package identifier with specified namespace when possible
-  const pack = `${namespace ? `${namespace}.` : ''}${project
-    .replace(/[^a-z0-9]/g, '')
-    .toLowerCase()}`;
-
   const bobVersion = await resolveBobVersion();
-  const options = {
-    bob: {
-      version: bobVersion,
-    },
-    project: {
-      slug,
-      description,
-      name:
-        /^[A-Z]/.test(basename) && /^[a-z0-9]+$/i.test(basename)
-          ? // If the project name is already in PascalCase, use it as-is
-            basename
-          : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
-            `${project.charAt(0).toUpperCase()}${project
-              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
-              .slice(1)}`,
-      package: pack,
-      package_dir: pack.replace(/\./g, '/'),
-      package_cpp: pack.replace(/\./g, '_'),
-      identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
-      native: languages !== 'js',
-      arch,
-      cpp: languages === 'cpp',
-      swift: languages === 'kotlin-swift',
-      view: moduleType === 'view',
-      module: moduleType === 'module',
-    },
-    author: {
-      name: authorName,
-      email: authorEmail,
-      url: authorUrl,
-    },
-    repo: repoUrl,
-    example,
-    year: new Date().getFullYear(),
-  };
+
+  const config = generateTemplateConfiguration({
+    bobVersion,
+    basename,
+    answers,
+  });
 
   async function applyTemplate(source: string, destination: string) {
     await fs.mkdirp(destination);
@@ -596,7 +531,7 @@ async function create(_argv: yargs.Arguments<any>) {
     for (const f of files) {
       const target = path.join(
         destination,
-        ejs.render(f.replace(/^\$/, ''), options, {
+        ejs.render(f.replace(/^\$/, ''), config, {
           openDelimiter: '{',
           closeDelimiter: '}',
         })
@@ -610,7 +545,7 @@ async function create(_argv: yargs.Arguments<any>) {
       } else if (!BINARIES.some((r) => r.test(file))) {
         const content = await fs.readFile(file, 'utf8');
 
-        await fs.writeFile(target, ejs.render(content, options));
+        await fs.writeFile(target, ejs.render(content, config));
       } else {
         await fs.copyFile(file, target);
       }
@@ -619,11 +554,11 @@ async function create(_argv: yargs.Arguments<any>) {
 
   await fs.mkdirp(folder);
 
-  if (reactNativeVersion != null) {
-    if (example === 'vanilla') {
+  if (answers.reactNativeVersion != null) {
+    if (config.example === 'vanilla') {
       console.log(
         `${kleur.blue('ℹ')} Using ${kleur.cyan(
-          `react-native@${reactNativeVersion}`
+          `react-native@${answers.reactNativeVersion}`
         )} for the example`
       );
     } else {
@@ -631,7 +566,7 @@ async function create(_argv: yargs.Arguments<any>) {
         `${kleur.yellow(
           '⚠'
         )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
-          example
+          config.example
         )}`
       );
     }
@@ -639,16 +574,16 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const spinner = ora().start();
 
-  if (example !== 'none') {
+  if (config.example !== 'none') {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
-      type: example,
+      type: config.example,
       dest: folder,
-      arch,
-      project: options.project,
+      arch: config.project.arch,
+      project: config.project,
       bobVersion,
-      reactNativeVersion,
+      reactNativeVersion: answers.reactNativeVersion,
     });
   }
 
@@ -659,50 +594,55 @@ async function create(_argv: yargs.Arguments<any>) {
   } else {
     await applyTemplate(COMMON_FILES, folder);
 
-    if (example !== 'none') {
+    if (config.example !== 'none') {
       await applyTemplate(COMMON_EXAMPLE_FILES, folder);
     }
   }
 
-  if (languages === 'js') {
+  if (answers.languages === 'js') {
     await applyTemplate(JS_FILES, folder);
     await applyTemplate(EXPO_FILES, folder);
   } else {
     await applyTemplate(NATIVE_COMMON_FILES, folder);
 
-    if (example !== 'none') {
+    if (config.example !== 'none') {
       await applyTemplate(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
-    if (moduleType === 'module') {
-      await applyTemplate(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+    if (config.project.module) {
+      await applyTemplate(
+        NATIVE_FILES[`module_${config.project.arch}`],
+        folder
+      );
     } else {
-      await applyTemplate(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+      await applyTemplate(NATIVE_FILES[`view_${config.project.arch}`], folder);
     }
 
-    if (options.project.swift) {
-      await applyTemplate(SWIFT_FILES[`${moduleType}_legacy`], folder);
+    if (config.project.swift) {
+      await applyTemplate(SWIFT_FILES[`module_legacy`], folder);
     } else {
-      if (moduleType === 'module') {
-        await applyTemplate(OBJC_FILES[`${moduleType}_common`], folder);
+      if (config.project.module) {
+        await applyTemplate(OBJC_FILES[`module_common`], folder);
       } else {
-        await applyTemplate(OBJC_FILES[`view_${arch}`], folder);
+        await applyTemplate(OBJC_FILES[`view_${config.project.arch}`], folder);
       }
     }
 
-    const templateType = `${moduleType}_${arch}` as const;
+    const templateType = `${config.project.module ? 'module' : 'view'}_${
+      config.project.arch
+    }` as const;
 
     await applyTemplate(KOTLIN_FILES[templateType], folder);
 
-    if (options.project.cpp) {
+    if (config.project.cpp) {
       await applyTemplate(CPP_FILES, folder);
-      await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
+      await fs.remove(path.join(folder, 'ios', `${config.project.name}.m`));
     }
   }
 
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
-  if (example !== 'none') {
+  if (config.example !== 'none') {
     // Set `react` and `react-native` versions of root `package.json` from example `package.json`
     const examplePackageJson = await fs.readJSON(
       path.join(folder, 'example', 'package.json')
@@ -719,7 +659,7 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies['react-native'];
     }
 
-    if (example === 'vanilla') {
+    if (config.example === 'vanilla') {
       // React Native doesn't provide the community CLI as a dependency.
       // We have to get read the version from the example app and put to the root package json
       const exampleCommunityCLIVersion =
@@ -733,7 +673,7 @@ async function create(_argv: yargs.Arguments<any>) {
       rootPackageJson.devDependencies['@react-native-community/cli'] =
         exampleCommunityCLIVersion;
 
-      if (arch !== 'legacy') {
+      if (config.project.arch !== 'legacy') {
         addCodegenBuildScript(folder);
       }
     }
@@ -800,7 +740,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
       if (isReactNativeProject) {
         packageJson.dependencies = packageJson.dependencies || {};
-        packageJson.dependencies[slug] =
+        packageJson.dependencies[config.project.slug] =
           packageManager === 'yarn'
             ? `link:./${path.relative(process.cwd(), folder)}`
             : `file:./${path.relative(process.cwd(), folder)}`;
@@ -833,7 +773,9 @@ async function create(_argv: yargs.Arguments<any>) {
         `- Run ${kleur.blue('npx react-native run-android')} or ${kleur.blue(
           'npx react-native run-ios'
         )} to build and run the app\n` +
-        `- Import from ${kleur.blue(slug)} and use it in your app.`
+        `- Import from ${kleur.blue(
+          config.project.slug
+        )} and use it in your app.`
       }
 
       ${kleur.yellow(`Good luck!`)}
@@ -843,7 +785,7 @@ async function create(_argv: yargs.Arguments<any>) {
     const platforms = {
       ios: { name: 'iOS', color: 'cyan' },
       android: { name: 'Android', color: 'green' },
-      ...(example === 'expo'
+      ...(config.example === 'expo'
         ? ({ web: { name: 'Web', color: 'blue' } } as const)
         : null),
     } as const;
