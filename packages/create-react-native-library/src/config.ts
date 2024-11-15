@@ -1,4 +1,4 @@
-import type { Answers } from 'create-react-native-library';
+import type { Answers, ExampleApp, SupportedArchitecture } from './input';
 
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
@@ -30,9 +30,6 @@ export type TemplateConfiguration = {
   example: ExampleApp;
   year: number;
 };
-
-export type SupportedArchitecture = 'new' | 'mixed' | 'legacy';
-export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
 export function generateTemplateConfiguration({
   bobVersion,
