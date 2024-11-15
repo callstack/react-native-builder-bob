@@ -17,8 +17,9 @@ import { version } from '../package.json';
 import { addCodegenBuildScript } from './utils/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertNpx } from './utils/assert';
+import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 
-const FALLBACK_BOB_VERSION = '0.29.0';
+const FALLBACK_BOB_VERSION = '0.32.0';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
@@ -276,12 +277,7 @@ async function create(_argv: yargs.Arguments<any>) {
   const { _, $0, ...argv } = _argv;
 
   // Prefetch bob version in background while asking questions
-  const bobVersionPromise = spawn('npm', [
-    'view',
-    'react-native-builder-bob',
-    'dist-tags.latest',
-  ]);
-
+  const resolveBobVersion = resolveBobVersionWithFallback(FALLBACK_BOB_VERSION);
   let local = false;
 
   if (typeof argv.local === 'boolean') {
@@ -531,21 +527,6 @@ async function create(_argv: yargs.Arguments<any>) {
     reactNativeVersion,
   } = answers;
 
-  // Get latest version of Bob from NPM
-  let bobVersion: string;
-
-  try {
-    bobVersion = await Promise.race([
-      new Promise<string>((resolve) => {
-        setTimeout(() => resolve(FALLBACK_BOB_VERSION), 1000);
-      }),
-      bobVersionPromise,
-    ]);
-  } catch (e) {
-    // Fallback to a known version if we couldn't fetch
-    bobVersion = FALLBACK_BOB_VERSION;
-  }
-
   const moduleType = type.startsWith('view-') ? 'view' : 'module';
   const arch =
     type === 'module-new' || type === 'view-new'
@@ -570,9 +551,10 @@ async function create(_argv: yargs.Arguments<any>) {
     .replace(/[^a-z0-9]/g, '')
     .toLowerCase()}`;
 
+  const bobVersion = await resolveBobVersion();
   const options = {
     bob: {
-      version: bobVersion || FALLBACK_BOB_VERSION,
+      version: bobVersion,
     },
     project: {
       slug,
