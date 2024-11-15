@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.32.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.31.0...react-native-builder-bob@0.32.0) (2024-11-15)
+
+### Features
+
+* use node to call codegen ([#685](https://github.com/callstack/react-native-builder-bob/issues/685)) ([55eec1c](https://github.com/callstack/react-native-builder-bob/commit/55eec1cf57c234abd6de7c40dcdbb7a6c25251e5)) - by @atlj
+
 # [0.31.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.30.3...react-native-builder-bob@0.31.0) (2024-11-08)
 
 ### Features
