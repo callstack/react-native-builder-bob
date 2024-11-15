@@ -1,10 +1,10 @@
 import kleur from 'kleur';
 import type { Input } from '../types';
 import { patchCodegen } from '../utils/patchCodegen';
-import { spawn } from '../utils/spawn';
 import fs from 'fs-extra';
 import path from 'path';
 import del from 'del';
+import { runRNCCli } from '../utils/runRNCCli';
 
 type Options = Input;
 
@@ -33,11 +33,9 @@ export default async function build({ root, report }: Options) {
   }
 
   try {
-    await spawn('npx', ['@react-native-community/cli', 'codegen'], {
-      stdio: 'ignore',
-    });
+    await runRNCCli(['codegen']);
 
-    patchCodegen(root, packageJson, report);
+    await patchCodegen(root, packageJson, report);
 
     report.success('Generated native code with codegen');
   } catch (e: unknown) {
