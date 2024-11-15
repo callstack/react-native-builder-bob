@@ -141,7 +141,7 @@ export type Question = Omit<
   name: keyof Answers;
 };
 
-export const args: Record<ArgName, yargs.Options> = {
+export const acceptedArgs: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
     type: 'string',

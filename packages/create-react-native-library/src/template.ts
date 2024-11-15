@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
 import type { TemplateConfiguration } from './config';
-import type { Answers } from 'create-react-native-library';
+import type { Answers } from './input';
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,

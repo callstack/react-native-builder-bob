@@ -13,8 +13,8 @@ import { createInitialGitCommit } from './utils/initialCommit';
 import { assertAnswers, assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { generateTemplateConfiguration } from './config';
-import { applyTemplates } from './template/applyTemplates';
-import { createQuestions, type Answers } from './input';
+import { applyTemplates } from './template';
+import { createQuestions, type Answers, acceptedArgs } from './input';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
 
@@ -334,7 +334,7 @@ async function create(_argv: yargs.Arguments<any>) {
 }
 
 yargs
-  .command('$0 [name]', 'create a react native library', args, create)
+  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
   .demandCommand()
   .recommendCommands()
   .fail((message, error) => {
