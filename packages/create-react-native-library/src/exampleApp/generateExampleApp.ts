@@ -1,8 +1,8 @@
 import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
-import { spawn } from './spawn';
-import sortObjectKeys from './sortObjectKeys';
+import { spawn } from '../utils/spawn';
+import sortObjectKeys from '../utils/sortObjectKeys';
 
 export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
 

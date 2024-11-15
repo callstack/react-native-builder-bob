@@ -11,10 +11,10 @@ import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
 import generateExampleApp, {
   type ExampleType,
-} from './utils/generateExampleApp';
+} from './exampleApp/generateExampleApp';
 import { spawn } from './utils/spawn';
 import { version } from '../package.json';
-import { addCodegenBuildScript } from './utils/addCodegenBuildScript';
+import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
