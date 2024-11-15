@@ -1,6 +1,6 @@
 import kleur from 'kleur';
 import { spawn } from './spawn';
-import type { Answers, Question } from 'create-react-native-library';
+import type { Answers, Question } from '../input';
 
 export async function assertNpx() {
   try {
