@@ -620,14 +620,14 @@ async function create(_argv: yargs.Arguments<any>) {
     year: new Date().getFullYear(),
   };
 
-  const copyDir = async (source: string, dest: string) => {
-    await fs.mkdirp(dest);
+  async function applyTemplate(source: string, destination: string) {
+    await fs.mkdirp(destination);
 
     const files = await fs.readdir(source);
 
     for (const f of files) {
       const target = path.join(
-        dest,
+        destination,
         ejs.render(f.replace(/^\$/, ''), options, {
           openDelimiter: '{',
           closeDelimiter: '}',
@@ -638,7 +638,7 @@ async function create(_argv: yargs.Arguments<any>) {
       const stats = await fs.stat(file);
 
       if (stats.isDirectory()) {
-        await copyDir(file, target);
+        await applyTemplate(file, target);
       } else if (!BINARIES.some((r) => r.test(file))) {
         const content = await fs.readFile(file, 'utf8');
 
@@ -647,7 +647,7 @@ async function create(_argv: yargs.Arguments<any>) {
         await fs.copyFile(file, target);
       }
     }
-  };
+  }
 
   await fs.mkdirp(folder);
 
@@ -687,47 +687,47 @@ async function create(_argv: yargs.Arguments<any>) {
   spinner.text = 'Copying files';
 
   if (local) {
-    await copyDir(COMMON_LOCAL_FILES, folder);
+    await applyTemplate(COMMON_LOCAL_FILES, folder);
   } else {
-    await copyDir(COMMON_FILES, folder);
+    await applyTemplate(COMMON_FILES, folder);
 
     if (example !== 'none') {
-      await copyDir(COMMON_EXAMPLE_FILES, folder);
+      await applyTemplate(COMMON_EXAMPLE_FILES, folder);
     }
   }
 
   if (languages === 'js') {
-    await copyDir(JS_FILES, folder);
-    await copyDir(EXPO_FILES, folder);
+    await applyTemplate(JS_FILES, folder);
+    await applyTemplate(EXPO_FILES, folder);
   } else {
-    await copyDir(NATIVE_COMMON_FILES, folder);
+    await applyTemplate(NATIVE_COMMON_FILES, folder);
 
     if (example !== 'none') {
-      await copyDir(NATIVE_COMMON_EXAMPLE_FILES, folder);
+      await applyTemplate(NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
     if (moduleType === 'module') {
-      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+      await applyTemplate(NATIVE_FILES[`${moduleType}_${arch}`], folder);
     } else {
-      await copyDir(NATIVE_FILES[`${moduleType}_${arch}`], folder);
+      await applyTemplate(NATIVE_FILES[`${moduleType}_${arch}`], folder);
     }
 
     if (options.project.swift) {
-      await copyDir(SWIFT_FILES[`${moduleType}_legacy`], folder);
+      await applyTemplate(SWIFT_FILES[`${moduleType}_legacy`], folder);
     } else {
       if (moduleType === 'module') {
-        await copyDir(OBJC_FILES[`${moduleType}_common`], folder);
+        await applyTemplate(OBJC_FILES[`${moduleType}_common`], folder);
       } else {
-        await copyDir(OBJC_FILES[`view_${arch}`], folder);
+        await applyTemplate(OBJC_FILES[`view_${arch}`], folder);
       }
     }
 
     const templateType = `${moduleType}_${arch}` as const;
 
-    await copyDir(KOTLIN_FILES[templateType], folder);
+    await applyTemplate(KOTLIN_FILES[templateType], folder);
 
     if (options.project.cpp) {
-      await copyDir(CPP_FILES, folder);
+      await applyTemplate(CPP_FILES, folder);
       await fs.remove(path.join(folder, 'ios', `${options.project.name}.m`));
     }
   }
