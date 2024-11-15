@@ -93,7 +93,8 @@ export default async function generateExampleApp({
     '--version',
     reactNativeVersion,
     '--skip-install',
-    '--npm',
+    '--pm',
+    'npm',
   ];
 
   // `npx create-expo-app example --no-install --template blank`

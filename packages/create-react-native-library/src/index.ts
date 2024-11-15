@@ -5,6 +5,7 @@ import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import ora from 'ora';
+import assert from 'node:assert';
 import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import prompts, { type PromptObject } from './utils/prompts';
@@ -143,23 +144,30 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
-const EXAMPLE_CHOICES = [
-  {
-    title: 'Test app',
-    value: 'test-app',
-    description: "app's native code is abstracted away",
-  },
-  {
-    title: 'Vanilla',
-    value: 'vanilla',
-    description: "provides access to app's native code",
-  },
-  {
-    title: 'Expo',
-    value: 'expo',
-    description: 'managed expo project with web support',
-  },
-] as const;
+const EXAMPLE_CHOICES = (
+  [
+    {
+      title: 'Vanilla',
+      value: 'vanilla',
+      description: "provides access to app's native code",
+      disabled: false,
+    },
+    {
+      title: 'Test app',
+      value: 'test-app',
+      description: "app's native code is abstracted away",
+      // The test app is disabled for now until proper
+      // Codegen spec shipping is implemented
+      disabled: !process.env.CRNL_ENABLE_TEST_APP,
+    },
+    {
+      title: 'Expo',
+      value: 'expo',
+      description: 'managed expo project with web support',
+      disabled: false,
+    },
+  ] as const
+).filter((choice) => !choice.disabled);
 
 const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
 const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
@@ -532,7 +540,7 @@ async function create(_argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'kotlin-objc',
-    example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
+    example = local ? 'none' : type === 'library' ? 'expo' : 'vanilla',
     reactNativeVersion,
   } = answers;
 
@@ -742,8 +750,23 @@ async function create(_argv: yargs.Arguments<any>) {
         examplePackageJson.dependencies['react-native'];
     }
 
-    if (arch !== 'legacy' && example === 'vanilla') {
-      addCodegenBuildScript(folder, options.project.name);
+    if (example === 'vanilla') {
+      // React Native doesn't provide the community CLI as a dependency.
+      // We have to get read the version from the example app and put to the root package json
+      const exampleCommunityCLIVersion =
+        examplePackageJson.devDependencies['@react-native-community/cli'];
+      assert(
+        exampleCommunityCLIVersion !== undefined,
+        "The generated example app doesn't have community CLI installed"
+      );
+
+      rootPackageJson.devDependencies = rootPackageJson.devDependencies || {};
+      rootPackageJson.devDependencies['@react-native-community/cli'] =
+        exampleCommunityCLIVersion;
+
+      if (arch !== 'legacy') {
+        addCodegenBuildScript(folder);
+      }
     }
   }
 
