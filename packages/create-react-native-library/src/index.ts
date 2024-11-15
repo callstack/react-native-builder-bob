@@ -16,7 +16,7 @@ import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
-import { assertNpx } from './utils/assert';
+import { assertNpx, assertOptions } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { generateTemplateConfiguration } from './template/config';
 
@@ -218,7 +218,10 @@ const TYPE_CHOICES: {
   },
 ];
 
-type Question = Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
+export type Question = Omit<
+  PromptObject<keyof Answers>,
+  'validate' | 'name'
+> & {
   validate?: (value: string) => boolean | string;
   name: keyof Answers;
 };
@@ -843,56 +846,3 @@ yargs
     'strip-dashed': true,
   })
   .strict().argv;
-
-/**
- * Makes sure the answers are in expected form and ends the process with error if they are not
- */
-export function assertOptions(questions: Question[], answers: Answers) {
-  for (const [key, value] of Object.entries(answers)) {
-    if (value == null) {
-      continue;
-    }
-
-    const question = questions.find((q) => q.name === key);
-
-    if (question == null) {
-      continue;
-    }
-
-    let valid = question.validate ? question.validate(String(value)) : true;
-
-    // We also need to guard against invalid choices
-    // If we don't already have a validation message to provide a better error
-    if (typeof valid !== 'string' && 'choices' in question) {
-      const choices =
-        typeof question.choices === 'function'
-          ? question.choices(
-              undefined,
-              // @ts-expect-error: it complains about optional values, but it should be fine
-              answers,
-              question
-            )
-          : question.choices;
-
-      if (choices && !choices.some((choice) => choice.value === value)) {
-        valid = `Supported values are - ${choices.map((c) =>
-          kleur.green(c.value)
-        )}`;
-      }
-    }
-
-    if (valid !== true) {
-      let message = `Invalid value ${kleur.red(
-        String(value)
-      )} passed for ${kleur.blue(key)}`;
-
-      if (typeof valid === 'string') {
-        message += `: ${valid}`;
-      }
-
-      console.log(message);
-
-      process.exit(1);
-    }
-  }
-}
