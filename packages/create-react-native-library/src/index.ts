@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs-extra';
-import ejs from 'ejs';
 import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
@@ -16,16 +15,12 @@ import { spawn } from './utils/spawn';
 import { version } from '../package.json';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
-import { assertNpx, assertOptions } from './utils/assert';
+import { assertAnswers, assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { generateTemplateConfiguration } from './template/config';
+import { applyTemplate } from './template/applyTemplate';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
-
-const BINARIES = [
-  /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
-  /\$\.yarn(?![a-z])/,
-];
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const COMMON_EXAMPLE_FILES = path.resolve(
@@ -465,7 +460,7 @@ async function create(_argv: yargs.Arguments<any>) {
     });
   }
 
-  assertOptions(questions, argv);
+  assertAnswers(questions, argv);
 
   const singleChoiceAnswers: Partial<Answers> = {};
   const finalQuestions: Question[] = [];
@@ -516,7 +511,7 @@ async function create(_argv: yargs.Arguments<any>) {
     ...promptAnswers,
   } as Required<Answers>;
 
-  assertOptions(questions, answers);
+  assertAnswers(questions, answers);
 
   const bobVersion = await resolveBobVersion();
 
@@ -525,35 +520,6 @@ async function create(_argv: yargs.Arguments<any>) {
     basename,
     answers,
   });
-
-  async function applyTemplate(source: string, destination: string) {
-    await fs.mkdirp(destination);
-
-    const files = await fs.readdir(source);
-
-    for (const f of files) {
-      const target = path.join(
-        destination,
-        ejs.render(f.replace(/^\$/, ''), config, {
-          openDelimiter: '{',
-          closeDelimiter: '}',
-        })
-      );
-
-      const file = path.join(source, f);
-      const stats = await fs.stat(file);
-
-      if (stats.isDirectory()) {
-        await applyTemplate(file, target);
-      } else if (!BINARIES.some((r) => r.test(file))) {
-        const content = await fs.readFile(file, 'utf8');
-
-        await fs.writeFile(target, ejs.render(content, config));
-      } else {
-        await fs.copyFile(file, target);
-      }
-    }
-  }
 
   await fs.mkdirp(folder);
 
@@ -593,41 +559,50 @@ async function create(_argv: yargs.Arguments<any>) {
   spinner.text = 'Copying files';
 
   if (local) {
-    await applyTemplate(COMMON_LOCAL_FILES, folder);
+    await applyTemplate(config, COMMON_LOCAL_FILES, folder);
   } else {
-    await applyTemplate(COMMON_FILES, folder);
+    await applyTemplate(config, COMMON_FILES, folder);
 
     if (config.example !== 'none') {
-      await applyTemplate(COMMON_EXAMPLE_FILES, folder);
+      await applyTemplate(config, COMMON_EXAMPLE_FILES, folder);
     }
   }
 
   if (answers.languages === 'js') {
-    await applyTemplate(JS_FILES, folder);
-    await applyTemplate(EXPO_FILES, folder);
+    await applyTemplate(config, JS_FILES, folder);
+    await applyTemplate(config, EXPO_FILES, folder);
   } else {
-    await applyTemplate(NATIVE_COMMON_FILES, folder);
+    await applyTemplate(config, NATIVE_COMMON_FILES, folder);
 
     if (config.example !== 'none') {
-      await applyTemplate(NATIVE_COMMON_EXAMPLE_FILES, folder);
+      await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
     if (config.project.module) {
       await applyTemplate(
+        config,
         NATIVE_FILES[`module_${config.project.arch}`],
         folder
       );
     } else {
-      await applyTemplate(NATIVE_FILES[`view_${config.project.arch}`], folder);
+      await applyTemplate(
+        config,
+        NATIVE_FILES[`view_${config.project.arch}`],
+        folder
+      );
     }
 
     if (config.project.swift) {
-      await applyTemplate(SWIFT_FILES[`module_legacy`], folder);
+      await applyTemplate(config, SWIFT_FILES[`module_legacy`], folder);
     } else {
       if (config.project.module) {
-        await applyTemplate(OBJC_FILES[`module_common`], folder);
+        await applyTemplate(config, OBJC_FILES[`module_common`], folder);
       } else {
-        await applyTemplate(OBJC_FILES[`view_${config.project.arch}`], folder);
+        await applyTemplate(
+          config,
+          OBJC_FILES[`view_${config.project.arch}`],
+          folder
+        );
       }
     }
 
@@ -635,10 +610,10 @@ async function create(_argv: yargs.Arguments<any>) {
       config.project.arch
     }` as const;
 
-    await applyTemplate(KOTLIN_FILES[templateType], folder);
+    await applyTemplate(config, KOTLIN_FILES[templateType], folder);
 
     if (config.project.cpp) {
-      await applyTemplate(CPP_FILES, folder);
+      await applyTemplate(config, CPP_FILES, folder);
       await fs.remove(path.join(folder, 'ios', `${config.project.name}.m`));
     }
   }
