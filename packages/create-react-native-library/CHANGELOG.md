@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.0...create-react-native-library@0.44.1) (2024-11-15)
+
+### Bug Fixes
+
+* single answer questions dont get stored with metadata ([#633](https://github.com/callstack/react-native-builder-bob/issues/633)) ([c1d8ab1](https://github.com/callstack/react-native-builder-bob/commit/c1d8ab11f31552720c2f4b735842e83b17bb804d)) - by @atlj
+
 # [0.44.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.43.0...create-react-native-library@0.44.0) (2024-11-15)
 
 ### Bug Fixes
