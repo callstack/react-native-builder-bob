@@ -214,6 +214,11 @@ const TYPE_CHOICES: {
   },
 ];
 
+type Question = Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
+  validate?: (value: string) => boolean | string;
+  name: keyof Answers;
+};
+
 const args: Record<ArgName, yargs.Options> = {
   'slug': {
     description: 'Name of the npm package',
@@ -364,10 +369,7 @@ async function create(_argv: yargs.Arguments<any>) {
 
   const basename = path.basename(folder);
 
-  const questions: (Omit<PromptObject<keyof Answers>, 'validate' | 'name'> & {
-    validate?: (value: string) => boolean | string;
-    name: string;
-  })[] = [
+  const questions: Question[] = [
     {
       type: 'text',
       name: 'slug',
@@ -476,108 +478,58 @@ async function create(_argv: yargs.Arguments<any>) {
     });
   }
 
-  const validate = (answers: Answers) => {
-    for (const [key, value] of Object.entries(answers)) {
-      if (value == null) {
-        continue;
-      }
+  assertOptions(questions, argv);
 
-      const question = questions.find((q) => q.name === key);
+  const singleChoiceAnswers: Partial<Answers> = {};
+  const finalQuestions: Question[] = [];
 
-      if (question == null) {
-        continue;
-      }
-
-      let valid = question.validate ? question.validate(String(value)) : true;
-
-      // We also need to guard against invalid choices
-      // If we don't already have a validation message to provide a better error
-      if (typeof valid !== 'string' && 'choices' in question) {
-        const choices =
-          typeof question.choices === 'function'
-            ? question.choices(
-                undefined,
-                // @ts-expect-error: it complains about optional values, but it should be fine
-                answers,
-                question
-              )
-            : question.choices;
-
-        if (choices && !choices.some((choice) => choice.value === value)) {
-          valid = `Supported values are - ${choices.map((c) =>
-            kleur.green(c.value)
-          )}`;
-        }
-      }
-
-      if (valid !== true) {
-        let message = `Invalid value ${kleur.red(
-          String(value)
-        )} passed for ${kleur.blue(key)}`;
-
-        if (typeof valid === 'string') {
-          message += `: ${valid}`;
-        }
-
-        console.log(message);
-
-        process.exit(1);
-      }
+  for (const question of questions) {
+    // Skip questions which are passed as parameter and pass validation
+    if (
+      argv[question.name] != null &&
+      question.validate?.(argv[question.name]) !== false
+    ) {
+      continue;
     }
-  };
 
-  // Validate arguments passed to the CLI
-  validate(argv);
+    // Don't prompt questions with a single choice
+    if (Array.isArray(question.choices) && question.choices.length === 1) {
+      const onlyChoice = question.choices[0]!;
+      singleChoiceAnswers[question.name] = onlyChoice.value;
+
+      continue;
+    }
+
+    const { type, choices } = question;
+
+    // Don't prompt dynamic questions with a single choice
+    if (type === 'select' && typeof choices === 'function') {
+      question.type = (prev, values, prompt) => {
+        const dynamicChoices = choices(prev, { ...argv, ...values }, prompt);
+
+        if (dynamicChoices && dynamicChoices.length === 1) {
+          const onlyChoice = dynamicChoices[0]!;
+          singleChoiceAnswers[question.name] = onlyChoice.value;
+          return null;
+        }
+
+        return type;
+      };
+    }
+
+    finalQuestions.push(question);
+  }
+
+  const promptAnswers = await prompts(finalQuestions);
 
   const answers = {
     ...argv,
     local,
-    ...(await prompts(
-      questions
-        .filter((question) => {
-          // Skip questions which are passed as parameter and pass validation
-          if (
-            argv[question.name] != null &&
-            question.validate?.(argv[question.name]) !== false
-          ) {
-            return false;
-          }
-
-          // Skip questions with a single choice
-          if (
-            Array.isArray(question.choices) &&
-            question.choices.length === 1
-          ) {
-            return false;
-          }
-
-          return true;
-        })
-        .map((question) => {
-          const { type, choices } = question;
-
-          // Skip dynamic questions with a single choice
-          if (type === 'select' && typeof choices === 'function') {
-            return {
-              ...question,
-              type: (prev, values, prompt) => {
-                const result = choices(prev, { ...argv, ...values }, prompt);
-
-                if (result && result.length === 1) {
-                  return null;
-                }
-
-                return type;
-              },
-            };
-          }
-
-          return question;
-        })
-    )),
+    ...singleChoiceAnswers,
+    ...promptAnswers,
   } as Answers;
 
-  validate(answers);
+  assertOptions(questions, answers);
 
   const {
     slug,
@@ -1000,3 +952,56 @@ yargs
     'strip-dashed': true,
   })
   .strict().argv;
+
+/**
+ * Makes sure the answers are in expected form and ends the process with error if they are not
+ */
+export function assertOptions(questions: Question[], answers: Answers) {
+  for (const [key, value] of Object.entries(answers)) {
+    if (value == null) {
+      continue;
+    }
+
+    const question = questions.find((q) => q.name === key);
+
+    if (question == null) {
+      continue;
+    }
+
+    let valid = question.validate ? question.validate(String(value)) : true;
+
+    // We also need to guard against invalid choices
+    // If we don't already have a validation message to provide a better error
+    if (typeof valid !== 'string' && 'choices' in question) {
+      const choices =
+        typeof question.choices === 'function'
+          ? question.choices(
+              undefined,
+              // @ts-expect-error: it complains about optional values, but it should be fine
+              answers,
+              question
+            )
+          : question.choices;
+
+      if (choices && !choices.some((choice) => choice.value === value)) {
+        valid = `Supported values are - ${choices.map((c) =>
+          kleur.green(c.value)
+        )}`;
+      }
+    }
+
+    if (valid !== true) {
+      let message = `Invalid value ${kleur.red(
+        String(value)
+      )} passed for ${kleur.blue(key)}`;
+
+      if (typeof valid === 'string') {
+        message += `: ${valid}`;
+      }
+
+      console.log(message);
+
+      process.exit(1);
+    }
+  }
+}
