@@ -45,7 +45,17 @@ export default async function build({ root, report }: Options) {
           `Errors found while generating codegen files:\n${e.stdout.toString()}`
         );
       } else if ('message' in e && typeof e.message === 'string') {
-        report.error(e.message);
+        if (
+          e.message.includes(
+            "Error: Cannot find module '@react-native-community/cli/package.json'"
+          )
+        ) {
+          report.error(
+            "You don't have `@react-native-community/cli` in your root package's dev dependencies. Please install it and make sure it uses the same version as your application."
+          );
+        } else {
+          report.error(e.message);
+        }
       } else {
         throw e;
       }
@@ -53,6 +63,6 @@ export default async function build({ root, report }: Options) {
       throw e;
     }
 
-    throw new Error('Failed generate the codegen files.');
+    process.exit(1);
   }
 }
