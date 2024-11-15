@@ -2,7 +2,6 @@ import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
 import type yargs from 'yargs';
 import type { PromptObject } from './utils/prompts';
-import type { ExampleType } from './exampleApp/generateExampleApp';
 import { spawn } from './utils/spawn';
 
 export type ArgName =
@@ -202,7 +201,7 @@ export type Answers = {
   repoUrl: string;
   languages: ProjectLanguages;
   type?: ProjectType;
-  example?: ExampleType;
+  example?: ExampleApp;
   reactNativeVersion?: string;
   local?: boolean;
 };

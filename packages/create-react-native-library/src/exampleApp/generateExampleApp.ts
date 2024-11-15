@@ -3,8 +3,7 @@ import path from 'path';
 import https from 'https';
 import { spawn } from '../utils/spawn';
 import sortObjectKeys from '../utils/sortObjectKeys';
-
-export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
+import type { ExampleApp } from '../input';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -50,7 +49,7 @@ export default async function generateExampleApp({
   bobVersion,
   reactNativeVersion = 'latest',
 }: {
-  type: ExampleType;
+  type: ExampleApp;
   dest: string;
   arch: 'new' | 'mixed' | 'legacy';
   project: {
