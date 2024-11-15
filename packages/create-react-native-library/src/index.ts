@@ -588,7 +588,7 @@ async function create(_argv: yargs.Arguments<any>) {
     repoUrl,
     type = 'module-mixed',
     languages = type === 'library' ? 'js' : 'kotlin-objc',
-    example = local ? 'none' : type === 'library' ? 'expo' : 'test-app',
+    example = local ? 'none' : type === 'library' ? 'expo' : 'vanilla',
     reactNativeVersion,
   } = answers;
 
