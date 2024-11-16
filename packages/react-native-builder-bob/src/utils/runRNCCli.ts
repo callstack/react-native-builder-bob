@@ -1,8 +1,8 @@
-import assert from 'node:assert';
-import type { SpawnOptions } from 'node:child_process';
+import { type SpawnOptions } from 'node:child_process';
+import { spawn } from './spawn';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { spawn } from './spawn';
+import assert from 'node:assert';
 
 // This is a special case for calling bob from the XCode scripts
 // XCode scripts don't have the node binary properly set
