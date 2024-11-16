@@ -17,9 +17,20 @@ import {
   acceptedArgs,
 } from './input';
 import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
-import { printNextSteps } from './nextSteps';
+import { printErrorHelp, printNextSteps } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
+
+yargs
+  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
+  .demandCommand()
+  .recommendCommands()
+  .fail(printErrorHelp)
+  .parserConfiguration({
+    // don't pass kebab-case args to handler.
+    'strip-dashed': true,
+  })
+  .strict().argv;
 
 // FIXME: fix the type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,66 +40,9 @@ async function create(_argv: yargs.Arguments<any>) {
 
   // Prefetch bob version in background while asking questions
   const resolveBobVersion = resolveBobVersionWithFallback(FALLBACK_BOB_VERSION);
-  let local = false;
 
-  if (typeof argv.local === 'boolean') {
-    local = argv.local;
-  } else {
-    const hasPackageJson = await fs.pathExists(
-      path.join(process.cwd(), 'package.json')
-    );
-
-    if (hasPackageJson) {
-      // If we're under a project with package.json, ask the user if they want to create a local library
-      const answers = await prompts({
-        type: 'confirm',
-        name: 'local',
-        message: `Looks like you're under a project folder. Do you want to create a local library?`,
-        initial: true,
-      });
-
-      local = answers.local;
-    }
-  }
-
-  let folder: string;
-
-  if (argv.name && !local) {
-    folder = path.join(process.cwd(), argv.name);
-  } else {
-    const answers = await prompts({
-      type: 'text',
-      name: 'folder',
-      message: `Where do you want to create the library?`,
-      initial:
-        local && argv.name && !argv.name.includes('/')
-          ? `modules/${argv.name}`
-          : argv.name,
-      validate: (input) => {
-        if (!input) {
-          return 'Cannot be empty';
-        }
-
-        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
-          return 'Folder already exists';
-        }
-
-        return true;
-      },
-    });
-
-    folder = path.join(process.cwd(), answers.folder);
-  }
-
-  if (await fs.pathExists(folder)) {
-    console.log(
-      `A folder already exists at ${kleur.blue(
-        folder
-      )}! Please specify another folder name or delete the existing one.`
-    );
-
-    process.exit(1);
-  }
+  const local = await promptLocalLibrary(argv);
+  const folder = await promptPath(argv, local);
 
   await assertNpx();
 
@@ -201,30 +155,71 @@ async function create(_argv: yargs.Arguments<any>) {
   await printNextSteps(local, folder, config);
 }
 
-yargs
-  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
-  .demandCommand()
-  .recommendCommands()
-  .fail((message, error) => {
-    console.log('\n');
+async function promptLocalLibrary(argv: Record<string, string>) {
+  let local = false;
 
-    if (error) {
-      console.log(kleur.red(error.message));
-      throw error;
-    }
+  if (typeof argv.local === 'boolean') {
+    local = argv.local;
+  } else {
+    const hasPackageJson = await fs.pathExists(
+      path.join(process.cwd(), 'package.json')
+    );
 
-    if (message) {
-      console.log(kleur.red(message));
-    } else {
-      console.log(
-        kleur.red(`An unknown error occurred. See '--help' for usage guide.`)
-      );
+    if (hasPackageJson) {
+      // If we're under a project with package.json, ask the user if they want to create a local library
+      const answers = await prompts({
+        type: 'confirm',
+        name: 'local',
+        message: `Looks like you're under a project folder. Do you want to create a local library?`,
+        initial: true,
+      });
+
+      local = answers.local;
     }
+  }
+
+  return local;
+}
+
+async function promptPath(argv: Record<string, string>, local: boolean) {
+  let folder: string;
+
+  if (argv.name && !local) {
+    folder = path.join(process.cwd(), argv.name);
+  } else {
+    const answers = await prompts({
+      type: 'text',
+      name: 'folder',
+      message: `Where do you want to create the library?`,
+      initial:
+        local && argv.name && !argv.name.includes('/')
+          ? `modules/${argv.name}`
+          : argv.name,
+      validate: (input) => {
+        if (!input) {
+          return 'Cannot be empty';
+        }
+
+        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
+          return 'Folder already exists';
+        }
+
+        return true;
+      },
+    });
+
+    folder = path.join(process.cwd(), answers.folder);
+  }
+
+  if (await fs.pathExists(folder)) {
+    console.log(
+      `A folder already exists at ${kleur.blue(
+        folder
+      )}! Please specify another folder name or delete the existing one.`
+    );
 
     process.exit(1);
-  })
-  .parserConfiguration({
-    // don't pass kebab-case args to handler.
-    'strip-dashed': true,
-  })
-  .strict().argv;
+  }
+
+  return folder;
+}

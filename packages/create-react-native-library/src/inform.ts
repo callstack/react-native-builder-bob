@@ -103,3 +103,22 @@ export async function printNextSteps(
     );
   }
 }
+
+export function printErrorHelp(message: string, error: Error) {
+  console.log('\n');
+
+  if (error) {
+    console.log(kleur.red(error.message));
+    throw error;
+  }
+
+  if (message) {
+    console.log(kleur.red(message));
+  } else {
+    console.log(
+      kleur.red(`An unknown error occurred. See '--help' for usage guide.`)
+    );
+  }
+
+  process.exit(1);
+}
