@@ -9,8 +9,7 @@ import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertAnswers, assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
-import { generateTemplateConfiguration } from './config';
-import { applyTemplates } from './template';
+import { applyTemplates, generateTemplateConfiguration } from './template';
 import {
   createQuestions,
   createMetadata,

@@ -1,73 +1,161 @@
 import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
-import type { TemplateConfiguration } from './config';
-import type { Answers } from './input';
+import type { Answers, ExampleApp, SupportedArchitecture } from './input';
+
+// Please think at least 5 times before introducing a new config key
+// You can just reuse the existing ones most of the time
+export type TemplateConfiguration = {
+  bob: {
+    version: string;
+  };
+  project: {
+    slug: string;
+    description: string;
+    name: string;
+    package: string;
+    package_dir: string;
+    package_cpp: string;
+    identifier: string;
+    native: boolean;
+    arch: SupportedArchitecture;
+    cpp: boolean;
+    swift: boolean;
+    view: boolean;
+    module: boolean;
+  };
+  author: {
+    name: string;
+    email: string;
+    url: string;
+  };
+  repo: string;
+  example: ExampleApp;
+  year: number;
+};
 
 const BINARIES = [
   /(gradlew|\.(jar|keystore|png|jpg|gif))$/,
   /\$\.yarn(?![a-z])/,
 ];
 
-const COMMON_FILES = path.resolve(__dirname, '../../templates/common');
+const COMMON_FILES = path.resolve(__dirname, '../templates/common');
 const COMMON_EXAMPLE_FILES = path.resolve(
   __dirname,
-  '../../templates/common-example'
+  '../templates/common-example'
 );
-const COMMON_LOCAL_FILES = path.resolve(
-  __dirname,
-  '../../templates/common-local'
-);
-const JS_FILES = path.resolve(__dirname, '../../templates/js-library');
-const EXPO_FILES = path.resolve(__dirname, '../../templates/expo-library');
-const CPP_FILES = path.resolve(__dirname, '../../templates/cpp-library');
+const COMMON_LOCAL_FILES = path.resolve(__dirname, '../templates/common-local');
+const JS_FILES = path.resolve(__dirname, '../templates/js-library');
+const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
+const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
-  '../../templates/native-common'
+  '../templates/native-common'
 );
 const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
   __dirname,
-  '../../templates/native-common-example'
+  '../templates/native-common-example'
 );
 
 const NATIVE_FILES = {
-  module_legacy: path.resolve(
-    __dirname,
-    '../../templates/native-library-legacy'
-  ),
-  module_new: path.resolve(__dirname, '../../templates/native-library-new'),
-  module_mixed: path.resolve(__dirname, '../../templates/native-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../../templates/native-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../../templates/native-view-mixed'),
-  view_new: path.resolve(__dirname, '../../templates/native-view-new'),
+  module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
+  module_new: path.resolve(__dirname, '../templates/native-library-new'),
+  module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
+  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/native-view-new'),
 } as const;
 
 const OBJC_FILES = {
-  module_common: path.resolve(__dirname, '../../templates/objc-library'),
-  view_legacy: path.resolve(__dirname, '../../templates/objc-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../../templates/objc-view-mixed'),
-  view_new: path.resolve(__dirname, '../../templates/objc-view-new'),
+  module_common: path.resolve(__dirname, '../templates/objc-library'),
+  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
 } as const;
 
 const KOTLIN_FILES = {
-  module_legacy: path.resolve(
-    __dirname,
-    '../../templates/kotlin-library-legacy'
-  ),
-  module_new: path.resolve(__dirname, '../../templates/kotlin-library-new'),
-  module_mixed: path.resolve(__dirname, '../../templates/kotlin-library-mixed'),
-  view_legacy: path.resolve(__dirname, '../../templates/kotlin-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../../templates/kotlin-view-mixed'),
-  view_new: path.resolve(__dirname, '../../templates/kotlin-view-new'),
+  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
+  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
+  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
+  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
+  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
+  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
 } as const;
 
 const SWIFT_FILES = {
-  module_legacy: path.resolve(
-    __dirname,
-    '../../templates/swift-library-legacy'
-  ),
-  view_legacy: path.resolve(__dirname, '../../templates/swift-view-legacy'),
+  module_legacy: path.resolve(__dirname, '../templates/swift-library-legacy'),
+  view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
 } as const;
+
+export function generateTemplateConfiguration({
+  bobVersion,
+  basename,
+  answers,
+}: {
+  bobVersion: string;
+  basename: string;
+  answers: Required<Answers>;
+}): TemplateConfiguration {
+  const { slug, languages, type } = answers;
+
+  const arch =
+    type === 'module-new' || type === 'view-new'
+      ? 'new'
+      : type === 'module-mixed' || type === 'view-mixed'
+      ? 'mixed'
+      : 'legacy';
+
+  const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+  let namespace: string | undefined;
+
+  if (slug.startsWith('@') && slug.includes('/')) {
+    namespace = slug
+      .split('/')[0]
+      ?.replace(/[^a-z0-9]/g, '')
+      .toLowerCase();
+  }
+
+  // Create a package identifier with specified namespace when possible
+  const pack = `${namespace ? `${namespace}.` : ''}${project
+    .replace(/[^a-z0-9]/g, '')
+    .toLowerCase()}`;
+
+  return {
+    bob: {
+      version: bobVersion,
+    },
+    project: {
+      slug,
+      description: answers.description,
+      name:
+        /^[A-Z]/.test(basename) && /^[a-z0-9]+$/i.test(basename)
+          ? // If the project name is already in PascalCase, use it as-is
+            basename
+          : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
+            `${project.charAt(0).toUpperCase()}${project
+              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
+              .slice(1)}`,
+      package: pack,
+      package_dir: pack.replace(/\./g, '/'),
+      package_cpp: pack.replace(/\./g, '_'),
+      identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
+      native: languages !== 'js',
+      arch,
+      cpp: languages === 'cpp',
+      swift: languages === 'kotlin-swift',
+      view: answers.type.startsWith('view'),
+      module: answers.type.startsWith('module'),
+    },
+    author: {
+      name: answers.authorName,
+      email: answers.authorEmail,
+      url: answers.authorUrl,
+    },
+    repo: answers.repoUrl,
+    example: answers.example,
+    year: new Date().getFullYear(),
+  };
+}
 
 export async function applyTemplates(
   answers: Answers,

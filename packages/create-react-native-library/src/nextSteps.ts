@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import dedent from 'dedent';
-import type { TemplateConfiguration } from './config';
+import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
 
 export async function printNextSteps(
