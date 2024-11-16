@@ -1,13 +1,10 @@
 import path from 'path';
 import fs from 'fs-extra';
-import dedent from 'dedent';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import ora from 'ora';
-import assert from 'node:assert';
 import prompts from './utils/prompts';
 import generateExampleApp from './exampleApp/generateExampleApp';
-import { version } from '../package.json';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertAnswers, assertNpx } from './utils/assert';
@@ -15,6 +12,9 @@ import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { generateTemplateConfiguration } from './config';
 import { applyTemplates } from './template';
 import { createQuestions, type Answers, acceptedArgs } from './input';
+import { createMetadata } from './metadata';
+import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
+import { printNextSteps } from './nextSteps';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
 
@@ -160,68 +160,25 @@ async function create(_argv: yargs.Arguments<any>) {
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
   if (config.example !== 'none') {
-    // Set `react` and `react-native` versions of root `package.json` from example `package.json`
-    const examplePackageJson = await fs.readJSON(
-      path.join(folder, 'example', 'package.json')
+    const { devDependencies } = await getDependencyVersionsFromExample(
+      folder,
+      config.example
     );
 
-    if (
-      examplePackageJson.dependencies?.react &&
-      examplePackageJson.dependencies?.['react-native']
-    ) {
-      rootPackageJson.devDependencies = rootPackageJson.devDependencies || {};
-      rootPackageJson.devDependencies.react =
-        examplePackageJson.dependencies.react;
-      rootPackageJson.devDependencies['react-native'] =
-        examplePackageJson.dependencies['react-native'];
-    }
-
-    if (config.example === 'vanilla') {
-      // React Native doesn't provide the community CLI as a dependency.
-      // We have to get read the version from the example app and put to the root package json
-      const exampleCommunityCLIVersion =
-        examplePackageJson.devDependencies['@react-native-community/cli'];
-      assert(
-        exampleCommunityCLIVersion !== undefined,
-        "The generated example app doesn't have community CLI installed"
-      );
-
-      rootPackageJson.devDependencies = rootPackageJson.devDependencies || {};
-      rootPackageJson.devDependencies['@react-native-community/cli'] =
-        exampleCommunityCLIVersion;
-
-      if (config.project.arch !== 'legacy') {
-        addCodegenBuildScript(folder);
-      }
-    }
+    rootPackageJson.devDependencies = rootPackageJson.devDependencies
+      ? {
+          ...rootPackageJson.devDependencies,
+          ...devDependencies,
+        }
+      : devDependencies;
   }
 
-  // Some of the passed args can already be derived from the generated package.json file.
-  const ignoredAnswers: (keyof Answers)[] = [
-    'name',
-    'slug',
-    'description',
-    'authorName',
-    'authorEmail',
-    'authorUrl',
-    'repoUrl',
-    'example',
-    'reactNativeVersion',
-    'local',
-  ];
+  if (config.example === 'vanilla' && config.project.arch !== 'legacy') {
+    addCodegenBuildScript(folder);
+  }
 
-  type AnswerEntries<T extends keyof Answers = keyof Answers> = [
-    T,
-    Answers[T],
-  ][];
+  const libraryMetadata = createMetadata(answers);
 
-  const libraryMetadata = Object.fromEntries(
-    (Object.entries(answers) as AnswerEntries).filter(
-      ([answer]) => !ignoredAnswers.includes(answer)
-    )
-  );
-
-  libraryMetadata.version = version;
   rootPackageJson['create-react-native-library'] = libraryMetadata;
 
   await fs.writeJson(path.join(folder, 'package.json'), rootPackageJson, {
@@ -238,99 +195,7 @@ async function create(_argv: yargs.Arguments<any>) {
     )}!\n`
   );
 
-  if (local) {
-    let linked;
-
-    const packageManager = (await fs.pathExists(
-      path.join(process.cwd(), 'yarn.lock')
-    ))
-      ? 'yarn'
-      : 'npm';
-
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
-
-    if (await fs.pathExists(packageJsonPath)) {
-      const packageJson = await fs.readJSON(packageJsonPath);
-      const isReactNativeProject = Boolean(
-        packageJson.dependencies?.['react-native']
-      );
-
-      if (isReactNativeProject) {
-        packageJson.dependencies = packageJson.dependencies || {};
-        packageJson.dependencies[config.project.slug] =
-          packageManager === 'yarn'
-            ? `link:./${path.relative(process.cwd(), folder)}`
-            : `file:./${path.relative(process.cwd(), folder)}`;
-
-        await fs.writeJSON(packageJsonPath, packageJson, {
-          spaces: 2,
-        });
-
-        linked = true;
-      }
-    }
-
-    console.log(
-      dedent(`
-      ${kleur.magenta(
-        `${kleur.bold('Get started')} with the project`
-      )}${kleur.gray(':')}
-
-      ${
-        (linked
-          ? `- Run ${kleur.blue(
-              `${packageManager} install`
-            )} to link the library\n`
-          : `- Link the library at ${kleur.blue(
-              path.relative(process.cwd(), folder)
-            )} based on your project setup'\n`) +
-        `- Run ${kleur.blue(
-          'pod install --project-directory=ios'
-        )} to install dependencies with CocoaPods\n` +
-        `- Run ${kleur.blue('npx react-native run-android')} or ${kleur.blue(
-          'npx react-native run-ios'
-        )} to build and run the app\n` +
-        `- Import from ${kleur.blue(
-          config.project.slug
-        )} and use it in your app.`
-      }
-
-      ${kleur.yellow(`Good luck!`)}
-    `)
-    );
-  } else {
-    const platforms = {
-      ios: { name: 'iOS', color: 'cyan' },
-      android: { name: 'Android', color: 'green' },
-      ...(config.example === 'expo'
-        ? ({ web: { name: 'Web', color: 'blue' } } as const)
-        : null),
-    } as const;
-
-    console.log(
-      dedent(`
-      ${kleur.magenta(
-        `${kleur.bold('Get started')} with the project`
-      )}${kleur.gray(':')}
-
-        ${kleur.gray('$')} yarn
-      ${Object.entries(platforms)
-        .map(
-          ([script, { name, color }]) => `
-      ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
-        ':'
-      )}
-
-        ${kleur.gray('$')} yarn example ${script}`
-        )
-        .join('\n')}
-
-      ${kleur.yellow(
-        `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
-      )}
-    `)
-    );
-  }
+  await printNextSteps(local, folder, config);
 }
 
 yargs
