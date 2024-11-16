@@ -122,3 +122,24 @@ export function printErrorHelp(message: string, error: Error) {
 
   process.exit(1);
 }
+
+export function printUsedRNVersion(
+  version: string,
+  config: TemplateConfiguration
+) {
+  if (config.example === 'vanilla') {
+    console.log(
+      `${kleur.blue('ℹ')} Using ${kleur.cyan(
+        `react-native@${version}`
+      )} for the example`
+    );
+  } else {
+    console.warn(
+      `${kleur.yellow(
+        '⚠'
+      )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
+        config.example
+      )}`
+    );
+  }
+}

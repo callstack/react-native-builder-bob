@@ -18,7 +18,7 @@ import {
   type Args,
 } from './input';
 import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
-import { printErrorHelp, printNextSteps } from './inform';
+import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
 
@@ -82,22 +82,8 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   await fs.mkdirp(folder);
 
-  if (answers.reactNativeVersion != null) {
-    if (config.example === 'vanilla') {
-      console.log(
-        `${kleur.blue('ℹ')} Using ${kleur.cyan(
-          `react-native@${answers.reactNativeVersion}`
-        )} for the example`
-      );
-    } else {
-      console.warn(
-        `${kleur.yellow(
-          '⚠'
-        )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
-          config.example
-        )}`
-      );
-    }
+  if (answers.reactNativeVersion !== null) {
+    printUsedRNVersion(answers.reactNativeVersion, config);
   }
 
   const spinner = ora().start();
