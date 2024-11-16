@@ -11,8 +11,12 @@ import { assertAnswers, assertNpx } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { generateTemplateConfiguration } from './config';
 import { applyTemplates } from './template';
-import { createQuestions, type Answers, acceptedArgs } from './input';
-import { createMetadata } from './metadata';
+import {
+  createQuestions,
+  createMetadata,
+  type Answers,
+  acceptedArgs,
+} from './input';
 import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
 import { printNextSteps } from './nextSteps';
 
