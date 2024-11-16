@@ -27,7 +27,7 @@ export async function runRNCCli(
     rncCliBinaryName
   );
 
-  return await spawn(RNC_CLI_BINARY_PATH, [...args], options);
+  return await spawn(RNC_CLI_BINARY_PATH, args, options);
 }
 
 async function getCliBinaryName(): Promise<string> {
