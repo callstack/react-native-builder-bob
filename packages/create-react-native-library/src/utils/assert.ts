@@ -1,6 +1,6 @@
 import kleur from 'kleur';
 import { spawn } from './spawn';
-import type { Answers, Question } from '../input';
+import type { Answers, Args, Question } from '../input';
 
 export async function assertNpx() {
   try {
@@ -24,7 +24,7 @@ export async function assertNpx() {
 /**
  * Makes sure the answers are in expected form and ends the process with error if they are not
  */
-export function assertAnswers(questions: Question[], answers: Answers) {
+export function assertAnswers(questions: Question[], answers: Answers | Args) {
   for (const [key, value] of Object.entries(answers)) {
     if (value == null) {
       continue;

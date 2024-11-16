@@ -15,6 +15,7 @@ import {
   createMetadata,
   type Answers,
   acceptedArgs,
+  type Args,
 } from './input';
 import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps } from './inform';
@@ -22,7 +23,13 @@ import { printErrorHelp, printNextSteps } from './inform';
 const FALLBACK_BOB_VERSION = '0.32.0';
 
 yargs
-  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
+  .command(
+    '$0 [name]',
+    'create a react native library',
+    acceptedArgs,
+    // @ts-expect-error Some types are still incompatible
+    create
+  )
   .demandCommand()
   .recommendCommands()
   .fail(printErrorHelp)
@@ -32,10 +39,7 @@ yargs
   })
   .strict().argv;
 
-// FIXME: fix the type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function create(_argv: yargs.Arguments<any>) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function create(_argv: yargs.Arguments<Args>) {
   const { _, $0, ...argv } = _argv;
 
   // Prefetch bob version in background while asking questions
@@ -155,7 +159,7 @@ async function create(_argv: yargs.Arguments<any>) {
   await printNextSteps(local, folder, config);
 }
 
-async function promptLocalLibrary(argv: Record<string, string>) {
+async function promptLocalLibrary(argv: Args) {
   let local = false;
 
   if (typeof argv.local === 'boolean') {
@@ -181,7 +185,7 @@ async function promptLocalLibrary(argv: Record<string, string>) {
   return local;
 }
 
-async function promptPath(argv: Record<string, string>, local: boolean) {
+async function promptPath(argv: Args, local: boolean) {
   let folder: string;
 
   if (argv.name && !local) {

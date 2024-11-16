@@ -8,15 +8,15 @@ import { spawn } from './utils/spawn';
 export type ArgName =
   | 'slug'
   | 'description'
-  | 'author-name'
-  | 'author-email'
-  | 'author-url'
-  | 'repo-url'
+  | 'authorName'
+  | 'authorEmail'
+  | 'authorUrl'
+  | 'repoUrl'
   | 'languages'
   | 'type'
   | 'local'
   | 'example'
-  | 'react-native-version';
+  | 'reactNativeVersion';
 
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
@@ -142,53 +142,54 @@ export type Question = Omit<
 };
 
 export const acceptedArgs: Record<ArgName, yargs.Options> = {
-  'slug': {
+  slug: {
     description: 'Name of the npm package',
     type: 'string',
   },
-  'description': {
+  description: {
     description: 'Description of the npm package',
     type: 'string',
   },
-  'author-name': {
+  authorName: {
     description: 'Name of the package author',
     type: 'string',
   },
-  'author-email': {
+  authorEmail: {
     description: 'Email address of the package author',
     type: 'string',
   },
-  'author-url': {
+  authorUrl: {
     description: 'URL for the package author',
     type: 'string',
   },
-  'repo-url': {
+  repoUrl: {
     description: 'URL for the repository',
     type: 'string',
   },
-  'languages': {
+  languages: {
     description: 'Languages you want to use',
     choices: LANGUAGE_CHOICES.map(({ value }) => value),
   },
-  'type': {
+  type: {
     description: 'Type of library you want to develop',
     choices: TYPE_CHOICES.map(({ value }) => value),
   },
-  'react-native-version': {
+  reactNativeVersion: {
     description: 'Version of React Native to use, uses latest if not specified',
     type: 'string',
   },
-  'local': {
+  local: {
     description: 'Whether to create a local library',
     type: 'boolean',
   },
-  'example': {
+  example: {
     description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
-};
+} as const;
 
+export type Args = Record<ArgName | 'name', string>;
 export type SupportedArchitecture = 'new' | 'mixed' | 'legacy';
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
@@ -214,7 +215,7 @@ export async function createQuestions({
 }: {
   basename: string;
   local: boolean;
-  argv: Record<string, string>;
+  argv: Args;
 }) {
   let name, email;
 
