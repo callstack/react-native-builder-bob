@@ -2,7 +2,7 @@ import kleur from 'kleur';
 import { spawn } from './spawn';
 import type { Answers, Args, Question } from '../input';
 
-export async function assertNpx() {
+export async function assertNpxExists() {
   try {
     await spawn('npx', ['--help']);
   } catch (error) {
@@ -24,7 +24,10 @@ export async function assertNpx() {
 /**
  * Makes sure the answers are in expected form and ends the process with error if they are not
  */
-export function assertAnswers(questions: Question[], answers: Answers | Args) {
+export function assertUserInput(
+  questions: Question[],
+  answers: Answers | Args
+) {
   for (const [key, value] of Object.entries(answers)) {
     if (value == null) {
       continue;

@@ -7,7 +7,7 @@ import prompts from './utils/prompts';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
-import { assertAnswers, assertNpx } from './utils/assert';
+import { assertUserInput, assertNpxExists } from './utils/assert';
 import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import {
@@ -40,6 +40,7 @@ yargs
   .strict().argv;
 
 async function create(_argv: yargs.Arguments<Args>) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _, $0, ...argv } = _argv;
 
   // Prefetch bob version in background while asking questions
@@ -48,7 +49,7 @@ async function create(_argv: yargs.Arguments<Args>) {
   const local = await promptLocalLibrary(argv);
   const folder = await promptPath(argv, local);
 
-  await assertNpx();
+  await assertNpxExists();
 
   const basename = path.basename(folder);
 
@@ -58,7 +59,7 @@ async function create(_argv: yargs.Arguments<Args>) {
     argv,
   });
 
-  assertAnswers(questions, argv);
+  assertUserInput(questions, argv);
 
   const promptAnswers = await prompts(questions);
 
@@ -69,7 +70,7 @@ async function create(_argv: yargs.Arguments<Args>) {
     ...promptAnswers,
   } as Required<Answers>;
 
-  assertAnswers(questions, answers);
+  assertUserInput(questions, answers);
 
   const bobVersion = await resolveBobVersion();
 
