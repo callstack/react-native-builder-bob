@@ -4,10 +4,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import assert from 'node:assert';
 
-// This is a special case for calling bob from the XCode scripts
-// XCode scripts don't have the node binary properly set
-// We expose an env value for node instead.
-const NODE_BINARY = process.env['NODE_BINARY'] || 'node';
+const NODE_BINARY = 'node';
 
 /**
  * Runs the React Native Community CLI with the specified arguments
@@ -27,7 +24,7 @@ export async function runRNCCli(
     rncCliBinaryName
   );
 
-  return await spawn(NODE_BINARY, [RNC_CLI_BINARY_PATH, ...args], options);
+  return await spawn(RNC_CLI_BINARY_PATH, args, options);
 }
 
 async function getCliBinaryName(): Promise<string> {
