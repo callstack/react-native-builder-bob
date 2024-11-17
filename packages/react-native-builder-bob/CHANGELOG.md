@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.32.0...react-native-builder-bob@0.32.1) (2024-11-17)
+
+### Bug Fixes
+
+* spawn CLI directly without using Node ([#689](https://github.com/callstack/react-native-builder-bob/issues/689)) ([a299f14](https://github.com/callstack/react-native-builder-bob/commit/a299f145a70f58a74b07c3643365aa7c11fdd356)) - by @gronxb
+
 # [0.32.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.31.0...react-native-builder-bob@0.32.0) (2024-11-15)
 
 ### Features
