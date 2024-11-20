@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.1...create-react-native-library@0.44.2) (2024-11-20)
+
+### Bug Fixes
+
+* add react-native.config.js to the published file list ([#659](https://github.com/callstack/react-native-builder-bob/issues/659)) ([625236b](https://github.com/callstack/react-native-builder-bob/commit/625236bd5c096ace55c7ac63849ed807896a083b)) - by @johnf
+
 ## [0.44.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.0...create-react-native-library@0.44.1) (2024-11-15)
 
 ### Bug Fixes
