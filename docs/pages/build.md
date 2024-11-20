@@ -8,6 +8,7 @@ Supported targets are:
 - ES modules build for bundlers such as [webpack](https://webpack.js.org)
 - [TypeScript](https://www.typescriptlang.org/) definitions
 - Flow definitions (copies .js files to .flow files)
+- [Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) generated scaffold code
 
 If you created a project with [`create-react-native-library`](./create.md), `react-native-builder-bob` is **already pre-configured to build your project**. You don't need to configure it again.
 
@@ -22,6 +23,8 @@ npx react-native-builder-bob@latest init
 ```
 
 This will ask you a few questions and add the required configuration and scripts for building the code. The code will be compiled automatically when the package is published.
+
+> Note: the `init` command doesn't add the `codegen` target yet. You can either add it manually or create a new library with `create-react-native-library`.
 
 You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
 
@@ -42,6 +45,7 @@ yarn add --dev react-native-builder-bob
      "source": "src",
      "output": "lib",
      "targets": [
+       "codegen",
        ["commonjs", { "esm": true }],
        ["module", { "esm": true }],
        ["typescript", { "esm": true }]
@@ -125,6 +129,27 @@ yarn add --dev react-native-builder-bob
 
    This makes sure that Jest doesn't try to run the tests in the generated files.
 
+1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
+
+   If your library is supporting the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that are only supporting the old architecture.
+
+   You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
+
+   It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
+
+   > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
+
+   ##### Opting out of Codegen shipping __(not recommended)__
+
+   If you have a reason to not ship Codegen generated scaffold code with your library, you need to remove the [codegen target](#codegen) and add `package.json` to your `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
+
+   ```json
+   "exports": {
+     // ...
+     "./package.json": "./package.json"
+   },
+   ```
+
 And we're done 🎉
 
 ## Options
@@ -156,6 +181,12 @@ Example:
 ### `targets`
 
 Various targets to build for. The available targets are:
+
+#### `codegen`
+
+Generates the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code, which is used with the New React Native Architecture.
+
+You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
 
 #### `commonjs`
 
