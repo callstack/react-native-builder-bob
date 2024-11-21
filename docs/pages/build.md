@@ -238,6 +238,10 @@ Example:
 ["module", { "esm": true, "sourceMaps": false }]
 ```
 
+##### `jsxRuntime`
+
+Explicitly set your [runtime](https://babeljs.io/docs/babel-preset-react#runtime). Defaults to `automatic`.
+
 #### `typescript`
 
 Enable generating type definitions with `tsc` if your source code is written in [TypeScript](http://www.typescriptlang.org/).

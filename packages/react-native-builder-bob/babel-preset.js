@@ -6,6 +6,7 @@ const browserslist = require('browserslist');
  * Babel preset for React Native Builder Bob
  * @param {'commonjs' | 'preserve'} options.modules - Whether to compile modules to CommonJS or preserve them
  * @param {Boolean} options.esm - Whether to output ES module compatible code, e.g. by adding extension to import/export statements
+ * @param {'automatic' | 'classic'} options.jsxRuntime - Which JSX runtime to use, defaults to 'automatic'
  */
 module.exports = function (api, options, cwd) {
   const cjs = options.modules === 'commonjs';
@@ -37,7 +38,8 @@ module.exports = function (api, options, cwd) {
       [
         require.resolve('@babel/preset-react'),
         {
-          runtime: 'automatic',
+          runtime:
+            options.jsxRuntime !== undefined ? options.jsxRuntime : 'automatic',
         },
       ],
       require.resolve('@babel/preset-typescript'),

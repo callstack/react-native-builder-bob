@@ -13,6 +13,7 @@ type Options = Input & {
   copyFlow?: boolean;
   modules: 'commonjs' | 'preserve';
   exclude: string;
+  jsxRuntime?: 'automatic' | 'classic';
 };
 
 const sourceExt = /\.([cm])?[jt]sx?$/;
@@ -29,6 +30,7 @@ export default async function compile({
   copyFlow,
   sourceMaps = true,
   report,
+  jsxRuntime = 'automatic',
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
@@ -113,6 +115,7 @@ export default async function compile({
                       // If a file is explicitly marked as ESM, then preserve the syntax
                       /\.m[jt]s$/.test(filepath) ? 'preserve' : modules,
                     esm,
+                    jsxRuntime,
                   },
                 ],
               ],
