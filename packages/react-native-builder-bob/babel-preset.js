@@ -37,7 +37,7 @@ module.exports = function (api, options, cwd) {
       [
         require.resolve('@babel/preset-react'),
         {
-          runtime: 'automatic',
+          runtime: options.jsxRuntime || 'automatic',
         },
       ],
       require.resolve('@babel/preset-typescript'),
