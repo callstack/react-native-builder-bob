@@ -3,11 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.3.0...docs@0.4.0) (2024-11-21)
+
+### Features
+
+- allow to specify JSX Runtime for @babel/preset-react` ([#695](https://github.com/callstack/react-native-builder-bob/issues/695)) ([f296a24](https://github.com/callstack/react-native-builder-bob/commit/f296a249edc47bf06c6fc99eb303ab40e28c85be)), closes [#678](https://github.com/callstack/react-native-builder-bob/issues/678) - by @tjzel
+
 # [0.3.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.2.1...docs@0.3.0) (2024-11-08)
 
 ### Features
 
-* disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
+- disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
 
 ## [0.2.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.2.0...docs@0.2.1) (2024-08-12)
 
