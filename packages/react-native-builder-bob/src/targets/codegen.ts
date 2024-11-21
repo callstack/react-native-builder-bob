@@ -32,11 +32,13 @@ export default async function build({ root, report }: Options) {
     await del([codegenAndroidPath]);
   }
 
-  const codegenType = packageJson.codegenConfig?.type
+  const codegenType = packageJson.codegenConfig?.type;
 
   if (codegenType === undefined) {
-    report.error("Couldn't find the 'type' value in 'codegenConfig'. Please check your package.json's 'codegenConfig' property and make sure 'type' is defined. https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen")
-    process.exit(1)
+    report.error(
+      "Couldn't find the 'type' value in 'codegenConfig'. Please check your package.json's 'codegenConfig' property and make sure 'type' is defined. https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen"
+    );
+    process.exit(1);
   }
 
   try {

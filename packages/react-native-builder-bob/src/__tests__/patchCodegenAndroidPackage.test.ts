@@ -61,7 +61,11 @@ describe('patchCodegenAndroidPackage', () => {
   });
 
   it('moves the files to correct dir', async () => {
-    await patchCodegenAndroidPackage(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -72,7 +76,11 @@ describe('patchCodegenAndroidPackage', () => {
   });
 
   it('replaces the package name in the files', async () => {
-    await patchCodegenAndroidPackage(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -87,7 +95,11 @@ describe('patchCodegenAndroidPackage', () => {
   });
 
   it('removes the old package dir', async () => {
-    await patchCodegenAndroidPackage(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     expect(await fs.pathExists(mockCodegenSpecsPath)).toBe(false);
   });
