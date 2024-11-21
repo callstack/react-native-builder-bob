@@ -139,7 +139,7 @@ yarn add --dev react-native-builder-bob
 
    > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
 
-   ##### Opting out of Codegen shipping **(not recommended)**
+   ##### Opting out of Codegen shipping __(not recommended)__
 
    If you have a reason to not ship Codegen generated scaffold code with your library, you need to remove the [codegen target](#codegen) and add `package.json` to your `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
 
