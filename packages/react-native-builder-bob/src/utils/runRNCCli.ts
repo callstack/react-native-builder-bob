@@ -7,7 +7,7 @@ import { spawn } from './spawn';
 export async function runRNCCli(
   args: string[],
   options: SpawnOptions = {
-    stdio: 'ignore',
+    stdio: ['ignore', 'ignore', 'pipe'],
   }
 ) {
   return await spawn('npx', ['@react-native-community/cli', ...args], options);
