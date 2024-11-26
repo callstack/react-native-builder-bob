@@ -97,6 +97,16 @@ export default async function compile({
 
       const content = await fs.readFile(filepath, 'utf-8');
       const result = await babel.transformAsync(content, {
+        caller: {
+          name: 'react-native-builder-bob',
+          supportsStaticESM:
+            /\.m[jt]s$/.test(filepath) || // If a file is explicitly marked as ESM, then preserve the syntax
+            modules === 'preserve'
+              ? true
+              : false,
+          rewriteImportExtensions: esm,
+          jsxRuntime,
+        },
         cwd: root,
         babelrc: babelrc,
         configFile: configFile,
@@ -107,18 +117,7 @@ export default async function compile({
         ...(babelrc || configFile
           ? null
           : {
-              presets: [
-                [
-                  require.resolve('../../babel-preset'),
-                  {
-                    modules:
-                      // If a file is explicitly marked as ESM, then preserve the syntax
-                      /\.m[jt]s$/.test(filepath) ? 'preserve' : modules,
-                    esm,
-                    jsxRuntime,
-                  },
-                ],
-              ],
+              presets: [require.resolve('../../babel-preset')],
             }),
       });
 
