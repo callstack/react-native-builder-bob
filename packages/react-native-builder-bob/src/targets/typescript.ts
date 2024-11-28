@@ -156,8 +156,15 @@ export default async function build({
       );
     }
 
+    const outputs = options?.esm
+      ? {
+          commonjs: path.join(output, 'commonjs'),
+          module: path.join(output, 'module'),
+        }
+      : { commonjs: output };
+
     const tsbuildinfo = path.join(
-      output,
+      outputs.commonjs,
       project.replace(/\.json$/, '.tsbuildinfo')
     );
 
@@ -166,13 +173,6 @@ export default async function build({
     } catch (e) {
       // Ignore
     }
-
-    const outputs = options?.esm
-      ? {
-          commonjs: path.join(output, 'commonjs'),
-          module: path.join(output, 'module'),
-        }
-      : { commonjs: output };
 
     const result = spawn.sync(
       tsc,

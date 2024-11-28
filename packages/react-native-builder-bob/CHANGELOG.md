@@ -3,11 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.33.1...react-native-builder-bob@0.33.2) (2024-11-27)
+
+### Bug Fixes
+
+- fix deleting .tsbuildinfo file ([#706](https://github.com/callstack/react-native-builder-bob/issues/706)) ([283440e](https://github.com/callstack/react-native-builder-bob/commit/283440e1e749635f1ab0a2835aad833510a1be95)) - by @satya164
+
 ## [0.33.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.33.0...react-native-builder-bob@0.33.1) (2024-11-21)
 
 ### Bug Fixes
 
-* use npx to call rnccli ([#693](https://github.com/callstack/react-native-builder-bob/issues/693)) ([1dbed97](https://github.com/callstack/react-native-builder-bob/commit/1dbed97036fcc50cdbdc142e1f105a2ac1eb3c3c)), closes [#691](https://github.com/callstack/react-native-builder-bob/issues/691) [#685](https://github.com/callstack/react-native-builder-bob/issues/685) - by @atlj
+- use npx to call rnccli ([#693](https://github.com/callstack/react-native-builder-bob/issues/693)) ([1dbed97](https://github.com/callstack/react-native-builder-bob/commit/1dbed97036fcc50cdbdc142e1f105a2ac1eb3c3c)), closes [#691](https://github.com/callstack/react-native-builder-bob/issues/691) [#685](https://github.com/callstack/react-native-builder-bob/issues/685) - by @atlj
 
 # [0.33.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.32.1...react-native-builder-bob@0.33.0) (2024-11-21)
 
