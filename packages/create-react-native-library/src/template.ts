@@ -73,6 +73,7 @@ const NATIVE_FILES = {
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
+  module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
 } as const;
 
 const OBJC_FILES = {
@@ -196,6 +197,11 @@ export async function applyTemplates(
 
     if (config.example !== 'none') {
       await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
+    }
+
+    if (config.project.nitro) {
+      await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
+      return;
     }
 
     if (config.project.module) {
