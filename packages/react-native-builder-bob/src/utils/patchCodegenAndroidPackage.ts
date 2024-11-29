@@ -13,7 +13,7 @@ const CODEGEN_DOCS =
  * @throws if codegenConfig.outputDir.android or codegenConfig.android.javaPackageName is not defined in package.json
  * @throws if the codegenAndroidPath does not exist
  */
-export async function patchCodegen(
+export async function patchCodegenAndroidPackage(
   projectPath: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   packageJson: any,

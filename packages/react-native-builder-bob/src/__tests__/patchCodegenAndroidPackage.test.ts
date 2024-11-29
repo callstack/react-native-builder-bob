@@ -1,7 +1,7 @@
 import { expect, it, describe, beforeEach, afterEach } from '@jest/globals';
 import fs from 'fs-extra';
 import path from 'node:path';
-import { patchCodegen } from '../utils/patchCodegen';
+import { patchCodegenAndroidPackage } from '../utils/patchCodegenAndroidPackage';
 import mockfs from 'mock-fs';
 import type { Report } from '../types';
 
@@ -44,7 +44,7 @@ const mockCodegenSpecsPath = path.resolve(
   'android/generated/java/com/facebook/fbreact/specs'
 );
 
-describe('patchCodegen', () => {
+describe('patchCodegenAndroidPackage', () => {
   beforeEach(() => {
     mockfs({
       [mockProjectPath]: {
@@ -61,7 +61,11 @@ describe('patchCodegen', () => {
   });
 
   it('moves the files to correct dir', async () => {
-    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -72,7 +76,11 @@ describe('patchCodegen', () => {
   });
 
   it('replaces the package name in the files', async () => {
-    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     const expectedDir = path.resolve(
       mockProjectPath,
@@ -87,7 +95,11 @@ describe('patchCodegen', () => {
   });
 
   it('removes the old package dir', async () => {
-    await patchCodegen(mockProjectPath, mockPackageJson, mockReport);
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJson,
+      mockReport
+    );
 
     expect(await fs.pathExists(mockCodegenSpecsPath)).toBe(false);
   });

@@ -1,6 +1,6 @@
 import kleur from 'kleur';
 import type { Input } from '../types';
-import { patchCodegen } from '../utils/patchCodegen';
+import { patchCodegenAndroidPackage } from '../utils/patchCodegenAndroidPackage';
 import fs from 'fs-extra';
 import path from 'path';
 import del from 'del';
@@ -32,10 +32,21 @@ export default async function build({ root, report }: Options) {
     await del([codegenAndroidPath]);
   }
 
+  const codegenType = packageJson.codegenConfig?.type;
+
+  if (codegenType === undefined) {
+    report.error(
+      "Couldn't find the 'type' value in 'codegenConfig'. Please check your package.json's 'codegenConfig' property and make sure 'type' is defined. https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen"
+    );
+    process.exit(1);
+  }
+
   try {
     await runRNCCli(['codegen']);
 
-    await patchCodegen(root, packageJson, report);
+    if (codegenType === 'modules' || codegenType === 'all') {
+      await patchCodegenAndroidPackage(root, packageJson, report);
+    }
 
     report.success('Generated native code with codegen');
   } catch (e: unknown) {
