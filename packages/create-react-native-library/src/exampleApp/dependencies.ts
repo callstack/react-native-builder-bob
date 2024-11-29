@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import type { ExampleApp } from '../input';
 
-export async function getDependencyVersionsFromExample(
+export async function getDependencyVersionsFromExampleApp(
   folder: string,
   exampleAppType: ExampleApp
 ) {

@@ -17,7 +17,7 @@ import {
   acceptedArgs,
   type Args,
 } from './input';
-import { getDependencyVersionsFromExample } from './exampleApp/dependencies';
+import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.32.0';
@@ -108,16 +108,16 @@ async function create(_argv: yargs.Arguments<Args>) {
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
   if (config.example !== 'none') {
-    const { devDependencies } = await getDependencyVersionsFromExample(
+    const { devDependencies } = await getDependencyVersionsFromExampleApp(
       folder,
       config.example
     );
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
       ? {
-          ...rootPackageJson.devDependencies,
-          ...devDependencies,
-        }
+        ...rootPackageJson.devDependencies,
+        ...devDependencies,
+      }
       : devDependencies;
   }
 
