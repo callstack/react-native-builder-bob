@@ -30,3 +30,17 @@ export const resolveBobVersionWithFallback = (fallback: string) =>
     fallback,
     1000
   );
+
+export const resolveNitroModulesVersionWithFallback = (fallback: string) =>
+  promiseWithFallback(
+    spawn('npm', ['view', 'react-native-nitro-modules', 'dist-tags.latest']),
+    fallback,
+    1000
+  );
+
+export const resolveNitroCodegenVersionWithFallback = (fallback: string) =>
+  promiseWithFallback(
+    spawn('npm', ['view', 'nitro-codegen', 'dist-tags.latest']),
+    fallback,
+    1000
+  );
