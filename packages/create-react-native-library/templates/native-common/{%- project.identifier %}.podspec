@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
 <% } -%>
 <% if (project.nitro) { -%>
 
-  load 'nitrogen/generated/ios/CrnlNitro+autolinking.rb'
+  load 'nitrogen/generated/ios/<%- project.name -%>+autolinking.rb'
   add_nitrogen_files(s)
 <% } -%>
 
