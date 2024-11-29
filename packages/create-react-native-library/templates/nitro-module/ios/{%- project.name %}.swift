@@ -8,4 +8,3 @@ class <%- project.name -%>: Hybrid<%- project.name -%>Spec {
         return a * b
     }
 }
-
