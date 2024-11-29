@@ -23,6 +23,9 @@
     "android",
     "ios",
     "cpp",
+<% if (project.nitro) { -%>
+    "nitro",
+<% } -%>
     "*.podspec",
     "react-native.config.js",
     "!ios/build",
@@ -72,7 +75,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
-<% if (example === 'vanilla') { -%>
+<% if (example === 'vanilla' && !project.nitro) { -%>
     "@react-native-community/cli": "15.0.0-alpha.2",
 <% } -%>
     "@react-native/eslint-config": "^0.73.1",
@@ -99,6 +102,9 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+<% if (project.nitro) { -%>
+    "react-native-nitro-modules": "*",
+<% } -%>
     "react": "*",
     "react-native": "*"
   },

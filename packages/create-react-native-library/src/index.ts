@@ -106,14 +106,14 @@ async function create(_argv: yargs.Arguments<Args>) {
   if (config.example !== 'none') {
     const { devDependencies } = await getDependencyVersionsFromExampleApp(
       folder,
-      config.example
+      config
     );
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
       ? {
-        ...rootPackageJson.devDependencies,
-        ...devDependencies,
-      }
+          ...rootPackageJson.devDependencies,
+          ...devDependencies,
+        }
       : devDependencies;
   }
 

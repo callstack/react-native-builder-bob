@@ -1,11 +1,11 @@
 import assert from 'node:assert';
 import path from 'path';
 import fs from 'fs-extra';
-import type { ExampleApp } from '../input';
+import type { TemplateConfiguration } from '../template';
 
 export async function getDependencyVersionsFromExampleApp(
   folder: string,
-  exampleAppType: ExampleApp
+  config: TemplateConfiguration
 ) {
   const examplePackageJson = await fs.readJSON(
     path.join(folder, 'example', 'package.json')
@@ -27,7 +27,7 @@ export async function getDependencyVersionsFromExampleApp(
     'react-native': reactNative,
   };
 
-  if (exampleAppType === 'vanilla') {
+  if (config.example === 'vanilla' && !config.project.nitro) {
     // React Native doesn't provide the community CLI as a dependency.
     // We have to get read the version from the example app and put to the root package json
     const exampleCommunityCLIVersion =
