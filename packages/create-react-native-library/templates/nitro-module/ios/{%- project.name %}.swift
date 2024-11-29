@@ -1,10 +1,10 @@
 class <%- project.name -%>: Hybrid<%- project.name -%>Spec {
-    var hybridContext = margelo.nitro.HybridContext()
-    var memorySize: Int {
+    public var hybridContext = margelo.nitro.HybridContext()
+    public var memorySize: Int {
         getSizeOf(self)
     }
 
-    func multiply(a: Double, b: Double) throws -> Double {
+    public func multiply(a: Double, b: Double) throws -> Double {
         return a * b
     }
 }
