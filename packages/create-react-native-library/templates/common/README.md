@@ -4,9 +4,15 @@
 
 ## Installation
 
+<% if (project.nitro) { -%>
+```sh
+npm install <%- project.slug %> react-native-nitro-modules
+```
+<% } else { -%>
 ```sh
 npm install <%- project.slug %>
 ```
+<% } -%>
 
 ## Usage
 
