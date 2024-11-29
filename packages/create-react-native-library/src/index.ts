@@ -111,13 +111,13 @@ async function create(_argv: yargs.Arguments<Args>) {
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
       ? {
-          ...rootPackageJson.devDependencies,
-          ...devDependencies,
-        }
+        ...rootPackageJson.devDependencies,
+        ...devDependencies,
+      }
       : devDependencies;
   }
 
-  if (config.example === 'vanilla' && config.project.arch === 'new') {
+  if (config.example === 'vanilla' && config.project.arch === 'new' && !config.project.nitro) {
     addCodegenBuildScript(folder);
   }
 
