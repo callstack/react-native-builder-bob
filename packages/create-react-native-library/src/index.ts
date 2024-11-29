@@ -115,9 +115,9 @@ async function create(_argv: yargs.Arguments<Args>) {
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
       ? {
-        ...rootPackageJson.devDependencies,
-        ...devDependencies,
-      }
+          ...rootPackageJson.devDependencies,
+          ...devDependencies,
+        }
       : devDependencies;
   }
 
