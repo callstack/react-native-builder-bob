@@ -108,11 +108,13 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
-<% if (project.nitro) { -%>
-    "react-native-nitro-modules": "*",
-<% } -%>
     "react": "*",
+<% if (project.nitro) { -%>
+    "react-native": "*",
+    "react-native-nitro-modules": "*"
+<% } else { -%>    
     "react-native": "*"
+<% } -%>
   },
 <% if (example !== 'none') { -%>
   "workspaces": [
