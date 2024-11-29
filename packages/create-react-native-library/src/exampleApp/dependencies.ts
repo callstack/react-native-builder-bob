@@ -7,7 +7,6 @@ export async function getDependencyVersionsFromExampleApp(
   folder: string,
   exampleAppType: ExampleApp
 ) {
-  // Set `react` and `react-native` versions of root `package.json` from example `package.json`
   const examplePackageJson = await fs.readJSON(
     path.join(folder, 'example', 'package.json')
   );
