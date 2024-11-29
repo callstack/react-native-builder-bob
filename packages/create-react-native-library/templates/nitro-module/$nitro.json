@@ -1,10 +1,10 @@
 {
   "cxxNamespace": ["<%- project.package_cpp -%>"],
   "ios": {
-    "iosModulename": "<%- project.identifier -%>"
+    "iosModuleName": "<%- project.name -%>"
   },
   "android": {
-    "androidNamespace": ["<%- project.package -%>"],
+    "androidNamespace": <%- project.package_array -%>,
     "androidCxxLibName": "<%- project.package_cpp -%>"
   },
   "autolinking": {
