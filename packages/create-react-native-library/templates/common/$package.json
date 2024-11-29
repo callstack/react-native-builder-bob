@@ -51,7 +51,12 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
+<% if (example !== 'expo') { -%>
+    "nitrogen": "nitro-codegen",
+    "prepare": "bob build && yarn nitrogen",
+<% } else { -%>
     "prepare": "bob build",
+<% } -%>
     "release": "release-it"
   },
   "keywords": [
