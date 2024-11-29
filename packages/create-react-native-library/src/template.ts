@@ -3,12 +3,16 @@ import fs from 'fs-extra';
 import ejs from 'ejs';
 import type { Answers, ExampleApp, SupportedArchitecture } from './input';
 
+export type TemplateVersions = {
+  bob: string;
+  nitroModules: string;
+  nitroCodegen: string;
+};
+
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
 export type TemplateConfiguration = {
-  bob: {
-    version: string;
-  };
+  versions: TemplateVersions;
   project: {
     slug: string;
     description: string;
@@ -95,11 +99,11 @@ const SWIFT_FILES = {
 } as const;
 
 export function generateTemplateConfiguration({
-  bobVersion,
+  versions,
   basename,
   answers,
 }: {
-  bobVersion: string;
+  versions: TemplateVersions;
   basename: string;
   answers: Answers;
 }): TemplateConfiguration {
@@ -126,9 +130,7 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
-    bob: {
-      version: bobVersion,
-    },
+    versions,
     project: {
       slug,
       description: answers.description,
