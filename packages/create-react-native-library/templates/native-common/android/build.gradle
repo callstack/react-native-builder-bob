@@ -28,6 +28,9 @@ def isNewArchitectureEnabled() {
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+<% if (project.nitro) { -%>
+apply from: '../nitrogen/generated/android/<%- project.name -%>+autolinking.gradle'
+<% } -%>
 
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
@@ -48,7 +51,11 @@ def supportsNamespace() {
 
 android {
   if (supportsNamespace()) {
+<% if (project.nitro) { -%>
+    namespace "com.margelo.nitro.<%- project.package -%>"
+<% } else { -%>
     namespace "com.<%- project.package -%>"
+<% } -%>
 
     sourceSets {
       main {
@@ -68,28 +75,61 @@ android {
 <% if (project.arch === "new") { -%>
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 <% } -%>
+<% if (project.cpp || project.nitro) { -%>
 
-<% if (project.cpp) { -%>
     externalNativeBuild {
       cmake {
-        cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+        cppFlags "-frtti -fexceptions -Wall -fstack-protector-all"
         abiFilters (*reactNativeArchitectures())
+
+        buildTypes {
+          debug {
+            cppFlags "-O1 -g"
+          }
+          release {
+            cppFlags "-O2"
+          }
+        }
       }
     }
 <% } -%>
   }
-<% if (project.cpp) { -%>
+<% if (project.cpp || project.nitro) { -%>
 
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
     }
   }
+
+  packagingOptions {
+    excludes = [
+            "META-INF",
+            "META-INF/**",
+            "**/libc++_shared.so",
+            "**/libfbjni.so",
+            "**/libjsi.so",
+            "**/libfolly_json.so",
+            "**/libfolly_runtime.so",
+            "**/libglog.so",
+            "**/libhermes.so",
+            "**/libhermes-executor-debug.so",
+            "**/libhermes_executor.so",
+            "**/libreactnative.so",
+            "**/libreactnativejni.so",
+            "**/libturbomodulejsijni.so",
+            "**/libreact_nativemodule_core.so",
+            "**/libjscexecutor.so"
+    ]
+  }
 <% } -%>
 <% if (project.arch === "new") { -%>
 
   buildFeatures {
     buildConfig true
+<% if (project.nitro) { -%>
+    prefab true
+<% } -%>
   }
 <% } -%>
 
@@ -132,9 +172,13 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+<% if (project.nitro) { -%>
+  // Add a dependency on NitroModules
+  implementation project(":react-native-nitro-modules")
+<% } -%>
 }
 
-<% if (project.arch === "new") { -%>
+<% if (project.arch === "new" && !project.nitro) { -%>
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
