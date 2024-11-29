@@ -29,7 +29,7 @@ def isNewArchitectureEnabled() {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 <% if (project.nitro) { -%>
-apply from: '../nitrogen/generated/android/<%- project.name -%>+autolinking.gradle'
+apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinking.gradle'
 <% } -%>
 
 if (isNewArchitectureEnabled()) {
