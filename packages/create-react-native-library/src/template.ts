@@ -18,6 +18,7 @@ export type TemplateConfiguration = {
     package_cpp: string;
     identifier: string;
     native: boolean;
+    nitro: boolean;
     arch: SupportedArchitecture;
     cpp: boolean;
     swift: boolean;
@@ -143,6 +144,7 @@ export function generateTemplateConfiguration({
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
+      nitro: type.startsWith('nitro'),
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
