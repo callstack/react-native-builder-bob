@@ -1,10 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 import https from 'https';
-import { spawn } from './spawn';
-import sortObjectKeys from './sortObjectKeys';
-
-export type ExampleType = 'vanilla' | 'test-app' | 'expo' | 'none';
+import { spawn } from '../utils/spawn';
+import sortObjectKeys from '../utils/sortObjectKeys';
+import type { ExampleApp } from '../input';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -50,7 +49,7 @@ export default async function generateExampleApp({
   bobVersion,
   reactNativeVersion = 'latest',
 }: {
-  type: ExampleType;
+  type: ExampleApp;
   dest: string;
   arch: 'new' | 'mixed' | 'legacy';
   project: {
