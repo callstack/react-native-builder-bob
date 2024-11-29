@@ -13,16 +13,15 @@ export const <%- project.name -%>HybridObject =
 
 const <%- project.name -%> = <%- project.name -%>HybridObject
   ? <%- project.name -%>HybridObject
-  : new Proxy(
+  : (new Proxy(
       {},
       {
         get() {
           throw new Error(LINKING_ERROR);
         },
       }
-    );
+    ) as <%- project.name -%>);
 
 export function multiply(a: number, b: number): number {
   return <%- project.name -%>.multiply(a, b);
 }
-
