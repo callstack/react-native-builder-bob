@@ -22,6 +22,9 @@ yarn
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
+<% if (project.nitro) { -%>
+This project uses [Nitro Modules](https://nitro.margelo.com/). If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/docs).
+<% } -%>
 
 <% if (project.native) { -%>
 If you want to use Android Studio or XCode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcworkspace` in XCode and find the source files at `Pods > Development Pods > <%- project.slug -%>`.
