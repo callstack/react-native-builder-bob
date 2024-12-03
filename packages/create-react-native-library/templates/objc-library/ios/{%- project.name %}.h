@@ -4,14 +4,14 @@
 #endif
 <% } -%>
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "RN<%- project.name -%>Spec.h"
+<% if (project.arch === 'new') { -%>
+#import "generated/RN<%- project.name -%>Spec/RN<%- project.name -%>Spec.h"
 
 @interface <%- project.name -%> : NSObject <Native<%- project.name -%>Spec>
-#else
+<% } else { -%>
 #import <React/RCTBridgeModule.h>
 
 @interface <%- project.name -%> : NSObject <RCTBridgeModule>
-#endif
+<% } -%>
 
 @end

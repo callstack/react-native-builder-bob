@@ -49,31 +49,6 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-<% if (project.arch === 'mixed') { -%>
-By default, the example is configured to build with the old architecture. To run the example with the new architecture, you can do the following:
-
-1. For Android, run:
-
-   ```sh
-   ORG_GRADLE_PROJECT_newArchEnabled=true yarn example android
-   ```
-
-2. For iOS, run:
-
-   ```sh
-   cd example/ios
-   RCT_NEW_ARCH_ENABLED=1 pod install
-   cd -
-   yarn example ios
-   ```
-
-If you are building for a different architecture than your previous build, make sure to remove the build folders first. You can run the following command to cleanup all build folders:
-
-```sh
-yarn clean
-```
-
-<% } -%>
 <% if (project.arch !== 'legacy') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
