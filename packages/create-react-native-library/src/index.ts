@@ -82,7 +82,7 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   await fs.mkdirp(folder);
 
-  if (answers.reactNativeVersion !== null) {
+  if (answers.reactNativeVersion != null) {
     printUsedRNVersion(answers.reactNativeVersion, config);
   }
 
