@@ -5,7 +5,7 @@
 <% } -%>
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "RN<%- project.name -%>Spec.h"
+#import "generated/RN<%- project.name -%>Spec/RN<%- project.name -%>Spec.h"
 
 @interface <%- project.name -%> : NSObject <Native<%- project.name -%>Spec>
 #else

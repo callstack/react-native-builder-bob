@@ -1,10 +1,10 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "<%- project.name -%>View.h"
 
-#import "ComponentDescriptors.h"
-#import "EventEmitters.h"
-#import "Props.h"
-#import "RCTComponentViewHelpers.h"
+#import "generated/<%- project.name -%>ViewSpec/ComponentDescriptors.h"
+#import "generated/<%- project.name -%>ViewSpec/EventEmitters.h"
+#import "generated/<%- project.name -%>ViewSpec/Props.h"
+#import "generated/<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h"
 
 #import "RCTFabricComponentsPlugins.h"
 #import "Utils.h"

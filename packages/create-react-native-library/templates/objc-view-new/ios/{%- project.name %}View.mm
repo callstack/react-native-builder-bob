@@ -1,9 +1,9 @@
 #import "<%- project.name -%>View.h"
 
-#import "ComponentDescriptors.h"
-#import "EventEmitters.h"
-#import "Props.h"
-#import "RCTComponentViewHelpers.h"
+#import "generated/<%- project.name -%>ViewSpec/ComponentDescriptors.h"
+#import "generated/<%- project.name -%>ViewSpec/EventEmitters.h"
+#import "generated/<%- project.name -%>ViewSpec/Props.h"
+#import "generated/<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h"
 
 #import "RCTFabricComponentsPlugins.h"
 
@@ -58,13 +58,13 @@ Class<RCTComponentViewProtocol> <%- project.name -%>ViewCls(void)
 {
     NSString *noHashString = [stringToConvert stringByReplacingOccurrencesOfString:@"#" withString:@""];
     NSScanner *stringScanner = [NSScanner scannerWithString:noHashString];
-    
+
     unsigned hex;
     if (![stringScanner scanHexInt:&hex]) return nil;
     int r = (hex >> 16) & 0xFF;
     int g = (hex >> 8) & 0xFF;
     int b = (hex) & 0xFF;
-    
+
     return [UIColor colorWithRed:r / 255.0f green:g / 255.0f blue:b / 255.0f alpha:1.0f];
 }
 
