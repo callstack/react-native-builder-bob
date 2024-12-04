@@ -21,3 +21,10 @@ export type Options = {
   targets?: (Target | [target: Target, options: object])[];
   exclude?: string;
 };
+
+declare module '@babel/core' {
+  export interface TransformCaller {
+    rewriteImportExtensions: boolean;
+    jsxRuntime: 'automatic' | 'classic';
+  }
+}

@@ -4,12 +4,14 @@ const browserslist = require('browserslist');
 
 /**
  * Babel preset for React Native Builder Bob
- * @param {'commonjs' | 'preserve'} options.modules - Whether to compile modules to CommonJS or preserve them
- * @param {Boolean} options.esm - Whether to output ES module compatible code, e.g. by adding extension to import/export statements
- * @param {'automatic' | 'classic'} options.jsxRuntime - Which JSX runtime to use, defaults to 'automatic'
  */
 module.exports = function (api, options, cwd) {
-  const cjs = options.modules === 'commonjs';
+  const opt = (name) =>
+    api.caller((caller) => (caller != null ? caller[name] : undefined));
+
+  const supportsStaticESM = opt('supportsStaticESM');
+  const rewriteImportExtensions = opt('rewriteImportExtensions');
+  const jsxRuntime = opt('jsxRuntime');
 
   return {
     presets: [
@@ -32,14 +34,13 @@ module.exports = function (api, options, cwd) {
             node: '18',
           },
           useBuiltIns: false,
-          modules: cjs ? 'commonjs' : false,
+          modules: supportsStaticESM ? false : 'commonjs',
         },
       ],
       [
         require.resolve('@babel/preset-react'),
         {
-          runtime:
-            options.jsxRuntime !== undefined ? options.jsxRuntime : 'automatic',
+          runtime: jsxRuntime !== undefined ? jsxRuntime : 'automatic',
         },
       ],
       require.resolve('@babel/preset-typescript'),
@@ -50,7 +51,7 @@ module.exports = function (api, options, cwd) {
       [
         require.resolve('./lib/babel'),
         {
-          extension: options.esm ? 'js' : undefined,
+          extension: rewriteImportExtensions ? 'js' : undefined,
         },
       ],
     ],
