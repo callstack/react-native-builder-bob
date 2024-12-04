@@ -1,13 +1,13 @@
 package com.<%- project.package %>
 
-import com.facebook.react.TurboReactPackage
+import com.facebook.react.BaseReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 import java.util.HashMap
 
-class <%- project.name -%>Package : TurboReactPackage() {
+class <%- project.name -%>Package : BaseReactPackage() {
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
     return if (name == <%- project.name -%>Module.NAME) {
       <%- project.name -%>Module(reactContext)
