@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.4.0...docs@0.4.1) (2024-12-04)
+
+### Bug Fixes
+
+- update tsconfig to align how metro resolves package exports ([#701](https://github.com/callstack/react-native-builder-bob/issues/701)) ([e52ba57](https://github.com/callstack/react-native-builder-bob/commit/e52ba57a6c629e5a2e867d9925064e7c1653eb84)) - by @satya164
+
 # [0.4.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.3.0...docs@0.4.0) (2024-11-21)
 
 ### Features

@@ -3,41 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.45.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.3...create-react-native-library@0.45.0) (2024-12-04)
+
+### Bug Fixes
+
+- ensure 'invokeLibraryCodegen' task executes 'npx' correctly on windows ([#707](https://github.com/callstack/react-native-builder-bob/issues/707)) ([2553e24](https://github.com/callstack/react-native-builder-bob/commit/2553e24942c9c021d7e3db2c3e1eec1bacf8063f)) - by @ddiazFG
+- fix incorrect check for --react-native-version ([#709](https://github.com/callstack/react-native-builder-bob/issues/709)) ([6628b2a](https://github.com/callstack/react-native-builder-bob/commit/6628b2a3bdbd3f02b111c6500fc83d94bc123d80)) - by @satya164
+- move from TurboReactPackage to BaseReactPackage ([#708](https://github.com/callstack/react-native-builder-bob/issues/708)) ([bcccda5](https://github.com/callstack/react-native-builder-bob/commit/bcccda5257415785da6442aafa4edd7ae767307b)) - by @satya164
+- remove experimental from new arch ([#705](https://github.com/callstack/react-native-builder-bob/issues/705)) ([62352f8](https://github.com/callstack/react-native-builder-bob/commit/62352f81293298af529c2537c833304714e351de)) - by @okwasniewski
+- update tsconfig to align how metro resolves package exports ([#701](https://github.com/callstack/react-native-builder-bob/issues/701)) ([e52ba57](https://github.com/callstack/react-native-builder-bob/commit/e52ba57a6c629e5a2e867d9925064e7c1653eb84)) - by @satya164
+- use 'all' for fabric components codegen config ([#715](https://github.com/callstack/react-native-builder-bob/issues/715)) ([219055b](https://github.com/callstack/react-native-builder-bob/commit/219055b3902a848dab7012672438d001cfe66834)), closes [#661](https://github.com/callstack/react-native-builder-bob/issues/661) - by @satya164
+
+### Features
+
+- pass options to babel-preset using callers ([#704](https://github.com/callstack/react-native-builder-bob/issues/704)) ([a9f2ede](https://github.com/callstack/react-native-builder-bob/commit/a9f2edea4d478ee176034fa7970114876130e76c)) - by @satya164
+
 ## [0.44.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.2...create-react-native-library@0.44.3) (2024-11-29)
 
 ### Bug Fixes
 
-* use proper codegen types ([#697](https://github.com/callstack/react-native-builder-bob/issues/697)) ([c143bab](https://github.com/callstack/react-native-builder-bob/commit/c143babf27f08bc2d82cc2cb632e6f537961901c)), closes [/github.com/facebook/react-native/issues/46208#issuecomment-2491424662](https://github.com//github.com/facebook/react-native/issues/46208/issues/issuecomment-2491424662) - by @atlj
+- use proper codegen types ([#697](https://github.com/callstack/react-native-builder-bob/issues/697)) ([c143bab](https://github.com/callstack/react-native-builder-bob/commit/c143babf27f08bc2d82cc2cb632e6f537961901c)), closes [/github.com/facebook/react-native/issues/46208#issuecomment-2491424662](https://github.com//github.com/facebook/react-native/issues/46208/issues/issuecomment-2491424662) - by @atlj
 
 ## [0.44.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.1...create-react-native-library@0.44.2) (2024-11-20)
 
 ### Bug Fixes
 
-* add react-native.config.js to the published file list ([#659](https://github.com/callstack/react-native-builder-bob/issues/659)) ([625236b](https://github.com/callstack/react-native-builder-bob/commit/625236bd5c096ace55c7ac63849ed807896a083b)) - by @johnf
+- add react-native.config.js to the published file list ([#659](https://github.com/callstack/react-native-builder-bob/issues/659)) ([625236b](https://github.com/callstack/react-native-builder-bob/commit/625236bd5c096ace55c7ac63849ed807896a083b)) - by @johnf
 
 ## [0.44.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.44.0...create-react-native-library@0.44.1) (2024-11-15)
 
 ### Bug Fixes
 
-* single answer questions dont get stored with metadata ([#633](https://github.com/callstack/react-native-builder-bob/issues/633)) ([c1d8ab1](https://github.com/callstack/react-native-builder-bob/commit/c1d8ab11f31552720c2f4b735842e83b17bb804d)) - by @atlj
+- single answer questions dont get stored with metadata ([#633](https://github.com/callstack/react-native-builder-bob/issues/633)) ([c1d8ab1](https://github.com/callstack/react-native-builder-bob/commit/c1d8ab11f31552720c2f4b735842e83b17bb804d)) - by @atlj
 
 # [0.44.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.43.0...create-react-native-library@0.44.0) (2024-11-15)
 
 ### Bug Fixes
 
-* correct the paths for codegen generated header files on views ([#680](https://github.com/callstack/react-native-builder-bob/issues/680)) ([6069721](https://github.com/callstack/react-native-builder-bob/commit/606972160c18117d4dc466c87652498119322a87)), closes [#669](https://github.com/callstack/react-native-builder-bob/issues/669) [ios#2](https://github.com/ios/issues/2) - by @atlj
-* every created example app is testing app ([#684](https://github.com/callstack/react-native-builder-bob/issues/684)) ([4a3d2a1](https://github.com/callstack/react-native-builder-bob/commit/4a3d2a120466b95058f4fe3d08eed165582c99ad)) - by @atlj
-* expo app doesn't have index.js ([#686](https://github.com/callstack/react-native-builder-bob/issues/686)) ([f08ab08](https://github.com/callstack/react-native-builder-bob/commit/f08ab088fdefe33389843e02ae600236746393cd)), closes [#682](https://github.com/callstack/react-native-builder-bob/issues/682) - by @atlj
+- correct the paths for codegen generated header files on views ([#680](https://github.com/callstack/react-native-builder-bob/issues/680)) ([6069721](https://github.com/callstack/react-native-builder-bob/commit/606972160c18117d4dc466c87652498119322a87)), closes [#669](https://github.com/callstack/react-native-builder-bob/issues/669) [ios#2](https://github.com/ios/issues/2) - by @atlj
+- every created example app is testing app ([#684](https://github.com/callstack/react-native-builder-bob/issues/684)) ([4a3d2a1](https://github.com/callstack/react-native-builder-bob/commit/4a3d2a120466b95058f4fe3d08eed165582c99ad)) - by @atlj
+- expo app doesn't have index.js ([#686](https://github.com/callstack/react-native-builder-bob/issues/686)) ([f08ab08](https://github.com/callstack/react-native-builder-bob/commit/f08ab088fdefe33389843e02ae600236746393cd)), closes [#682](https://github.com/callstack/react-native-builder-bob/issues/682) - by @atlj
 
 ### Features
 
-* don't add a XCode prebuild action to invoke codegen anymore ([#679](https://github.com/callstack/react-native-builder-bob/issues/679)) ([8fc684a](https://github.com/callstack/react-native-builder-bob/commit/8fc684a4a2c90cfa10e005da112e2836c86cf316)) - by @atlj
+- don't add a XCode prebuild action to invoke codegen anymore ([#679](https://github.com/callstack/react-native-builder-bob/issues/679)) ([8fc684a](https://github.com/callstack/react-native-builder-bob/commit/8fc684a4a2c90cfa10e005da112e2836c86cf316)) - by @atlj
 
 # [0.43.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.3...create-react-native-library@0.43.0) (2024-11-08)
 
 ### Features
 
-* disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
+- disable RNTA temporarily ([#658](https://github.com/callstack/react-native-builder-bob/issues/658)) ([aa400f6](https://github.com/callstack/react-native-builder-bob/commit/aa400f622d6953ff949bd749d7bc4c9af397f486)), closes [#637](https://github.com/callstack/react-native-builder-bob/issues/637) - by @atlj
 
 ## [0.42.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.2...create-react-native-library@0.42.3) (2024-11-08)
 
@@ -47,7 +62,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* vanilla example codegen fails ([#665](https://github.com/callstack/react-native-builder-bob/issues/665)) ([a9546fb](https://github.com/callstack/react-native-builder-bob/commit/a9546fbf33b6cc96af64c553311d0ce02e9f9de3)), closes [#662](https://github.com/callstack/react-native-builder-bob/issues/662) - by @atlj
+- vanilla example codegen fails ([#665](https://github.com/callstack/react-native-builder-bob/issues/665)) ([a9546fb](https://github.com/callstack/react-native-builder-bob/commit/a9546fbf33b6cc96af64c553311d0ce02e9f9de3)), closes [#662](https://github.com/callstack/react-native-builder-bob/issues/662) - by @atlj
 
 ## [0.42.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.42.0...create-react-native-library@0.42.1) (2024-10-24)
 
