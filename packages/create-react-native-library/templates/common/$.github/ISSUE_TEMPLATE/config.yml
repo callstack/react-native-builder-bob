@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓Stack Overflow
+    url: https://stackoverflow.com
+    about: If this library works as promised but you need help, please ask questions there.

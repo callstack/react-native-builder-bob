@@ -1,0 +1,31 @@
+name: 💡Feature request
+description: Submit your idea for a change in the codebase.
+labels: [feature request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Feature request
+
+  - type: textarea
+    id: why-is-this-needed
+    attributes:
+      label: Why it is needed?
+      description: Please tell us a bit more of why you want this feature to be added, what's its origin.
+    validations:
+      required: true
+  - type: textarea
+    id: possible-implementation
+    attributes:
+      label: Possible implementation
+      description: It really helps if you could describe from a technical POV how this new feature would work, which code it rely on, etc.
+    validations:
+      required: false
+  - type: textarea
+    id: code-sample
+    attributes:
+      label: Code sample
+      description: Please show how the new code could work, if doable.
+      render: js
+    validations:
+      required: false
