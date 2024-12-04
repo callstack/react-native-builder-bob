@@ -51,7 +51,7 @@ export default async function generateExampleApp({
 }: {
   type: ExampleApp;
   dest: string;
-  arch: 'new' | 'mixed' | 'legacy';
+  arch: 'new' | 'legacy';
   project: {
     slug: string;
     name: string;

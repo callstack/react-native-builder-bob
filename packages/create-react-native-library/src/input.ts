@@ -21,11 +21,9 @@ export type ArgName =
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 export type ProjectType =
-  | 'module-legacy'
   | 'module-new'
-  | 'module-mixed'
-  | 'view-mixed'
   | 'view-new'
+  | 'module-legacy'
   | 'view-legacy'
   | 'library';
 
@@ -37,14 +35,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: [
-      'module-legacy',
-      'module-new',
-      'module-mixed',
-      'view-mixed',
-      'view-new',
-      'view-legacy',
-    ],
+    types: ['module-new', 'view-new', 'module-legacy', 'view-legacy'],
   },
   {
     title: 'Kotlin & Swift',
@@ -54,7 +45,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'C++ for Android & iOS',
     value: 'cpp',
-    types: ['module-legacy', 'module-mixed', 'module-new'],
+    types: ['module-new', 'module-legacy'],
   },
   {
     title: 'JavaScript for Android, iOS & Web',
@@ -88,48 +79,35 @@ const EXAMPLE_CHOICES = (
   ] as const
 ).filter((choice) => !choice.disabled);
 
-const NEWARCH_DESCRIPTION = 'requires new arch';
-const BACKCOMPAT_DESCRIPTION = 'supports new arch';
-
 const TYPE_CHOICES: {
   title: string;
   value: ProjectType;
   description: string;
 }[] = [
   {
-    title: 'JavaScript library',
-    value: 'library',
-    description: 'supports Expo Go and Web',
-  },
-  {
-    title: 'Native module',
-    value: 'module-legacy',
-    description: 'bridge for native APIs to JS',
-  },
-  {
-    title: 'Native view',
-    value: 'view-legacy',
-    description: 'bridge for native views to JS',
-  },
-  {
-    title: 'Turbo module with backward compat',
-    value: 'module-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
-  },
-  {
     title: 'Turbo module',
     value: 'module-new',
-    description: NEWARCH_DESCRIPTION,
-  },
-  {
-    title: 'Fabric view with backward compat',
-    value: 'view-mixed',
-    description: BACKCOMPAT_DESCRIPTION,
+    description: 'integration for native APIs to JS',
   },
   {
     title: 'Fabric view',
     value: 'view-new',
-    description: NEWARCH_DESCRIPTION,
+    description: 'integration for native views to JS',
+  },
+  {
+    title: 'Legacy Native module',
+    value: 'module-legacy',
+    description: 'bridge for native APIs to JS (old architecture)',
+  },
+  {
+    title: 'Legacy Native view',
+    value: 'view-legacy',
+    description: 'bridge for native views to JS (old architecture)',
+  },
+  {
+    title: 'JavaScript library',
+    value: 'library',
+    description: 'supports Expo Go and Web',
   },
 ];
 
@@ -190,7 +168,7 @@ export const acceptedArgs: Record<ArgName, yargs.Options> = {
 } as const;
 
 export type Args = Record<ArgName | 'name', string>;
-export type SupportedArchitecture = 'new' | 'mixed' | 'legacy';
+export type SupportedArchitecture = 'new' | 'legacy';
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
 export type Answers = {

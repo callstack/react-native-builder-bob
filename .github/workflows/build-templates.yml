@@ -31,10 +31,8 @@ jobs:
           - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
           - module-legacy
-          - module-mixed
           - module-new
           - view-legacy
-          - view-mixed
           - view-new
         language:
           - kotlin-objc
@@ -44,11 +42,7 @@ jobs:
         exclude:
           - type: module-new
             language: kotlin-swift
-          - type: module-mixed
-            language: kotlin-swift
           - type: view-new
-            language: kotlin-swift
-          - type: view-mixed
             language: kotlin-swift
         include:
           - os: ubuntu-latest
@@ -56,27 +50,7 @@ jobs:
             language: js
             arch: auto
           - os: ubuntu-latest
-            type: module-mixed
-            language: kotlin-objc
-            arch: new
-          - os: macos-14
-            type: module-mixed
-            language: kotlin-objc
-            arch: new
-          - os: ubuntu-latest
-            type: view-mixed
-            language: kotlin-objc
-            arch: new
-          - os: macos-14
-            type: view-mixed
-            language: kotlin-objc
-            arch: new
-          - os: ubuntu-latest
             type: module-legacy
-            language: cpp
-            arch: auto
-          - os: ubuntu-latest
-            type: module-mixed
             language: cpp
             arch: auto
           - os: ubuntu-latest
@@ -85,10 +59,6 @@ jobs:
             arch: auto
           - os: macos-14
             type: module-legacy
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-mixed
             language: cpp
             arch: auto
           - os: macos-14

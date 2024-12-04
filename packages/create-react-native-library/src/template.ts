@@ -40,11 +40,21 @@ const BINARIES = [
 ];
 
 const COMMON_FILES = path.resolve(__dirname, '../templates/common');
-const COMMON_EXAMPLE_FILES = path.resolve(
-  __dirname,
-  '../templates/common-example'
-);
 const COMMON_LOCAL_FILES = path.resolve(__dirname, '../templates/common-local');
+const EXAMPLE_COMMON_FILES = path.resolve(
+  __dirname,
+  '../templates/example-common'
+);
+const EXAMPLE_MODULE_LEGACY_FILES = path.resolve(
+  __dirname,
+  '../templates/example-module-legacy'
+);
+const EXAMPLE_MODULE_NEW_FILES = path.resolve(
+  __dirname,
+  '../templates/example-module-new'
+);
+const EXAMPLE_VIEW_FILES = path.resolve(__dirname, '../templates/example-view');
+
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
@@ -60,25 +70,20 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 const NATIVE_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/native-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/native-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
 } as const;
 
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
   view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/objc-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/objc-view-new'),
 } as const;
 
 const KOTLIN_FILES = {
   module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
-  module_mixed: path.resolve(__dirname, '../templates/kotlin-library-mixed'),
   view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
-  view_mixed: path.resolve(__dirname, '../templates/kotlin-view-mixed'),
   view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
 } as const;
 
@@ -99,11 +104,7 @@ export function generateTemplateConfiguration({
   const { slug, languages, type } = answers;
 
   const arch =
-    type === 'module-new' || type === 'view-new'
-      ? 'new'
-      : type === 'module-mixed' || type === 'view-mixed'
-      ? 'mixed'
-      : 'legacy';
+    type === 'module-legacy' || type === 'view-legacy' ? 'legacy' : 'new';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   let namespace: string | undefined;
@@ -169,7 +170,17 @@ export async function applyTemplates(
     await applyTemplate(config, COMMON_FILES, folder);
 
     if (config.example !== 'none') {
-      await applyTemplate(config, COMMON_EXAMPLE_FILES, folder);
+      await applyTemplate(config, EXAMPLE_COMMON_FILES, folder);
+
+      if (config.project.view) {
+        await applyTemplate(config, EXAMPLE_VIEW_FILES, folder);
+      } else {
+        if (config.project.arch === 'legacy') {
+          await applyTemplate(config, EXAMPLE_MODULE_LEGACY_FILES, folder);
+        } else {
+          await applyTemplate(config, EXAMPLE_MODULE_NEW_FILES, folder);
+        }
+      }
     }
   }
 
