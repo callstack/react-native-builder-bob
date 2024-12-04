@@ -88,8 +88,8 @@ const EXAMPLE_CHOICES = (
   ] as const
 ).filter((choice) => !choice.disabled);
 
-const NEWARCH_DESCRIPTION = 'requires new arch (experimental)';
-const BACKCOMPAT_DESCRIPTION = 'supports new arch (experimental)';
+const NEWARCH_DESCRIPTION = 'requires new arch';
+const BACKCOMPAT_DESCRIPTION = 'supports new arch';
 
 const TYPE_CHOICES: {
   title: string;
