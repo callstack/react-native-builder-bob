@@ -18,17 +18,18 @@ You can verify whether ESM support is enabled by checking the configuration for 
 
 The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files. For TypeScript, it also generates 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
-It's recommended to specify `"moduleResolution": "Bundler"` in your `tsconfig.json` file as well:
+It's recommended to specify `"moduleResolution": "Bundler"` and `"resolvePackageJsonImports": false` in your `tsconfig.json` file to match [Metro's behavior](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta):
 
 ```json
 {
   "compilerOptions": {
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "resolvePackageJsonImports": false
   }
 }
 ```
 
-This means that you don't need to specify the file extension in the import statements. They'll be automatically added when possible during the build process.
+Specifying `"moduleResolution": "Bundler"` means that you don't need to use file extensions in the import statements. Bob automatically adds them when possible during the build process.
 
 To make use of the output files, ensure that your `package.json` file contains the following fields:
 
