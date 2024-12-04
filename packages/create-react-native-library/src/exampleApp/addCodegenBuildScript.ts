@@ -10,8 +10,14 @@ def isNewArchitectureEnabled() {
 if (isNewArchitectureEnabled()) {
     // Since our library doesn't invoke codegen automatically we need to do it here.
     tasks.register('invokeLibraryCodegen', Exec) {
-        workingDir "$rootDir/../../"
-        commandLine "npx", "bob", "build", "--target", "codegen"
+      workingDir "$rootDir/../../"
+      def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+
+      if (isWindows) {
+        commandLine 'cmd', '/c', 'npx bob build --target codegen'
+      } else {
+        commandLine 'sh', '-c', 'npx bob build --target codegen'
+      }
     }
     preBuild.dependsOn invokeLibraryCodegen
 }`;
