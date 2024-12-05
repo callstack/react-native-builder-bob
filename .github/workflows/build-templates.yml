@@ -30,44 +30,30 @@ jobs:
           - ubuntu-latest
           - macos-14 # macos latest defaults to macos 12 at the moment.
         type:
-          - module-legacy
-          - module-new
-          - view-legacy
-          - view-new
+          - turbo-module
+          - fabric-view
+          - legacy-module
+          - legacy-view
         language:
           - kotlin-objc
           - kotlin-swift
-        arch:
-          - auto
+          - cpp
         exclude:
-          - type: module-new
+          - type: turbo-module
             language: kotlin-swift
-          - type: view-new
+          - type: fabric-view
             language: kotlin-swift
+          - type: fabric-view
+            language: cpp
+          - type: legacy-module
+            language: cpp
         include:
           - os: ubuntu-latest
             type: library
             language: js
-            arch: auto
-          - os: ubuntu-latest
-            type: module-legacy
-            language: cpp
-            arch: auto
-          - os: ubuntu-latest
-            type: module-new
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-legacy
-            language: cpp
-            arch: auto
-          - os: macos-14
-            type: module-new
-            language: cpp
-            arch: auto
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
     runs-on: ${{ matrix.os }}
@@ -79,20 +65,13 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Set environment variables
-        run: |
-          if [[ "${{ matrix.arch }}" == "new" ]]; then
-            echo "RCT_NEW_ARCH_ENABLED=1" >> $GITHUB_ENV
-            echo "ORG_GRADLE_PROJECT_newArchEnabled=true" >> $GITHUB_ENV
-          fi
-
       - name: Build package
         run: |
           yarn workspace create-react-native-library prepare
 
       - name: Get working directory
         run: |
-          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}" >> $GITHUB_ENV
+          echo "work_dir=${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}" >> $GITHUB_ENV
 
       - name: Create library
         run: |
@@ -142,14 +121,14 @@ jobs:
         run: |
           # Build Android for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+            if [[ ${{ matrix.type }} == *-view && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == cpp ]]; then
               echo "android_build=1" >> $GITHUB_ENV
             fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} == macos-14 ]]; then
-            if [[ ${{ matrix.type }} == view-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == module-* && ${{ matrix.language }} == cpp ]]; then
+            if [[ ${{ matrix.type }} == *-view && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == cpp ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
           fi
@@ -160,9 +139,9 @@ jobs:
         with:
           path: |
             ${{ env.work_dir }}/.turbo
-          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
           restore-keys: |
-            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-${{ matrix.arch }}-
+            ${{ runner.os }}-library-turborepo-${{ matrix.type }}-${{ matrix.language }}-
 
       - name: Check turborepo cache
         if: env.android_build == 1 || env.ios_build == 1

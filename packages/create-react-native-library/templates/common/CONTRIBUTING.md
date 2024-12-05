@@ -49,7 +49,7 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-<% if (project.arch !== 'legacy') { -%>
+<% if (project.arch === 'new') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
 ```sh

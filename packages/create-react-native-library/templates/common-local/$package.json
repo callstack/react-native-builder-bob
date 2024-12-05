@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "<%- project.description %>",
   "main": "src/index",
-<% if (project.arch !== 'legacy') { -%>
+<% if (project.arch === 'new') { -%>
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
     "type": <%- project.view ? '"all"': '"modules"' %>,

@@ -21,10 +21,10 @@ export type ArgName =
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 export type ProjectType =
-  | 'module-new'
-  | 'view-new'
-  | 'module-legacy'
-  | 'view-legacy'
+  | 'turbo-module'
+  | 'fabric-view'
+  | 'legacy-module'
+  | 'legacy-view'
   | 'library';
 
 const LANGUAGE_CHOICES: {
@@ -35,17 +35,17 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: ['module-new', 'view-new', 'module-legacy', 'view-legacy'],
+    types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
   },
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['module-legacy', 'view-legacy'],
+    types: ['legacy-module', 'legacy-view'],
   },
   {
     title: 'C++ for Android & iOS',
     value: 'cpp',
-    types: ['module-new', 'module-legacy'],
+    types: ['turbo-module', 'legacy-module'],
   },
   {
     title: 'JavaScript for Android, iOS & Web',
@@ -86,22 +86,22 @@ const TYPE_CHOICES: {
 }[] = [
   {
     title: 'Turbo module',
-    value: 'module-new',
+    value: 'turbo-module',
     description: 'integration for native APIs to JS',
   },
   {
     title: 'Fabric view',
-    value: 'view-new',
+    value: 'fabric-view',
     description: 'integration for native views to JS',
   },
   {
     title: 'Legacy Native module',
-    value: 'module-legacy',
+    value: 'legacy-module',
     description: 'bridge for native APIs to JS (old architecture)',
   },
   {
     title: 'Legacy Native view',
-    value: 'view-legacy',
+    value: 'legacy-view',
     description: 'bridge for native views to JS (old architecture)',
   },
   {

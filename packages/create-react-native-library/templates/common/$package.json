@@ -172,7 +172,7 @@
     "source": "src",
     "output": "lib",
     "targets": [
-<% if (project.arch !== 'legacy') { -%>
+<% if (project.arch === 'new') { -%>
       "codegen",
 <% } -%>
       [
@@ -194,7 +194,7 @@
         }
       ]
     ]
-<% if (project.arch !== 'legacy') { -%>
+<% if (project.arch === 'new') { -%>
   },
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
