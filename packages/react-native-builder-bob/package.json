@@ -51,6 +51,7 @@
     "@babel/preset-flow": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
+    "@react-native/babel-plugin-codegen": "^0.76.3",
     "babel-plugin-module-resolver": "^5.0.2",
     "browserslist": "^4.20.4",
     "cosmiconfig": "^9.0.0",
