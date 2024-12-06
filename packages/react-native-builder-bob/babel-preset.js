@@ -47,6 +47,7 @@ module.exports = function (api, options, cwd) {
       require.resolve('@babel/preset-flow'),
     ],
     plugins: [
+      require.resolve('@react-native/babel-plugin-codegen'),
       require.resolve('@babel/plugin-transform-strict-mode'),
       [
         require.resolve('./lib/babel'),
