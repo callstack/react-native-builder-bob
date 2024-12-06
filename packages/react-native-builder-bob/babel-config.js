@@ -61,7 +61,17 @@ const getConfig = (defaultConfig, { root, pkg }) => {
       },
       {
         include: path.join(root, src),
-        presets: [require.resolve('./babel-preset')],
+        presets: [
+          [
+            require.resolve('./babel-preset'),
+            {
+              // Let the app's preset handle the commonjs transform
+              // Otherwise this causes issues with `@react-native/babel-plugin-codegen`
+              // Codegen generates `export` statements in wrong places causing syntax error
+              supportsStaticESM: true,
+            },
+          ],
+        ],
       },
     ],
   };
