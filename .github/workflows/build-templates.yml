@@ -34,6 +34,7 @@ jobs:
           - fabric-view
           - legacy-module
           - legacy-view
+          - nitro-module
         language:
           - kotlin-objc
           - kotlin-swift
@@ -46,6 +47,10 @@ jobs:
           - type: fabric-view
             language: cpp
           - type: legacy-view
+            language: cpp
+          - type: nitro-module
+            language: kotlin-objc
+          - type: nitro-module
             language: cpp
         include:
           - os: ubuntu
@@ -215,6 +220,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles(format('{0}/example/android/gradle/wrapper/gradle-wrapper.properties', env.work_dir)) }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Run nitro codegen
+        if: matrix.type == 'nitro-module'
+        run: |
+          yarn nitrogen
 
       - name: Build example (Android)
         env:
