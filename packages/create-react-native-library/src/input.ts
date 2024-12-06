@@ -25,6 +25,7 @@ export type ProjectType =
   | 'fabric-view'
   | 'legacy-module'
   | 'legacy-view'
+  | 'nitro-module'
   | 'library';
 
 const LANGUAGE_CHOICES: {
@@ -33,14 +34,14 @@ const LANGUAGE_CHOICES: {
   types: ProjectType[];
 }[] = [
   {
+    title: 'Kotlin & Swift',
+    value: 'kotlin-swift',
+    types: ['nitro-module', 'legacy-module', 'legacy-view'],
+  },
+  {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
     types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
-  },
-  {
-    title: 'Kotlin & Swift',
-    value: 'kotlin-swift',
-    types: ['legacy-module', 'legacy-view'],
   },
   {
     title: 'C++ for Android & iOS',
@@ -84,6 +85,11 @@ const TYPE_CHOICES: {
   value: ProjectType;
   description: string;
 }[] = [
+  {
+    title: 'Nitro module',
+    value: 'nitro-module',
+    description: 'nitro for faster modules',
+  },
   {
     title: 'Turbo module',
     value: 'turbo-module',

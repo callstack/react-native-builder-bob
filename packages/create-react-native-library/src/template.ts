@@ -3,21 +3,27 @@ import fs from 'fs-extra';
 import ejs from 'ejs';
 import type { Answers, ExampleApp, SupportedArchitecture } from './input';
 
+export type TemplateVersions = {
+  bob: string;
+  nitroModules: string;
+  nitroCodegen: string;
+};
+
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
 export type TemplateConfiguration = {
-  bob: {
-    version: string;
-  };
+  versions: TemplateVersions;
   project: {
     slug: string;
     description: string;
     name: string;
     package: string;
+    package_array: string;
     package_dir: string;
     package_cpp: string;
     identifier: string;
     native: boolean;
+    nitro: boolean;
     arch: SupportedArchitecture;
     cpp: boolean;
     swift: boolean;
@@ -72,6 +78,7 @@ const NATIVE_FILES = {
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
+  module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
 } as const;
 
 const OBJC_FILES = {
@@ -93,11 +100,11 @@ const SWIFT_FILES = {
 } as const;
 
 export function generateTemplateConfiguration({
-  bobVersion,
+  versions,
   basename,
   answers,
 }: {
-  bobVersion: string;
+  versions: TemplateVersions;
   basename: string;
   answers: Required<Answers>;
 }): TemplateConfiguration {
@@ -122,9 +129,7 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
-    bob: {
-      version: bobVersion,
-    },
+    versions,
     project: {
       slug,
       description: answers.description,
@@ -137,10 +142,12 @@ export function generateTemplateConfiguration({
               .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
               .slice(1)}`,
       package: pack,
+      package_array: JSON.stringify(pack.split('.')),
       package_dir: pack.replace(/\./g, '/'),
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
+      nitro: type.startsWith('nitro'),
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
@@ -192,6 +199,11 @@ export async function applyTemplates(
 
     if (config.example !== 'none') {
       await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
+    }
+
+    if (config.project.nitro) {
+      await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
+      return;
     }
 
     if (config.project.module) {
