@@ -6,7 +6,6 @@ import type {
   ExportAllDeclaration,
   ExportNamedDeclaration,
 } from '@babel/types';
-import isFabricComponentFile from './utils/isFabricComponentFile';
 
 type Options = {
   /**
@@ -39,18 +38,17 @@ const isDirectory = (filename: string): boolean => {
   return exists;
 };
 
-const checkExts = (
+const isModule = (
   filename: string,
   extension: string,
-  platforms: string[],
-  callback: (ext: string) => boolean
+  platforms: string[]
 ): boolean => {
   const exts = ['js', 'ts', 'jsx', 'tsx', extension];
 
   return exts.some(
     (ext) =>
-      callback(`${filename}.${ext}`) &&
-      platforms.every((platform) => !callback(`${filename}.${platform}.${ext}`))
+      isFile(`${filename}.${ext}`) &&
+      platforms.every((platform) => !isFile(`${filename}.${platform}.${ext}`))
   );
 };
 
@@ -114,13 +112,6 @@ export default function (
       node.source.value
     );
 
-    // Skip if file is a fabric view
-    if (
-      checkExts(filename, extension, platforms, (f) => isFabricComponentFile(f))
-    ) {
-      return;
-    }
-
     // Replace .ts extension with .js if file with extension is explicitly imported
     if (isFile(filename)) {
       node.source.value = node.source.value.replace(/\.tsx?$/, `.${extension}`);
@@ -128,7 +119,7 @@ export default function (
     }
 
     // Add extension if .ts file or file with extension exists
-    if (checkExts(filename, extension, platforms, isFile)) {
+    if (isModule(filename, extension, platforms)) {
       node.source.value += `.${extension}`;
       return;
     }
@@ -136,7 +127,7 @@ export default function (
     // Expand folder imports to index and add extension
     if (
       isDirectory(filename) &&
-      checkExts(path.join(filename, 'index'), extension, platforms, isFile)
+      isModule(path.join(filename, 'index'), extension, platforms)
     ) {
       node.source.value = node.source.value.replace(
         /\/?$/,
