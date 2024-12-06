@@ -23,7 +23,7 @@ The [example app](/example/) demonstrates usage of the library. You need to run 
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
 <% if (project.nitro) { -%>
-This project uses [Nitro Modules](https://nitro.margelo.com/). If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/docs).
+This project uses [Nitro Modules](https://nitro.margelo.com/). If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
 <% } -%>
 
 <% if (project.native) { -%>
