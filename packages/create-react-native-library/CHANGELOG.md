@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.2...create-react-native-library@0.45.3) (2024-12-06)
+
+### Bug Fixes
+
+- fix codegen script failing due to missing platforms ([86c5c67](https://github.com/callstack/react-native-builder-bob/commit/86c5c67656712a990f2dd1c9eda761c7082d52e6)) - by @satya164
+
 ## [0.45.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.1...create-react-native-library@0.45.2) (2024-12-06)
 
 **Note:** Version bump only for package create-react-native-library

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.1...react-native-builder-bob@0.35.2) (2024-12-06)
+
+### Bug Fixes
+
+- fix syntax error when running the app ([b029db9](https://github.com/callstack/react-native-builder-bob/commit/b029db94aed3c7f4adba7833668ebd146fc1470e)) - by @satya164
+
 ## [0.35.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.0...react-native-builder-bob@0.35.1) (2024-12-06)
 
 ### Reverts
