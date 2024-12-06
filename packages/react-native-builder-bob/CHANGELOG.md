@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.34.0...react-native-builder-bob@0.35.0) (2024-12-06)
+
+### Features
+
+- enable JS codegen transform ([#717](https://github.com/callstack/react-native-builder-bob/issues/717)) ([2fc7496](https://github.com/callstack/react-native-builder-bob/commit/2fc7496e9ad18cfa20990d25f1c7d44b92eedf49)) - by @jbroma
+
 # [0.34.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.33.3...react-native-builder-bob@0.34.0) (2024-12-04)
 
 ### Bug Fixes
