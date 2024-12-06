@@ -138,11 +138,11 @@ export function generateTemplateConfiguration({
       name:
         /^[A-Z]/.test(basename) && /^[a-z0-9]+$/i.test(basename)
           ? // If the project name is already in PascalCase, use it as-is
-          basename
+            basename
           : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
-          `${project.charAt(0).toUpperCase()}${project
-            .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
-            .slice(1)}`,
+            `${project.charAt(0).toUpperCase()}${project
+              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
+              .slice(1)}`,
       package: pack,
       package_array: JSON.stringify(pack.split('.')),
       package_dir: pack.replace(/\./g, '/'),
@@ -236,8 +236,9 @@ export async function applyTemplates(
       }
     }
 
-    const templateType = `${config.project.module ? 'module' : 'view'}_${config.project.arch
-      }` as const;
+    const templateType = `${config.project.module ? 'module' : 'view'}_${
+      config.project.arch
+    }` as const;
 
     await applyTemplate(config, KOTLIN_FILES[templateType], folder);
 

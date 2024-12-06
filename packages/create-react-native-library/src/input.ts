@@ -33,27 +33,27 @@ const LANGUAGE_CHOICES: {
   value: ProjectLanguages;
   types: ProjectType[];
 }[] = [
-    {
-      title: 'Kotlin & Swift',
-      value: 'kotlin-swift',
-      types: ['nitro-module', 'legacy-module', 'legacy-view'],
-    },
-    {
-      title: 'Kotlin & Objective-C',
-      value: 'kotlin-objc',
-      types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
-    },
-    {
-      title: 'C++ for Android & iOS',
-      value: 'cpp',
-      types: ['turbo-module', 'legacy-module'],
-    },
-    {
-      title: 'JavaScript for Android, iOS & Web',
-      value: 'js',
-      types: ['library'],
-    },
-  ];
+  {
+    title: 'Kotlin & Swift',
+    value: 'kotlin-swift',
+    types: ['nitro-module', 'legacy-module', 'legacy-view'],
+  },
+  {
+    title: 'Kotlin & Objective-C',
+    value: 'kotlin-objc',
+    types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
+  },
+  {
+    title: 'C++ for Android & iOS',
+    value: 'cpp',
+    types: ['turbo-module', 'legacy-module'],
+  },
+  {
+    title: 'JavaScript for Android, iOS & Web',
+    value: 'js',
+    types: ['library'],
+  },
+];
 
 const EXAMPLE_CHOICES = (
   [
@@ -85,37 +85,37 @@ const TYPE_CHOICES: {
   value: ProjectType;
   description: string;
 }[] = [
-    {
-      title: 'Nitro module',
-      value: 'nitro-module',
-      description: 'nitro for faster modules',
-    },
-    {
-      title: 'Turbo module',
-      value: 'turbo-module',
-      description: 'integration for native APIs to JS',
-    },
-    {
-      title: 'Fabric view',
-      value: 'fabric-view',
-      description: 'integration for native views to JS',
-    },
-    {
-      title: 'Legacy Native module',
-      value: 'legacy-module',
-      description: 'bridge for native APIs to JS (old architecture)',
-    },
-    {
-      title: 'Legacy Native view',
-      value: 'legacy-view',
-      description: 'bridge for native views to JS (old architecture)',
-    },
-    {
-      title: 'JavaScript library',
-      value: 'library',
-      description: 'supports Expo Go and Web',
-    },
-  ];
+  {
+    title: 'Nitro module',
+    value: 'nitro-module',
+    description: 'nitro for faster modules',
+  },
+  {
+    title: 'Turbo module',
+    value: 'turbo-module',
+    description: 'integration for native APIs to JS',
+  },
+  {
+    title: 'Fabric view',
+    value: 'fabric-view',
+    description: 'integration for native views to JS',
+  },
+  {
+    title: 'Legacy Native module',
+    value: 'legacy-module',
+    description: 'bridge for native APIs to JS (old architecture)',
+  },
+  {
+    title: 'Legacy Native view',
+    value: 'legacy-view',
+    description: 'bridge for native views to JS (old architecture)',
+  },
+  {
+    title: 'JavaScript library',
+    value: 'library',
+    description: 'supports Expo Go and Web',
+  },
+];
 
 export const acceptedArgs: Record<ArgName, yargs.Options> = {
   slug: {
