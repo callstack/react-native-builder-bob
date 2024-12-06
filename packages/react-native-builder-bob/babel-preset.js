@@ -4,10 +4,16 @@ const browserslist = require('browserslist');
 
 /**
  * Babel preset for React Native Builder Bob
+ *
+ * @param {Boolean} options.supportsStaticESM - Whether to preserve ESM imports/exports, defaults to `false`
+ * @param {Boolean} options.rewriteImportExtensions - Whether to rewrite import extensions to '.js', defaults to `false`
+ * @param {'automatic' | 'classic'} options.jsxRuntime - Which JSX runtime to use, defaults to 'automatic'
  */
 module.exports = function (api, options, cwd) {
   const opt = (name) =>
-    api.caller((caller) => (caller != null ? caller[name] : undefined));
+    options[name] !== undefined
+      ? options[name]
+      : api.caller((caller) => (caller != null ? caller[name] : undefined));
 
   const supportsStaticESM = opt('supportsStaticESM');
   const rewriteImportExtensions = opt('rewriteImportExtensions');
@@ -47,7 +53,6 @@ module.exports = function (api, options, cwd) {
       require.resolve('@babel/preset-flow'),
     ],
     plugins: [
-      require.resolve('@react-native/babel-plugin-codegen'),
       require.resolve('@babel/plugin-transform-strict-mode'),
       [
         require.resolve('./lib/babel'),

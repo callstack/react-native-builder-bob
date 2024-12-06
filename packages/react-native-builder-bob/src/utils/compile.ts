@@ -4,6 +4,7 @@ import kleur from 'kleur';
 import * as babel from '@babel/core';
 import glob from 'glob';
 import type { Input } from '../types';
+import isFabricComponentFile from './isFabricComponentFile';
 
 type Options = Input & {
   esm?: boolean;
@@ -92,6 +93,13 @@ export default async function compile({
       if (!sourceExt.test(filepath)) {
         // Copy files which aren't source code
         fs.copy(filepath, outputFilename);
+        return;
+      }
+
+      if (isFabricComponentFile(filepath)) {
+        // React Native wants to handle compiling the file for fabric components
+        // So we just copy it over as is
+        fs.copy(filepath, path.join(output, path.relative(source, filepath)));
         return;
       }
 
