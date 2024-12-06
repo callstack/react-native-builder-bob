@@ -24,7 +24,7 @@
     "ios",
     "cpp",
 <% if (project.nitro) { -%>
-    "nitro",
+    "nitrogen",
 <% } -%>
     "*.podspec",
     "react-native.config.js",
@@ -51,11 +51,9 @@
 <% } else { -%>
     "clean": "del-cli lib",
 <% } -%>
-<% if (example !== 'expo') { -%>
-    "nitrogen": "nitro-codegen",
-    "prepare": "bob build && yarn nitrogen",
-<% } else { -%>
     "prepare": "bob build",
+<% if (project.nitro) { -%>
+    "nitrogen": "nitro-codegen",
 <% } -%>
     "release": "release-it"
   },
