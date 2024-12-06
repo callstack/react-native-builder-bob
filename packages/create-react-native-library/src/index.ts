@@ -121,7 +121,7 @@ async function create(_argv: yargs.Arguments<Args>) {
       : devDependencies;
   }
 
-  if (config.example === 'vanilla' && config.project.arch !== 'legacy') {
+  if (config.example === 'vanilla' && config.project.arch === 'new') {
     addCodegenBuildScript(folder);
   }
 
