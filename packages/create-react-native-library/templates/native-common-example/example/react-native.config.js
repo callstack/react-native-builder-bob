@@ -15,7 +15,7 @@ module.exports = {
       automaticPodsInstallation: true,
     },
   }),
-<% } else { -%>
+<% } else if (example === 'vanila') { -%>
   project: {
     ios: {
       automaticPodsInstallation: true,

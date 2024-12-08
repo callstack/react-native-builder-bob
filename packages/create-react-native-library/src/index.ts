@@ -103,9 +103,9 @@ async function create(_argv: yargs.Arguments<Args>) {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
+      config,
       destination: folder,
       reactNativeVersion: answers.reactNativeVersion,
-      config,
     });
   }
 
