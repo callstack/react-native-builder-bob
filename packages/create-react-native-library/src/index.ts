@@ -8,7 +8,7 @@ import generateExampleApp from './exampleApp/generateExampleApp';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertUserInput, assertNpxExists } from './utils/assert';
-import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import {
   createQuestions,
@@ -44,7 +44,10 @@ async function create(_argv: yargs.Arguments<Args>) {
   const { _, $0, ...argv } = _argv;
 
   // Prefetch bob version in background while asking questions
-  const resolveBobVersion = resolveBobVersionWithFallback(FALLBACK_BOB_VERSION);
+  const bobVersionPromise = resolveNpmPackageVersion(
+    'react-native-builder-bob',
+    FALLBACK_BOB_VERSION
+  );
 
   const local = await promptLocalLibrary(argv);
   const folder = await promptPath(argv, local);
@@ -72,7 +75,7 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   assertUserInput(questions, answers);
 
-  const bobVersion = await resolveBobVersion();
+  const bobVersion = await bobVersionPromise;
 
   const config = generateTemplateConfiguration({
     bobVersion,
