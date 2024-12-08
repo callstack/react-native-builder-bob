@@ -45,7 +45,7 @@ jobs:
             language: kotlin-swift
           - type: fabric-view
             language: cpp
-          - type: legacy-module
+          - type: legacy-view
             language: cpp
         include:
           - os: ubuntu-latest

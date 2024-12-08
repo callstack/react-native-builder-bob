@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import ora from 'ora';
-import prompts from './utils/prompts';
+import { prompt } from './utils/prompt';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
@@ -56,22 +56,15 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   const basename = path.basename(folder);
 
-  const { questions, singleChoiceAnswers } = await createQuestions({
-    basename,
-    local,
-    argv,
-  });
+  const questions = await createQuestions({ basename, local });
 
   assertUserInput(questions, argv);
 
-  const promptAnswers = await prompts(questions);
-
-  const answers = {
-    ...argv,
-    local,
-    ...singleChoiceAnswers,
+  const promptAnswers = await prompt(questions, argv);
+  const answers: Answers = {
     ...promptAnswers,
-  } as Required<Answers>;
+    local,
+  };
 
   assertUserInput(questions, answers);
 
@@ -161,7 +154,7 @@ async function promptLocalLibrary(argv: Args) {
 
     if (hasPackageJson) {
       // If we're under a project with package.json, ask the user if they want to create a local library
-      const answers = await prompts({
+      const answers = await prompt({
         type: 'confirm',
         name: 'local',
         message: `Looks like you're under a project folder. Do you want to create a local library?`,
@@ -181,7 +174,7 @@ async function promptPath(argv: Args, local: boolean) {
   if (argv.name && !local) {
     folder = path.join(process.cwd(), argv.name);
   } else {
-    const answers = await prompts({
+    const answers = await prompt({
       type: 'text',
       name: 'folder',
       message: `Where do you want to create the library?`,

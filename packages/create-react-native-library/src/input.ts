@@ -1,8 +1,8 @@
-import { version } from '../package.json';
-import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
+import validateNpmPackage from 'validate-npm-package-name';
 import type yargs from 'yargs';
-import type { PromptObject } from './utils/prompts';
+import { version } from '../package.json';
+import type { Question } from './utils/prompt';
 import { spawn } from './utils/spawn';
 
 export type ArgName =
@@ -111,14 +111,6 @@ const TYPE_CHOICES: {
   },
 ];
 
-export type Question = Omit<
-  PromptObject<keyof Answers>,
-  'validate' | 'name'
-> & {
-  validate?: (value: string) => boolean | string;
-  name: keyof Answers;
-};
-
 export const acceptedArgs: Record<ArgName, yargs.Options> = {
   slug: {
     description: 'Name of the npm package',
@@ -180,8 +172,8 @@ export type Answers = {
   authorUrl: string;
   repoUrl: string;
   languages: ProjectLanguages;
-  type?: ProjectType;
-  example?: ExampleApp;
+  type: ProjectType;
+  example: ExampleApp;
   reactNativeVersion?: string;
   local?: boolean;
 };
@@ -189,11 +181,9 @@ export type Answers = {
 export async function createQuestions({
   basename,
   local,
-  argv,
 }: {
   basename: string;
   local: boolean;
-  argv: Args;
 }) {
   let name, email;
 
@@ -204,7 +194,7 @@ export async function createQuestions({
     // Ignore error
   }
 
-  const initialQuestions: Question[] = [
+  const questions: Question<keyof Answers>[] = [
     {
       type: 'text',
       name: 'slug',
@@ -295,7 +285,7 @@ export async function createQuestions({
   ];
 
   if (!local) {
-    initialQuestions.push({
+    questions.push({
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
@@ -313,48 +303,7 @@ export async function createQuestions({
     });
   }
 
-  const singleChoiceAnswers: Partial<Answers> = {};
-  const finalQuestions: Question[] = [];
-
-  for (const question of initialQuestions) {
-    // Skip questions which are passed as parameter and pass validation
-    const argValue = argv[question.name];
-    if (argValue && question.validate?.(argValue) !== false) {
-      continue;
-    }
-
-    // Don't prompt questions with a single choice
-    if (Array.isArray(question.choices) && question.choices.length === 1) {
-      const onlyChoice = question.choices[0]!;
-      singleChoiceAnswers[question.name] = onlyChoice.value;
-
-      continue;
-    }
-
-    const { type, choices } = question;
-
-    // Don't prompt dynamic questions with a single choice
-    if (type === 'select' && typeof choices === 'function') {
-      question.type = (prev, values, prompt) => {
-        const dynamicChoices = choices(prev, { ...argv, ...values }, prompt);
-
-        if (dynamicChoices && dynamicChoices.length === 1) {
-          const onlyChoice = dynamicChoices[0]!;
-          singleChoiceAnswers[question.name] = onlyChoice.value;
-          return null;
-        }
-
-        return type;
-      };
-    }
-
-    finalQuestions.push(question);
-  }
-
-  return {
-    questions: finalQuestions,
-    singleChoiceAnswers,
-  };
+  return questions;
 }
 
 export function createMetadata(answers: Answers) {

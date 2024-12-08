@@ -99,7 +99,7 @@ export function generateTemplateConfiguration({
 }: {
   bobVersion: string;
   basename: string;
-  answers: Required<Answers>;
+  answers: Answers;
 }): TemplateConfiguration {
   const { slug, languages, type } = answers;
 
