@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.3...create-react-native-library@0.45.4) (2024-12-08)
+
+### Bug Fixes
+
+- don't crash if resolving version fails ([a403f14](https://github.com/callstack/react-native-builder-bob/commit/a403f149d2c578b5dcf524951f29b2aa0baa9619)) - by @satya164
+- validate arguments correctly ([#724](https://github.com/callstack/react-native-builder-bob/issues/724)) ([a34d80f](https://github.com/callstack/react-native-builder-bob/commit/a34d80fcf76aff1e3797f1ca1fd586fce7900731)) - by @satya164
+
 ## [0.45.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.2...create-react-native-library@0.45.3) (2024-12-06)
 
 ### Bug Fixes
