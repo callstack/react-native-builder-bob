@@ -1,8 +1,8 @@
-import { version } from '../package.json';
-import validateNpmPackage from 'validate-npm-package-name';
 import githubUsername from 'github-username';
+import validateNpmPackage from 'validate-npm-package-name';
 import type yargs from 'yargs';
-import type { PromptObject } from './utils/prompts';
+import { version } from '../package.json';
+import type { Question } from './utils/prompt';
 import { spawn } from './utils/spawn';
 
 export type ArgName =
@@ -21,10 +21,10 @@ export type ArgName =
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 export type ProjectType =
-  | 'module-new'
-  | 'view-new'
-  | 'module-legacy'
-  | 'view-legacy'
+  | 'turbo-module'
+  | 'fabric-view'
+  | 'legacy-module'
+  | 'legacy-view'
   | 'library';
 
 const LANGUAGE_CHOICES: {
@@ -35,17 +35,17 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: ['module-new', 'view-new', 'module-legacy', 'view-legacy'],
+    types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
   },
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['module-legacy', 'view-legacy'],
+    types: ['legacy-module', 'legacy-view'],
   },
   {
     title: 'C++ for Android & iOS',
     value: 'cpp',
-    types: ['module-new', 'module-legacy'],
+    types: ['turbo-module', 'legacy-module'],
   },
   {
     title: 'JavaScript for Android, iOS & Web',
@@ -57,13 +57,13 @@ const LANGUAGE_CHOICES: {
 const EXAMPLE_CHOICES = (
   [
     {
-      title: 'Vanilla',
+      title: 'App with Community CLI',
       value: 'vanilla',
       description: "provides access to app's native code",
       disabled: false,
     },
     {
-      title: 'Test app',
+      title: 'React Native Test App by Microsoft',
       value: 'test-app',
       description: "app's native code is abstracted away",
       // The test app is disabled for now until proper
@@ -71,9 +71,9 @@ const EXAMPLE_CHOICES = (
       disabled: !process.env.CRNL_ENABLE_TEST_APP,
     },
     {
-      title: 'Expo',
+      title: 'App with Expo CLI',
       value: 'expo',
-      description: 'managed expo project with web support',
+      description: 'managed expo app with web support',
       disabled: false,
     },
   ] as const
@@ -86,22 +86,22 @@ const TYPE_CHOICES: {
 }[] = [
   {
     title: 'Turbo module',
-    value: 'module-new',
+    value: 'turbo-module',
     description: 'integration for native APIs to JS',
   },
   {
     title: 'Fabric view',
-    value: 'view-new',
+    value: 'fabric-view',
     description: 'integration for native views to JS',
   },
   {
     title: 'Legacy Native module',
-    value: 'module-legacy',
+    value: 'legacy-module',
     description: 'bridge for native APIs to JS (old architecture)',
   },
   {
     title: 'Legacy Native view',
-    value: 'view-legacy',
+    value: 'legacy-view',
     description: 'bridge for native views to JS (old architecture)',
   },
   {
@@ -110,14 +110,6 @@ const TYPE_CHOICES: {
     description: 'supports Expo Go and Web',
   },
 ];
-
-export type Question = Omit<
-  PromptObject<keyof Answers>,
-  'validate' | 'name'
-> & {
-  validate?: (value: string) => boolean | string;
-  name: keyof Answers;
-};
 
 export const acceptedArgs: Record<ArgName, yargs.Options> = {
   slug: {
@@ -180,8 +172,8 @@ export type Answers = {
   authorUrl: string;
   repoUrl: string;
   languages: ProjectLanguages;
-  type?: ProjectType;
-  example?: ExampleApp;
+  type: ProjectType;
+  example: ExampleApp;
   reactNativeVersion?: string;
   local?: boolean;
 };
@@ -189,11 +181,9 @@ export type Answers = {
 export async function createQuestions({
   basename,
   local,
-  argv,
 }: {
   basename: string;
   local: boolean;
-  argv: Args;
 }) {
   let name, email;
 
@@ -204,7 +194,7 @@ export async function createQuestions({
     // Ignore error
   }
 
-  const initialQuestions: Question[] = [
+  const questions: Question<keyof Answers>[] = [
     {
       type: 'text',
       name: 'slug',
@@ -292,14 +282,20 @@ export async function createQuestions({
         });
       },
     },
-  ];
-
-  if (!local) {
-    initialQuestions.push({
+    {
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
       choices: (_, values) => {
+        if (local) {
+          return [
+            {
+              title: 'None',
+              value: 'none',
+            },
+          ];
+        }
+
         return EXAMPLE_CHOICES.filter((choice) => {
           if (values.type) {
             return values.type === 'library'
@@ -310,51 +306,10 @@ export async function createQuestions({
           return true;
         });
       },
-    });
-  }
+    },
+  ];
 
-  const singleChoiceAnswers: Partial<Answers> = {};
-  const finalQuestions: Question[] = [];
-
-  for (const question of initialQuestions) {
-    // Skip questions which are passed as parameter and pass validation
-    const argValue = argv[question.name];
-    if (argValue && question.validate?.(argValue) !== false) {
-      continue;
-    }
-
-    // Don't prompt questions with a single choice
-    if (Array.isArray(question.choices) && question.choices.length === 1) {
-      const onlyChoice = question.choices[0]!;
-      singleChoiceAnswers[question.name] = onlyChoice.value;
-
-      continue;
-    }
-
-    const { type, choices } = question;
-
-    // Don't prompt dynamic questions with a single choice
-    if (type === 'select' && typeof choices === 'function') {
-      question.type = (prev, values, prompt) => {
-        const dynamicChoices = choices(prev, { ...argv, ...values }, prompt);
-
-        if (dynamicChoices && dynamicChoices.length === 1) {
-          const onlyChoice = dynamicChoices[0]!;
-          singleChoiceAnswers[question.name] = onlyChoice.value;
-          return null;
-        }
-
-        return type;
-      };
-    }
-
-    finalQuestions.push(question);
-  }
-
-  return {
-    questions: finalQuestions,
-    singleChoiceAnswers,
-  };
+  return questions;
 }
 
 export function createMetadata(answers: Answers) {

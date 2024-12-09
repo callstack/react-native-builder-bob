@@ -3,12 +3,12 @@ import fs from 'fs-extra';
 import kleur from 'kleur';
 import yargs from 'yargs';
 import ora from 'ora';
-import prompts from './utils/prompts';
+import { prompt } from './utils/prompt';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { assertUserInput, assertNpxExists } from './utils/assert';
-import { resolveBobVersionWithFallback } from './utils/promiseWithFallback';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import {
   createQuestions,
@@ -44,7 +44,10 @@ async function create(_argv: yargs.Arguments<Args>) {
   const { _, $0, ...argv } = _argv;
 
   // Prefetch bob version in background while asking questions
-  const resolveBobVersion = resolveBobVersionWithFallback(FALLBACK_BOB_VERSION);
+  const bobVersionPromise = resolveNpmPackageVersion(
+    'react-native-builder-bob',
+    FALLBACK_BOB_VERSION
+  );
 
   const local = await promptLocalLibrary(argv);
   const folder = await promptPath(argv, local);
@@ -53,26 +56,19 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   const basename = path.basename(folder);
 
-  const { questions, singleChoiceAnswers } = await createQuestions({
-    basename,
-    local,
-    argv,
-  });
+  const questions = await createQuestions({ basename, local });
 
   assertUserInput(questions, argv);
 
-  const promptAnswers = await prompts(questions);
-
-  const answers = {
-    ...argv,
-    local,
-    ...singleChoiceAnswers,
+  const promptAnswers = await prompt(questions, argv);
+  const answers: Answers = {
     ...promptAnswers,
-  } as Required<Answers>;
+    local,
+  };
 
   assertUserInput(questions, answers);
 
-  const bobVersion = await resolveBobVersion();
+  const bobVersion = await bobVersionPromise;
 
   const config = generateTemplateConfiguration({
     bobVersion,
@@ -121,7 +117,7 @@ async function create(_argv: yargs.Arguments<Args>) {
       : devDependencies;
   }
 
-  if (config.example === 'vanilla' && config.project.arch !== 'legacy') {
+  if (config.example === 'vanilla' && config.project.arch === 'new') {
     addCodegenBuildScript(folder);
   }
 
@@ -158,7 +154,7 @@ async function promptLocalLibrary(argv: Args) {
 
     if (hasPackageJson) {
       // If we're under a project with package.json, ask the user if they want to create a local library
-      const answers = await prompts({
+      const answers = await prompt({
         type: 'confirm',
         name: 'local',
         message: `Looks like you're under a project folder. Do you want to create a local library?`,
@@ -178,7 +174,7 @@ async function promptPath(argv: Args, local: boolean) {
   if (argv.name && !local) {
     folder = path.join(process.cwd(), argv.name);
   } else {
-    const answers = await prompts({
+    const answers = await prompt({
       type: 'text',
       name: 'folder',
       message: `Where do you want to create the library?`,

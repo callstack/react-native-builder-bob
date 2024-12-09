@@ -99,12 +99,12 @@ export function generateTemplateConfiguration({
 }: {
   bobVersion: string;
   basename: string;
-  answers: Required<Answers>;
+  answers: Answers;
 }): TemplateConfiguration {
   const { slug, languages, type } = answers;
 
   const arch =
-    type === 'module-legacy' || type === 'view-legacy' ? 'legacy' : 'new';
+    type === 'legacy-module' || type === 'legacy-view' ? 'legacy' : 'new';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   let namespace: string | undefined;
@@ -144,8 +144,8 @@ export function generateTemplateConfiguration({
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
-      view: answers.type.startsWith('view'),
-      module: answers.type.startsWith('module'),
+      view: answers.type.endsWith('-view'),
+      module: answers.type.endsWith('-module'),
     },
     author: {
       name: answers.authorName,

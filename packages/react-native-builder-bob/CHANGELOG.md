@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.1...react-native-builder-bob@0.35.2) (2024-12-06)
+
+### Bug Fixes
+
+- fix syntax error when running the app ([b029db9](https://github.com/callstack/react-native-builder-bob/commit/b029db94aed3c7f4adba7833668ebd146fc1470e)) - by @satya164
+
+## [0.35.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.0...react-native-builder-bob@0.35.1) (2024-12-06)
+
+### Reverts
+
+- Revert "feat: enable JS codegen transform (#717)" ([262185c](https://github.com/callstack/react-native-builder-bob/commit/262185cfcec2babf4a558b9e4b5ce570e1f5ff66)), closes [#717](https://github.com/callstack/react-native-builder-bob/issues/717) - by @satya164
+
+# [0.35.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.34.0...react-native-builder-bob@0.35.0) (2024-12-06)
+
+### Features
+
+- enable JS codegen transform ([#717](https://github.com/callstack/react-native-builder-bob/issues/717)) ([2fc7496](https://github.com/callstack/react-native-builder-bob/commit/2fc7496e9ad18cfa20990d25f1c7d44b92eedf49)) - by @jbroma
+
 # [0.34.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.33.3...react-native-builder-bob@0.34.0) (2024-12-04)
 
 ### Bug Fixes
