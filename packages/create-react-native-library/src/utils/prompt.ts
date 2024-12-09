@@ -42,8 +42,14 @@ export async function prompt<T extends string>(
         continue;
       }
 
+      const { type, choices } = question;
+
       // Don't prompt questions with a single choice
-      if (Array.isArray(question.choices) && question.choices.length === 1) {
+      if (
+        type === 'select' &&
+        Array.isArray(question.choices) &&
+        question.choices.length === 1
+      ) {
         const onlyChoice = question.choices[0];
 
         if (onlyChoice?.value) {
@@ -53,8 +59,6 @@ export async function prompt<T extends string>(
 
         continue;
       }
-
-      const { type, choices } = question;
 
       // Don't prompt dynamic questions with a single choice
       if (type === 'select' && typeof choices === 'function') {

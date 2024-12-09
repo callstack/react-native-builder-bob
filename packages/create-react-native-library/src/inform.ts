@@ -54,7 +54,7 @@ export async function printNextSteps(
             )} to link the library\n`
           : `- Link the library at ${kleur.blue(
               path.relative(process.cwd(), folder)
-            )} based on your project setup'\n`) +
+            )} based on your project setup\n`) +
         `- Run ${kleur.blue(
           'pod install --project-directory=ios'
         )} to install dependencies with CocoaPods\n` +

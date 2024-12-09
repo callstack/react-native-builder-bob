@@ -282,14 +282,20 @@ export async function createQuestions({
         });
       },
     },
-  ];
-
-  if (!local) {
-    questions.push({
+    {
       type: 'select',
       name: 'example',
       message: 'What type of example app do you want to create?',
       choices: (_, values) => {
+        if (local) {
+          return [
+            {
+              title: 'None',
+              value: 'none',
+            },
+          ];
+        }
+
         return EXAMPLE_CHOICES.filter((choice) => {
           if (values.type) {
             return values.type === 'library'
@@ -300,8 +306,8 @@ export async function createQuestions({
           return true;
         });
       },
-    });
-  }
+    },
+  ];
 
   return questions;
 }
