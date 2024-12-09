@@ -57,13 +57,13 @@ const LANGUAGE_CHOICES: {
 const EXAMPLE_CHOICES = (
   [
     {
-      title: 'Vanilla',
+      title: 'App with Community CLI',
       value: 'vanilla',
       description: "provides access to app's native code",
       disabled: false,
     },
     {
-      title: 'Test app',
+      title: 'React Native Test App by Microsoft',
       value: 'test-app',
       description: "app's native code is abstracted away",
       // The test app is disabled for now until proper
@@ -71,9 +71,9 @@ const EXAMPLE_CHOICES = (
       disabled: !process.env.CRNL_ENABLE_TEST_APP,
     },
     {
-      title: 'Expo',
+      title: 'App with Expo CLI',
       value: 'expo',
-      description: 'managed expo project with web support',
+      description: 'managed expo app with web support',
       disabled: false,
     },
   ] as const
