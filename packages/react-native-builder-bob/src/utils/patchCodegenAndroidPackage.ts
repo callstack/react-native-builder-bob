@@ -20,7 +20,7 @@ export async function patchCodegenAndroidPackage(
   report: Report
 ) {
   let codegenAndroidPath: string | undefined =
-    packageJson.codegenConfig.outputDir.android;
+    packageJson.codegenConfig?.outputDir?.android;
   if (!codegenAndroidPath) {
     throw new Error(
       `Your package.json doesn't contain codegenConfig.outputDir.android. Please see ${CODEGEN_DOCS}`
