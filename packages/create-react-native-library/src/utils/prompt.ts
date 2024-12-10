@@ -31,10 +31,12 @@ export async function prompt<T extends string>(
   options?: prompts.Options
 ) {
   const singleChoiceAnswers = {};
-  const promptQuestions = [];
+  const promptQuestions: Question<T>[] = [];
 
   if (Array.isArray(questions)) {
     for (const question of questions) {
+      let promptQuestion = question;
+
       // Skip questions which are passed as parameter and pass validation
       const argValue = argv?.[question.name];
 
@@ -62,25 +64,28 @@ export async function prompt<T extends string>(
 
       // Don't prompt dynamic questions with a single choice
       if (type === 'select' && typeof choices === 'function') {
-        question.type = (prev, values) => {
-          const dynamicChoices = choices(prev, { ...argv, ...values });
+        promptQuestion = {
+          ...question,
+          type: (prev, values) => {
+            const dynamicChoices = choices(prev, { ...argv, ...values });
 
-          if (dynamicChoices && dynamicChoices.length === 1) {
-            const onlyChoice = dynamicChoices[0];
+            if (dynamicChoices && dynamicChoices.length === 1) {
+              const onlyChoice = dynamicChoices[0];
 
-            if (onlyChoice?.value) {
-              // @ts-expect-error assume the passed value is correct
-              singleChoiceAnswers[question.name] = onlyChoice.value;
+              if (onlyChoice?.value) {
+                // @ts-expect-error assume the passed value is correct
+                singleChoiceAnswers[question.name] = onlyChoice.value;
+              }
+
+              return null;
             }
 
-            return null;
-          }
-
-          return type;
+            return type;
+          },
         };
       }
 
-      promptQuestions.push(question);
+      promptQuestions.push(promptQuestion);
     }
   } else {
     promptQuestions.push(questions);
