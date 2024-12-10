@@ -1,34 +1,10 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { prompt } from './prompt';
 import type { TemplateConfiguration } from '../template';
-import type { Args } from '../input';
 
 type PackageJson = {
   dependencies?: Record<string, string>;
 };
-
-export async function promptLocalLibrary(argv: Args): Promise<boolean> {
-  if (typeof argv.local === 'boolean') {
-    return argv.local;
-  }
-
-  const packageJsonPath = await findAppPackageJsonPath();
-
-  if (packageJsonPath === null) {
-    return false;
-  }
-
-  // If we're under a project with package.json, ask the user if they want to create a local library
-  const answers = await prompt({
-    type: 'confirm',
-    name: 'local',
-    message: `Looks like you're under a project folder. Do you want to create a local library?`,
-    initial: true,
-  });
-
-  return answers.local;
-}
 
 /** @returns `true` if successfull */
 export async function addNitroDependencyToLocalLibrary(

@@ -174,6 +174,7 @@ export async function applyTemplates(
   folder: string
 ) {
   const { local } = answers;
+
   if (local) {
     await applyTemplate(config, COMMON_LOCAL_FILES, folder);
   } else {

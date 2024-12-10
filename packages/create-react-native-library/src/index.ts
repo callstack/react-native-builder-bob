@@ -16,17 +16,15 @@ import {
   createMetadata,
   createQuestions,
   type Answers,
-  type Args,
 } from './input';
 import { applyTemplates, generateTemplateConfiguration } from './template';
-import { assertNpxExists, assertUserInput } from './utils/assert';
+import { assertNpxExists } from './utils/assert';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 import {
   addNitroDependencyToLocalLibrary,
   linkLocalLibrary,
-  promptLocalLibrary,
 } from './utils/local';
 import { determinePackageManager } from './utils/packageManager';
 
@@ -34,15 +32,15 @@ const FALLBACK_BOB_VERSION = '0.40.5';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 const SUPPORTED_REACT_NATIVE_VERSION = '0.78.2';
 
+type Args = Partial<Answers> & {
+  name?: string;
+  $0: string;
+  [key: string]: unknown;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
-  .command(
-    '$0 [name]',
-    'create a react native library',
-    acceptedArgs,
-    // @ts-expect-error Some types are still incompatible
-    create
-  )
+  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
   .demandCommand()
   .recommendCommands()
   .fail(printErrorHelp)
@@ -52,7 +50,7 @@ yargs
   })
   .strict().argv;
 
-async function create(_argv: yargs.Arguments<Args>) {
+async function create(_argv: Args) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _, $0, ...argv } = _argv;
 
@@ -66,26 +64,19 @@ async function create(_argv: yargs.Arguments<Args>) {
     FALLBACK_NITRO_MODULES_VERSION
   );
 
-  const local = await promptLocalLibrary(argv);
-  const folder = await promptPath(argv, local);
-
   await assertNpxExists();
 
-  const basename = path.basename(folder);
+  const questions = await createQuestions(argv);
 
-  const questions = await createQuestions({ basename, local });
+  const promptAnswers = await prompt<Answers, typeof argv>(questions, argv, {
+    interactive: argv.interactive,
+  });
 
-  assertUserInput(questions, argv);
-
-  const promptAnswers = await prompt(questions, argv);
-  const answers: Answers = {
+  const answers = {
     ...promptAnswers,
     reactNativeVersion:
       promptAnswers.reactNativeVersion ?? SUPPORTED_REACT_NATIVE_VERSION,
-    local,
   };
-
-  assertUserInput(questions, answers);
 
   const bobVersion = await bobVersionPromise;
 
@@ -101,9 +92,11 @@ async function create(_argv: yargs.Arguments<Args>) {
       // Nitro codegen's version is always the same as nitro modules version.
       nitroCodegen: nitroModulesVersion,
     },
-    basename,
+    basename: path.basename(answers.name ?? answers.directory),
     answers,
   });
+
+  const folder = path.resolve(process.cwd(), answers.directory);
 
   await fs.mkdirp(folder);
 
@@ -148,76 +141,35 @@ async function create(_argv: yargs.Arguments<Args>) {
       )}!\n`
     );
 
-  if (!local) {
+  if (answers.local) {
+    const packageManager = await determinePackageManager();
+
+    let addedNitro = false;
+
+    if (config.project.moduleConfig === 'nitro-modules') {
+      addedNitro = await addNitroDependencyToLocalLibrary(config);
+    }
+
+    const linkedLocalLibrary = await linkLocalLibrary(
+      config,
+      folder,
+      packageManager
+    );
+
+    printSuccessMessage();
+
+    printLocalLibNextSteps({
+      config,
+      packageManager,
+      linkedLocalLibrary,
+      addedNitro,
+      folder,
+    });
+  } else {
     await createInitialGitCommit(folder);
 
     printSuccessMessage();
 
     printNonLocalLibNextSteps(config);
-    return;
   }
-
-  const packageManager = await determinePackageManager();
-
-  let addedNitro = false;
-  if (config.project.moduleConfig === 'nitro-modules') {
-    addedNitro = await addNitroDependencyToLocalLibrary(config);
-  }
-
-  const linkedLocalLibrary = await linkLocalLibrary(
-    config,
-    folder,
-    packageManager
-  );
-
-  printSuccessMessage();
-
-  printLocalLibNextSteps({
-    config,
-    packageManager,
-    linkedLocalLibrary,
-    addedNitro,
-    folder,
-  });
-}
-
-async function promptPath(argv: Args, local: boolean) {
-  let folder: string;
-
-  if (argv.name && !local) {
-    folder = path.join(process.cwd(), argv.name);
-  } else {
-    const answers = await prompt({
-      type: 'text',
-      name: 'folder',
-      message: `Where do you want to create the library?`,
-      initial:
-        local && argv.name && !argv.name.includes('/')
-          ? `modules/${argv.name}`
-          : argv.name,
-      validate: (input) => {
-        if (!input) {
-          return 'Cannot be empty';
-        }
-
-        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
-          return 'Folder already exists';
-        }
-
-        return true;
-      },
-    });
-
-    folder = path.join(process.cwd(), answers.folder);
-  }
-
-  if (await fs.pathExists(folder)) {
-    throw new Error(
-      `A folder already exists at ${kleur.blue(
-        folder
-      )}! Please specify another folder name or delete the existing one.`
-    );
-  }
-
-  return folder;
 }

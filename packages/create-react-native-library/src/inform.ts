@@ -88,20 +88,19 @@ export function printLocalLibNextSteps({
 export function printErrorHelp(message: string, error: Error) {
   console.log('\n');
 
-  if (error) {
-    console.log(kleur.red(error.message));
-    throw error;
-  }
-
   if (message) {
-    console.log(kleur.red(message));
+    console.log(message);
   } else {
     console.log(
-      kleur.red(`An unknown error occurred. See '--help' for usage guide.`)
+      `An unknown error occurred. See ${kleur.blue('--help')} for usage guide.`
     );
   }
 
-  process.exit(1);
+  if (error) {
+    console.log('\n');
+
+    throw error;
+  }
 }
 
 export function printUsedRNVersion(
