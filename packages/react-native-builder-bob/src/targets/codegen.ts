@@ -6,14 +6,16 @@ import path from 'path';
 import del from 'del';
 import { runRNCCli } from '../utils/runRNCCli';
 
-type Options = Input;
+type Options = Input & {
+  clean: boolean;
+};
 
-export default async function build({ root, report }: Options) {
+export default async function build({ clean, root, report }: Options) {
   const packageJsonPath = path.resolve(root, 'package.json');
   const packageJson = await fs.readJson(packageJsonPath);
 
   const codegenIosPath = packageJson.codegenConfig?.outputDir?.ios;
-  if (codegenIosPath != null) {
+  if (codegenIosPath != null && clean) {
     report.info(
       `Cleaning up previous iOS codegen native code at ${kleur.blue(
         path.relative(root, codegenIosPath)
@@ -23,7 +25,7 @@ export default async function build({ root, report }: Options) {
   }
 
   const codegenAndroidPath = packageJson.codegenConfig?.outputDir?.android;
-  if (codegenAndroidPath != null) {
+  if (codegenAndroidPath != null && clean) {
     report.info(
       `Cleaning up previous Android codegen native code at ${kleur.blue(
         path.relative(root, codegenAndroidPath)

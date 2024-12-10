@@ -14,6 +14,7 @@ type Options = Input & {
     project?: string;
     tsc?: string;
   };
+  clean: boolean;
 };
 
 type Field = {
@@ -24,17 +25,20 @@ type Field = {
 };
 
 export default async function build({
-  source,
+  clean,
   root,
+  source,
   output,
   report,
   options,
 }: Options) {
-  report.info(
-    `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
-  );
+  if (clean) {
+    report.info(
+      `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
+    );
 
-  await del([output]);
+    await del([output]);
+  }
 
   report.info(`Generating type definitions with ${kleur.blue('tsc')}`);
 
