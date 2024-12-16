@@ -23,7 +23,7 @@
     "android",
     "ios",
     "cpp",
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === "nitro-modules") { -%>
     "nitrogen",
 <% } -%>
     "*.podspec",
@@ -52,7 +52,7 @@
     "clean": "del-cli lib",
 <% } -%>
     "prepare": "bob build",
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
     "nitrogen": "nitro-codegen",
 <% } -%>
     "release": "release-it"
@@ -78,7 +78,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
-<% if (example === 'vanilla' && !project.nitro) { -%>
+<% if (example === 'vanilla' && (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view')) { -%>
     "@react-native-community/cli": "15.0.0-alpha.2",
 <% } -%>
     "@react-native/eslint-config": "^0.73.1",
@@ -91,14 +91,14 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
     "nitro-codegen": "^<%- versions.nitroCodegen %>",
 <% } -%>
     "prettier": "^3.0.3",
     "react": "17.0.2",
     "react-native": "0.73.0",
     "react-native-builder-bob": "^<%- versions.bob %>",
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
     "react-native-nitro-modules": "^<%- versions.nitroModules %>",
 <% } -%>
     "release-it": "^17.10.0",
@@ -112,7 +112,7 @@
   },
   "peerDependencies": {
     "react": "*",
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
     "react-native": "*",
     "react-native-nitro-modules": "*"
 <% } else { -%>    
@@ -189,7 +189,7 @@
     "source": "src",
     "output": "lib",
     "targets": [
-<% if (project.arch === 'new' && !project.nitro) { -%>
+<% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
       "codegen",
 <% } -%>
       [
@@ -211,11 +211,11 @@
         }
       ]
     ]
-<% if (project.arch === 'new' && !project.nitro) { -%>
+<% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
   },
   "codegenConfig": {
-    "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
-    "type": "<%- project.view ? 'all': 'modules' -%>",
+    "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
+    "type": "<%- project.viewConfig !== null ? 'components': 'modules' -%>",
     "jsSrcsDir": "src",
     "outputDir": {
       "ios": "ios/generated",

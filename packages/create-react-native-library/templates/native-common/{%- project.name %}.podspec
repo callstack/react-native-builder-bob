@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 <% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm}"
 <% } -%>
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === "nitro-modules") { -%>
 
   load 'nitrogen/generated/ios/<%- project.name -%>+autolinking.rb'
   add_nitrogen_files(s)
@@ -45,7 +45,7 @@ Pod::Spec.new do |s|
           "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
           "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
       }
-<% if (project.view) { -%>
+<% if (project.viewConfig !== null) { -%>
       s.dependency "React-RCTFabric"
 <% } -%>
       s.dependency "React-Codegen"

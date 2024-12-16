@@ -4,7 +4,7 @@
 
 ## Installation
 
-<% if (project.nitro) { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 ```sh
 npm install <%- project.slug %> react-native-nitro-modules
 
@@ -18,7 +18,7 @@ npm install <%- project.slug %>
 
 ## Usage
 
-<% if (project.view) { -%>
+<% if (project.viewConfig !== null) { -%>
 
 ```js
 import { <%- project.name -%>View } from "<%- project.slug -%>";
@@ -28,7 +28,7 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 <<%- project.name -%>View color="tomato" />
 ```
 
-<% } else if (project.arch === 'new' && project.module) { -%>
+<% } else if (project.moduleConfig === 'nitro-modules' || project.moduleConfig === 'turbo-modules') { -%>
 
 ```js
 import { multiply } from '<%- project.slug -%>';

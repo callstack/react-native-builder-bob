@@ -49,13 +49,13 @@ async function create(_argv: yargs.Arguments<Args>) {
   const bobVersionPromise = resolveNpmPackageVersion(
     'react-native-builder-bob',
     FALLBACK_BOB_VERSION
-  )
+  );
   const nitroModulesVersionPromise = resolveNpmPackageVersion(
-    "react-native-nitro-modules",
+    'react-native-nitro-modules',
     FALLBACK_NITRO_MODULES_VERSION
   );
   const nitroCodegenVersionPromise = resolveNpmPackageVersion(
-    "nitro-codegen",
+    'nitro-codegen',
     FALLBACK_NITRO_CODEGEN_VERSION
   );
 
@@ -132,8 +132,8 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   if (
     config.example === 'vanilla' &&
-    config.project.arch === 'new' &&
-    !config.project.nitro
+    (config.project.moduleConfig === 'turbo-modules' ||
+      config.project.viewConfig === 'fabric-view')
   ) {
     addCodegenBuildScript(folder);
   }
