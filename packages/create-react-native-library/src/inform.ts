@@ -96,16 +96,6 @@ export async function printNextSteps(
         )
         .join('\n')}
 
-      ${
-        config.project.nitro
-          ? kleur.blue(
-              `Read the ${kleur.bold(
-                'Nitro Modules'
-              )} docs at ${kleur.underline('https://nitro.margelo.com')}
-              `
-            )
-          : ''
-      }
       ${kleur.yellow(
         `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
       )}
