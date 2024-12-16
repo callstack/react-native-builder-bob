@@ -237,7 +237,8 @@ export default async function generateExampleApp({
     });
   }
 
-  // Sort the deps by name
+  // Sort the deps by name to match behavior of package managers
+  // This way the package.json doesn't get updated when installing deps
   for (const field of ['dependencies', 'devDependencies']) {
     if (pkg[field]) {
       pkg[field] = sortObjectKeys(pkg[field]);
