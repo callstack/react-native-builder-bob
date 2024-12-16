@@ -18,7 +18,6 @@ export type TemplateConfiguration = {
     description: string;
     name: string;
     package: string;
-    package_array: string;
     package_dir: string;
     package_cpp: string;
     identifier: string;
@@ -144,7 +143,6 @@ export function generateTemplateConfiguration({
               .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
               .slice(1)}`,
       package: pack,
-      package_array: JSON.stringify(pack.split('.')),
       package_dir: pack.replace(/\./g, '/'),
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),

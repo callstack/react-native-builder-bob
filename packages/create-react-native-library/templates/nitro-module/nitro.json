@@ -4,7 +4,7 @@
     "iosModuleName": "<%- project.name -%>"
   },
   "android": {
-    "androidNamespace": <%- project.package_array -%>,
+    "androidNamespace": <%- JSON.stringify(project.package.split('.')) -%>,
     "androidCxxLibName": "<%- project.package_cpp -%>"
   },
   "autolinking": {
