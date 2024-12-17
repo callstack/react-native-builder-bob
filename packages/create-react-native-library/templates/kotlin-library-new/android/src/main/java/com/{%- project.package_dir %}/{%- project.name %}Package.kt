@@ -24,7 +24,6 @@ class <%- project.name -%>Package : BaseReactPackage() {
         <%- project.name -%>Module.NAME,
         false,  // canOverrideExistingModule
         false,  // needsEagerInit
-        true,  // hasConstants
         false,  // isCxxModule
         true // isTurboModule
       )
