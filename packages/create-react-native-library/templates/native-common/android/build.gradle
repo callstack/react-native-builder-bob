@@ -102,6 +102,8 @@ android {
       path "CMakeLists.txt"
     }
   }
+<% } -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 
   packagingOptions {
     excludes = [
