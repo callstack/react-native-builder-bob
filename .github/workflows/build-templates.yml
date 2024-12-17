@@ -27,8 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
-          - macos-14 # macos latest defaults to macos 12 at the moment.
+          - ubuntu
+          - macos
         type:
           - turbo-module
           - fabric-view
@@ -48,7 +48,7 @@ jobs:
           - type: legacy-view
             language: cpp
         include:
-          - os: ubuntu-latest
+          - os: ubuntu
             type: library
             language: js
 
@@ -56,7 +56,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type }}-${{ matrix.language }}
       cancel-in-progress: true
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
 
     steps:
       - name: Checkout
@@ -129,14 +129,14 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu-latest ]]; then
+          if [[ ${{ matrix.os }} == ubuntu ]]; then
             if [[ ${{ matrix.type }} == *-view && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == *-objc ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == cpp ]]; then
               echo "android_build=1" >> $GITHUB_ENV
             fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos-14 ]]; then
+          if [[ ${{ matrix.os }} == macos ]]; then
             if [[ ${{ matrix.type }} == *-view && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == kotlin-* ]] || [[ ${{ matrix.type }} == *-module && ${{ matrix.language }} == cpp ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
