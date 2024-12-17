@@ -88,9 +88,9 @@ jobs:
             --example ${{ matrix.language == 'js' && 'expo' || 'vanilla' }} \
             --no-local
 
-      - name: Cache dependencies of library
+      - name: Restore dependencies of library
         id: library-yarn-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
@@ -106,6 +106,15 @@ jobs:
           touch yarn.lock # Without this Yarn will fail due to the parent directory being a Yarn workspace
           rm -f example/yarn.lock # Workaround for cached yarn.lock from older version
           yarn install --no-immutable
+
+      - name: Cache dependencies of library
+        if: steps.library-yarn-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.work_dir }}/**/node_modules
+            ${{ env.work_dir }}/yarn.lock
+          key: ${{ steps.library-yarn-cache.outputs.cache-primary-key }}
 
       - name: Use local version of react-native-builder-bob
         run: |
@@ -215,10 +224,10 @@ jobs:
         run: |
           yarn turbo run build:android --cache-dir=".turbo"
 
-      - name: Cache cocoapods
+      - name: Restore cocoapods
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
         id: library-cocoapods-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
@@ -236,6 +245,15 @@ jobs:
         run: |
           cd example/ios
           pod install
+
+      - name: Cache cocoapods
+        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.work_dir }}/**/ios/Pods
+            ${{ env.work_dir }}/**/ios/Podfile.lock
+          key: ${{ steps.library-cocoapods-cache.outputs.cache-primary-key }}
 
       - name: Build example (iOS)
         if: env.ios_build == 1
