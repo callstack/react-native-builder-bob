@@ -12,6 +12,7 @@ import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import buildCodegen from './targets/codegen';
 import type { Options, Report, Target } from './types';
+import runScript from './targets/script';
 
 type ArgName = 'target';
 
@@ -583,6 +584,15 @@ async function buildTarget(
         output: path.resolve(root, output, 'typescript'),
         report,
       });
+      break;
+    case 'script':
+      await runScript({
+        options: targetOptions,
+        source: path.resolve(root, source),
+        output: path.resolve(root, output, 'typescript'),
+        report,
+        root,
+      })
       break;
     default:
       logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
