@@ -13,6 +13,7 @@ import buildTypescript from './targets/typescript';
 import buildCodegen from './targets/codegen';
 import customTarget from './targets/custom';
 import type { Options, Report, Target } from './types';
+import runScript from './targets/script';
 
 type ArgName = 'target';
 
