@@ -188,6 +188,22 @@ Generates the [React Native Codegen](https://reactnative.dev/docs/the-new-archit
 
 You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
 
+#### `script`
+
+Allows arbitrary scripts to be called during the build process. There is no guarantee when the script is going to be called or finished. This is useful to call code generators during the build process.
+
+##### `run`
+
+`bob` will run the command passed in the `run` option. The build process will throw and exit if the `script` target is defined without the `run` option.
+
+##### `cwd`
+
+You can set the `cwd` (current working directory) option to specify where the command should be called from. This option accepts a path and will default to the path `build` was called from.
+
+##### `clean`
+
+You can pass a path to this option and `bob` will delete all the files on that path. The path is resolved relatively to the `cwd` option.
+
 #### `commonjs`
 
 Enable compiling source files with Babel and use CommonJS module system.
