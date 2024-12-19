@@ -1,12 +1,15 @@
 import kleur from 'kleur';
+import path from 'path';
 import type { Input } from '../types';
 import { spawn } from '../utils/spawn';
 import dedent from 'dedent';
+import del from 'del';
 
 type Options = Input & {
   options?: {
     run?: string;
     cwd?: string;
+    clean?: string;
   }
 };
 
@@ -34,6 +37,15 @@ export default async function runScript({
   }
 
   const cwd = options?.cwd ?? root
+
+  if (options.clean) {
+    report.info(
+      `Cleaning up previous script target at ${kleur.blue(path.relative(root, options.clean))}`
+    );
+
+    await del([path.resolve(cwd, options.clean)])
+  }
+
 
   report.info(
     `Running ${kleur.blue(options.run)} `
