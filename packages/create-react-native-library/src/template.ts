@@ -10,8 +10,8 @@ import type {
 
 export type TemplateVersions = {
   bob: string;
-  nitroModules: string;
-  nitroCodegen: string;
+  nitroModules?: string;
+  nitroCodegen?: string;
 };
 
 export type ModuleConfig =

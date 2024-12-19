@@ -22,7 +22,6 @@ import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.36.0';
 const FALLBACK_NITRO_MODULES_VERSION = '0.18.0';
-const FALLBACK_NITRO_CODEGEN_VERSION = '0.18.0';
 
 yargs
   .command(
@@ -54,10 +53,6 @@ async function create(_argv: yargs.Arguments<Args>) {
     'react-native-nitro-modules',
     FALLBACK_NITRO_MODULES_VERSION
   );
-  const nitroCodegenVersionPromise = resolveNpmPackageVersion(
-    'nitro-codegen',
-    FALLBACK_NITRO_CODEGEN_VERSION
-  );
 
   const local = await promptLocalLibrary(argv);
   const folder = await promptPath(argv, local);
@@ -79,14 +74,18 @@ async function create(_argv: yargs.Arguments<Args>) {
   assertUserInput(questions, answers);
 
   const bobVersion = await bobVersionPromise;
-  const nitroModulesVersion = await nitroModulesVersionPromise;
-  const nitroCodegenVersion = await nitroCodegenVersionPromise;
+
+  const nitroModulesVersion =
+    answers.type === 'nitro-module'
+      ? await nitroModulesVersionPromise
+      : undefined;
 
   const config = generateTemplateConfiguration({
     versions: {
       bob: bobVersion,
       nitroModules: nitroModulesVersion,
-      nitroCodegen: nitroCodegenVersion,
+      // Nitro codegen's version is always the same as nitro modules version.
+      nitroCodegen: nitroModulesVersion,
     },
     basename,
     answers,
