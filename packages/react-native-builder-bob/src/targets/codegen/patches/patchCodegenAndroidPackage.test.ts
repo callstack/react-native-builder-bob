@@ -19,7 +19,7 @@ const mockPackageJson = {
 const mockReport: Report = {
   info: console.log,
   warn: console.log,
-  error: console.log,
+  error: console.error,
   success: console.log,
 };
 

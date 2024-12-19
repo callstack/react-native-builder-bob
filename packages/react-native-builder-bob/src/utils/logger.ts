@@ -4,9 +4,16 @@ const logger =
   (
     type: string,
     color: kleur.Color,
+    group?: string,
     stream: NodeJS.WriteStream = process.stdout
   ) =>
   (...messages: unknown[]) => {
+    if (group) {
+      messages.unshift(
+        `${kleur.gray('[')}${kleur.blue(group)}${kleur.gray(']')}`
+      );
+    }
+
     const message = `${color(kleur.bold(type))} ${messages
       .map((message) => {
         if (typeof message === 'string') {
@@ -22,10 +29,14 @@ const logger =
 
 export const info = logger('ℹ', kleur.blue);
 export const warn = logger('⚠', kleur.yellow);
-export const error = logger('✖', kleur.red, process.stderr);
+export const error = logger('✖', kleur.red, undefined, process.stderr);
 export const success = logger('✔', kleur.green);
 
-export const exit = (...messages: unknown[]) => {
-  error(...messages);
-  process.exit(1);
+export const grouped = (label: string) => {
+  return {
+    info: logger('ℹ', kleur.blue, label),
+    warn: logger('⚠', kleur.yellow, label),
+    error: logger('✖', kleur.red, label, process.stderr),
+    success: logger('✔', kleur.green, label),
+  };
 };

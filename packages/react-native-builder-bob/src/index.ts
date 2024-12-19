@@ -12,7 +12,7 @@ import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import buildCodegen from './targets/codegen';
 import customTarget from './targets/custom';
-import type { Options, Report, Target } from './types';
+import type { Options, Target } from './types';
 
 type ArgName = 'target';
 
@@ -58,9 +58,10 @@ yargs
     }
 
     if (!(await fs.pathExists(projectPackagePath))) {
-      logger.exit(
+      logger.error(
         `Couldn't find a 'package.json' file in '${root}'.\n  Are you in a project folder?`
       );
+      process.exit(1);
     }
 
     const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
@@ -98,10 +99,10 @@ yargs
     }
 
     if (!entryFile) {
-      logger.exit(
+      logger.error(
         `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'.\n  Please re-run the CLI after creating it.`
       );
-      return;
+      process.exit(1);
     }
 
     pkg.devDependencies = Object.fromEntries(
@@ -463,71 +464,56 @@ yargs
     const result = await explorer.search();
 
     if (!result?.config) {
-      logger.exit(
+      logger.error(
         `No configuration found. Run '${argv.$0} init' to create one automatically.`
       );
+      process.exit(1);
     }
 
     const options: Options = result!.config;
 
     if (!options.targets?.length) {
-      logger.exit(
+      logger.error(
         `No targets found in the configuration in '${path.relative(
           root,
           result!.filepath
         )}'.`
       );
+      process.exit(1);
     }
 
     const source = options.source;
 
     if (!source) {
-      logger.exit(
+      logger.error(
         `No source option found in the configuration in '${path.relative(
           root,
           result!.filepath
         )}'.`
       );
+      process.exit(1);
     }
 
     const output = options.output;
 
     if (!output) {
-      logger.exit(
+      logger.error(
         `No source option found in the configuration in '${path.relative(
           root,
           result!.filepath
         )}'.`
       );
+      process.exit(1);
     }
 
     const exclude =
       options.exclude ?? '**/{__tests__,__fixtures__,__mocks__}/**';
 
-    const report = {
-      info: logger.info,
-      warn: logger.warn,
-      error: logger.error,
-      success: logger.success,
-    };
-
     if (argv.target != null) {
-      buildTarget(
-        argv.target,
-        report,
-        source as string,
-        output as string,
-        exclude
-      );
+      buildTarget(argv.target, source as string, output as string, exclude);
     } else {
       for (const target of options.targets!) {
-        buildTarget(
-          target,
-          report,
-          source as string,
-          output as string,
-          exclude
-        );
+        buildTarget(target, source as string, output as string, exclude);
       }
     }
   })
@@ -537,7 +523,6 @@ yargs
 
 async function buildTarget(
   target: Exclude<Options['targets'], undefined>[number],
-  report: Report,
   source: string,
   output: string,
   exclude: string
@@ -545,7 +530,7 @@ async function buildTarget(
   const targetName = Array.isArray(target) ? target[0] : target;
   const targetOptions = Array.isArray(target) ? target[1] : undefined;
 
-  report.info(`Building target ${kleur.blue(targetName)}`);
+  const report = logger.grouped(targetName);
 
   switch (targetName) {
     case 'commonjs':
@@ -594,6 +579,7 @@ async function buildTarget(
       });
       break;
     default:
-      logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
+      logger.error(`Invalid target ${kleur.blue(targetName)}.`);
+      process.exit(1);
   }
 }
