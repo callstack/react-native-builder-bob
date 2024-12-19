@@ -221,11 +221,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run nitro codegen
-        if: matrix.type == 'nitro-module'
-        run: |
-          yarn nitrogen
-
       - name: Build example (Android)
         env:
           JAVA_OPTS: "-XX:MaxHeapSize=6g"
