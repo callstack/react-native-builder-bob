@@ -189,6 +189,15 @@
     "source": "src",
     "output": "lib",
     "targets": [
+<% if (project.moduleConfig === "nitro-modules") { -%>
+      [
+        "custom",
+        {
+          "script": "nitrogen",
+          "clean": "nitrogen/"
+        }
+      ],
+<% } -%>
 <% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
       "codegen",
 <% } -%>
