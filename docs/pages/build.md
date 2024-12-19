@@ -194,15 +194,11 @@ Define a custom build target. This is useful to call code generators during the 
 
 ##### `script`
 
-`bob` will run the script passed in the `script` option. The build process **will throw and exit** if the `build` target is defined without this option.
-
-##### `cwd`
-
-You can set the `cwd` (current working directory) option to specify where the command should be called from. This option accepts **a relative path**, and it will default to the path `build` was called from.
+Accepts a script name. `bob` will call the matching script defined under `package.json`'s `scripts` property. The build process **will throw and exit** if the target is defined without this option.
 
 ##### `clean`
 
-You can pass a path to this option and `bob` will delete all the files on that path. The path is resolved relatively to the `cwd` option.
+You can pass a path to this option and `bob` will delete all the files on that path. The path is resolved relatively to where `build` was called from.
 
 #### `commonjs`
 

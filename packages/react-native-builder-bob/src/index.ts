@@ -592,7 +592,7 @@ async function buildTarget(
         output: path.resolve(root, output, 'typescript'),
         report,
         root,
-      })
+      });
       break;
     default:
       logger.exit(`Invalid target ${kleur.blue(targetName)}.`);
