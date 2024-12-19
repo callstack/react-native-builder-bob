@@ -49,9 +49,9 @@ export default async function customTarget({ options, root, report }: Options) {
       stdio: ['ignore', 'ignore', 'inherit'],
     });
   } catch (e) {
-    report.error(`Couldn't run ${kleur.blue(options.script)} script`);
+    report.error(`Couldn't run the ${kleur.blue(options.script)} script`);
     process.exit(1);
   }
 
-  report.success(`Ran ${kleur.blue(options.script)} script succesfully`);
+  report.success(`Ran the ${kleur.blue(options.script)} script succesfully`);
 }
