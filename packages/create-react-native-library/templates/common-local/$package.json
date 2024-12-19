@@ -5,8 +5,8 @@
   "main": "src/index",
 <% if (project.arch === 'new') { -%>
   "codegenConfig": {
-    "name": "RN<%- project.name -%><%- project.view ? 'View': '' -%>Spec",
-    "type": <%- project.view ? '"all"': '"modules"' %>,
+    "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
+    "type": <%- project.viewConfig !== null ? '"components"': '"modules"' %>,
     "jsSrcsDir": "src"
   },
 <% } -%>
