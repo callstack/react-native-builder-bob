@@ -188,6 +188,18 @@ Generates the [React Native Codegen](https://reactnative.dev/docs/the-new-archit
 
 You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
 
+#### `custom`
+
+Define a custom build target. This is useful to call code generators during the build process.
+
+##### `script`
+
+Accepts a script name. `bob` will call the matching script defined under `package.json`'s `scripts` property. The build process **will throw and exit** if the target is defined without this option.
+
+##### `clean`
+
+You can pass a path to this option and `bob` will delete all the files on that path. The path is resolved relatively to where `build` was called from.
+
 #### `commonjs`
 
 Enable compiling source files with Babel and use CommonJS module system.
