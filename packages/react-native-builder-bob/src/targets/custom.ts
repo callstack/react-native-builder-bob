@@ -5,7 +5,7 @@ import { spawn } from '../utils/spawn';
 import dedent from 'dedent';
 import del from 'del';
 
-type Options = Input & {
+type Options = Omit<Input, 'output'> & {
   options?: {
     script?: string;
     clean?: string;

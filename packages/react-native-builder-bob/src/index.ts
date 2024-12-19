@@ -589,7 +589,6 @@ async function buildTarget(
       await customTarget({
         options: targetOptions,
         source: path.resolve(root, source),
-        output: path.resolve(root, output, 'typescript'),
         report,
         root,
       });
