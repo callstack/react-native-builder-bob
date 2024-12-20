@@ -18,6 +18,22 @@ yarn
 ```
 
 > Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development.
+<% if (project.moduleConfig === 'nitro-modules') { -%>
+
+This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
+
+You need to run the code generation process using [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate-heavy code required for this project. Without this step, the example apps will not build.
+
+Run **Nitrogen** in the following cases:
+- When you make changes to any `*.nitro.ts` files.
+- When running the project for the first time (since the generated files are not committed to the repository).
+
+To invoke **Nitrogen**, use the following command:
+
+```sh
+yarn nitrogen
+```
+<% } -%>
 
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
