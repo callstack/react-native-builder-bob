@@ -18,14 +18,26 @@ yarn
 ```
 
 > Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development.
+<% if (project.moduleConfig === 'nitro-modules') { -%>
+
+This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
+
+You need to run the code generation process using [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate-heavy code required for this project. Without this step, the example apps will not build.
+
+Run **Nitrogen** in the following cases:
+- When you make changes to any `*.nitro.ts` files.
+- When running the project for the first time (since the generated files are not committed to the repository).
+
+To invoke **Nitrogen**, use the following command:
+
+```sh
+yarn nitrogen
+```
+<% } -%>
 
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
-<% if (project.moduleConfig === 'nitro-modules') { -%>
-
-This project uses [Nitro Modules](https://nitro.margelo.com/). If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
-<% } -%>
 
 <% if (project.native) { -%>
 If you want to use Android Studio or XCode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcworkspace` in XCode and find the source files at `Pods > Development Pods > <%- project.slug -%>`.
