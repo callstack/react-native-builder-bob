@@ -86,14 +86,15 @@ const TYPE_CHOICES: {
   description: string;
 }[] = [
   {
-    title: 'Nitro module',
-    value: 'nitro-module',
-    description: 'type-safe and fast integration for native APIs to JS',
-  },
-  {
     title: 'Turbo module',
     value: 'turbo-module',
     description: 'integration for native APIs to JS',
+  },
+  {
+    title: 'Nitro module',
+    value: 'nitro-module',
+    description:
+      'type-safe, fast integration for native APIs to JS (experimental)',
   },
   {
     title: 'Fabric view',
