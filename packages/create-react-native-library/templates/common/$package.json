@@ -114,7 +114,7 @@
     "react": "*",
 <% if (project.moduleConfig === 'nitro-modules') { -%>
     "react-native": "*",
-    "react-native-nitro-modules": "*"
+    "react-native-nitro-modules": "^<%- versions.nitroModules %>"
 <% } else { -%>    
     "react-native": "*"
 <% } -%>
