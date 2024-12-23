@@ -1,6 +1,5 @@
 class <%- project.name -%>: Hybrid<%- project.name -%>Spec {
-    public var hybridContext = margelo.nitro.HybridContext()
-    public var memorySize: Int {
+    public override var memorySize: Int {
         getSizeOf(self)
     }
 
