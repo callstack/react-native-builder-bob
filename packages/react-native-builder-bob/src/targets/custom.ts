@@ -13,7 +13,7 @@ type Options = Omit<Input, 'output'> & {
 };
 
 export default async function customTarget({ options, root, report }: Options) {
-  if (options?.script === undefined) {
+  if (options?.script == null) {
     report.error(
       dedent(
         `No script was provided with the custom target.
@@ -25,7 +25,7 @@ export default async function customTarget({ options, root, report }: Options) {
 
   if (options.clean) {
     report.info(
-      `Cleaning up previous custom build at ${kleur.blue(
+      `Cleaning up ${kleur.blue(
         path.relative(root, options.clean)
       )}`
     );
@@ -39,7 +39,7 @@ export default async function customTarget({ options, root, report }: Options) {
   // usr/bin/yarn -> yarn
   const packageManagerName = path.basename(packageManager);
   report.info(
-    `Calling ${kleur.blue(packageManagerName)} ${kleur.blue(
+    `Running ${kleur.blue(packageManagerName)} ${kleur.blue(
       packageManagerArgs.join(' ')
     )}`
   );
@@ -49,7 +49,7 @@ export default async function customTarget({ options, root, report }: Options) {
       stdio: ['ignore', 'ignore', 'inherit'],
     });
   } catch (e) {
-    report.error(`Couldn't run the ${kleur.blue(options.script)} script`);
+    report.error(`An error occurred when running ${kleur.blue(options.script)}`);
     process.exit(1);
   }
 
