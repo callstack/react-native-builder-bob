@@ -206,12 +206,8 @@
     },
     "android": {
       "javaPackageName": "com.<%- project.package %>"
-    <% if (example === 'vanilla') { -%>
     },
     "includesGeneratedCode": true
-    <% } else { -%>
-    }
-    <% } -%>
 <% } -%>
   }
 }

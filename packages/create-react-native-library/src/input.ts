@@ -54,25 +54,23 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
-const EXAMPLE_CHOICES = (
-  [
-    {
-      title: 'App with Community CLI',
-      value: 'vanilla',
-      description: "provides access to app's native code",
-    },
-    {
-      title: 'React Native Test App by Microsoft',
-      value: 'test-app',
-      description: "app's native code is abstracted away",
-    },
-    {
-      title: 'App with Expo CLI',
-      value: 'expo',
-      description: 'managed expo app with web support',
-    },
-  ]
-)
+const EXAMPLE_CHOICES = [
+  {
+    title: 'App with Community CLI',
+    value: 'vanilla',
+    description: "provides access to app's native code",
+  },
+  {
+    title: 'React Native Test App by Microsoft',
+    value: 'test-app',
+    description: "app's native code is abstracted away",
+  },
+  {
+    title: 'App with Expo CLI',
+    value: 'expo',
+    description: 'managed expo app with web support',
+  },
+];
 
 const TYPE_CHOICES: {
   title: string;
