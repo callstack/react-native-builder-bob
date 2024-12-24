@@ -60,24 +60,19 @@ const EXAMPLE_CHOICES = (
       title: 'App with Community CLI',
       value: 'vanilla',
       description: "provides access to app's native code",
-      disabled: false,
     },
     {
       title: 'React Native Test App by Microsoft',
       value: 'test-app',
       description: "app's native code is abstracted away",
-      // The test app is disabled for now until proper
-      // Codegen spec shipping is implemented
-      disabled: !process.env.CRNL_ENABLE_TEST_APP,
     },
     {
       title: 'App with Expo CLI',
       value: 'expo',
       description: 'managed expo app with web support',
-      disabled: false,
     },
-  ] as const
-).filter((choice) => !choice.disabled);
+  ]
+)
 
 const TYPE_CHOICES: {
   title: string;
