@@ -34,11 +34,11 @@ export default async function customTarget({ options, root, report }: Options) {
     await del([path.resolve(root, pathToClean)]);
   }
 
-  const packageManager = process.env.npm_execpath ?? 'npm';
+  const packageManagerExecutable = process.env.npm_execpath ?? 'npm';
   const packageManagerArgs = ['run', options.script];
 
   // usr/bin/yarn -> yarn
-  const packageManagerName = path.basename(packageManager);
+  const packageManagerName = path.basename(packageManagerExecutable);
   report.info(
     `Running ${kleur.blue(packageManagerName)} ${kleur.blue(
       packageManagerArgs.join(' ')
@@ -46,7 +46,7 @@ export default async function customTarget({ options, root, report }: Options) {
   );
 
   try {
-    await spawn(packageManager, packageManagerArgs, {
+    await spawn(packageManagerExecutable, packageManagerArgs, {
       stdio: ['ignore', 'ignore', 'inherit'],
     });
   } catch (e) {
