@@ -1,5 +1,6 @@
 import kleur from 'kleur';
 import path from 'path';
+import fs from 'fs-extra';
 import type { Input } from '../types';
 import { spawn } from '../utils/spawn';
 import dedent from 'dedent';
@@ -23,14 +24,14 @@ export default async function customTarget({ options, root, report }: Options) {
     process.exit(1);
   }
 
-  if (options.clean) {
-    report.info(
-      `Cleaning up ${kleur.blue(
-        path.relative(root, options.clean)
-      )}`
-    );
+  const pathToClean = options.clean
+    ? path.relative(root, options.clean)
+    : undefined;
 
-    await del([path.resolve(root, options.clean)]);
+  if (pathToClean) {
+    report.info(`Cleaning up ${kleur.blue(pathToClean)}`);
+
+    await del([path.resolve(root, pathToClean)]);
   }
 
   const packageManager = process.env.npm_execpath ?? 'npm';
@@ -49,9 +50,23 @@ export default async function customTarget({ options, root, report }: Options) {
       stdio: ['ignore', 'ignore', 'inherit'],
     });
   } catch (e) {
-    report.error(`An error occurred when running ${kleur.blue(options.script)}`);
+    report.error(
+      `An error occurred when running ${kleur.blue(options.script)}`
+    );
     process.exit(1);
   }
 
   report.success(`Ran the ${kleur.blue(options.script)} script succesfully`);
+
+  if (options.clean && pathToClean && !(await fs.pathExists(pathToClean))) {
+    report.warn(
+      `Custom target with the ${kleur.blue(
+        options.script
+      )} script has ${kleur.blue(options.clean)} as the ${kleur.bold(
+        'clean'
+      )} option but this path wasn't created after running the script. Are you sure you've defined the ${kleur.bold(
+        'clean'
+      )} path correctly?`
+    );
+  }
 }
