@@ -27,7 +27,7 @@ export async function getDependencyVersionsFromExampleApp(
     'react-native': reactNative,
   };
 
-  if (exampleAppType === 'vanilla') {
+  if (exampleAppType === 'vanilla' || exampleAppType === 'test-app') {
     // React Native doesn't provide the community CLI as a dependency.
     // We have to get read the version from the example app and put to the root package json
     const exampleCommunityCLIVersion =
