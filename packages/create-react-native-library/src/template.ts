@@ -104,7 +104,9 @@ export function generateTemplateConfiguration({
   const { slug, languages, type } = answers;
 
   const arch =
-    type === 'legacy-module' || type === 'legacy-view' ? 'legacy' : 'new';
+    type === 'legacy-module' || type === 'legacy-view' || type === 'library'
+      ? 'legacy'
+      : 'new';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   let namespace: string | undefined;
