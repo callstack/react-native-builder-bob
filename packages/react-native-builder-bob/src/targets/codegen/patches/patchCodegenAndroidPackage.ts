@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
-import type { Report } from '../types';
+import type { Report } from '../../../types';
 
-const CODEGEN_DOCS =
-  'https://github.com/reactwg/react-native-new-architecture/blob/main/docs/enable-libraries-prerequisites.md#configure-codegen';
+export const CODEGEN_DOCS =
+  'https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen';
 
 /**
  * Currently, running react-native codegen generates java files with package name `com.facebook.fbreact.specs`.
