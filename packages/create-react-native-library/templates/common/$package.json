@@ -70,7 +70,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@evilmartians/lefthook": "^1.5.0",
 <% if (example === 'vanilla') { -%>
     "@react-native-community/cli": "15.0.0-alpha.2",
