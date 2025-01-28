@@ -1,10 +1,11 @@
 import kleur from 'kleur';
-import type { Input } from '../types';
-import { patchCodegenAndroidPackage } from '../utils/patchCodegenAndroidPackage';
+import type { Input } from '../../types';
+import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
 import fs from 'fs-extra';
 import path from 'path';
 import del from 'del';
-import { runRNCCli } from '../utils/runRNCCli';
+import { runRNCCli } from '../../utils/runRNCCli';
+import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
 
 type Options = Input;
 
@@ -47,6 +48,7 @@ export default async function build({ root, report }: Options) {
     if (codegenType === 'modules' || codegenType === 'all') {
       await patchCodegenAndroidPackage(root, packageJson, report);
     }
+    await removeCodegenAppLevelCode(root, packageJson);
 
     report.success('Generated native code with codegen');
   } catch (e: unknown) {
