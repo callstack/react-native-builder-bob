@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.46.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.5...create-react-native-library@0.46.0) (2025-01-28)
+
+### Bug Fixes
+
+* js-only libraries have codegen config ([#758](https://github.com/callstack/react-native-builder-bob/issues/758)) ([d17ce35](https://github.com/callstack/react-native-builder-bob/commit/d17ce35fab6361f6ef8a6540929f75badb39af92)), closes [#754](https://github.com/callstack/react-native-builder-bob/issues/754) - by @atlj
+* remove deprecated hasConstants parameter ([#729](https://github.com/callstack/react-native-builder-bob/issues/729)) ([4bb5d9d](https://github.com/callstack/react-native-builder-bob/commit/4bb5d9dc31e8a6d016de1ba20860ab3ff5fb6a6b)), closes [/github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt#L25](https://github.com//github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt/issues/L25) - by @satya164
+
+### Features
+
+* add issue templates ([#696](https://github.com/callstack/react-native-builder-bob/issues/696)) ([4c046a2](https://github.com/callstack/react-native-builder-bob/commit/4c046a227061e67c256d5af33e5be4fc13d84433)) - by @okwasniewski
+
 ## [0.45.5](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.3...create-react-native-library@0.45.5) (2024-12-09)
 
 ### Bug Fixes

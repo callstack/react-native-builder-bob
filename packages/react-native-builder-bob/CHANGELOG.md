@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.2...react-native-builder-bob@0.35.3) (2025-01-28)
+
+### Bug Fixes
+
+* don't crash if codegenConfig is not defined in package.json ([#716](https://github.com/callstack/react-native-builder-bob/issues/716)) ([3f537f1](https://github.com/callstack/react-native-builder-bob/commit/3f537f1daf4cf01269ea00e665ed4dd0be550e27)) - by @riteshshukla04
+* ios example app has duplicated symbols due to codegen ([#757](https://github.com/callstack/react-native-builder-bob/issues/757)) ([c1b508a](https://github.com/callstack/react-native-builder-bob/commit/c1b508a8fdc65775076e376568443a0bdef675c6)), closes [#755](https://github.com/callstack/react-native-builder-bob/issues/755) - by @atlj
+
 ## [0.35.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.1...react-native-builder-bob@0.35.2) (2024-12-06)
 
 ### Bug Fixes
