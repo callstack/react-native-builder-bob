@@ -30,7 +30,7 @@ export async function patchCodegenAndroidPackage(
 
   if (!(await fs.pathExists(codegenAndroidPath))) {
     throw new Error(
-      `The codegen android path defined in your package.json: ${codegenAndroidPath} doesnt' exist.`
+      `The codegen android path defined in your package.json: ${codegenAndroidPath} doesn't exist.`
     );
   }
 
@@ -89,7 +89,19 @@ export async function patchCodegenAndroidPackage(
     })
   );
 
-  await fs.rm(path.resolve(codegenAndroidPath, 'java/com/facebook'), {
-    recursive: true,
-  });
+  if (
+    await fs.pathExists(
+      path.resolve(codegenAndroidPath, 'java/com/facebook/react/viewmanagers')
+    )
+  ) {
+    // Keep the view managers
+    await fs.rm(path.resolve(codegenAndroidPath, 'java/com/facebook/fbreact'), {
+      recursive: true,
+    });
+  } else {
+    // Delete the entire facebook namespace
+    await fs.rm(path.resolve(codegenAndroidPath, 'java/com/facebook'), {
+      recursive: true,
+    });
+  }
 }

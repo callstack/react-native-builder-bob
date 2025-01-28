@@ -23,12 +23,12 @@ const mockReport: Report = {
   success: console.log,
 };
 
-const mockJavaSpec = `
+const mockJavaModuleSpec = `
 /**
  * Some comment
  */
 
-package com.bobtest;
+package com.facebook.fbreact.specs;
 
 import com.example.exampleimport;
 
@@ -38,10 +38,26 @@ class SomeClass {
   }
 }`;
 
+const mockJavaViewSpec = `
+/**
+  * Some comment
+  */
+
+package com.facebook.react.viewmanagers;
+
+public interface SomeInterface<T extends View> {
+  void setColor(T view, @Nullable String value);
+}
+`;
+
 const mockProjectPath = path.resolve(__dirname, 'mockProject');
-const mockCodegenSpecsPath = path.resolve(
+const mockCodegenModuleSpecsPath = path.resolve(
   mockProjectPath,
   'android/generated/java/com/facebook/fbreact/specs'
+);
+const mockCodegenViewSpecsPath = path.resolve(
+  mockProjectPath,
+  'android/generated/java/com/facebook/react/viewmanagers'
 );
 
 describe('patchCodegenAndroidPackage', () => {
@@ -50,8 +66,8 @@ describe('patchCodegenAndroidPackage', () => {
       [mockProjectPath]: {
         'package.json': JSON.stringify(mockPackageJson),
       },
-      [mockCodegenSpecsPath]: {
-        'NativeBobtestSpec.java': mockJavaSpec,
+      [mockCodegenModuleSpecsPath]: {
+        'NativeBobtestSpec.java': mockJavaModuleSpec,
       },
     });
   });
@@ -101,6 +117,40 @@ describe('patchCodegenAndroidPackage', () => {
       mockReport
     );
 
-    expect(await fs.pathExists(mockCodegenSpecsPath)).toBe(false);
+    expect(await fs.pathExists(mockCodegenModuleSpecsPath)).toBe(false);
+  });
+
+  it("doesn't delete the view manager specs", async () => {
+    const mockPackageJsonWithTypeAll = {
+      ...mockPackageJson,
+      codegenConfig: {
+        ...mockPackageJson.codegenConfig,
+        type: 'all',
+      },
+    };
+
+    mockfs({
+      [mockProjectPath]: {
+        'package.json': JSON.stringify(mockPackageJsonWithTypeAll),
+      },
+      [mockCodegenModuleSpecsPath]: {
+        'NativeBobtestSpec.java': mockJavaModuleSpec,
+      },
+      [mockCodegenViewSpecsPath]: {
+        'BobtestViewManagerInterface.java': mockJavaViewSpec,
+      },
+    });
+
+    await patchCodegenAndroidPackage(
+      mockProjectPath,
+      mockPackageJsonWithTypeAll,
+      mockReport
+    );
+
+    expect(
+      await fs.pathExists(
+        path.join(mockCodegenViewSpecsPath, 'BobtestViewManagerInterface.java')
+      )
+    ).toBeTruthy();
   });
 });
