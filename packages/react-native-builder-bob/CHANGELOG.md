@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.36.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.3...react-native-builder-bob@0.36.0) (2025-01-28)
+
+### Bug Fixes
+
+* bob codegen deletes view specs when codegen type is all ([#736](https://github.com/callstack/react-native-builder-bob/issues/736)) ([7f5fbc7](https://github.com/callstack/react-native-builder-bob/commit/7f5fbc7a8ac8c68fedc2e62cff91b2696d74b635)), closes [#728](https://github.com/callstack/react-native-builder-bob/issues/728) - by @atlj
+
+### Features
+
+* update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
+
 ## [0.35.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.2...react-native-builder-bob@0.35.3) (2025-01-28)
 
 ### Bug Fixes
