@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.47.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.46.0...create-react-native-library@0.47.0) (2025-01-28)
+
+### Bug Fixes
+
+* build architectures needed only for cpp projects ([#753](https://github.com/callstack/react-native-builder-bob/issues/753)) ([9509158](https://github.com/callstack/react-native-builder-bob/commit/95091588167d0d4ffd04363030945c654ec60d30)) - by @okwasniewski
+* codegen generated headers are public on ios ([#737](https://github.com/callstack/react-native-builder-bob/issues/737)) ([5a68aa7](https://github.com/callstack/react-native-builder-bob/commit/5a68aa7507254704b762f01475d5306ddf2aaec6)), closes [#690](https://github.com/callstack/react-native-builder-bob/issues/690) - by @atlj
+
+### Features
+
+* **android:** upgrade SDK versions and build tools ([#742](https://github.com/callstack/react-native-builder-bob/issues/742)) ([388ad09](https://github.com/callstack/react-native-builder-bob/commit/388ad09ed748fc00c278ade6402fb7e62fa2be64)) - by @szymonrybczak
+* update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
+
 # [0.46.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.5...create-react-native-library@0.46.0) (2025-01-28)
 
 ### Bug Fixes
