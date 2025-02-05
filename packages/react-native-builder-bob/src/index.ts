@@ -11,6 +11,7 @@ import buildCommonJS from './targets/commonjs';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
 import buildCodegen from './targets/codegen';
+import customTarget from './targets/custom';
 import type { Options, Report, Target } from './types';
 
 type ArgName = 'target';
@@ -582,6 +583,14 @@ async function buildTarget(
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
         report,
+      });
+      break;
+    case 'custom':
+      await customTarget({
+        options: targetOptions,
+        source: path.resolve(root, source),
+        report,
+        root,
       });
       break;
     default:
