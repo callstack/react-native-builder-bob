@@ -20,7 +20,7 @@ import {
 import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
-const FALLBACK_BOB_VERSION = '0.32.0';
+const FALLBACK_BOB_VERSION = '0.36.0';
 
 yargs
   .command(
