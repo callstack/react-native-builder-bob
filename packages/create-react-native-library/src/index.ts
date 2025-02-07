@@ -21,7 +21,7 @@ import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.36.0';
-const FALLBACK_NITRO_MODULES_VERSION = '0.18.0';
+const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 
 yargs
   .command(
@@ -123,9 +123,9 @@ async function create(_argv: yargs.Arguments<Args>) {
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
       ? {
-          ...rootPackageJson.devDependencies,
-          ...devDependencies,
-        }
+        ...rootPackageJson.devDependencies,
+        ...devDependencies,
+      }
       : devDependencies;
   }
 
