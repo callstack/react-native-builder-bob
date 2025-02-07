@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.47.0...create-react-native-library@0.47.1) (2025-02-07)
+
+### Bug Fixes
+
+* `nkdversion` -> `ndkVersion` casing in `gradle.properties` ([#744](https://github.com/callstack/react-native-builder-bob/issues/744)) ([981eea1](https://github.com/callstack/react-native-builder-bob/commit/981eea148bf092fd1107173863417b54353f7202)), closes [/github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle#L62](https://github.com//github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle/issues/L62) - by @KiwiKilian
+
 # [0.47.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.46.0...create-react-native-library@0.47.0) (2025-01-28)
 
 ### Bug Fixes

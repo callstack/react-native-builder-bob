@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.36.0...react-native-builder-bob@0.37.0) (2025-02-07)
+
+### Features
+
+* **bob:** support custom target definitions ([#732](https://github.com/callstack/react-native-builder-bob/issues/732)) ([5b42f44](https://github.com/callstack/react-native-builder-bob/commit/5b42f440fc609d9a49b94a5435276acda9d0ade7)) - by @atlj
+
 # [0.36.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.3...react-native-builder-bob@0.36.0) (2025-01-28)
 
 ### Bug Fixes
