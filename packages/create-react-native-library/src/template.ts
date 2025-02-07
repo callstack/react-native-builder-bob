@@ -1,14 +1,31 @@
 import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
-import type { Answers, ExampleApp, SupportedArchitecture } from './input';
+import type {
+  Answers,
+  ExampleApp,
+  ProjectType,
+  SupportedArchitecture,
+} from './input';
+
+export type TemplateVersions = {
+  bob: string;
+  nitroModules?: string;
+  nitroCodegen?: string;
+};
+
+export type ModuleConfig =
+  | 'native-modules'
+  | 'turbo-modules'
+  | 'nitro-modules'
+  | null;
+
+export type ViewConfig = 'paper-view' | 'fabric-view' | null;
 
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
 export type TemplateConfiguration = {
-  bob: {
-    version: string;
-  };
+  versions: TemplateVersions;
   project: {
     slug: string;
     description: string;
@@ -21,8 +38,8 @@ export type TemplateConfiguration = {
     arch: SupportedArchitecture;
     cpp: boolean;
     swift: boolean;
-    view: boolean;
-    module: boolean;
+    viewConfig: ViewConfig;
+    moduleConfig: ModuleConfig;
   };
   author: {
     name: string;
@@ -72,6 +89,7 @@ const NATIVE_FILES = {
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
+  module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
 } as const;
 
 const OBJC_FILES = {
@@ -93,11 +111,11 @@ const SWIFT_FILES = {
 } as const;
 
 export function generateTemplateConfiguration({
-  bobVersion,
+  versions,
   basename,
   answers,
 }: {
-  bobVersion: string;
+  versions: TemplateVersions;
   basename: string;
   answers: Answers;
 }): TemplateConfiguration {
@@ -124,9 +142,7 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
-    bob: {
-      version: bobVersion,
-    },
+    versions,
     project: {
       slug,
       description: answers.description,
@@ -146,8 +162,8 @@ export function generateTemplateConfiguration({
       arch,
       cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
-      view: answers.type.endsWith('-view'),
-      module: answers.type.endsWith('-module'),
+      viewConfig: getViewConfig(type),
+      moduleConfig: getModuleConfig(type),
     },
     author: {
       name: answers.authorName,
@@ -158,6 +174,30 @@ export function generateTemplateConfiguration({
     example: answers.example,
     year: new Date().getFullYear(),
   };
+}
+
+function getModuleConfig(projectType: ProjectType): ModuleConfig {
+  switch (projectType) {
+    case 'nitro-module':
+      return 'nitro-modules';
+    case 'turbo-module':
+      return 'turbo-modules';
+    case 'legacy-module':
+      return 'native-modules';
+    default:
+      return null;
+  }
+}
+
+function getViewConfig(projectType: ProjectType): ViewConfig {
+  switch (projectType) {
+    case 'legacy-view':
+      return 'paper-view';
+    case 'fabric-view':
+      return 'fabric-view';
+    default:
+      return null;
+  }
 }
 
 export async function applyTemplates(
@@ -174,7 +214,7 @@ export async function applyTemplates(
     if (config.example !== 'none') {
       await applyTemplate(config, EXAMPLE_COMMON_FILES, folder);
 
-      if (config.project.view) {
+      if (config.project.viewConfig !== null) {
         await applyTemplate(config, EXAMPLE_VIEW_FILES, folder);
       } else {
         if (config.project.arch === 'legacy') {
@@ -196,7 +236,12 @@ export async function applyTemplates(
       await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
-    if (config.project.module) {
+    if (config.project.moduleConfig === 'nitro-modules') {
+      await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
+      return;
+    }
+
+    if (config.project.moduleConfig !== null) {
       await applyTemplate(
         config,
         NATIVE_FILES[`module_${config.project.arch}`],
@@ -213,7 +258,7 @@ export async function applyTemplates(
     if (config.project.swift) {
       await applyTemplate(config, SWIFT_FILES[`module_legacy`], folder);
     } else {
-      if (config.project.module) {
+      if (config.project.moduleConfig !== null) {
         await applyTemplate(config, OBJC_FILES[`module_common`], folder);
       } else {
         await applyTemplate(
@@ -224,9 +269,9 @@ export async function applyTemplates(
       }
     }
 
-    const templateType = `${config.project.module ? 'module' : 'view'}_${
-      config.project.arch
-    }` as const;
+    const templateType = `${
+      config.project.moduleConfig !== null ? 'module' : 'view'
+    }_${config.project.arch}` as const;
 
     await applyTemplate(config, KOTLIN_FILES[templateType], folder);
 

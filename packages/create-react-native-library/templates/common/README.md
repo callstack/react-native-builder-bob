@@ -4,13 +4,21 @@
 
 ## Installation
 
+<% if (project.moduleConfig === 'nitro-modules') { -%>
+```sh
+npm install <%- project.slug %> react-native-nitro-modules
+
+> `react-native-nitro-modules` is required as this library relies on [Nitro Modules](https://nitro.margelo.com/).
+```
+<% } else { -%>
 ```sh
 npm install <%- project.slug %>
 ```
+<% } -%>
 
 ## Usage
 
-<% if (project.view) { -%>
+<% if (project.viewConfig !== null) { -%>
 
 ```js
 import { <%- project.name -%>View } from "<%- project.slug -%>";
@@ -20,7 +28,7 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 <<%- project.name -%>View color="tomato" />
 ```
 
-<% } else if (project.arch === 'new' && project.module) { -%>
+<% } else if (project.moduleConfig === 'nitro-modules' || project.moduleConfig === 'turbo-modules') { -%>
 
 ```js
 import { multiply } from '<%- project.slug -%>';

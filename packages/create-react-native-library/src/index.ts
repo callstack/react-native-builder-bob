@@ -21,6 +21,7 @@ import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.36.0';
+const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 
 yargs
   .command(
@@ -48,6 +49,10 @@ async function create(_argv: yargs.Arguments<Args>) {
     'react-native-builder-bob',
     FALLBACK_BOB_VERSION
   );
+  const nitroModulesVersionPromise = resolveNpmPackageVersion(
+    'react-native-nitro-modules',
+    FALLBACK_NITRO_MODULES_VERSION
+  );
 
   const local = await promptLocalLibrary(argv);
   const folder = await promptPath(argv, local);
@@ -70,8 +75,18 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   const bobVersion = await bobVersionPromise;
 
+  const nitroModulesVersion =
+    answers.type === 'nitro-module'
+      ? await nitroModulesVersionPromise
+      : undefined;
+
   const config = generateTemplateConfiguration({
-    bobVersion,
+    versions: {
+      bob: bobVersion,
+      nitroModules: nitroModulesVersion,
+      // Nitro codegen's version is always the same as nitro modules version.
+      nitroCodegen: nitroModulesVersion,
+    },
     basename,
     answers,
   });
@@ -88,12 +103,9 @@ async function create(_argv: yargs.Arguments<Args>) {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
-      type: config.example,
-      dest: folder,
-      arch: config.project.arch,
-      project: config.project,
-      bobVersion,
+      destination: folder,
       reactNativeVersion: answers.reactNativeVersion,
+      config,
     });
   }
 
@@ -106,7 +118,7 @@ async function create(_argv: yargs.Arguments<Args>) {
   if (config.example !== 'none') {
     const { devDependencies } = await getDependencyVersionsFromExampleApp(
       folder,
-      config.example
+      config
     );
 
     rootPackageJson.devDependencies = rootPackageJson.devDependencies
@@ -117,7 +129,11 @@ async function create(_argv: yargs.Arguments<Args>) {
       : devDependencies;
   }
 
-  if (config.example === 'vanilla' && config.project.arch === 'new') {
+  if (
+    config.example === 'vanilla' &&
+    (config.project.moduleConfig === 'turbo-modules' ||
+      config.project.viewConfig === 'fabric-view')
+  ) {
     addCodegenBuildScript(folder);
   }
 

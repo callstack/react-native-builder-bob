@@ -34,6 +34,7 @@ jobs:
           - fabric-view
           - legacy-module
           - legacy-view
+          - nitro-module
         language:
           - kotlin-objc
           - kotlin-swift
@@ -46,6 +47,10 @@ jobs:
           - type: fabric-view
             language: cpp
           - type: legacy-view
+            language: cpp
+          - type: nitro-module
+            language: kotlin-objc
+          - type: nitro-module
             language: cpp
         include:
           - os: ubuntu

@@ -1,0 +1,17 @@
+{
+  "cxxNamespace": ["<%- project.package_cpp -%>"],
+  "ios": {
+    "iosModuleName": "<%- project.name -%>"
+  },
+  "android": {
+    "androidNamespace": <%- JSON.stringify(project.package.split('.')) -%>,
+    "androidCxxLibName": "<%- project.package_cpp -%>"
+  },
+  "autolinking": {
+    "<%- project.name -%>": {
+      "swift": "<%- project.name -%>",
+      "kotlin": "<%- project.name -%>"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
