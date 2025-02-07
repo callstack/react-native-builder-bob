@@ -22,9 +22,9 @@ yarn
 
 This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
 
-You need to run the code generation process using [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate-heavy code required for this project. Without this step, the example apps will not build.
+You need to run [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate code required for this project. The example app will not build without this step.
 
-Run **Nitrogen** in the following cases:
+Run **Nitrogen** in following cases:
 - When you make changes to any `*.nitro.ts` files.
 - When running the project for the first time (since the generated files are not committed to the repository).
 
