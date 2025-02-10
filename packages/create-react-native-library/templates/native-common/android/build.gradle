@@ -15,7 +15,7 @@ buildscript {
   }
 }
 
-<% if (project.cpp) { -%>
+<% if (project.cpp || project.moduleConfig === 'nitro-modules') { -%>
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
