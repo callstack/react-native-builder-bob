@@ -6,7 +6,7 @@
 <% if (project.arch === 'new') { -%>
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
-    "type": <%- project.viewConfig !== null ? '"components"': '"modules"' %>,
+    "type": <%- project.viewConfig !== null ? '"all"': '"modules"' %>,
     "jsSrcsDir": "src"
   },
 <% } -%>
