@@ -151,3 +151,39 @@ This is because the example app is configured as a Yarn workspace, and there is 
    ```yml
    nodeLinker: node-modules
    ```
+
+
+
+## Testing with React Native testing library
+
+To test with React Native testing library, you may need to use `@react-native/babel-preset` preset for test environment in `babel.config.js` file.
+
+```js
+// babel.config.js
+module.exports = {
+  presets: ['module:react-native-builder-bob/babel-preset'],
+  env: {
+    test: {
+      presets: ['module:@react-native/babel-preset'],
+    },
+  },
+};
+```
+Then update the jest config in your `package.json` file.
+
+```json
+// package.json
+"jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|@react-native|@react-native-community|react-native-reanimated)"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/react-native/extend-expect"
+    ]
+  },
+```
