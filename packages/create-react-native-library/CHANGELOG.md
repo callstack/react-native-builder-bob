@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.1...create-react-native-library@0.48.2) (2025-02-19)
+
+### Bug Fixes
+
+* Import `@DoNotStrip` ([#770](https://github.com/callstack/react-native-builder-bob/issues/770)) ([d3db624](https://github.com/callstack/react-native-builder-bob/commit/d3db6247ace621c2445783898e6a8fe066f5bd44)) - by @mrousavy
+
 ## [0.48.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.0...create-react-native-library@0.48.1) (2025-02-10)
 
 ### Bug Fixes
