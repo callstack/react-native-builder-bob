@@ -48,7 +48,6 @@ Pod::Spec.new do |s|
 <% if (project.viewConfig !== null) { -%>
       s.dependency "React-RCTFabric"
 <% } -%>
-      s.dependency "React-Codegen"
       s.dependency "RCT-Folly"
       s.dependency "RCTRequired"
       s.dependency "RCTTypeSafety"
