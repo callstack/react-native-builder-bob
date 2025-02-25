@@ -115,7 +115,7 @@
 <% if (project.moduleConfig === 'nitro-modules') { -%>
     "react-native": "*",
     "react-native-nitro-modules": "^<%- versions.nitroModules %>"
-<% } else { -%>    
+<% } else { -%>
     "react-native": "*"
 <% } -%>
   },
@@ -224,7 +224,7 @@
   },
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
-    "type": "<%- project.viewConfig !== null ? 'components': 'modules' -%>",
+    "type": "<%- project.viewConfig !== null ? 'all': 'modules' -%>",
     "jsSrcsDir": "src",
     "outputDir": {
       "ios": "ios/generated",
