@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.2...create-react-native-library@0.48.3) (2025-02-25)
+
+### Bug Fixes
+
+* bring back [#715](https://github.com/callstack/react-native-builder-bob/issues/715) to fix Android builds for Fabric components ([#769](https://github.com/callstack/react-native-builder-bob/issues/769)) ([be8b107](https://github.com/callstack/react-native-builder-bob/commit/be8b1072f4618b67bbe94f89d828a3e70b06ad53)) - by @Serchinastico
+
 ## [0.48.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.1...create-react-native-library@0.48.2) (2025-02-19)
 
 ### Bug Fixes
