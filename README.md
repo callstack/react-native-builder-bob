@@ -87,9 +87,10 @@ Thanks to the authors of these libraries for inspiration:
 
 ## Alternatives
 
-There are other similar tools to scaffold React Native libraries. The difference is that the generated project with `create-react-native-library` is very opinionated and configured with additional tools.
+Some other tools for building React Native libraries that you may want to check out:
 
-- [react-native-module-init](https://github.com/brodybits/react-native-module-init)
+- [create-expo-module](https://docs.expo.dev/modules/get-started/)
+- [react-native-module-init](https://github.com/brodybits/react-native-module-init) (Unmaintained)
 
 ## LICENSE
 
