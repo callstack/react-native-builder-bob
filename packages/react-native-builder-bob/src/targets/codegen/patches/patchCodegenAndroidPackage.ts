@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import type { Report } from '../../../types';
+import kleur from 'kleur';
 
 export const CODEGEN_DOCS =
   'https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen';
@@ -50,7 +51,9 @@ export async function patchCodegenAndroidPackage(
   // If this issue is ever fixed in react-native, this check will prevent the patching from running.
   if (!(await fs.pathExists(codegenJavaPath))) {
     report.info(
-      `Could not find ${codegenJavaPath}. Skipping patching codegen java files.`
+      `Could not find ${kleur.blue(
+        path.relative(projectPath, codegenJavaPath)
+      )}. Skipping patching codegen java files.`
     );
     return;
   }
