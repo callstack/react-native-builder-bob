@@ -7,12 +7,8 @@ import { cosmiconfig } from 'cosmiconfig';
 import isGitDirty from 'is-git-dirty';
 import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
-import buildCommonJS from './targets/commonjs';
-import buildModule from './targets/module';
-import buildTypescript from './targets/typescript';
-import buildCodegen from './targets/codegen';
-import customTarget from './targets/custom';
 import type { Options, Target } from './types';
+import { run } from './utils/workerize';
 
 type ArgName = 'target';
 
@@ -534,27 +530,18 @@ async function buildTarget(
 
   switch (targetName) {
     case 'commonjs':
-      await buildCommonJS({
-        root,
-        source: path.resolve(root, source),
-        output: path.resolve(root, output, 'commonjs'),
-        exclude,
-        options: targetOptions,
-        report,
-      });
-      break;
     case 'module':
-      await buildModule({
+      await run(targetName, {
         root,
         source: path.resolve(root, source),
-        output: path.resolve(root, output, 'module'),
+        output: path.resolve(root, output, targetName),
         exclude,
         options: targetOptions,
         report,
       });
       break;
     case 'typescript':
-      await buildTypescript({
+      await run('typescript', {
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
@@ -563,7 +550,7 @@ async function buildTarget(
       });
       break;
     case 'codegen':
-      await buildCodegen({
+      await run('codegen', {
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
@@ -571,11 +558,11 @@ async function buildTarget(
       });
       break;
     case 'custom':
-      await customTarget({
+      await run('custom', {
         options: targetOptions,
         source: path.resolve(root, source),
-        report,
         root,
+        report,
       });
       break;
     default:
