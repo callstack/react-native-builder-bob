@@ -139,7 +139,7 @@ yarn add --dev react-native-builder-bob
 
    > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
 
-   ##### Opting out of Codegen shipping __(not recommended)__
+   ##### Opting out of Codegen shipping **(not recommended)**
 
    If you have a reason to not ship Codegen generated scaffold code with your library, you need to remove the [codegen target](#codegen) and add `package.json` to your `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
 
@@ -218,11 +218,21 @@ See the [ESM support](./esm.md) guide for more details.
 
 ##### `configFile`
 
-To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration. You can extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/babel-preset.js) preset.
+To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration.
+
+It is recommended that you extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/babel-preset.js) preset in your custom config file:
+
+```js
+module.exports = {
+  presets: ['react-native-builder-bob/babel-preset'],
+};
+```
+
+This will make sure that the `commonjs` target produces code using CommonJS and the `module` target produces code using ES modules. It is also necessary for the `esm` option to work correctly.
 
 ##### `babelrc`
 
-You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files.
+You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files. Similar considerations apply as with the `configFile` option.
 
 ##### `copyFlow`
 

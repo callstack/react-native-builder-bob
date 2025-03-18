@@ -69,7 +69,16 @@ You can also specify additional conditions for different scenarios, such as `rea
 There are still a few things to keep in mind if you want your library to be ESM-compatible:
 
 - Avoid using default exports in your library. Named exports are recommended. Default exports produce a CommonJS module with a `default` property, which will work differently than the ESM build and can cause issues.
-- If the library uses platform-specific extensions (e.g., `.ios.js` or `.android.js`), the ESM output will not be compatible with Node.js. It's necessary to omit file extensions from the imports to make platform-specific extensions work, however, Node.js requires file extensions to be present. Bundlers such as Webpack (with [`resolve.fullySpecified: false`](https://webpack.js.org/configuration/module/#resolvefullyspecified)) or Metro can handle this. It's still possible to `require` the CommonJS build directly in Node.js.
+- If the library uses platform-specific extensions (e.g., `.ios.js` or `.android.js`), the ESM output will not be compatible with Node.js, i.e. it's not possible to use the library in Node.js with `import` syntax. It's necessary to omit file extensions from the imports to make platform-specific extensions work, however, Node.js requires file extensions to be present.
+
+  Bundlers such as Metro can handle this without additional configuration. Other bundlers may need to be configured to make extensionless imports to work, (e.g. it's necessary to specify [`resolve.fullySpecified: false`](https://webpack.js.org/configuration/module/#resolvefullyspecified) for Webpack).
+
+  It's still possible to use the library in Node.js using the CommonJS build with `require`:
+
+  ```js
+  const { foo } = require('my-library');
+  ```
+
 - Avoid using `.cjs`, `.mjs`, `.cts` or `.mts` extensions. Metro always requires file extensions in import statements when using `.cjs` or `.mjs` which breaks platform-specific extension resolution.
 - Avoid using `"moduleResolution": "Node16"` or `"moduleResolution": "NodeNext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.
 - If you specify a `react-native` condition in `exports`, make sure that it comes before `import` or `require`. The conditions should be ordered from the most specific to the least specific:
