@@ -182,24 +182,6 @@ Example:
 
 Various targets to build for. The available targets are:
 
-#### `codegen`
-
-Generates the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code, which is used with the New React Native Architecture.
-
-You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
-
-#### `custom`
-
-Define a custom build target. This is useful to call code generators during the build process.
-
-##### `script`
-
-Accepts a script name. `bob` will call the matching script defined under `package.json`'s `scripts` property. The build process **will throw and exit** if the target is defined without this option.
-
-##### `clean`
-
-You can pass a path to this option and `bob` will delete all the files on that path. The path is resolved relatively to where `build` was called from.
-
 #### `commonjs`
 
 Enable compiling source files with Babel and use CommonJS module system.
@@ -312,6 +294,34 @@ The output file should be referenced in the `types` field or `exports['.'].types
 Setting this option to `true` will output 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
 See the [ESM support](./esm.md) guide for more details.
+
+#### `codegen`
+
+Enable generating the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code, which is used with the New React Native Architecture.
+
+You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
+
+#### `custom`
+
+Define a custom build target. This is useful to call custom scripts during when running `bob build`.
+
+##### `script`
+
+Name of the script to run. The script must be defined in the `package.json` file under the `scripts` property. This property is required.
+
+This script is run asynchronously alongside the other build targets.
+
+##### `clean`
+
+Optionally, you can specify a path to cleanup before running the build script. The path is resolved relatively to where `build` was called from.
+
+This is useful if your script generates output files. Cleaning the output folder before running the script ensures that the output doesn't contain stale files.
+
+Example:
+
+```json
+["custom", { "script": "my-custom-build", "clean": "my-output-folder/" }]
+```
 
 ## Commands
 
