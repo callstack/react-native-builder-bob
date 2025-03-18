@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.5](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.4...create-react-native-library@0.48.5) (2025-03-18)
+
+### Bug Fixes
+
+- prevent example app from adding newArchEnabled if already present ([#796](https://github.com/callstack/react-native-builder-bob/issues/796)) ([711e9ea](https://github.com/callstack/react-native-builder-bob/commit/711e9eaa5f30aae5f5c8aacbbb0fab15cc3d211d)) - by @Serchinastico
+
 ## [0.48.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.3...create-react-native-library@0.48.4) (2025-03-18)
 
 ### Bug Fixes
