@@ -71,11 +71,13 @@ export default async function compile({
 
   await fs.mkdirp(output);
 
-  if (!esm) {
-    // Ideally we should code with ESM syntax as CommonJS if `esm` is not enabled
-    // This maintain compatibility with code written for CommonJS
-    // However currently NextJS has non-standard behavior and breaks this
-    // So for now we only set this conditionally
+  // Imports are not rewritten to include the extension if `esm` is not enabled
+  // Ideally we should always treat ESM syntax as CommonJS if `esm` is not enabled
+  // This would maintain compatibility for legacy setups where `import`/`export` didn't require file extensions
+  // However NextJS has non-standard behavior and breaks if we add `type: 'commonjs'` for code with import/export
+  // So we skip generating `package.json` if `esm` is not enabled and `modules` is not `commonjs`
+  // This means that user can't use `type: 'module'` in root `package.json` without enabling `esm` for `module` target
+  if (esm || modules === 'commonjs') {
     await fs.writeJSON(path.join(output, 'package.json'), {
       type: modules === 'commonjs' ? 'commonjs' : 'module',
     });
