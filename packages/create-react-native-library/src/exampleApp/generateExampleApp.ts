@@ -290,7 +290,9 @@ export default async function generateExampleApp({
           'newArchEnabled=false',
           'newArchEnabled=true'
         );
-      } else {
+      } else if (
+        !gradleProperties.split('\n').includes('newArchEnabled=true')
+      ) {
         gradleProperties += '\nnewArchEnabled=true';
       }
     }
