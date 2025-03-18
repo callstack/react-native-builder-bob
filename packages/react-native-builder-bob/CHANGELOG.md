@@ -3,28 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.37.0...react-native-builder-bob@0.38.0) (2025-03-18)
+
+### Bug Fixes
+
+- fix generating package.json when esm is enabled ([2493fe1](https://github.com/callstack/react-native-builder-bob/commit/2493fe19e0379beb22f83c65c6a275b8693e8f20)) - by @satya164
+- write errors to stderr ([2ecb39c](https://github.com/callstack/react-native-builder-bob/commit/2ecb39c307ac5f67d66d9efa0fc1adc4b85cf525)) - by @satya164
+
+### Features
+
+- prefix build logs with target name ([09e8647](https://github.com/callstack/react-native-builder-bob/commit/09e8647525dc3c8b5f9b048c92cccfabee1ef9c1)) - by @satya164
+
 # [0.37.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.36.0...react-native-builder-bob@0.37.0) (2025-02-07)
 
 ### Features
 
-* **bob:** support custom target definitions ([#732](https://github.com/callstack/react-native-builder-bob/issues/732)) ([5b42f44](https://github.com/callstack/react-native-builder-bob/commit/5b42f440fc609d9a49b94a5435276acda9d0ade7)) - by @atlj
+- **bob:** support custom target definitions ([#732](https://github.com/callstack/react-native-builder-bob/issues/732)) ([5b42f44](https://github.com/callstack/react-native-builder-bob/commit/5b42f440fc609d9a49b94a5435276acda9d0ade7)) - by @atlj
 
 # [0.36.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.3...react-native-builder-bob@0.36.0) (2025-01-28)
 
 ### Bug Fixes
 
-* bob codegen deletes view specs when codegen type is all ([#736](https://github.com/callstack/react-native-builder-bob/issues/736)) ([7f5fbc7](https://github.com/callstack/react-native-builder-bob/commit/7f5fbc7a8ac8c68fedc2e62cff91b2696d74b635)), closes [#728](https://github.com/callstack/react-native-builder-bob/issues/728) - by @atlj
+- bob codegen deletes view specs when codegen type is all ([#736](https://github.com/callstack/react-native-builder-bob/issues/736)) ([7f5fbc7](https://github.com/callstack/react-native-builder-bob/commit/7f5fbc7a8ac8c68fedc2e62cff91b2696d74b635)), closes [#728](https://github.com/callstack/react-native-builder-bob/issues/728) - by @atlj
 
 ### Features
 
-* update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
+- update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
 
 ## [0.35.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.2...react-native-builder-bob@0.35.3) (2025-01-28)
 
 ### Bug Fixes
 
-* don't crash if codegenConfig is not defined in package.json ([#716](https://github.com/callstack/react-native-builder-bob/issues/716)) ([3f537f1](https://github.com/callstack/react-native-builder-bob/commit/3f537f1daf4cf01269ea00e665ed4dd0be550e27)) - by @riteshshukla04
-* ios example app has duplicated symbols due to codegen ([#757](https://github.com/callstack/react-native-builder-bob/issues/757)) ([c1b508a](https://github.com/callstack/react-native-builder-bob/commit/c1b508a8fdc65775076e376568443a0bdef675c6)), closes [#755](https://github.com/callstack/react-native-builder-bob/issues/755) - by @atlj
+- don't crash if codegenConfig is not defined in package.json ([#716](https://github.com/callstack/react-native-builder-bob/issues/716)) ([3f537f1](https://github.com/callstack/react-native-builder-bob/commit/3f537f1daf4cf01269ea00e665ed4dd0be550e27)) - by @riteshshukla04
+- ios example app has duplicated symbols due to codegen ([#757](https://github.com/callstack/react-native-builder-bob/issues/757)) ([c1b508a](https://github.com/callstack/react-native-builder-bob/commit/c1b508a8fdc65775076e376568443a0bdef675c6)), closes [#755](https://github.com/callstack/react-native-builder-bob/issues/755) - by @atlj
 
 ## [0.35.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.35.1...react-native-builder-bob@0.35.2) (2024-12-06)
 

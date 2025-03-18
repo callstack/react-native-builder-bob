@@ -3,58 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.3...create-react-native-library@0.48.4) (2025-03-18)
+
+### Bug Fixes
+
+- update release-it deps and config [#733](https://github.com/callstack/react-native-builder-bob/issues/733) ([#746](https://github.com/callstack/react-native-builder-bob/issues/746)) ([ef8c3f4](https://github.com/callstack/react-native-builder-bob/commit/ef8c3f4ff2050ba8852735703e070c02e4c90ccb)) - by @yjose
+
 ## [0.48.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.2...create-react-native-library@0.48.3) (2025-02-25)
 
 ### Bug Fixes
 
-* bring back [#715](https://github.com/callstack/react-native-builder-bob/issues/715) to fix Android builds for Fabric components ([#769](https://github.com/callstack/react-native-builder-bob/issues/769)) ([be8b107](https://github.com/callstack/react-native-builder-bob/commit/be8b1072f4618b67bbe94f89d828a3e70b06ad53)) - by @Serchinastico
+- bring back [#715](https://github.com/callstack/react-native-builder-bob/issues/715) to fix Android builds for Fabric components ([#769](https://github.com/callstack/react-native-builder-bob/issues/769)) ([be8b107](https://github.com/callstack/react-native-builder-bob/commit/be8b1072f4618b67bbe94f89d828a3e70b06ad53)) - by @Serchinastico
 
 ## [0.48.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.1...create-react-native-library@0.48.2) (2025-02-19)
 
 ### Bug Fixes
 
-* Import `@DoNotStrip` ([#770](https://github.com/callstack/react-native-builder-bob/issues/770)) ([d3db624](https://github.com/callstack/react-native-builder-bob/commit/d3db6247ace621c2445783898e6a8fe066f5bd44)) - by @mrousavy
+- Import `@DoNotStrip` ([#770](https://github.com/callstack/react-native-builder-bob/issues/770)) ([d3db624](https://github.com/callstack/react-native-builder-bob/commit/d3db6247ace621c2445783898e6a8fe066f5bd44)) - by @mrousavy
 
 ## [0.48.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.0...create-react-native-library@0.48.1) (2025-02-10)
 
 ### Bug Fixes
 
-* **crnl:** fix nitro modules android template ([#765](https://github.com/callstack/react-native-builder-bob/issues/765)) ([b56706b](https://github.com/callstack/react-native-builder-bob/commit/b56706b0483010dc16708d31bbeb3f37ab0fef0a)) - by @birgernass
+- **crnl:** fix nitro modules android template ([#765](https://github.com/callstack/react-native-builder-bob/issues/765)) ([b56706b](https://github.com/callstack/react-native-builder-bob/commit/b56706b0483010dc16708d31bbeb3f37ab0fef0a)) - by @birgernass
 
 # [0.48.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.47.1...create-react-native-library@0.48.0) (2025-02-07)
 
 ### Features
 
-* **crnl:** support nitro modules ([#721](https://github.com/callstack/react-native-builder-bob/issues/721)) ([70ba9e1](https://github.com/callstack/react-native-builder-bob/commit/70ba9e1718cf97ff98c4d92c7b675ed57f1d6f4a)) - by @atlj
+- **crnl:** support nitro modules ([#721](https://github.com/callstack/react-native-builder-bob/issues/721)) ([70ba9e1](https://github.com/callstack/react-native-builder-bob/commit/70ba9e1718cf97ff98c4d92c7b675ed57f1d6f4a)) - by @atlj
 
 ## [0.47.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.47.0...create-react-native-library@0.47.1) (2025-02-07)
 
 ### Bug Fixes
 
-* `nkdversion` -> `ndkVersion` casing in `gradle.properties` ([#744](https://github.com/callstack/react-native-builder-bob/issues/744)) ([981eea1](https://github.com/callstack/react-native-builder-bob/commit/981eea148bf092fd1107173863417b54353f7202)), closes [/github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle#L62](https://github.com//github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle/issues/L62) - by @KiwiKilian
+- `nkdversion` -> `ndkVersion` casing in `gradle.properties` ([#744](https://github.com/callstack/react-native-builder-bob/issues/744)) ([981eea1](https://github.com/callstack/react-native-builder-bob/commit/981eea148bf092fd1107173863417b54353f7202)), closes [/github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle#L62](https://github.com//github.com/callstack/react-native-builder-bob/blob/87b0032acd66b7b14a5b358117a3d1497c59baad/packages/create-react-native-library/templates/native-common/android/build.gradle/issues/L62) - by @KiwiKilian
 
 # [0.47.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.46.0...create-react-native-library@0.47.0) (2025-01-28)
 
 ### Bug Fixes
 
-* build architectures needed only for cpp projects ([#753](https://github.com/callstack/react-native-builder-bob/issues/753)) ([9509158](https://github.com/callstack/react-native-builder-bob/commit/95091588167d0d4ffd04363030945c654ec60d30)) - by @okwasniewski
-* codegen generated headers are public on ios ([#737](https://github.com/callstack/react-native-builder-bob/issues/737)) ([5a68aa7](https://github.com/callstack/react-native-builder-bob/commit/5a68aa7507254704b762f01475d5306ddf2aaec6)), closes [#690](https://github.com/callstack/react-native-builder-bob/issues/690) - by @atlj
+- build architectures needed only for cpp projects ([#753](https://github.com/callstack/react-native-builder-bob/issues/753)) ([9509158](https://github.com/callstack/react-native-builder-bob/commit/95091588167d0d4ffd04363030945c654ec60d30)) - by @okwasniewski
+- codegen generated headers are public on ios ([#737](https://github.com/callstack/react-native-builder-bob/issues/737)) ([5a68aa7](https://github.com/callstack/react-native-builder-bob/commit/5a68aa7507254704b762f01475d5306ddf2aaec6)), closes [#690](https://github.com/callstack/react-native-builder-bob/issues/690) - by @atlj
 
 ### Features
 
-* **android:** upgrade SDK versions and build tools ([#742](https://github.com/callstack/react-native-builder-bob/issues/742)) ([388ad09](https://github.com/callstack/react-native-builder-bob/commit/388ad09ed748fc00c278ade6402fb7e62fa2be64)) - by @szymonrybczak
-* update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
+- **android:** upgrade SDK versions and build tools ([#742](https://github.com/callstack/react-native-builder-bob/issues/742)) ([388ad09](https://github.com/callstack/react-native-builder-bob/commit/388ad09ed748fc00c278ade6402fb7e62fa2be64)) - by @szymonrybczak
+- update gh actions in template from `v3` to `v4` ([#748](https://github.com/callstack/react-native-builder-bob/issues/748)) ([64a469c](https://github.com/callstack/react-native-builder-bob/commit/64a469c55b3944284d8caa505a8b5e3f3e3a8bfe)) - by @krozniata
 
 # [0.46.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.5...create-react-native-library@0.46.0) (2025-01-28)
 
 ### Bug Fixes
 
-* js-only libraries have codegen config ([#758](https://github.com/callstack/react-native-builder-bob/issues/758)) ([d17ce35](https://github.com/callstack/react-native-builder-bob/commit/d17ce35fab6361f6ef8a6540929f75badb39af92)), closes [#754](https://github.com/callstack/react-native-builder-bob/issues/754) - by @atlj
-* remove deprecated hasConstants parameter ([#729](https://github.com/callstack/react-native-builder-bob/issues/729)) ([4bb5d9d](https://github.com/callstack/react-native-builder-bob/commit/4bb5d9dc31e8a6d016de1ba20860ab3ff5fb6a6b)), closes [/github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt#L25](https://github.com//github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt/issues/L25) - by @satya164
+- js-only libraries have codegen config ([#758](https://github.com/callstack/react-native-builder-bob/issues/758)) ([d17ce35](https://github.com/callstack/react-native-builder-bob/commit/d17ce35fab6361f6ef8a6540929f75badb39af92)), closes [#754](https://github.com/callstack/react-native-builder-bob/issues/754) - by @atlj
+- remove deprecated hasConstants parameter ([#729](https://github.com/callstack/react-native-builder-bob/issues/729)) ([4bb5d9d](https://github.com/callstack/react-native-builder-bob/commit/4bb5d9dc31e8a6d016de1ba20860ab3ff5fb6a6b)), closes [/github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt#L25](https://github.com//github.com/facebook/react-native/blob/5c789c3d3a91f4e4ee06e97cdeec7dcb64a5cf44/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/module/model/ReactModuleInfo.kt/issues/L25) - by @satya164
 
 ### Features
 
-* add issue templates ([#696](https://github.com/callstack/react-native-builder-bob/issues/696)) ([4c046a2](https://github.com/callstack/react-native-builder-bob/commit/4c046a227061e67c256d5af33e5be4fc13d84433)) - by @okwasniewski
+- add issue templates ([#696](https://github.com/callstack/react-native-builder-bob/issues/696)) ([4c046a2](https://github.com/callstack/react-native-builder-bob/commit/4c046a227061e67c256d5af33e5be4fc13d84433)) - by @okwasniewski
 
 ## [0.45.5](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.45.3...create-react-native-library@0.45.5) (2024-12-09)
 
