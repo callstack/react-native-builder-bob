@@ -230,6 +230,23 @@ module.exports = {
 
 This will make sure that the `commonjs` target produces code using CommonJS and the `module` target produces code using ES modules. It is also necessary for the `esm` option to work correctly.
 
+If you don't want to use the preset, then make sure to conditionally enable or disable the CommonJS transform with the following condition:
+
+```js
+module.exports = (api) => {
+  const isCommonJSTransformDisabled = api.caller(
+    // If `supportsStaticESM` is `true`, output ES modules, otherwise output CommonJS
+    (caller) => caller && caller.supportsStaticESM
+  );
+
+  return {
+    // Your config here
+  };
+};
+```
+
+If you're using [`@babel/preset-env`](https://babeljs.io/docs/babel-preset-env) with the [`modules`](https://babeljs.io/docs/babel-preset-env#modules) option set to `"auto"` (which is the default), it will be automatically configured to correctly enable the CommonJS transform when needed, so additional configuration is not necessary.
+
 ##### `babelrc`
 
 You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files. Similar considerations apply as with the `configFile` option.
