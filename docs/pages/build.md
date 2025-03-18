@@ -251,6 +251,14 @@ If you're using [`@babel/preset-env`](https://babeljs.io/docs/babel-preset-env) 
 
 You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files. Similar considerations apply as with the `configFile` option.
 
+##### `jsxRuntime`
+
+By default, JSX is compiled to use the `automatic` [runtime](https://babeljs.io/docs/babel-preset-react#runtime) [introduced in React 17](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html). This transform is also compatible with React 16.14.0, React 15.7.0, and React 0.14.10.
+
+If you want to use the classic runtime for any other reason, you can set the `jsxRuntime` option to `classic` explicitly.
+
+This option has no effect when overriding the default babel configuration without using `react-native-builder-bob/babel-preset`.
+
 ##### `copyFlow`
 
 If your source code is written in [Flow](http://www.typescriptlang.org/), You can specify the `copyFlow` option to `true` to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
@@ -276,10 +284,6 @@ Example:
 ```json
 ["module", { "esm": true, "sourceMaps": false }]
 ```
-
-##### `jsxRuntime`
-
-Explicitly set your [runtime](https://babeljs.io/docs/babel-preset-react#runtime). Defaults to `automatic`.
 
 #### `typescript`
 
