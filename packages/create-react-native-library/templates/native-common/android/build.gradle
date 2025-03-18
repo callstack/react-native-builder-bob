@@ -22,19 +22,15 @@ def reactNativeArchitectures() {
 }
 <% } -%>
 
-def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
-}
-
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 <% if (project.moduleConfig === 'nitro-modules') { -%>
 apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinking.gradle'
 <% } -%>
 
-if (isNewArchitectureEnabled()) {
-  apply plugin: "com.facebook.react"
-}
+<% if (project.arch === "new") { -%>
+apply plugin: "com.facebook.react"
+<% } -%>
 
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
@@ -72,9 +68,6 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-<% if (project.arch === "new") { -%>
-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-<% } -%>
 <% if (project.cpp || project.moduleConfig === 'nitro-modules') { -%>
 
     externalNativeBuild {
@@ -154,12 +147,10 @@ android {
 
   sourceSets {
     main {
-      if (isNewArchitectureEnabled()) {
-          java.srcDirs += [
-            "generated/java",
-            "generated/jni"
-          ]
-      }
+      java.srcDirs += [
+        "generated/java",
+        "generated/jni"
+      ]
     }
   }
 <% } -%>
@@ -181,11 +172,9 @@ dependencies {
 }
 
 <% if (project.moduleConfig === "turbo-modules" || project.viewConfig === "fabric-view") { -%>
-if (isNewArchitectureEnabled()) {
-  react {
-    jsRootDir = file("../src/")
-    libraryName = "<%- project.viewConfig !== null ? project.name + 'View' : project.name -%>"
-    codegenJavaPackageName = "com.<%- project.package -%>"
-  }
+react {
+  jsRootDir = file("../src/")
+  libraryName = "<%- project.viewConfig !== null ? project.name + 'View' : project.name -%>"
+  codegenJavaPackageName = "com.<%- project.package -%>"
 }
 <% } -%>
