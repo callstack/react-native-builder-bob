@@ -15,16 +15,16 @@ import something, { c as c1 } from "./c";
 
 import type { A } from "./a";
 
-import "./MyNativeLib";
-import "../MyNativeLib";
-import "./MyNativeLib.ts";
-import "../MyNativeLib.ts";
-import "./MyNativeLib.tsx";
-import "../MyNativeLib.tsx";
-import "./MyNativeLib.js";
-import "../MyNativeLib.js";
-import "./MyNativeLib.jsx";
-import "../MyNativeLib.jsx";
+import "./NativeMyLib";
+import "../NativeMyLib";
+import "./NativeMyLib.ts";
+import "../NativeMyLib.ts";
+import "./NativeMyLib.tsx";
+import "../NativeMyLib.tsx";
+import "./NativeMyLib.js";
+import "../NativeMyLib.js";
+import "./NativeMyLib.jsx";
+import "../NativeMyLib.jsx";
 
 import "./MyNativeComponent";
 import "../MyNativeComponent";

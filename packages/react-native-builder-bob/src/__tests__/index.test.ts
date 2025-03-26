@@ -10,6 +10,13 @@ it.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
   );
 
   const result = await transformFileAsync(filepath, {
+    caller: {
+      name: 'test',
+      supportsStaticESM: false,
+      rewriteImportExtensions: true,
+      jsxRuntime: 'automatic',
+      codegenEnabled: true,
+    },
     configFile: false,
     babelrc: false,
     plugins: [
