@@ -6,6 +6,7 @@ import type {
   ExportAllDeclaration,
   ExportNamedDeclaration,
 } from '@babel/types';
+import { isCodegenSpec } from './utils/isCodegenSpec';
 
 type Options = {
   /**
@@ -24,6 +25,8 @@ type Options = {
   platforms?: string[];
 };
 
+const extensions = ['ts', 'tsx', 'js', 'jsx'];
+
 const isFile = (filename: string): boolean => {
   const exists =
     fs.lstatSync(filename, { throwIfNoEntry: false })?.isFile() ?? false;
@@ -38,12 +41,12 @@ const isDirectory = (filename: string): boolean => {
   return exists;
 };
 
-const isModule = (
+const isModuleWithoutPlatform = (
   filename: string,
   extension: string,
   platforms: string[]
 ): boolean => {
-  const exts = ['js', 'ts', 'jsx', 'tsx', extension];
+  const exts = [...extensions, extension];
 
   return exts.some(
     (ext) =>
@@ -86,6 +89,8 @@ export default function (
 ): PluginObj {
   api.assertVersion(7);
 
+  const codegenEnabled = api.caller((caller) => caller?.codegenEnabled);
+
   function addExtension(
     {
       node,
@@ -106,11 +111,19 @@ export default function (
 
     assertFilename(state.filename);
 
-    // Skip folder imports
     const filename = path.resolve(
       path.dirname(state.filename),
       node.source.value
     );
+
+    // Skip imports for codegen spec if codegen is enabled
+    if (
+      codegenEnabled &&
+      (isCodegenSpec(filename) ||
+        extensions.some((ext) => isCodegenSpec(`${filename}.${ext}`)))
+    ) {
+      return;
+    }
 
     // Replace .ts extension with .js if file with extension is explicitly imported
     if (isFile(filename)) {
@@ -119,7 +132,8 @@ export default function (
     }
 
     // Add extension if .ts file or file with extension exists
-    if (isModule(filename, extension, platforms)) {
+    // And no platform specific file exists
+    if (isModuleWithoutPlatform(filename, extension, platforms)) {
       node.source.value += `.${extension}`;
       return;
     }
@@ -127,7 +141,11 @@ export default function (
     // Expand folder imports to index and add extension
     if (
       isDirectory(filename) &&
-      isModule(path.join(filename, 'index'), extension, platforms)
+      isModuleWithoutPlatform(
+        path.join(filename, 'index'),
+        extension,
+        platforms
+      )
     ) {
       node.source.value = node.source.value.replace(
         /\/?$/,

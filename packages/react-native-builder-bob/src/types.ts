@@ -31,5 +31,6 @@ declare module '@babel/core' {
   export interface TransformCaller {
     rewriteImportExtensions: boolean;
     jsxRuntime: 'automatic' | 'classic';
+    codegenEnabled: boolean;
   }
 }
