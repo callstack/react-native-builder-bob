@@ -14,3 +14,25 @@ import * as b1 from "./b";
 import something, { c as c1 } from "./c";
 
 import type { A } from "./a";
+
+import "./MyNativeLib";
+import "../MyNativeLib";
+import "./MyNativeLib.ts";
+import "../MyNativeLib.ts";
+import "./MyNativeLib.tsx";
+import "../MyNativeLib.tsx";
+import "./MyNativeLib.js";
+import "../MyNativeLib.js";
+import "./MyNativeLib.jsx";
+import "../MyNativeLib.jsx";
+
+import "./MyNativeComponent";
+import "../MyNativeComponent";
+import "./MyNativeComponent.ts";
+import "../MyNativeComponent.ts";
+import "./MyNativeComponent.tsx";
+import "../MyNativeComponent.tsx";
+import "./MyNativeComponent.js";
+import "../MyNativeComponent.js";
+import "./MyNativeComponent.jsx";
+import "../MyNativeComponent.jsx";

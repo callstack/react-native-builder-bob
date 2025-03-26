@@ -4,6 +4,7 @@ import kleur from 'kleur';
 import * as babel from '@babel/core';
 import glob from 'glob';
 import type { Input } from '../types';
+import { isCodegenSpec } from './isCodegenSpec';
 
 type Options = Input & {
   esm?: boolean;
@@ -98,6 +99,14 @@ export default async function compile({
       }
 
       const content = await fs.readFile(filepath, 'utf-8');
+
+      // If codegen is used in the app, then we need to preserve TypeScript source
+      // So we copy the file as is instead of transforming it
+      if (isCodegenSpec(filepath)) {
+        fs.copy(filepath, path.join(output, path.relative(source, filepath)));
+        return;
+      }
+
       const result = await babel.transformAsync(content, {
         caller: {
           name: 'react-native-builder-bob',
@@ -108,6 +117,7 @@ export default async function compile({
               : false,
           rewriteImportExtensions: esm,
           jsxRuntime,
+          codegenEnabled: 'codegenConfig' in pkg,
         },
         cwd: root,
         babelrc: babelrc,
