@@ -4689,9 +4689,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001406, caniuse-lite@npm:^1.0.30001640":
-  version: 1.0.30001645
-  resolution: "caniuse-lite@npm:1.0.30001645"
-  checksum: a4808bac31fdcdf183ce12f8c86d101e515b2df3423ae4284b930b493809ae88b3396b52ca2a197a3de3c94046ee5384cc9f0efeff5ccfb7c8cd385229527596
+  version: 1.0.30001707
+  resolution: "caniuse-lite@npm:1.0.30001707"
+  checksum: 38824c9f88d754428844e64ba18197c06f4f8503035e30eace88c6bffdcf5f682dcf3cef895b60cd6f19c71e6714731adc1940b612ea606c6875cd2f801e4836
   languageName: node
   linkType: hard
 
@@ -11635,6 +11635,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mock-stdin@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "mock-stdin@npm:1.0.0"
+  checksum: da038fae5cc189915e4865cbcb0a0b71e98a7e8569959423ac6e798d5e626bc12708c9918d98c46a5aab35d8d8f8bfa782dce25532173137a69fc162990eda91
+  languageName: node
+  linkType: hard
+
 "modify-values@npm:^1.0.0":
   version: 1.0.1
   resolution: "modify-values@npm:1.0.1"
@@ -13036,6 +13043,7 @@ __metadata:
     kleur: ^4.1.4
     metro-config: ^0.80.9
     mock-fs: ^5.2.0
+    mock-stdin: ^1.0.0
     prompts: ^2.4.2
     which: ^2.0.2
     yargs: ^17.5.1

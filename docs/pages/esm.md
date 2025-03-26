@@ -11,25 +11,25 @@ You can verify whether ESM support is enabled by checking the configuration for 
   "targets": [
     ["commonjs", { "esm": true }],
     ["module", { "esm": true }],
-    ["typescript", { "esm": true }]
+    "typescript"
   ]
 }
 ```
 
 The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files. For TypeScript, it also generates 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
-It's recommended to specify `"moduleResolution": "Bundler"` and `"resolvePackageJsonImports": false` in your `tsconfig.json` file to match [Metro's behavior](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta):
+It's recommended to specify `"moduleResolution": "bundler"` and `"resolvePackageJsonImports": false` in your `tsconfig.json` file to match [Metro's behavior](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta):
 
 ```json
 {
   "compilerOptions": {
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "resolvePackageJsonImports": false
   }
 }
 ```
 
-Specifying `"moduleResolution": "Bundler"` means that you don't need to use file extensions in the import statements. Bob automatically adds them when possible during the build process.
+Specifying `"moduleResolution": "bundler"` means that you don't need to use file extensions in the import statements. Bob automatically adds them when possible during the build process.
 
 To make use of the output files, ensure that your `package.json` file contains the following fields:
 
@@ -80,7 +80,7 @@ There are still a few things to keep in mind if you want your library to be ESM-
   ```
 
 - Avoid using `.cjs`, `.mjs`, `.cts` or `.mts` extensions. Metro always requires file extensions in import statements when using `.cjs` or `.mjs` which breaks platform-specific extension resolution.
-- Avoid using `"moduleResolution": "Node16"` or `"moduleResolution": "NodeNext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.
+- Avoid using `"moduleResolution": "node16"` or `"moduleResolution": "nodenext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.
 - If you specify a `react-native` condition in `exports`, make sure that it comes before `import` or `require`. The conditions should be ordered from the most specific to the least specific:
 
   ```json

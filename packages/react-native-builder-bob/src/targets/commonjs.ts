@@ -1,17 +1,12 @@
 import path from 'path';
 import kleur from 'kleur';
 import del from 'del';
-import compile from '../utils/compile';
-import type { Input } from '../types';
+import compile, { type CompileOptions } from '../utils/compile';
+import type { Input, Variants } from '../types';
 
 type Options = Input & {
-  options?: {
-    esm?: boolean;
-    babelrc?: boolean | null;
-    configFile?: string | false | null;
-    sourceMaps?: boolean;
-    copyFlow?: boolean;
-  };
+  options?: CompileOptions;
+  variants: Variants;
   exclude: string;
 };
 
@@ -21,6 +16,7 @@ export default async function build({
   output,
   exclude,
   options,
+  variants,
   report,
 }: Options) {
   report.info(
@@ -31,6 +27,7 @@ export default async function build({
 
   await compile({
     ...options,
+    variants,
     root,
     source,
     output,
