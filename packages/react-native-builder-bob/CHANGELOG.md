@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.0...react-native-builder-bob@0.38.1) (2025-03-26)
+
+### Bug Fixes
+
+- skip compiling codegen spec with bob ([#797](https://github.com/callstack/react-native-builder-bob/issues/797)) ([3b025ef](https://github.com/callstack/react-native-builder-bob/commit/3b025efb1240410d6848b879ee739110d6f31a3b)) - by @satya164
+
 # [0.38.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.37.0...react-native-builder-bob@0.38.0) (2025-03-18)
 
 ### Bug Fixes
