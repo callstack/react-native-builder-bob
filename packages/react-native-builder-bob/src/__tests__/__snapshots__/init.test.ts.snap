@@ -5,7 +5,7 @@ exports[`initializes the configuration 1`] = `
   "name": "library",
   "version": "1.0.0",
   "devDependencies": {
-    "react-native-builder-bob": "^0.38.1"
+    "react-native-builder-bob": "^0.5.0"
   },
   "exports": {
     ".": {

@@ -5,6 +5,11 @@ import { stdin } from 'mock-stdin';
 import { join } from 'path';
 import { init } from '../init';
 
+jest.mock('../../package.json', () => ({
+  name: 'react-native-builder-bob',
+  version: '0.5.0',
+}));
+
 let io: ReturnType<typeof stdin> | undefined;
 
 const root = '/path/to/library';
