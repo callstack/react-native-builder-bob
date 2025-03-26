@@ -104,7 +104,7 @@ export async function init() {
         {
           title: 'commonjs - for legacy setups (Node.js < 20)',
           value: 'commonjs',
-          selected: true,
+          selected: false,
         },
         {
           title: 'typescript - declaration files for typechecking',
