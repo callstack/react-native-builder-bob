@@ -131,24 +131,15 @@ yarn add --dev react-native-builder-bob
 
 1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
 
-   If your library is supporting the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that are only supporting the old architecture.
+   If your library supports the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that only support the old architecture.
 
    You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
 
    It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
 
+   See [How to opt-out of shipping the Codegen generated code](./faq.md#how-to-opt-out-of-shipping-codegen-generated-scaffold-code) if you don't want to ship the Codegen generated scaffold code.
+
    > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
-
-   ##### Opting out of Codegen shipping **(not recommended)**
-
-   If you have a reason to not ship Codegen generated scaffold code with your library, you need to remove the [codegen target](#codegen) and add `package.json` to your `exports` field. Otherwise, React Native Codegen will skip spec generation for your library when your library is consumed as an NPM library. You can find the related issue [here](https://github.com/callstack/react-native-builder-bob/issues/637).
-
-   ```json
-   "exports": {
-     // ...
-     "./package.json": "./package.json"
-   },
-   ```
 
 And we're done 🎉
 
