@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.1...react-native-builder-bob@0.38.2) (2025-03-26)
+
+**Note:** Version bump only for package react-native-builder-bob
+
 ## [0.38.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.0...react-native-builder-bob@0.38.1) (2025-03-26)
 
 ### Bug Fixes
