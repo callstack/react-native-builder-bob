@@ -3,19 +3,24 @@ import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
 import glob from 'glob';
-import type { Input } from '../types';
+import type { Input, Variants } from '../types';
 import { isCodegenSpec } from './isCodegenSpec';
 
-type Options = Input & {
+export type CompileOptions = {
   esm?: boolean;
   babelrc?: boolean | null;
   configFile?: string | false | null;
   sourceMaps?: boolean;
   copyFlow?: boolean;
-  modules: 'commonjs' | 'preserve';
-  exclude: string;
   jsxRuntime?: 'automatic' | 'classic';
 };
+
+type Options = Input &
+  CompileOptions & {
+    modules: 'commonjs' | 'preserve';
+    variants: Variants;
+    exclude: string;
+  };
 
 const sourceExt = /\.([cm])?[jt]sx?$/;
 
@@ -32,6 +37,7 @@ export default async function compile({
   sourceMaps = true,
   report,
   jsxRuntime = 'automatic',
+  variants,
 }: Options) {
   const files = glob.sync('**/*', {
     cwd: source,
@@ -182,36 +188,50 @@ export default async function compile({
     return null;
   };
 
-  const fields =
-    modules === 'commonjs'
-      ? [{ name: 'main', value: pkg.main }]
-      : [{ name: 'module', value: pkg.module }];
+  const fields: { name: string; value: string | undefined }[] = [];
+
+  if (variants.commonjs && variants.module) {
+    if (modules === 'commonjs') {
+      fields.push({ name: 'main', value: pkg.main });
+    } else {
+      fields.push({ name: 'module', value: pkg.module });
+    }
+  } else {
+    fields.push({ name: 'main', value: pkg.main });
+  }
 
   if (esm) {
-    if (modules === 'commonjs') {
-      fields.push(
-        typeof pkg.exports?.['.']?.require === 'string'
-          ? {
-              name: "exports['.'].require",
-              value: pkg.exports?.['.']?.require,
-            }
-          : {
-              name: "exports['.'].require.default",
-              value: pkg.exports?.['.']?.require?.default,
-            }
-      );
+    if (variants.commonjs && variants.module) {
+      if (modules === 'commonjs') {
+        fields.push(
+          typeof pkg.exports?.['.']?.require === 'string'
+            ? {
+                name: "exports['.'].require",
+                value: pkg.exports?.['.']?.require,
+              }
+            : {
+                name: "exports['.'].require.default",
+                value: pkg.exports?.['.']?.require?.default,
+              }
+        );
+      } else {
+        fields.push(
+          typeof pkg.exports?.['.']?.import === 'string'
+            ? {
+                name: "exports['.'].import",
+                value: pkg.exports?.['.']?.import,
+              }
+            : {
+                name: "exports['.'].import.default",
+                value: pkg.exports?.['.']?.import?.default,
+              }
+        );
+      }
     } else {
-      fields.push(
-        typeof pkg.exports?.['.']?.import === 'string'
-          ? {
-              name: "exports['.'].import",
-              value: pkg.exports?.['.']?.import,
-            }
-          : {
-              name: "exports['.'].import.default",
-              value: pkg.exports?.['.']?.import?.default,
-            }
-      );
+      fields.push({
+        name: "exports['.'].default",
+        value: pkg.exports?.['.']?.default,
+      });
     }
   } else {
     if (modules === 'commonjs' && pkg.exports?.['.']?.require) {
@@ -232,6 +252,8 @@ export default async function compile({
       );
     }
   }
+
+  const generatedEntryPath = await getGeneratedEntryPath();
 
   if (fields.some((field) => field.value)) {
     await Promise.all(
@@ -261,8 +283,6 @@ export default async function compile({
             'code' in e &&
             e.code === 'MODULE_NOT_FOUND'
           ) {
-            const generatedEntryPath = await getGeneratedEntryPath();
-
             if (!generatedEntryPath) {
               report.warn(
                 `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
@@ -292,9 +312,27 @@ export default async function compile({
         }
       })
     );
-  } else {
-    const generatedEntryPath = await getGeneratedEntryPath();
 
+    if (
+      modules === 'commonjs' &&
+      pkg.exports?.['.']?.import === `./${generatedEntryPath}`
+    ) {
+      report.warn(
+        `The the ${kleur.blue(
+          "exports['.'].import"
+        )} field points to a CommonJS module. This is likely a mistake.`
+      );
+    } else if (
+      modules === 'preserve' &&
+      pkg.exports?.['.']?.require === `./${generatedEntryPath}`
+    ) {
+      report.warn(
+        `The the ${kleur.blue(
+          "exports['.'].import"
+        )} field points to a ES module. This is likely a mistake.`
+      );
+    }
+  } else {
     report.warn(
       `No ${fields
         .map((field) => kleur.blue(field.name))

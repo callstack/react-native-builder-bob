@@ -27,6 +27,11 @@ export type Options = {
   exclude?: string;
 };
 
+export type Variants = {
+  commonjs?: boolean;
+  module?: boolean;
+};
+
 declare module '@babel/core' {
   export interface TransformCaller {
     rewriteImportExtensions: boolean;

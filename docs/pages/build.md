@@ -4,10 +4,10 @@ When code is in non-standard syntaxes such as JSX, TypeScript etc, it needs to b
 
 Supported targets are:
 
-- Generic CommonJS build
-- ES modules build for bundlers such as [webpack](https://webpack.js.org)
+- [ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) build for modern tools
+- [CommonJS](https://nodejs.org/api/modules.html#modules-commonjs-modules) build for legacy tools
 - [TypeScript](https://www.typescriptlang.org/) definitions
-- Flow definitions (copies .js files to .flow files)
+- [Flow](https://flow.org/) definitions (copies .js files to .flow files)
 - [Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) generated scaffold code
 
 If you created a project with [`create-react-native-library`](./create.md), `react-native-builder-bob` is **already pre-configured to build your project**. You don't need to configure it again.
@@ -24,7 +24,7 @@ npx react-native-builder-bob@latest init
 
 This will ask you a few questions and add the required configuration and scripts for building the code. The code will be compiled automatically when the package is published.
 
-> Note: the `init` command doesn't add the `codegen` target yet. You can either add it manually or create a new library with `create-react-native-library`.
+> Note: the `init` command doesn't add the [`codegen` target](#codegen) yet. You can either add it manually or create a new library with `create-react-native-library`.
 
 You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
 
@@ -34,28 +34,28 @@ To configure your project manually, follow these steps:
 
 1. First, install `react-native-builder-bob` in your project. Open a Terminal in your project, and run:
 
-```sh
-yarn add --dev react-native-builder-bob
-```
+   ```sh
+   yarn add --dev react-native-builder-bob
+   ```
 
-1. In your `package.json`, specify the targets to build for:
+2. In your `package.json`, specify the targets to build for:
 
    ```json
    "react-native-builder-bob": {
      "source": "src",
      "output": "lib",
      "targets": [
-       "codegen",
        ["commonjs", { "esm": true }],
        ["module", { "esm": true }],
-       ["typescript", { "esm": true }]
+       "typescript",
+       "codegen",
      ]
    }
    ```
 
    See the [Options](#options) section for more details.
 
-1. Add `bob` to your `prepare` or `prepack` step:
+3. Add `bob` to your `prepare` or `prepack` step:
 
    ```js
    "scripts": {
@@ -74,7 +74,7 @@ yarn add --dev react-native-builder-bob
 
    If you are not sure which one to use, we recommend going with `prepare` as it works during both publishing and installing from GIT with more package managers.
 
-1. Configure the appropriate entry points:
+4. Configure the appropriate entry points:
 
    ```json
    "source": "./src/index.tsx",
@@ -112,7 +112,7 @@ yarn add --dev react-native-builder-bob
 
    > If you're building TypeScript definition files, also make sure that the `types` field points to a correct path. Depending on the project configuration, the path can be different for you than the example snippet (e.g. `lib/typescript/index.d.ts` if you have only the `src` directory and `rootDir` is not set).
 
-1. Add the output directory to `.gitignore` and `.eslintignore`
+5. Add the output directory to `.gitignore` and `.eslintignore`
 
    ```gitignore
    # generated files by bob
@@ -121,7 +121,7 @@ yarn add --dev react-native-builder-bob
 
    This makes sure that you don't accidentally commit the generated files to git or get lint errors for them.
 
-1. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
+6. Add the output directory to `jest.modulePathIgnorePatterns` if you use [Jest](https://jestjs.io)
 
    ```json
    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
@@ -129,7 +129,7 @@ yarn add --dev react-native-builder-bob
 
    This makes sure that Jest doesn't try to run the tests in the generated files.
 
-1. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
+7. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
 
    If your library supports the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that only support the old architecture.
 
@@ -261,6 +261,8 @@ Example:
 #### `typescript`
 
 Enable generating type definitions with `tsc` if your source code is written in [TypeScript](http://www.typescriptlang.org/).
+
+When both `module` and `commonjs` targets are enabled, and `esm` is set to `true` for the `module` target, this will output 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
 The following options are supported:
 

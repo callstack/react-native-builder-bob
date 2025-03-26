@@ -6,14 +6,15 @@ import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
 import { platform } from 'os';
-import type { Input } from '../types';
+import type { Input, Variants } from '../types';
 
 type Options = Input & {
   options?: {
-    esm?: boolean;
     project?: string;
     tsc?: string;
   };
+  esm: boolean;
+  variants: Variants;
 };
 
 type Field = {
@@ -21,6 +22,7 @@ type Field = {
   value: string | undefined;
   output: string | undefined;
   error: boolean;
+  message: string | undefined;
 };
 
 export default async function build({
@@ -29,6 +31,8 @@ export default async function build({
   output,
   report,
   options,
+  variants,
+  esm,
 }: Options) {
   report.info(
     `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
@@ -156,15 +160,25 @@ export default async function build({
       );
     }
 
-    const outputs = options?.esm
-      ? {
-          commonjs: path.join(output, 'commonjs'),
-          module: path.join(output, 'module'),
-        }
-      : { commonjs: output };
+    const outputs: { commonjs?: string; module?: string } = {};
+
+    if (esm && variants.commonjs && variants.module) {
+      outputs.commonjs = path.join(output, 'commonjs');
+      outputs.module = path.join(output, 'module');
+    } else if (variants.commonjs) {
+      outputs.commonjs = output;
+    } else {
+      outputs.module = output;
+    }
+
+    const outDir = outputs.commonjs ?? outputs.module;
+
+    if (outDir == null) {
+      throw new Error('Neither commonjs nor module output is enabled.');
+    }
 
     const tsbuildinfo = path.join(
-      outputs.commonjs,
+      outDir,
       project.replace(/\.json$/, '.tsbuildinfo')
     );
 
@@ -186,7 +200,7 @@ export default async function build({
         '--project',
         project,
         '--outDir',
-        outputs.commonjs,
+        outDir,
       ],
       {
         stdio: 'inherit',
@@ -197,16 +211,26 @@ export default async function build({
     if (result.status === 0) {
       await del([tsbuildinfo]);
 
-      if (outputs?.module) {
-        // When ESM compatible output is enabled, we need to generate 2 builds for commonjs and esm
-        // In this case we copy the already generated types, and add `package.json` with `type` field
-        await fs.copy(outputs.commonjs, outputs.module);
-        await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
-          type: 'commonjs',
-        });
-        await fs.writeJSON(path.join(outputs.module, 'package.json'), {
-          type: 'module',
-        });
+      if (esm) {
+        if (outputs?.commonjs && outputs?.module) {
+          // When ESM compatible output is enabled and commonjs build is present, we need to generate 2 builds for commonjs and esm
+          // In this case we copy the already generated types, and add `package.json` with `type` field
+          await fs.copy(outputs.commonjs, outputs.module);
+          await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
+            type: 'commonjs',
+          });
+          await fs.writeJSON(path.join(outputs.module, 'package.json'), {
+            type: 'module',
+          });
+        } else if (outputs?.commonjs) {
+          await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
+            type: 'commonjs',
+          });
+        } else if (outputs?.module) {
+          await fs.writeJSON(path.join(outputs.module, 'package.json'), {
+            type: 'module',
+          });
+        }
       }
 
       report.success(
@@ -223,14 +247,22 @@ export default async function build({
           value: pkg.types,
           output: outputs.commonjs,
           error: false,
+          message: undefined,
         },
         ...(pkg.exports?.['.']?.types
           ? [
               {
                 name: "exports['.'].types",
                 value: pkg.exports?.['.']?.types,
-                output: outputs.commonjs,
-                error: options?.esm === true,
+                output: outDir,
+                error: Boolean(esm && variants.commonjs && variants.module),
+                message: `using both ${kleur.blue('commonjs')} and ${kleur.blue(
+                  'module'
+                )} targets with ${kleur.blue(
+                  'esm'
+                )} option enabled. Specify ${kleur.blue(
+                  "exports['.'].import.types"
+                )} and ${kleur.blue("exports['.'].require.types")} instead.`,
               },
             ]
           : []),
@@ -238,13 +270,17 @@ export default async function build({
           name: "exports['.'].import.types",
           value: pkg.exports?.['.']?.import?.types,
           output: outputs.module,
-          error: !options?.esm,
+          error: !esm,
+          message: `the ${kleur.blue(
+            'esm'
+          )} option is not enabled for the ${kleur.blue('module')} target`,
         },
         {
           name: "exports['.'].require.types",
           value: pkg.exports?.['.']?.require?.types,
           output: outputs.commonjs,
-          error: !options?.esm,
+          error: false,
+          message: undefined,
         },
       ];
 
@@ -284,9 +320,7 @@ export default async function build({
                 report.warn(
                   `The ${kleur.blue(field.name)} field in ${kleur.blue(
                     `package.json`
-                  )} should not be set when the ${kleur.blue(
-                    'esm'
-                  )} option is ${options?.esm ? 'enabled' : 'disabled'}.`
+                  )} should not be set when ${field.message}.`
                 );
               }
 
