@@ -108,9 +108,6 @@
 <% } -%>
     "typescript": "^5.2.2"
   },
-  "resolutions": {
-    "@types/react": "^18.2.44"
-  },
   "peerDependencies": {
     "react": "*",
 <% if (project.moduleConfig === 'nitro-modules') { -%>
