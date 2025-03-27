@@ -31,7 +31,7 @@ export async function build(argv: Argv) {
     );
   }
 
-  const result = await loadConfig();
+  const result = loadConfig(root);
 
   if (!result?.config) {
     logger.error(
