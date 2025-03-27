@@ -78,18 +78,11 @@ To configure your project manually, follow these steps:
 
    ```json
    "source": "./src/index.tsx",
-   "main": "./lib/commonjs/index.js",
-   "module": "./lib/module/index.js",
+   "main": "./lib/module/index.js",
    "exports": {
      ".": {
-       "import": {
-         "types": "./lib/typescript/module/src/index.d.ts",
-         "default": "./lib/module/index.js"
-       },
-       "require": {
-         "types": "./lib/typescript/commonjs/src/index.d.ts",
-         "default": "./lib/commonjs/index.js"
-       }
+        "types": "./lib/typescript/src/index.d.ts",
+        "default": "./lib/module/index.js"
      },
      "./package.json": "./package.json"
    },
@@ -248,7 +241,7 @@ Example:
 
 Enable compiling source files with Babel and use CommonJS module system. This is essentially the same as the `module` target and accepts the same options, but transforms the `import`/`export` statements in your code to `require`/`module.exports`.
 
-This is useful for supporting usage of this module with `require` in Node versions older than 20 (it can still be used with `import` for Node.js 12+ if `module` target with `esm` is enabled), and some tools such a [Jest](https://jestjs.io). The output file should be referenced in the `main` field. If you have a dual module setup with both ESM and CommonJS builds, it needs to be specified in `exports['.'].require` field of `package.json`.
+This is useful for supporting usage of this module with `require` in Node versions older than 20 (it can still be used with `import` for Node.js 12+ if `module` target with `esm` is enabled), and some tools such as [Jest](https://jestjs.io). The output file should be referenced in the `main` field. If you have a [dual package setup](esm.md#dual-package-setup) with both ESM and CommonJS builds, it needs to be specified in `exports['.'].require` field of `package.json`.
 
 Example:
 

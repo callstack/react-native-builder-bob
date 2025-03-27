@@ -35,33 +35,21 @@ Specifying `"moduleResolution": "bundler"` means that you don't need to use file
 To make use of the output files, ensure that your `package.json` file contains the following fields:
 
 ```json
-"main": "./lib/commonjs/index.js",
-"module": "./lib/module/index.js",
+"main": "./lib/module/index.js",
 "exports": {
   ".": {
-    "import": {
-      "types": "./lib/typescript/module/src/index.d.ts",
-      "default": "./lib/module/index.js"
-    },
-    "require": {
-      "types": "./lib/typescript/commonjs/src/index.d.ts",
-      "default": "./lib/commonjs/index.js"
-    }
+    "types": "./lib/typescript/src/index.d.ts",
+    "default": "./lib/module/index.js"
   },
   "./package.json": "./package.json"
 },
 ```
 
-The `main` field is for tools that don't support the `exports` field (e.g. [Jest](https://jestjs.io)). The `module` field is a non-standard field that some tools use to determine the ESM entry point.
+The `main` field is for tools that don't support the `exports` field (e.g. [Metro](https://metrobundler.dev) < 0.82.0).
 
 The `exports` field is used by Node.js 12+, modern browsers and tools to determine the correct entry point. The entrypoint is specified in the `.` key and will be used when the library is imported or required directly (e.g. `import 'my-library'` or `require('my-library')`).
 
 Here, we specify 2 conditions:
-
-- `import`: Used when the library is imported with an `import` statement or a dynamic `import()`. It should point to the ESM build.
-- `require`: Used when the library is required with a `require` call. It should point to the CommonJS build.
-
-Each condition has 2 fields:
 
 - `types`: Used for the TypeScript definitions.
 - `default`: Used for the actual JS code when the library is imported or required.
@@ -71,6 +59,76 @@ You can also specify additional conditions for different scenarios, such as `rea
 The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
 
 > Note: Metro enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the `unstable_enablePackageExports` option to `true` in the [Metro configuration](https://metrobundler.dev/docs/configuration/). If this is not enabled, Metro will use the entrypoint specified in the `main` field.
+
+## Dual package setup
+
+The previously mentioned setup only works with tools that support ES modules. If you want to support tools that don't support ESM and use the CommonJS module system, you can set up a dual package setup.
+
+A dual package setup means that you have 2 builds of your library: one for ESM and one for CommonJS. The ESM build is used by tools that support ES modules, while the CommonJS build is used by tools that don't support ES modules.
+
+To configure a dual package setup, you can follow these steps:
+
+1. Add the `commonjs` target to the `react-native-builder-bob` field in your `package.json` or `bob.config.js`:
+
+   ```diff
+   "react-native-builder-bob": {
+     "source": "src",
+     "output": "lib",
+     "targets": [
+       ["module", { "esm": true }],
+   +   ["commonjs", { "esm": true }]
+       "typescript",
+     ]
+   }
+   ```
+
+2. Optionally change the `main` field in your `package.json` to point to the CommonJS build:
+
+   ```diff
+   - "main": "./lib/module/index.js",
+   + "main": "./lib/commonjs/index.js",
+   ```
+
+   This is needed if you want to support tools that don't support the `exports` field and need to use the CommonJS build.
+
+3. Optionally add a `module` field in your `package.json` to point to the ESM build:
+
+   ```diff
+     "main": "./lib/commonjs/index.js",
+   + "module": "./lib/module/index.js",
+   ```
+
+   The `module` field is a non-standard field that some tools use to determine the ESM entry point.
+
+4. Change the `exports` field in your `package.json` to include 2 conditions:
+
+   ```diff
+   "exports": {
+     ".": {
+   -   "types": "./lib/typescript/src/index.d.ts",
+   -   "default": "./lib/module/index.js"
+   +   "import": {
+   +     "types": "./lib/typescript/module/src/index.d.ts",
+   +     "default": "./lib/module/index.js"
+   +   },
+   +   "require": {
+   +     "types": "./lib/typescript/commonjs/src/index.d.ts",
+   +     "default": "./lib/commonjs/index.js"
+   +   }
+     }
+   },
+   ```
+
+   Here, we specify 2 conditions:
+
+   - `import`: Used when the library is imported with an `import` statement or a dynamic `import()`. It will point to the ESM build.
+   - `require`: Used when the library is required with a `require` call. It will point to the CommonJS build.
+
+   Each condition has a `types` field - necessary for TypeScript to provide the appropriate definitions for the module system. The type definitions have slightly different semantics for CommonJS and ESM, so it's important to specify them separately.
+
+   The `default` field is the fallback entry point for both conditions. It's used for the actual JS code when the library is imported or required.
+
+> **Important:** With this approach, the ESM and CommonJS versions of the package are treated as separate modules by Node.js as they are different files, leading to [potential issues](https://nodejs.org/docs/latest-v19.x/api/packages.html#dual-package-hazard) if the package is both imported and required in the same runtime environment. If the package relies on any state that can cause issues if 2 separate instances are loaded, it's necessary to isolate the state into a separate CommonJS module that can be shared between the ESM and CommonJS builds.
 
 ## Guidelines
 
@@ -100,7 +158,19 @@ There are still a few things to keep in mind if you want your library to be ESM-
 
 - Avoid using `.cjs`, `.mjs`, `.cts` or `.mts` extensions. Metro always requires file extensions in import statements when using `.cjs` or `.mjs` which breaks platform-specific extension resolution.
 - Avoid using `"moduleResolution": "node16"` or `"moduleResolution": "nodenext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.
-- If you specify a `react-native` condition in `exports`, make sure that it comes before the `default` condition. The conditions should be ordered from the most specific to the least specific:
+- If you specify a `react-native` condition in `exports`, make sure that it comes before other conditions. The conditions should be ordered from the most specific to the least specific:
+
+  ```json
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "react-native": "./lib/modules/index.native.js",
+      "default": "./lib/module/index.js"
+    }
+  }
+  ```
+
+  Or for a dual package setup:
 
   ```json
   "exports": {
