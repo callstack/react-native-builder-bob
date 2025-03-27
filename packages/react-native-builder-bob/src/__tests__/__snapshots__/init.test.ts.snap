@@ -17,7 +17,8 @@ exports[`initializes the configuration 1`] = `
         "types": "./lib/typescript/commonjs/src/index.d.ts",
         "default": "./lib/commonjs/index.js"
       }
-    }
+    },
+    "./package.json": "./package.json"
   },
   "source": "./src/index.ts",
   "main": "./lib/commonjs/index.js",

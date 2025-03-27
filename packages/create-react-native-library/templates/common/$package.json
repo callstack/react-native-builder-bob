@@ -15,7 +15,8 @@
         "types": "./lib/typescript/commonjs/src/index.d.ts",
         "default": "./lib/commonjs/index.js"
       }
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "src",
@@ -234,6 +235,13 @@
     "android": {
       "javaPackageName": "com.<%- project.package %>"
     <% if (example === 'vanilla') { -%>
+    <% if (project.viewConfig === 'fabric-view') { -%>
+    },
+    "ios": {
+      "componentProvider": {
+        "<%- project.name -%>View": "<%- project.name -%>View"
+      }
+    <% } -%>
     },
     "includesGeneratedCode": true
     <% } else { -%>

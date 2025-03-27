@@ -150,7 +150,7 @@ If you have a reason to not ship Codegen generated scaffold code with your libra
     ]
    ```
 
-3. Add `package.json` to the `exports` field in your `package.json`:
+3. If you have an `exports` field in your `package.json`, ensure that it contains `./package.json`:
 
    ```diff
    "exports": {
