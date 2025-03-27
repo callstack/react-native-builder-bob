@@ -91,15 +91,15 @@ const TYPE_CHOICES: {
     description: 'integration for native APIs to JS',
   },
   {
+    title: 'Fabric view',
+    value: 'fabric-view',
+    description: 'integration for native views to JS',
+  },
+  {
     title: 'Nitro module',
     value: 'nitro-module',
     description:
       'type-safe, fast integration for native APIs to JS (experimental)',
-  },
-  {
-    title: 'Fabric view',
-    value: 'fabric-view',
-    description: 'integration for native views to JS',
   },
   {
     title: 'Legacy Native module',

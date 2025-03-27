@@ -242,6 +242,7 @@ export async function init() {
 
     const exportsField = {
       '.': {},
+      './package.json': './package.json',
     };
 
     const importField = {
@@ -263,11 +264,6 @@ export async function init() {
       exportsField['.'] = requireField;
     } else if (targets.includes('module')) {
       exportsField['.'] = importField;
-    }
-
-    if (pkg.codegenConfig && !pkg.codegenConfig.includesGeneratedCode) {
-      // @ts-expect-error The exports is not strictly types therefore it doesn't know about the package.json property
-      exportsField['./package.json'] = './package.json';
     }
 
     if (
