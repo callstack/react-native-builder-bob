@@ -108,7 +108,9 @@ export default async function compile({
 
       // If codegen is used in the app, then we need to preserve TypeScript source
       // So we copy the file as is instead of transforming it
-      if (isCodegenSpec(filepath)) {
+      const codegenEnabled = 'codegenConfig' in pkg;
+
+      if (codegenEnabled && isCodegenSpec(filepath)) {
         fs.copy(filepath, path.join(output, path.relative(source, filepath)));
         return;
       }
@@ -123,7 +125,7 @@ export default async function compile({
               : false,
           rewriteImportExtensions: esm,
           jsxRuntime,
-          codegenEnabled: 'codegenConfig' in pkg,
+          codegenEnabled,
         },
         cwd: root,
         babelrc: babelrc,
