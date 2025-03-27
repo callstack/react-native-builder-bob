@@ -135,7 +135,8 @@ If you have a reason to not ship Codegen generated scaffold code with your libra
    ```diff
    "codegenConfig": {
      // …
-   +   "includesGeneratedCode": false
+   - "includesGeneratedCode": true
+   + "includesGeneratedCode": false
    }
    ```
 
@@ -146,7 +147,7 @@ If you have a reason to not ship Codegen generated scaffold code with your libra
     "output": "lib",
     "targets": [
       // …
-   -   "codegen"
+   -  "codegen"
     ]
    ```
 
@@ -154,8 +155,10 @@ If you have a reason to not ship Codegen generated scaffold code with your libra
 
    ```diff
    "exports": {
-     // …
-   +   "./package.json": "./package.json"
+     ".": {
+       // …
+     },
+   + "./package.json": "./package.json"
    },
    ```
 
