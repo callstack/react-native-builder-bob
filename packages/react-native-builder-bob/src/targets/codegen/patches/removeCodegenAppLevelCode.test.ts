@@ -1,4 +1,4 @@
-import { expect, it, describe, beforeEach, afterEach } from '@jest/globals';
+import { expect, test, describe, beforeEach, afterEach } from '@jest/globals';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { removeCodegenAppLevelCode } from './removeCodegenAppLevelCode';
@@ -50,7 +50,7 @@ describe('patchCodegenAndroidPackage', () => {
     mockfs.restore();
   });
 
-  it('removes the duplicate iOS files', async () => {
+  test('removes the duplicate iOS files', async () => {
     await removeCodegenAppLevelCode(mockProjectPath, mockPackageJson);
 
     expect(
@@ -62,7 +62,7 @@ describe('patchCodegenAndroidPackage', () => {
     ).toBe(0);
   });
 
-  it('removes the unnecessary Android files', async () => {
+  test('removes the unnecessary Android files', async () => {
     await removeCodegenAppLevelCode(mockProjectPath, mockPackageJson);
 
     expect(
@@ -74,7 +74,7 @@ describe('patchCodegenAndroidPackage', () => {
     ).toBe(0);
   });
 
-  it("doesn't crash the process when there are no files to remove", async () => {
+  test("doesn't crash the process when there are no files to remove", async () => {
     mockfs({
       [mockProjectPath]: {
         'package.json': JSON.stringify(mockPackageJson),

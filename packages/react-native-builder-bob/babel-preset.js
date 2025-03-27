@@ -1,4 +1,4 @@
-/* eslint-disable import/no-commonjs */
+/* eslint-disable @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
 
 const browserslist = require('browserslist');
 
