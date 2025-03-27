@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, it, jest } from '@jest/globals';
 import { readFile } from 'fs-extra';
 import mockFs from 'mock-fs';
 import { stdin } from 'mock-stdin';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { init } from '../init';
 
 jest.mock('../../package.json', () => ({
@@ -12,6 +12,7 @@ jest.mock('../../package.json', () => ({
 
 let io: ReturnType<typeof stdin> | undefined;
 
+const node_modules = resolve('../../node_modules');
 const root = '/path/to/library';
 
 const enter = '\x0D';
@@ -43,6 +44,7 @@ beforeEach(() => {
   io = stdin();
 
   mockFs({
+    [node_modules]: mockFs.load(node_modules),
     [root]: {
       'package.json': JSON.stringify({
         name: 'library',
@@ -63,8 +65,6 @@ afterEach(() => {
 
 it('initializes the configuration', async () => {
   jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
-
-  process.chdir(root);
 
   const run = async () => {
     await waitFor(() => {
@@ -114,7 +114,7 @@ it('initializes the configuration', async () => {
     io?.send(enter);
   };
 
-  await Promise.all([run(), init()]);
+  await Promise.all([run(), init({ cwd: root })]);
 
   expect(process.stdout.write).toHaveBeenLastCalledWith(
     expect.stringMatching('configured successfully!')

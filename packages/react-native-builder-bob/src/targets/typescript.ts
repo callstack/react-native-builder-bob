@@ -1,12 +1,12 @@
-import kleur from 'kleur';
-import path from 'path';
-import fs from 'fs-extra';
-import which from 'which';
 import spawn from 'cross-spawn';
-import del from 'del';
+import fs from 'fs-extra';
 import JSON5 from 'json5';
+import kleur from 'kleur';
 import { platform } from 'os';
+import path from 'path';
+import which from 'which';
 import type { Input, Variants } from '../types';
+import { rmrf } from '../utils/rmrf';
 
 type Options = Input & {
   options?: {
@@ -38,7 +38,7 @@ export default async function build({
     `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
-  await del([output]);
+  await rmrf(output, { root });
 
   report.info(`Generating type definitions with ${kleur.blue('tsc')}`);
 
@@ -183,7 +183,8 @@ export default async function build({
     );
 
     try {
-      await del([tsbuildinfo]);
+      await rmrf(tsbuildinfo, { root });
+      await rmrf(tsbuildinfo, { root });
     } catch (e) {
       // Ignore
     }
@@ -209,7 +210,7 @@ export default async function build({
     );
 
     if (result.status === 0) {
-      await del([tsbuildinfo]);
+      await rmrf(tsbuildinfo, { root });
 
       if (esm) {
         if (outputs?.commonjs && outputs?.module) {

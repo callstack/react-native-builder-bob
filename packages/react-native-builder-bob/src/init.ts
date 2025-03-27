@@ -1,20 +1,24 @@
-import path from 'path';
-import fs from 'fs-extra';
-import kleur from 'kleur';
 import dedent from 'dedent';
+import fs from 'fs-extra';
 import isGitDirty from 'is-git-dirty';
-import prompts, { type PromptObject } from './utils/prompts';
-import * as logger from './utils/logger';
+import kleur from 'kleur';
+import path from 'path';
+import { getProjectRoot } from './utils/getProjectRoot';
 import { loadConfig } from './utils/loadConfig';
+import * as logger from './utils/logger';
+import prompts, { type PromptObject } from './utils/prompts';
 
 // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
 const { name, version } = require('../package.json');
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
-export async function init() {
-  const root = process.cwd();
-  const projectPackagePath = path.resolve(root, 'package.json');
+type Argv = {
+  cwd?: string;
+};
+
+export async function init(argv: Argv) {
+  const root = await getProjectRoot(argv);
 
   if (isGitDirty()) {
     const { shouldContinue } = await prompts({
@@ -29,15 +33,10 @@ export async function init() {
     }
   }
 
-  if (!(await fs.pathExists(projectPackagePath))) {
-    logger.error(
-      `Couldn't find a 'package.json' file in '${root}'.\n  Are you in a project folder?`
-    );
-    process.exit(1);
-  }
+  const projectPackagePath = path.join(root, 'package.json');
 
   const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
-  const result = await loadConfig();
+  const result = await loadConfig(root);
 
   if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
     const { shouldContinue } = await prompts({

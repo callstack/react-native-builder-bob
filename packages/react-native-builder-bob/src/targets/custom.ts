@@ -1,10 +1,10 @@
+import dedent from 'dedent';
+import fs from 'fs-extra';
 import kleur from 'kleur';
 import path from 'path';
-import fs from 'fs-extra';
 import type { Input } from '../types';
+import { rmrf } from '../utils/rmrf';
 import { spawn } from '../utils/spawn';
-import dedent from 'dedent';
-import del from 'del';
 
 type Options = Omit<Input, 'output'> & {
   options?: {
@@ -31,7 +31,7 @@ export default async function customTarget({ options, root, report }: Options) {
   if (pathToClean) {
     report.info(`Cleaning up ${kleur.blue(pathToClean)}`);
 
-    await del([path.resolve(root, pathToClean)]);
+    await rmrf(pathToClean, { root });
   }
 
   const packageManagerExecutable = process.env.npm_execpath ?? 'npm';

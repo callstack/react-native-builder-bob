@@ -1,8 +1,8 @@
-import path from 'path';
 import kleur from 'kleur';
-import del from 'del';
-import compile, { type CompileOptions } from '../utils/compile';
+import path from 'path';
 import type { Input, Variants } from '../types';
+import compile, { type CompileOptions } from '../utils/compile';
+import { rmrf } from '../utils/rmrf';
 
 type Options = Input & {
   options?: CompileOptions;
@@ -23,7 +23,7 @@ export default async function build({
     `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
-  await del([output]);
+  await rmrf(output, { root });
 
   await compile({
     ...options,

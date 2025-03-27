@@ -1,15 +1,15 @@
-import path from 'path';
 import kleur from 'kleur';
-import * as logger from './utils/logger';
+import path from 'path';
+import yargs from 'yargs';
+import buildCodegen from './targets/codegen';
 import buildCommonJS from './targets/commonjs';
+import customTarget from './targets/custom';
 import buildModule from './targets/module';
 import buildTypescript from './targets/typescript';
-import buildCodegen from './targets/codegen';
-import customTarget from './targets/custom';
 import { type Options, type Target } from './types';
-import fs from 'fs-extra';
+import { getProjectRoot } from './utils/getProjectRoot';
 import { loadConfig } from './utils/loadConfig';
-import yargs from 'yargs';
+import * as logger from './utils/logger';
 
 export const args = {
   target: {
@@ -21,21 +21,13 @@ export const args = {
 
 type Argv = {
   $0: string;
+  cwd?: string;
   target?: Target;
 };
 
 export async function build(argv: Argv) {
-  const root = process.cwd();
-
-  const projectPackagePath = path.resolve(root, 'package.json');
-
-  if (!(await fs.pathExists(projectPackagePath))) {
-    throw new Error(
-      `Couldn't find a 'package.json' file in '${root}'. Are you in a project folder?`
-    );
-  }
-
-  const result = await loadConfig();
+  const root = await getProjectRoot(argv);
+  const result = await loadConfig(root);
 
   if (!result?.config) {
     logger.error(

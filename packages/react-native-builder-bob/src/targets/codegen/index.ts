@@ -1,10 +1,10 @@
-import kleur from 'kleur';
-import type { Input } from '../../types';
-import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
 import fs from 'fs-extra';
+import kleur from 'kleur';
 import path from 'path';
-import del from 'del';
+import type { Input } from '../../types';
+import { rmrf } from '../../utils/rmrf';
 import { runRNCCli } from '../../utils/runRNCCli';
+import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
 import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
 
 type Options = Input;
@@ -20,7 +20,8 @@ export default async function build({ root, report }: Options) {
         path.relative(root, codegenIosPath)
       )}`
     );
-    await del([codegenIosPath]);
+
+    await rmrf(codegenIosPath, { root });
   }
 
   const codegenAndroidPath = packageJson.codegenConfig?.outputDir?.android;
@@ -30,7 +31,8 @@ export default async function build({ root, report }: Options) {
         path.relative(root, codegenAndroidPath)
       )}`
     );
-    await del([codegenAndroidPath]);
+
+    rmrf(codegenAndroidPath, { root });
   }
 
   const codegenType = packageJson.codegenConfig?.type;
