@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.4](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.3...react-native-builder-bob@0.38.4) (2025-03-27)
+
+### Bug Fixes
+
+- fix configuration for fabric view templates ([#801](https://github.com/callstack/react-native-builder-bob/issues/801)) ([212de62](https://github.com/callstack/react-native-builder-bob/commit/212de62ccac91b8d4ea3015c33985f45bae5a45e)), closes [#788](https://github.com/callstack/react-native-builder-bob/issues/788) - by @satya164
+
 ## [0.38.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.2...react-native-builder-bob@0.38.3) (2025-03-27)
 
 ### Bug Fixes

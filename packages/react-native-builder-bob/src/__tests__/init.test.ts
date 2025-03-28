@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, it, jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, jest } from '@jest/globals';
 import { readFile } from 'fs-extra';
 import mockFs from 'mock-fs';
 import { stdin } from 'mock-stdin';
@@ -61,7 +61,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-it('initializes the configuration', async () => {
+test('initializes the configuration', async () => {
   jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
   process.chdir(root);

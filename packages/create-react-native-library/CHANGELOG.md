@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.9](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.8...create-react-native-library@0.48.9) (2025-03-28)
+
+### Bug Fixes
+
+- don't throw for missing dep if it's already in root ([f9258fa](https://github.com/callstack/react-native-builder-bob/commit/f9258faac62e8c22450d8c940dfa743c7a70709c)) - by @
+
+## [0.48.8](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.7...create-react-native-library@0.48.8) (2025-03-27)
+
+### Bug Fixes
+
+- align @types/react version between example and root project ([49a5777](https://github.com/callstack/react-native-builder-bob/commit/49a57771ce0ffb98a2a00b8a79c077c826bc66fc)), closes [#782](https://github.com/callstack/react-native-builder-bob/issues/782) - by @satya164
+
+## [0.48.7](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.6...create-react-native-library@0.48.7) (2025-03-27)
+
+### Bug Fixes
+
+- fix configuration for fabric view templates ([#801](https://github.com/callstack/react-native-builder-bob/issues/801)) ([212de62](https://github.com/callstack/react-native-builder-bob/commit/212de62ccac91b8d4ea3015c33985f45bae5a45e)), closes [#788](https://github.com/callstack/react-native-builder-bob/issues/788) - by @satya164
+
 ## [0.48.6](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.5...create-react-native-library@0.48.6) (2025-03-26)
 
 **Note:** Version bump only for package create-react-native-library

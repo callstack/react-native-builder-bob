@@ -7,7 +7,7 @@ import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import { loadConfig } from './utils/loadConfig';
 
-// eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
 const { name, version } = require('../package.json');
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
@@ -242,6 +242,7 @@ export async function init() {
 
     const exportsField = {
       '.': {},
+      './package.json': './package.json',
     };
 
     const importField = {
@@ -263,11 +264,6 @@ export async function init() {
       exportsField['.'] = requireField;
     } else if (targets.includes('module')) {
       exportsField['.'] = importField;
-    }
-
-    if (pkg.codegenConfig && !pkg.codegenConfig.includesGeneratedCode) {
-      // @ts-expect-error The exports is not strictly types therefore it doesn't know about the package.json property
-      exportsField['./package.json'] = './package.json';
     }
 
     if (

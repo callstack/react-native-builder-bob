@@ -92,6 +92,11 @@ const TYPE_CHOICES: {
     description: 'integration for native APIs to JS',
   },
   {
+    title: 'Fabric view',
+    value: 'fabric-view',
+    description: 'integration for native views to JS',
+  },
+  {
     title: 'Nitro module',
     value: 'nitro-module',
     description:
@@ -102,11 +107,6 @@ const TYPE_CHOICES: {
     value: 'nitro-view',
     description:
       'integration for native views to JS using nitro for prop parsing (experimental)',
-  },
-  {
-    title: 'Fabric view',
-    value: 'fabric-view',
-    description: 'integration for native views to JS',
   },
   {
     title: 'Legacy Native module',
