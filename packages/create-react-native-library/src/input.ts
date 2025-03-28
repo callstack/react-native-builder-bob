@@ -14,6 +14,7 @@ export type ProjectType =
   | 'turbo-module'
   | 'fabric-view'
   | 'nitro-module'
+  | 'nitro-view'
   | 'library';
 
 const LANGUAGE_CHOICES: {
@@ -24,7 +25,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['nitro-module'],
+    types: ['nitro-module', 'nitro-view'],
   },
   {
     title: 'Kotlin & Objective-C',
@@ -83,6 +84,12 @@ const TYPE_CHOICES: {
     value: 'nitro-module',
     description:
       'type-safe, fast integration for native APIs to JS (experimental)',
+  },
+  {
+    title: 'Nitro View',
+    value: 'nitro-view',
+    description:
+      'integration for native views to JS using nitro for prop parsing (experimental)',
   },
   {
     title: 'JavaScript library',
