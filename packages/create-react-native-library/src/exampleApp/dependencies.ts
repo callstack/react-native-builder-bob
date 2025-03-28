@@ -1,9 +1,14 @@
-import assert from 'node:assert';
 import path from 'path';
 import fs from 'fs-extra';
 import type { TemplateConfiguration } from '../template';
+import sortObjectKeys from '../utils/sortObjectKeys';
 
-export async function getDependencyVersionsFromExampleApp(
+type PackageJson = {
+  devDependencies?: Record<string, string>;
+};
+
+export async function alignDependencyVersionsWithExampleApp(
+  pkg: PackageJson,
   folder: string,
   config: TemplateConfiguration
 ) {
@@ -31,17 +36,18 @@ export async function getDependencyVersionsFromExampleApp(
         examplePackageJson.dependencies?.[name] ??
         examplePackageJson.devDependencies?.[name];
 
-      assert(
-        version != null,
-        `Couldn't find the package "${name}" in the example app.`
-      );
-
-      devDependencies[name] = version;
+      if (version != null) {
+        devDependencies[name] = version;
+      } else if (pkg.devDependencies?.[name] == null) {
+        throw new Error(
+          `Couldn't find the package "${name}" in the example app.`
+        );
+      }
     }
   });
 
-  return {
-    dependencies: {},
-    devDependencies,
-  };
+  pkg['devDependencies'] = sortObjectKeys({
+    ...pkg['devDependencies'],
+    ...devDependencies,
+  });
 }

@@ -4,7 +4,7 @@ import ora from 'ora';
 import path from 'path';
 import yargs from 'yargs';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
-import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
+import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 import {
@@ -19,7 +19,6 @@ import { assertNpxExists, assertUserInput } from './utils/assert';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
-import sortObjectKeys from './utils/sortObjectKeys';
 
 const FALLBACK_BOB_VERSION = '0.38.3';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
@@ -117,18 +116,11 @@ async function create(_argv: yargs.Arguments<Args>) {
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
   if (config.example !== 'none') {
-    const { dependencies, devDependencies } =
-      await getDependencyVersionsFromExampleApp(folder, config);
-
-    rootPackageJson.dependencies = sortObjectKeys({
-      ...rootPackageJson.dependencies,
-      ...dependencies,
-    });
-
-    rootPackageJson.devDependencies = sortObjectKeys({
-      ...rootPackageJson.devDependencies,
-      ...devDependencies,
-    });
+    await alignDependencyVersionsWithExampleApp(
+      rootPackageJson,
+      folder,
+      config
+    );
   }
 
   if (
