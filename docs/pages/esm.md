@@ -9,14 +9,16 @@ You can verify whether ESM support is enabled by checking the configuration for 
   "source": "src",
   "output": "lib",
   "targets": [
-    ["commonjs", { "esm": true }],
     ["module", { "esm": true }],
+    ["commonjs", { "esm": true }],
     "typescript"
   ]
 }
 ```
 
-The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files. For TypeScript, it also generates 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
+The `"esm": true` option enables ESM-compatible output by adding the `.js` extension to the import statements in the generated files. This is necessary if you want to be able to import the library on Node.js or in a bundler that supports ESM, with some caveats. See the [Guidelines](#guidelines) section for more information.
+
+For TypeScript, it also generates 2 sets of type definitions if the [`commonjs`](build.md#commonjs) target is also enabled: one for the CommonJS build and one for the ES module build.
 
 It's recommended to specify `"moduleResolution": "bundler"` and `"resolvePackageJsonImports": false` in your `tsconfig.json` file to match [Metro's behavior](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta):
 
@@ -36,7 +38,6 @@ To make use of the output files, ensure that your `package.json` file contains t
 ```json
 "main": "./lib/commonjs/index.js",
 "module": "./lib/module/index.js",
-"types": "./lib/typescript/commonjs/src/index.d.ts",
 "exports": {
   ".": {
     "import": {
@@ -47,22 +48,28 @@ To make use of the output files, ensure that your `package.json` file contains t
       "types": "./lib/typescript/commonjs/src/index.d.ts",
       "default": "./lib/commonjs/index.js"
     }
-  }
+  },
+  "./package.json": "./package.json"
 },
 ```
 
-The `main`, `module` and `types` fields are for legacy setups that don't support the `exports` field. See the [Manual configuration](build.md#manual-configuration) guide for more information about those fields.
+The `main` field is for tools that don't support the `exports` field (e.g. [Metro](https://metrobundler.dev/)). The `module` field is a non-standard field that some tools use to determine the ESM entry point.
 
-The `exports` field is used by modern tools and bundlers to determine the correct entry point. Here, we specify 2 conditions:
+The `exports` field is used by Node.js 12+, modern browsers and tools to determine the correct entry point. The entrypoint is specified in the `.` key and will be used when the library is imported or required directly (e.g. `import 'my-library'` or `require('my-library')`).
+
+Here, we specify 2 conditions:
 
 - `import`: Used when the library is imported with an `import` statement or a dynamic `import()`. It should point to the ESM build.
 - `require`: Used when the library is required with a `require` call. It should point to the CommonJS build.
 
-Each condition has a `types` field - necessary for TypeScript to provide the appropriate definitions for the module system. The type definitions have slightly different semantics for CommonJS and ESM, so it's important to specify them separately.
+Each condition has 2 fields:
 
-The `default` field is the fallback entry point for both conditions. It's used for the actual JS code when the library is imported or required.
+- `types`: Used for the TypeScript definitions.
+- `default`: Used for the actual JS code when the library is imported or required.
 
 You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
+
+The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
 
 ## Guidelines
 
@@ -79,9 +86,20 @@ There are still a few things to keep in mind if you want your library to be ESM-
   const { foo } = require('my-library');
   ```
 
+  Alternatively, if you want to be able to use the library in Node.js with `import` syntax, you can use `require` to import code with platform-specific extensions in your library:
+
+  ```js
+  // will import `foo.native.js`, `foo.ios.js`, `foo.js` etc.
+  const { foo } = require('./foo');
+  ```
+
+  Make sure to have a file without any platform-specific extensions that will be loaded by Node.js.
+
+  Also note that if your module (e.g. `foo.js` in this case) contains ESM syntax, it will only work on Node.js 20 or newer.
+
 - Avoid using `.cjs`, `.mjs`, `.cts` or `.mts` extensions. Metro always requires file extensions in import statements when using `.cjs` or `.mjs` which breaks platform-specific extension resolution.
 - Avoid using `"moduleResolution": "node16"` or `"moduleResolution": "nodenext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.
-- If you specify a `react-native` condition in `exports`, make sure that it comes before `import` or `require`. The conditions should be ordered from the most specific to the least specific:
+- If you specify a `react-native` condition in `exports`, make sure that it comes before the `default` condition. The conditions should be ordered from the most specific to the least specific:
 
   ```json
   "exports": {
@@ -96,6 +114,7 @@ There are still a few things to keep in mind if you want your library to be ESM-
         "react-native": "./lib/commonjs/index.native.js",
         "default": "./lib/commonjs/index.js"
       }
-    }
+    },
+    "./package.json": "./package.json"
   }
   ```

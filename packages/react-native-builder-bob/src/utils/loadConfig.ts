@@ -1,6 +1,6 @@
 import { cosmiconfig } from 'cosmiconfig';
 
-// eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
 const { name } = require('../../package.json');
 
 const root = process.cwd();

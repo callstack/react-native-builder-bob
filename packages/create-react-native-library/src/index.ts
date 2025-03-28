@@ -1,28 +1,29 @@
-import path from 'path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
-import yargs from 'yargs';
 import ora from 'ora';
-import { prompt } from './utils/prompt';
-import generateExampleApp from './exampleApp/generateExampleApp';
+import path from 'path';
+import yargs from 'yargs';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
-import { createInitialGitCommit } from './utils/initialCommit';
-import { assertUserInput, assertNpxExists } from './utils/assert';
-import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
-import { applyTemplates, generateTemplateConfiguration } from './template';
+import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
+import generateExampleApp from './exampleApp/generateExampleApp';
+import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 import {
-  createQuestions,
-  createMetadata,
-  type Answers,
   acceptedArgs,
+  createMetadata,
+  createQuestions,
+  type Answers,
   type Args,
 } from './input';
-import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
-import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
+import { applyTemplates, generateTemplateConfiguration } from './template';
+import { assertNpxExists, assertUserInput } from './utils/assert';
+import { createInitialGitCommit } from './utils/initialCommit';
+import { prompt } from './utils/prompt';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
-const FALLBACK_BOB_VERSION = '0.36.0';
+const FALLBACK_BOB_VERSION = '0.38.3';
 const FALLBACK_NITRO_MODULES_VERSION = '0.25.2';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
   .command(
     '$0 [name]',
@@ -115,17 +116,11 @@ async function create(_argv: yargs.Arguments<Args>) {
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
   if (config.example !== 'none') {
-    const { devDependencies } = await getDependencyVersionsFromExampleApp(
+    await alignDependencyVersionsWithExampleApp(
+      rootPackageJson,
       folder,
       config
     );
-
-    rootPackageJson.devDependencies = rootPackageJson.devDependencies
-      ? {
-          ...rootPackageJson.devDependencies,
-          ...devDependencies,
-        }
-      : devDependencies;
   }
 
   if (
