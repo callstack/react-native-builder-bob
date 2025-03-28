@@ -15,7 +15,7 @@ buildscript {
   }
 }
 
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -24,7 +24,7 @@ def reactNativeArchitectures() {
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinking.gradle'
 <% } -%>
 
@@ -35,8 +35,9 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
-<% if (project.moduleConfig === 'nitro-modules') { -%>
-  namespace "com.margelo.nitro.<%- project.package -%>"
+  if (supportsNamespace()) {
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+    namespace "com.margelo.nitro.<%- project.package -%>"
 <% } else { -%>
   namespace "com.<%- project.package -%>"
 <% } -%>
@@ -46,7 +47,7 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
     externalNativeBuild {
       cmake {
@@ -66,7 +67,7 @@ android {
     }
 <% } -%>
   }
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
   externalNativeBuild {
     cmake {
@@ -74,7 +75,7 @@ android {
     }
   }
 <% } -%>
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
   packagingOptions {
     excludes = [
@@ -100,7 +101,7 @@ android {
 
   buildFeatures {
     buildConfig true
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     prefab true
 <% } -%>
   }
@@ -140,7 +141,7 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
   implementation project(":react-native-nitro-modules")
 <% } -%>
 }
