@@ -74,9 +74,8 @@ async function create(_argv: yargs.Arguments<Args>) {
   assertUserInput(questions, answers);
 
   const bobVersion = await bobVersionPromise;
-
   const nitroModulesVersion =
-    answers.type === 'nitro-module'
+    answers.type === 'nitro-module' || answers.type === 'nitro-view'
       ? await nitroModulesVersionPromise
       : undefined;
 

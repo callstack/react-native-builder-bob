@@ -181,7 +181,10 @@ export default async function generateExampleApp({
     'react-native-builder-bob': `^${config.versions.bob}`,
   };
 
-  if (config.project.moduleConfig === 'nitro-modules') {
+  if (
+    config.project.moduleConfig === 'nitro-modules' ||
+    config.project.viewConfig === 'nitro-view'
+  ) {
     const packagesToAddNitro = {
       'react-native-nitro-modules': `^${config.versions.nitroModules}`,
     };
