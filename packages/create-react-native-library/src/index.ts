@@ -21,7 +21,7 @@ import { getDependencyVersionsFromExampleApp } from './exampleApp/dependencies';
 import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
 
 const FALLBACK_BOB_VERSION = '0.36.0';
-const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
+const FALLBACK_NITRO_MODULES_VERSION = '0.25.2';
 
 yargs
   .command(
