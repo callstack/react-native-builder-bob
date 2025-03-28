@@ -23,6 +23,7 @@ import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 const FALLBACK_BOB_VERSION = '0.38.3';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
   .command(
     '$0 [name]',

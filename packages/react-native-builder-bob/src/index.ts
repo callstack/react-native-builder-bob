@@ -13,6 +13,7 @@ const args = {
   },
 } satisfies Record<ArgName, yargs.Options>;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
   .command('init', 'configure the package to use bob', {}, init)
   .command('build', 'build files for publishing', args, build)

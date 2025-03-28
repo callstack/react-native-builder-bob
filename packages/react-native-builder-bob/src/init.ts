@@ -7,7 +7,7 @@ import prompts, { type PromptObject } from './utils/prompts';
 import * as logger from './utils/logger';
 import { loadConfig } from './utils/loadConfig';
 
-// eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
 const { name, version } = require('../package.json');
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;

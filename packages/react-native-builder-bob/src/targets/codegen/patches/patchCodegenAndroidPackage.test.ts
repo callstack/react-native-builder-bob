@@ -1,4 +1,4 @@
-import { expect, it, describe, beforeEach, afterEach } from '@jest/globals';
+import { expect, test, describe, beforeEach, afterEach } from '@jest/globals';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage';
@@ -76,7 +76,7 @@ describe('patchCodegenAndroidPackage', () => {
     mockfs.restore();
   });
 
-  it('moves the files to correct dir', async () => {
+  test('moves the files to correct dir', async () => {
     await patchCodegenAndroidPackage(
       mockProjectPath,
       mockPackageJson,
@@ -91,7 +91,7 @@ describe('patchCodegenAndroidPackage', () => {
     expect(await fs.pathExists(expectedDir)).toBe(true);
   });
 
-  it('replaces the package name in the files', async () => {
+  test('replaces the package name in the files', async () => {
     await patchCodegenAndroidPackage(
       mockProjectPath,
       mockPackageJson,
@@ -110,7 +110,7 @@ describe('patchCodegenAndroidPackage', () => {
     expect(fileContent).toContain('package com.bobtest;');
   });
 
-  it('removes the old package dir', async () => {
+  test('removes the old package dir', async () => {
     await patchCodegenAndroidPackage(
       mockProjectPath,
       mockPackageJson,
@@ -120,7 +120,7 @@ describe('patchCodegenAndroidPackage', () => {
     expect(await fs.pathExists(mockCodegenModuleSpecsPath)).toBe(false);
   });
 
-  it("doesn't delete the view manager specs", async () => {
+  test("doesn't delete the view manager specs", async () => {
     const mockPackageJsonWithTypeAll = {
       ...mockPackageJson,
       codegenConfig: {
