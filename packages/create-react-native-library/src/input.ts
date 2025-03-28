@@ -86,7 +86,7 @@ const TYPE_CHOICES: {
       'type-safe, fast integration for native APIs to JS (experimental)',
   },
   {
-    title: 'Nitro View',
+    title: 'Nitro view',
     value: 'nitro-view',
     description:
       'integration for native views to JS using nitro for prop parsing (experimental)',
