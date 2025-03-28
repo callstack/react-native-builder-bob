@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.9](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.8...create-react-native-library@0.48.9) (2025-03-28)
+
+### Bug Fixes
+
+- don't throw for missing dep if it's already in root ([f9258fa](https://github.com/callstack/react-native-builder-bob/commit/f9258faac62e8c22450d8c940dfa743c7a70709c)) - by @
+
 ## [0.48.8](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.7...create-react-native-library@0.48.8) (2025-03-27)
 
 ### Bug Fixes
