@@ -37,7 +37,7 @@ export async function init() {
   }
 
   const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
-  const result = await loadConfig();
+  const result = loadConfig(root);
 
   if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
     const { shouldContinue } = await prompts({
