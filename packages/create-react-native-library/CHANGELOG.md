@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.49.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.9...create-react-native-library@0.49.0) (2025-03-29)
+
+### Bug Fixes
+
+- minimize usage of process.exit(1) ([8f969b2](https://github.com/callstack/react-native-builder-bob/commit/8f969b2737db221d8689600f79bd83b84391d4f9)) - by @satya164
+
+### Features
+
+- update eslint to v9 ([#794](https://github.com/callstack/react-native-builder-bob/issues/794)) ([d056559](https://github.com/callstack/react-native-builder-bob/commit/d056559559ed09d77779d95cb323572971b1dc75)) - by @Serchinastico
+
 ## [0.48.9](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.8...create-react-native-library@0.48.9) (2025-03-28)
 
 ### Bug Fixes
