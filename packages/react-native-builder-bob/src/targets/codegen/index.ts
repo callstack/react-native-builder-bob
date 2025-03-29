@@ -7,7 +7,7 @@ import del from 'del';
 import { runRNCCli } from '../../utils/runRNCCli';
 import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
 
-type Options = Input;
+type Options = Omit<Input, 'output'>;
 
 export default async function build({ root, report }: Options) {
   const packageJsonPath = path.resolve(root, 'package.json');

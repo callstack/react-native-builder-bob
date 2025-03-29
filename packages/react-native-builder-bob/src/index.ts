@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 import { build } from './build';
 import { init } from './init';
-import type { Target } from './types';
+import type { Target } from './schema';
 
 type ArgName = 'target';
 

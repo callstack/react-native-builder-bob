@@ -22,6 +22,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ark/schema@npm:0.45.5":
+  version: 0.45.5
+  resolution: "@ark/schema@npm:0.45.5"
+  dependencies:
+    "@ark/util": 0.45.5
+  checksum: d4cd8f3e67f785f1a499e966bc9d10d43597a2dee26ae3226c681d9dfa5e88c8229c989b30703b785fa009eeef7158c54e52ca4bdebe67940e9bb0295d03a185
+  languageName: node
+  linkType: hard
+
+"@ark/util@npm:0.45.5":
+  version: 0.45.5
+  resolution: "@ark/util@npm:0.45.5"
+  checksum: 2074b5c0055b3ac857e33c6ffd26463cdd2813aad46b280de8238edf2b7e8a7264e03e73c2e2890cfe2af589742fb982ebaee3f60605238a14b0eb0a0262eb14
+  languageName: node
+  linkType: hard
+
 "@babel/cli@npm:^7.24.8":
   version: 7.24.8
   resolution: "@babel/cli@npm:7.24.8"
@@ -4445,6 +4461,16 @@ __metadata:
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
   checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
+  languageName: node
+  linkType: hard
+
+"arktype@npm:^2.1.15":
+  version: 2.1.15
+  resolution: "arktype@npm:2.1.15"
+  dependencies:
+    "@ark/schema": 0.45.5
+    "@ark/util": 0.45.5
+  checksum: 2f407713f42a7976362c5394435c841b9913e32722c8e0cbf2313a5931a5e7dad64b1efc8fbcac79fd4e7a58be22ab68b6b9c07b7f19abb65862ed548429006a
   languageName: node
   linkType: hard
 
@@ -12723,6 +12749,7 @@ __metadata:
     "@types/prompts": ^2.0.14
     "@types/which": ^2.0.1
     "@types/yargs": ^17.0.10
+    arktype: ^2.1.15
     babel-plugin-module-resolver: ^5.0.2
     browserslist: ^4.20.4
     concurrently: ^7.2.2

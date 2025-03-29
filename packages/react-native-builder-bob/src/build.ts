@@ -1,8 +1,9 @@
+import { type } from 'arktype';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import path from 'path';
 import yargs from 'yargs';
-import { type Options, type Target } from './types';
+import { config, type Config, type Target, type TargetOptions } from './schema';
 import { loadConfig } from './utils/loadConfig';
 import * as logger from './utils/logger';
 import { run } from './utils/workerize';
@@ -39,46 +40,21 @@ export async function build(argv: Argv) {
     );
   }
 
-  const options: Options = result!.config;
+  const parsed = config(result.config);
 
-  if (!options.targets?.length) {
+  if (parsed instanceof type.errors) {
     throw new Error(
-      `No 'targets' found in the configuration in '${path.relative(
-        root,
-        result!.filepath
-      )}'.`
+      `Invalid configuration in ${result.filepath}: ${parsed.summary}`
     );
   }
 
-  const source = options.source;
+  const { source, output, targets, exclude } = parsed;
 
-  if (!source) {
-    throw new Error(
-      `No 'source' option found in the configuration in '${path.relative(
-        root,
-        result!.filepath
-      )}'.`
-    );
-  }
-
-  const output = options.output;
-
-  if (!output) {
-    throw new Error(
-      `No 'output' option found in the configuration in '${path.relative(
-        root,
-        result!.filepath
-      )}'.`
-    );
-  }
-
-  const exclude = options.exclude ?? '**/{__tests__,__fixtures__,__mocks__}/**';
-
-  const commonjs = options.targets?.some((t) =>
+  const commonjs = targets.some((t) =>
     Array.isArray(t) ? t[0] === 'commonjs' : t === 'commonjs'
   );
 
-  const module = options.targets?.some((t) =>
+  const module = targets.some((t) =>
     Array.isArray(t) ? t[0] === 'module' : t === 'module'
   );
 
@@ -94,19 +70,19 @@ export async function build(argv: Argv) {
       source,
       output,
       exclude,
-      options,
+      config: parsed,
       variants,
     });
   } else {
     await Promise.all(
-      options.targets?.map((target) =>
+      targets.map((target) =>
         buildTarget({
           root,
-          target,
+          target: Array.isArray(target) ? target[0] : target,
           source,
           output,
           exclude,
-          options,
+          config: parsed,
           variants,
         })
       )
@@ -114,40 +90,41 @@ export async function build(argv: Argv) {
   }
 }
 
-async function buildTarget({
+async function buildTarget<T extends Target>({
   root,
   target,
   source,
   output,
   exclude,
-  options,
+  config,
   variants,
 }: {
   root: string;
-  target: Exclude<Options['targets'], undefined>[number];
+  target: T;
   source: string;
   output: string;
   exclude: string;
-  options: Options;
+  config: Config;
   variants: {
     commonjs?: boolean;
     module?: boolean;
   };
 }) {
-  const targetName = Array.isArray(target) ? target[0] : target;
-  const targetOptions = Array.isArray(target) ? target[1] : undefined;
+  const options = config.targets
+    .map((t) => (Array.isArray(t) ? t : ([t, undefined] as const)))
+    .find((t) => t[0] === target)?.[1];
 
-  const report = logger.grouped(targetName);
+  const report = logger.grouped(target);
 
-  switch (targetName) {
+  switch (target) {
     case 'commonjs':
     case 'module':
-      await run(targetName, {
+      await run(target, {
         root,
         source: path.resolve(root, source),
-        output: path.resolve(root, output, targetName),
+        output: path.resolve(root, output, target),
         exclude,
-        options: targetOptions,
+        options: options as TargetOptions<'commonjs' | 'module'>,
         variants,
         report,
       });
@@ -155,7 +132,7 @@ async function buildTarget({
     case 'typescript':
       {
         const esm =
-          options.targets?.some((t) => {
+          config.targets?.some((t) => {
             if (Array.isArray(t)) {
               const [name, options] = t;
 
@@ -171,7 +148,7 @@ async function buildTarget({
           root,
           source: path.resolve(root, source),
           output: path.resolve(root, output, 'typescript'),
-          options: targetOptions,
+          options: options as TargetOptions<'typescript'>,
           esm,
           variants,
           report,
@@ -182,19 +159,18 @@ async function buildTarget({
       await run('codegen', {
         root,
         source: path.resolve(root, source),
-        output: path.resolve(root, output, 'typescript'),
         report,
       });
       break;
     case 'custom':
       await run('custom', {
-        options: targetOptions,
-        source: path.resolve(root, source),
-        report,
         root,
+        source: path.resolve(root, source),
+        options: options as TargetOptions<'custom'>,
+        report,
       });
       break;
     default:
-      throw new Error(`Invalid target ${kleur.blue(targetName)}.`);
+      throw new Error(`Invalid target ${kleur.blue(target)}.`);
   }
 }
