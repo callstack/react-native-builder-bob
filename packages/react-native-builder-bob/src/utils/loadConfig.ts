@@ -8,7 +8,9 @@ const searchPlaces = [
   'package.json',
 ];
 
-export const loadConfig = (root: string) => {
+export const loadConfig = (
+  root: string
+): { filepath: string; config: unknown } | undefined => {
   for (const filename of searchPlaces) {
     const result = requireConfig(root, filename);
 
