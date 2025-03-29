@@ -1,15 +1,11 @@
-import path from 'path';
-import kleur from 'kleur';
-import * as logger from './utils/logger';
-import buildCommonJS from './targets/commonjs';
-import buildModule from './targets/module';
-import buildTypescript from './targets/typescript';
-import buildCodegen from './targets/codegen';
-import customTarget from './targets/custom';
-import { type Options, type Target } from './types';
 import fs from 'fs-extra';
-import { loadConfig } from './utils/loadConfig';
+import kleur from 'kleur';
+import path from 'path';
 import yargs from 'yargs';
+import { type Options, type Target } from './types';
+import { loadConfig } from './utils/loadConfig';
+import * as logger from './utils/logger';
+import { run } from './utils/workerize';
 
 export const args = {
   target: {
@@ -147,21 +143,11 @@ async function buildTarget({
 
   switch (targetName) {
     case 'commonjs':
-      await buildCommonJS({
-        root,
-        source: path.resolve(root, source),
-        output: path.resolve(root, output, 'commonjs'),
-        exclude,
-        options: targetOptions,
-        variants,
-        report,
-      });
-      break;
     case 'module':
-      await buildModule({
+      await run(targetName, {
         root,
         source: path.resolve(root, source),
-        output: path.resolve(root, output, 'module'),
+        output: path.resolve(root, output, targetName),
         exclude,
         options: targetOptions,
         variants,
@@ -183,7 +169,7 @@ async function buildTarget({
             return false;
           }) ?? false;
 
-        await buildTypescript({
+        await run('typescript', {
           root,
           source: path.resolve(root, source),
           output: path.resolve(root, output, 'typescript'),
@@ -195,7 +181,7 @@ async function buildTarget({
       }
       break;
     case 'codegen':
-      await buildCodegen({
+      await run('codegen', {
         root,
         source: path.resolve(root, source),
         output: path.resolve(root, output, 'typescript'),
@@ -203,7 +189,7 @@ async function buildTarget({
       });
       break;
     case 'custom':
-      await customTarget({
+      await run('custom', {
         options: targetOptions,
         source: path.resolve(root, source),
         report,
