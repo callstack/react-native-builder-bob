@@ -21,7 +21,7 @@ import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
 const FALLBACK_BOB_VERSION = '0.38.3';
-const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
+const FALLBACK_NITRO_MODULES_VERSION = '0.25.2';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
@@ -75,9 +75,8 @@ async function create(_argv: yargs.Arguments<Args>) {
   assertUserInput(questions, answers);
 
   const bobVersion = await bobVersionPromise;
-
   const nitroModulesVersion =
-    answers.type === 'nitro-module'
+    answers.type === 'nitro-module' || answers.type === 'nitro-view'
       ? await nitroModulesVersionPromise
       : undefined;
 

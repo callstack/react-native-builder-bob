@@ -26,6 +26,7 @@ export type ProjectType =
   | 'legacy-module'
   | 'legacy-view'
   | 'nitro-module'
+  | 'nitro-view'
   | 'library';
 
 const LANGUAGE_CHOICES: {
@@ -36,7 +37,7 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['nitro-module', 'legacy-module', 'legacy-view'],
+    types: ['nitro-view', 'nitro-module', 'legacy-module', 'legacy-view'],
   },
   {
     title: 'Kotlin & Objective-C',
@@ -100,6 +101,12 @@ const TYPE_CHOICES: {
     value: 'nitro-module',
     description:
       'type-safe, fast integration for native APIs to JS (experimental)',
+  },
+  {
+    title: 'Nitro View',
+    value: 'nitro-view',
+    description:
+      'integration for native views to JS using nitro for prop parsing (experimental)',
   },
   {
     title: 'Legacy Native module',
