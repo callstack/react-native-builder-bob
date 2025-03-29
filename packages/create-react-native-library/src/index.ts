@@ -210,13 +210,11 @@ async function promptPath(argv: Args, local: boolean) {
   }
 
   if (await fs.pathExists(folder)) {
-    console.log(
+    throw new Error(
       `A folder already exists at ${kleur.blue(
         folder
       )}! Please specify another folder name or delete the existing one.`
     );
-
-    process.exit(1);
   }
 
   return folder;

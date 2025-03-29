@@ -4,7 +4,6 @@ import kleur from 'kleur';
 import dedent from 'dedent';
 import isGitDirty from 'is-git-dirty';
 import prompts, { type PromptObject } from './utils/prompts';
-import * as logger from './utils/logger';
 import { loadConfig } from './utils/loadConfig';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
@@ -30,10 +29,9 @@ export async function init() {
   }
 
   if (!(await fs.pathExists(projectPackagePath))) {
-    logger.error(
+    throw new Error(
       `Couldn't find a 'package.json' file in '${root}'.\n  Are you in a project folder?`
     );
-    process.exit(1);
   }
 
   const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
@@ -71,10 +69,9 @@ export async function init() {
   }
 
   if (!entryFile) {
-    logger.error(
+    throw new Error(
       `Couldn't find a 'index.js'. 'index.ts' or 'index.tsx' file under '${source}'.\n  Please re-run the CLI after creating it.`
     );
-    process.exit(1);
   }
 
   pkg.devDependencies = Object.fromEntries(

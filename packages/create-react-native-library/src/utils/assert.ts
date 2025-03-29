@@ -9,13 +9,11 @@ export async function assertNpxExists() {
   } catch (error) {
     // @ts-expect-error: TS doesn't know about `code`
     if (error != null && error.code === 'ENOENT') {
-      console.log(
+      throw new Error(
         `Couldn't find ${kleur.blue(
           'npx'
         )}! Please install it by running ${kleur.blue('npm install -g npx')}`
       );
-
-      process.exit(1);
     } else {
       throw error;
     }
@@ -76,9 +74,7 @@ export function assertUserInput(
         message += `: ${validation}`;
       }
 
-      console.log(message);
-
-      process.exit(1);
+      throw new Error(message);
     }
   }
 }

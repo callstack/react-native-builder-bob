@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs-extra';
 import type { Input } from '../types';
 import { spawn } from '../utils/spawn';
-import dedent from 'dedent';
 import del from 'del';
 
 type Options = Omit<Input, 'output'> & {
@@ -15,13 +14,11 @@ type Options = Omit<Input, 'output'> & {
 
 export default async function customTarget({ options, root, report }: Options) {
   if (options?.script == null) {
-    report.error(
-      dedent(
-        `No script was provided with the custom target.
-         Example: ${kleur.green('{["custom", { "script": "generateTypes" }}')}`
-      )
+    throw new Error(
+      `No 'script' was provided with the custom target. Example: ${kleur.green(
+        '{["custom", { "script": "generateTypes" }}'
+      )}`
     );
-    process.exit(1);
   }
 
   const pathToClean = options.clean
@@ -45,16 +42,9 @@ export default async function customTarget({ options, root, report }: Options) {
     )}`
   );
 
-  try {
-    await spawn(packageManagerExecutable, packageManagerArgs, {
-      stdio: ['ignore', 'ignore', 'inherit'],
-    });
-  } catch (e) {
-    report.error(
-      `An error occurred when running ${kleur.blue(options.script)}`
-    );
-    process.exit(1);
-  }
+  await spawn(packageManagerExecutable, packageManagerArgs, {
+    stdio: ['ignore', 'ignore', 'inherit'],
+  });
 
   report.success(`Ran the ${kleur.blue(options.script)} script succesfully`);
 

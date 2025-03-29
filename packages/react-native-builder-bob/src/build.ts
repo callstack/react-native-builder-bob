@@ -34,46 +34,42 @@ export async function build(argv: Argv) {
   const result = loadConfig(root);
 
   if (!result?.config) {
-    logger.error(
+    throw new Error(
       `No configuration found. Run '${argv.$0} init' to create one automatically.`
     );
-    process.exit(1);
   }
 
   const options: Options = result!.config;
 
   if (!options.targets?.length) {
-    logger.error(
-      `No targets found in the configuration in '${path.relative(
+    throw new Error(
+      `No 'targets' found in the configuration in '${path.relative(
         root,
         result!.filepath
       )}'.`
     );
-    process.exit(1);
   }
 
   const source = options.source;
 
   if (!source) {
-    logger.error(
-      `No source option found in the configuration in '${path.relative(
+    throw new Error(
+      `No 'source' option found in the configuration in '${path.relative(
         root,
         result!.filepath
       )}'.`
     );
-    process.exit(1);
   }
 
   const output = options.output;
 
   if (!output) {
-    logger.error(
-      `No source option found in the configuration in '${path.relative(
+    throw new Error(
+      `No 'output' option found in the configuration in '${path.relative(
         root,
         result!.filepath
       )}'.`
     );
-    process.exit(1);
   }
 
   const exclude = options.exclude ?? '**/{__tests__,__fixtures__,__mocks__}/**';
@@ -197,7 +193,6 @@ async function buildTarget({
       });
       break;
     default:
-      logger.error(`Invalid target ${kleur.blue(targetName)}.`);
-      process.exit(1);
+      throw new Error(`Invalid target ${kleur.blue(targetName)}.`);
   }
 }
