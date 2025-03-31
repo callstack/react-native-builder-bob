@@ -20,13 +20,12 @@ The `"esm": true` option enables ESM-compatible output by adding the `.js` exten
 
 For TypeScript, it also generates 2 sets of type definitions if the [`commonjs`](build.md#commonjs) target is also enabled: one for the CommonJS build and one for the ES module build.
 
-It's recommended to specify `"moduleResolution": "bundler"` and `"resolvePackageJsonImports": false` in your `tsconfig.json` file to match [Metro's behavior](https://reactnative.dev/blog/2023/06/21/package-exports-support#enabling-package-exports-beta):
+It's recommended to specify `"moduleResolution": "bundler"` in your `tsconfig.json` file to match Metro's behavior:
 
 ```json
 {
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "resolvePackageJsonImports": false
+    "moduleResolution": "bundler"
   }
 }
 ```
@@ -53,7 +52,7 @@ To make use of the output files, ensure that your `package.json` file contains t
 },
 ```
 
-The `main` field is for tools that don't support the `exports` field (e.g. [Metro](https://metrobundler.dev/)). The `module` field is a non-standard field that some tools use to determine the ESM entry point.
+The `main` field is for tools that don't support the `exports` field (e.g. [Jest](https://jestjs.io)). The `module` field is a non-standard field that some tools use to determine the ESM entry point.
 
 The `exports` field is used by Node.js 12+, modern browsers and tools to determine the correct entry point. The entrypoint is specified in the `.` key and will be used when the library is imported or required directly (e.g. `import 'my-library'` or `require('my-library')`).
 
@@ -70,6 +69,8 @@ Each condition has 2 fields:
 You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
 
 The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
+
+> Note: Metro enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the `unstable_enablePackageExports` option to `true` in the [Metro configuration](https://metrobundler.dev/docs/configuration/). If this is not enabled, Metro will use the entrypoint specified in the `main` field.
 
 ## Guidelines
 
