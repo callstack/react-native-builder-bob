@@ -35,6 +35,8 @@ jobs:
             language: kotlin-objc
           - name: nitro-module
             language: kotlin-swift
+          - name: nitro-view
+            language: kotlin-swift
         include:
           - os: ubuntu-latest
             type:
