@@ -35,6 +35,7 @@ jobs:
           - legacy-module
           - legacy-view
           - nitro-module
+          - nitro-view
         language:
           - kotlin-objc
           - kotlin-swift
@@ -51,6 +52,10 @@ jobs:
           - type: nitro-module
             language: kotlin-objc
           - type: nitro-module
+            language: cpp
+          - type: nitro-view
+            language: kotlin-objc
+          - type: nitro-view
             language: cpp
         include:
           - os: ubuntu
