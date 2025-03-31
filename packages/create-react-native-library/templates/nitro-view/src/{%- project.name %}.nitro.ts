@@ -9,4 +9,7 @@ export interface <%- project.name %>Props extends HybridViewProps {
 }
 export interface <%- project.name %>Methods extends HybridViewMethods {}
 
-export type <%- project.name %> = HybridView<<%- project.name %>Props, <%- project.name %>Methods>;
+export type <%- project.name %> = HybridView<
+  <%- project.name %>Props,
+  <%- project.name %>Methods
+>;
