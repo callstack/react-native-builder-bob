@@ -4,6 +4,7 @@ import https from 'https';
 import { spawn } from '../utils/spawn';
 import sortObjectKeys from '../utils/sortObjectKeys';
 import type { TemplateConfiguration } from '../template';
+import dedent from 'dedent';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -34,10 +35,14 @@ const PACKAGES_TO_REMOVE = [
   'typescript',
 ];
 
-const PACKAGES_TO_ADD_WEB = {
+const PACKAGES_TO_ADD_EXPO_WEB = {
   '@expo/metro-runtime': '~3.2.1',
   'react-dom': '18.2.0',
   'react-native-web': '~0.18.10',
+};
+
+const PACKAGES_TO_ADD_DEV_EXPO_NATIVE = {
+  'expo-dev-client': '~5.0.3',
 };
 
 export default async function generateExampleApp({
@@ -47,7 +52,7 @@ export default async function generateExampleApp({
 }: {
   config: TemplateConfiguration;
   destination: string;
-  reactNativeVersion?: string;
+  reactNativeVersion: string | undefined;
 }) {
   const directory = path.join(destination, 'example');
 
@@ -218,14 +223,39 @@ export default async function generateExampleApp({
       bundledNativeModules = {};
     }
 
-    Object.entries(PACKAGES_TO_ADD_WEB).forEach(([name, version]) => {
-      dependencies[name] = bundledNativeModules[name] || version;
-    });
+    if (config.project.native) {
+      Object.entries(PACKAGES_TO_ADD_DEV_EXPO_NATIVE).forEach(
+        ([name, version]) => {
+          devDependencies[name] = bundledNativeModules[name] || version;
+        }
+      );
 
-    scripts.web = 'expo start --web';
+      scripts.start = 'expo start --dev-client';
+      scripts.android = 'expo run:android';
+      scripts.ios = 'expo run:ios';
+
+      delete scripts.web;
+
+      await fs.writeFile(
+        path.join(directory, '.gitignore'),
+        dedent`
+        # These folders are generated with prebuild (CNG)
+        android/
+        ios/
+        `
+      );
+    } else {
+      Object.entries(PACKAGES_TO_ADD_EXPO_WEB).forEach(([name, version]) => {
+        dependencies[name] = bundledNativeModules[name] || version;
+      });
+
+      scripts.web = 'expo start --web';
+    }
 
     const app = await fs.readJSON(path.join(directory, 'app.json'));
 
+    app.expo.name = `${config.project.name} Example`;
+    app.expo.slug = `${config.project.slug}-example`;
     app.expo.android = app.expo.android || {};
     app.expo.android.package = `${config.project.package}.example`;
     app.expo.ios = app.expo.ios || {};

@@ -1,9 +1,9 @@
 #import "<%- project.name -%>View.h"
 
-#import "generated/RN<%- project.name -%>ViewSpec/ComponentDescriptors.h"
-#import "generated/RN<%- project.name -%>ViewSpec/EventEmitters.h"
-#import "generated/RN<%- project.name -%>ViewSpec/Props.h"
-#import "generated/RN<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h"
+#import "RN<%- project.name -%>ViewSpec/ComponentDescriptors.h"
+#import "RN<%- project.name -%>ViewSpec/EventEmitters.h"
+#import "RN<%- project.name -%>ViewSpec/Props.h"
+#import "RN<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h"
 
 #import "RCTFabricComponentsPlugins.h"
 

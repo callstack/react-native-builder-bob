@@ -58,6 +58,12 @@ const LANGUAGE_CHOICES: {
 const EXAMPLE_CHOICES = (
   [
     {
+      title: 'App with Expo CLI',
+      value: 'expo',
+      description: 'managed expo app for easier upgrades',
+      disabled: false,
+    },
+    {
       title: 'App with Community CLI',
       value: 'vanilla',
       description: "provides access to app's native code",
@@ -70,12 +76,6 @@ const EXAMPLE_CHOICES = (
       // The test app is disabled for now until proper
       // Codegen spec shipping is implemented
       disabled: !process.env.CRNL_ENABLE_TEST_APP,
-    },
-    {
-      title: 'App with Expo CLI',
-      value: 'expo',
-      description: 'managed expo app with web support',
-      disabled: false,
     },
   ] as const
 ).filter((choice) => !choice.disabled);
@@ -304,10 +304,15 @@ export async function createQuestions({
         }
 
         return EXAMPLE_CHOICES.filter((choice) => {
-          if (values.type) {
-            return values.type === 'library'
-              ? choice.value === 'expo'
-              : choice.value !== 'expo';
+          if (values.type === 'library') {
+            return choice.value === 'expo';
+          }
+
+          if (
+            values.type === 'legacy-module' ||
+            values.type === 'legacy-view'
+          ) {
+            return choice.value !== 'expo';
           }
 
           return true;
