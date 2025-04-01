@@ -142,6 +142,10 @@ jobs:
             fi
           fi
 
+      - name: Generate nitrogen code
+        if: matrix.type == 'nitro-view' || matrix.type == 'nitro-module' 
+        run: yarn nitrogen
+
       - name: Cache turborepo
         if: env.android_build == 1 || env.ios_build == 1
         uses: actions/cache@v4
