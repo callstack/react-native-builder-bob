@@ -36,10 +36,9 @@ export default async function build({ root, report }: Options) {
   const codegenType = packageJson.codegenConfig?.type;
 
   if (codegenType === undefined) {
-    report.error(
+    throw new Error(
       "Couldn't find the 'type' value in 'codegenConfig'. Please check your package.json's 'codegenConfig' property and make sure 'type' is defined. https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen"
     );
-    process.exit(1);
   }
 
   try {
@@ -54,7 +53,7 @@ export default async function build({ root, report }: Options) {
   } catch (e: unknown) {
     if (e != null && typeof e === 'object') {
       if ('stdout' in e && e.stdout != null) {
-        report.error(
+        throw new Error(
           `Errors found while generating codegen files:\n${e.stdout.toString()}`
         );
       } else if ('message' in e && typeof e.message === 'string') {
@@ -63,19 +62,13 @@ export default async function build({ root, report }: Options) {
             "Error: Cannot find module '@react-native-community/cli/package.json'"
           )
         ) {
-          report.error(
+          throw new Error(
             "You don't have `@react-native-community/cli` in your root package's dev dependencies. Please install it and make sure it uses the same version as your application."
           );
-        } else {
-          report.error(e.message);
         }
-      } else {
-        throw e;
       }
-    } else {
-      throw e;
     }
 
-    process.exit(1);
+    throw e;
   }
 }

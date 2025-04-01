@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
 
 const path = require('path');
-const { cosmiconfigSync } = require('cosmiconfig');
-const { lstatSync } = require('fs');
-const { name } = require('./package.json');
+const { loadConfig } = require('./lib/utils/loadConfig');
 
 /**
  * Get Babel configuration for the example project.
@@ -17,28 +15,18 @@ const { name } = require('./package.json');
  * @returns {import('@babel/core').TransformOptions} Babel configuration
  */
 const getConfig = (defaultConfig, { root, pkg }) => {
-  const explorer = cosmiconfigSync(name, {
-    stopDir: root,
-    searchPlaces: ['package.json', 'bob.config.cjs', 'bob.config.js'],
-  });
+  const result = loadConfig(root);
 
-  const result = explorer.search();
-  const src = result ? result.config.source : null;
+  if (result == null) {
+    throw new Error(`Couldn't find a valid configuration at ${root}.`);
+  }
 
-  if (src == null) {
-    if (
-      lstatSync(path.join(root, 'bob.config.mjs'), {
-        throwIfNoEntry: false,
-      }).isFile()
-    ) {
-      throw new Error(
-        "Found a 'bob.config.mjs' file. However, ESM syntax is currently not supported for the Babel configuration."
-      );
-    } else {
-      throw new Error(
-        "Couldn't determine the source directory. Does your config specify a 'source' field?"
-      );
-    }
+  const { source } = result.config;
+
+  if (source == null) {
+    throw new Error(
+      "Couldn't determine the source directory. Does your config specify a 'source' field?"
+    );
   }
 
   return {
@@ -60,7 +48,7 @@ const getConfig = (defaultConfig, { root, pkg }) => {
         ],
       },
       {
-        include: path.join(root, src),
+        include: path.join(root, source),
         presets: [
           [
             require.resolve('./babel-preset'),

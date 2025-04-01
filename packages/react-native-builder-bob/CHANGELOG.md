@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.4...react-native-builder-bob@0.39.0) (2025-03-29)
+
+### Bug Fixes
+
+- fix typescript error message with missing tsconfig ([34af0d3](https://github.com/callstack/react-native-builder-bob/commit/34af0d3a9c135665197c0bd410266d9a52f58b9e)) - by @satya164
+- minimize usage of process.exit(1) ([8f969b2](https://github.com/callstack/react-native-builder-bob/commit/8f969b2737db221d8689600f79bd83b84391d4f9)) - by @satya164
+
+### Features
+
+- run tasks in parallel with workers ([#792](https://github.com/callstack/react-native-builder-bob/issues/792)) ([664525f](https://github.com/callstack/react-native-builder-bob/commit/664525f88ccfca23aff939ab6a8ceb25635f99b5)) - by @satya164
+- update eslint to v9 ([#794](https://github.com/callstack/react-native-builder-bob/issues/794)) ([d056559](https://github.com/callstack/react-native-builder-bob/commit/d056559559ed09d77779d95cb323572971b1dc75)) - by @Serchinastico
+
 ## [0.38.4](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.38.3...react-native-builder-bob@0.38.4) (2025-03-27)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.5.4...docs@0.6.0) (2025-03-29)
+
+### Features
+
+- update eslint to v9 ([#794](https://github.com/callstack/react-native-builder-bob/issues/794)) ([d056559](https://github.com/callstack/react-native-builder-bob/commit/d056559559ed09d77779d95cb323572971b1dc75)) - by @Serchinastico
+
 ## [0.5.4](https://github.com/callstack/react-native-builder-bob/compare/docs@0.5.3...docs@0.5.4) (2025-03-27)
 
 **Note:** Version bump only for package docs

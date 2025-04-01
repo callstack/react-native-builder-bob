@@ -78,12 +78,14 @@ export default async function build({
         }
       } catch (e) {
         report.warn(
-          `Couldn't parse '${project}'. There might be validation errors.`
+          `Couldn't parse ${kleur.blue(
+            project
+          )}. There might be validation errors.`
         );
       }
     } else {
       throw new Error(
-        `Couldn't find a ${kleur.blue('tsconfig.json')} in the project root.`
+        `Couldn't find a ${kleur.blue(project)} in the project root.`
       );
     }
 
