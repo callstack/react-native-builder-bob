@@ -144,7 +144,7 @@ jobs:
 
       - name: Generate nitrogen code
         if: matrix.type == 'nitro-view' || matrix.type == 'nitro-module' 
-        run: yarn nitrogen
+        run: yarn nitro-codegen
 
       - name: Cache turborepo
         if: env.android_build == 1 || env.ios_build == 1
