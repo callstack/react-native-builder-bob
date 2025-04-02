@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.0...create-react-native-library@0.49.1) (2025-04-02)
+
+### Bug Fixes
+
+- remove resolvePackageJsonImports: false since Metro supports it from 0.82.0 ([7ac5d1a](https://github.com/callstack/react-native-builder-bob/commit/7ac5d1a93f1a2f154eefa4aa5bde06e6f5b6b249)) - by @satya164
+
 # [0.49.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.48.9...create-react-native-library@0.49.0) (2025-03-29)
 
 ### Bug Fixes
