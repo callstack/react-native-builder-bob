@@ -1,4 +1,3 @@
-import kleur from 'kleur';
 import {
   Worker,
   isMainThread,
@@ -33,42 +32,46 @@ export const run = async <T extends Target>(
     throw new Error('Worker can only be run from the main thread');
   }
 
-  const worker = new Worker(__filename, {
-    workerData: {
-      target,
-      data,
-    } satisfies WorkerData<T>,
-    env: {
-      ...process.env,
-      FORCE_COLOR: process.stdout.isTTY ? '1' : '0',
-    },
-  });
+  return new Promise<void>((resolve, reject) => {
+    const worker = new Worker(__filename, {
+      workerData: {
+        target,
+        data,
+      } satisfies WorkerData<T>,
+      env: {
+        ...process.env,
+        FORCE_COLOR: process.stdout.isTTY ? '1' : '0',
+      },
+    });
 
-  worker.on('message', (message) => {
-    switch (message.type) {
-      case 'info':
-        report.info(message.message);
-        break;
-      case 'warn':
-        report.warn(message.message);
-        break;
-      case 'error':
-        report.error(message.message);
-        break;
-      case 'success':
-        report.success(message.message);
-        break;
-    }
-  });
+    worker.on('message', (message) => {
+      switch (message.type) {
+        case 'info':
+          report.info(message.message);
+          break;
+        case 'warn':
+          report.warn(message.message);
+          break;
+        case 'error':
+          report.error(message.message);
+          break;
+        case 'success':
+          report.success(message.message);
+          break;
+      }
+    });
 
-  worker.on('error', (error) => {
-    report.error(error.message);
-  });
+    worker.on('error', (error) => {
+      reject(error);
+    });
 
-  worker.on('exit', (code) => {
-    if (code !== 0) {
-      report.error(`exited with code ${kleur.red(code)}`);
-    }
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        reject(new Error(`Worker exited with code ${code}`));
+      } else {
+        resolve();
+      }
+    });
   });
 };
 
@@ -84,10 +87,7 @@ if (!isMainThread) {
 
   if (target in targets) {
     // @ts-expect-error - typescript doesn't support correlated union types https://github.com/microsoft/TypeScript/issues/30581
-    targets[target]({ ...data, report }).catch((error) => {
-      console.log(error);
-      process.exit(1);
-    });
+    targets[target]({ ...data, report });
   } else {
     throw new Error(`Unknown target: ${target}`);
   }
