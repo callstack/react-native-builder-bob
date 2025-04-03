@@ -88,7 +88,7 @@ export async function build(argv: Argv) {
   };
 
   if (argv.target != null) {
-    buildTarget({
+    await buildTarget({
       root,
       target: argv.target,
       source,
@@ -98,17 +98,19 @@ export async function build(argv: Argv) {
       variants,
     });
   } else {
-    for (const target of options.targets!) {
-      buildTarget({
-        root,
-        target,
-        source,
-        output,
-        exclude,
-        options,
-        variants,
-      });
-    }
+    await Promise.all(
+      options.targets?.map((target) =>
+        buildTarget({
+          root,
+          target,
+          source,
+          output,
+          exclude,
+          options,
+          variants,
+        })
+      )
+    );
   }
 }
 

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/callstack/react-native-builder-bob/compare/docs@0.6.0...docs@0.6.1) (2025-04-02)
+
+### Bug Fixes
+
+- remove resolvePackageJsonImports: false since Metro supports it from 0.82.0 ([7ac5d1a](https://github.com/callstack/react-native-builder-bob/commit/7ac5d1a93f1a2f154eefa4aa5bde06e6f5b6b249)) - by @satya164
+
 # [0.6.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.5.4...docs@0.6.0) (2025-03-29)
 
 ### Features
