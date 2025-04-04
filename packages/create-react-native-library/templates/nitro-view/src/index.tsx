@@ -1,5 +1,6 @@
 import { getHostComponent } from 'react-native-nitro-modules';
-import <%- project.name %>Config from '../nitrogen/generated/shared/json/<%- project.name %>Config.json';
+// import <%- project.name %>Config from '../nitrogen/generated/shared/json/<%- project.name %>Config.json';
+const <%- project.name %>Config = require('../nitrogen/generated/shared/json/<%- project.name %>Config.json')
 import type {
   <%- project.name %>Methods,
   <%- project.name %>Props,
