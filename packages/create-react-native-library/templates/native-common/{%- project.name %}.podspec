@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
 <% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm}"
 <% } -%>
-<% if (project.moduleConfig === "nitro-modules") { -%>
+<% if (project.moduleConfig === "nitro-modules" || project.viewConfig === "nitro-view") { -%>
 
   load 'nitrogen/generated/ios/<%- project.name -%>+autolinking.rb'
   add_nitrogen_files(s)

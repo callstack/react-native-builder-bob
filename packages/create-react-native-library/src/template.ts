@@ -20,7 +20,7 @@ export type ModuleConfig =
   | 'nitro-modules'
   | null;
 
-export type ViewConfig = 'paper-view' | 'fabric-view' | null;
+export type ViewConfig = 'paper-view' | 'fabric-view' | 'nitro-view' | null;
 
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
@@ -90,6 +90,7 @@ const NATIVE_FILES = {
   view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
   module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
+  view_nitro: path.resolve(__dirname, '../templates/nitro-view'),
 } as const;
 
 const OBJC_FILES = {
@@ -195,6 +196,8 @@ function getViewConfig(projectType: ProjectType): ViewConfig {
       return 'paper-view';
     case 'fabric-view':
       return 'fabric-view';
+    case 'nitro-view':
+      return 'nitro-view';
     default:
       return null;
   }
@@ -238,6 +241,11 @@ export async function applyTemplates(
 
     if (config.project.moduleConfig === 'nitro-modules') {
       await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
+      return;
+    }
+
+    if (config.project.viewConfig === 'nitro-view') {
+      await applyTemplate(config, NATIVE_FILES['view_nitro'], folder);
       return;
     }
 

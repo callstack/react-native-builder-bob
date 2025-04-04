@@ -35,6 +35,7 @@ jobs:
           - legacy-module
           - legacy-view
           - nitro-module
+          - nitro-view
         language:
           - kotlin-objc
           - kotlin-swift
@@ -51,6 +52,10 @@ jobs:
           - type: nitro-module
             language: kotlin-objc
           - type: nitro-module
+            language: cpp
+          - type: nitro-view
+            language: kotlin-objc
+          - type: nitro-view
             language: cpp
         include:
           - os: ubuntu
@@ -146,6 +151,11 @@ jobs:
               echo "ios_build=1" >> $GITHUB_ENV
             fi
           fi
+
+      - name: Generate nitrogen code
+        if: matrix.type == 'nitro-view' || matrix.type == 'nitro-module'
+        working-directory: ${{ env.work_dir }}
+        run: yarn nitrogen
 
       - name: Cache turborepo
         if: env.android_build == 1 || env.ios_build == 1
