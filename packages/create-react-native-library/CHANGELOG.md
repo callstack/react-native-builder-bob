@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.1...create-react-native-library@0.49.2) (2025-04-04)
+
+### Bug Fixes
+
+- **crnl:** certain versions of XCode can't resolve codegen headers ([#810](https://github.com/callstack/react-native-builder-bob/issues/810)) ([7c12d62](https://github.com/callstack/react-native-builder-bob/commit/7c12d62d38f7f2657ac68b98314100186baff493)) - by @atlj
+
 ## [0.49.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.0...create-react-native-library@0.49.1) (2025-04-02)
 
 ### Bug Fixes

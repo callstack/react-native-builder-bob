@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.40.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.39.1...react-native-builder-bob@0.40.0) (2025-04-04)
+
+### Features
+
+- validate configuration with arktype ([#806](https://github.com/callstack/react-native-builder-bob/issues/806)) ([a8fd434](https://github.com/callstack/react-native-builder-bob/commit/a8fd434f93c2e28ceebd82aee4d734175dc6d019)) - by @satya164
+
 ## [0.39.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.39.0...react-native-builder-bob@0.39.1) (2025-04-02)
 
 ### Bug Fixes
