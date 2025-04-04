@@ -5,7 +5,7 @@
 <% } -%>
 
 <% if (project.arch === 'new') { -%>
-#import "generated/RN<%- project.name -%>Spec/RN<%- project.name -%>Spec.h"
+#import <<%- project.name -%>/RN<%- project.name -%>Spec.h>
 
 @interface <%- project.name -%> : NSObject <Native<%- project.name -%>Spec>
 <% } else { -%>
