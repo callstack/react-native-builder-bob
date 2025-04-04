@@ -51,6 +51,7 @@
     "@babel/preset-flow": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
+    "arktype": "^2.1.15",
     "babel-plugin-module-resolver": "^5.0.2",
     "browserslist": "^4.20.4",
     "cross-spawn": "^7.0.3",

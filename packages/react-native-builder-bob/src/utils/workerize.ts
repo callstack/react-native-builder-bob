@@ -9,7 +9,8 @@ import commonjs from '../targets/commonjs';
 import custom from '../targets/custom';
 import module from '../targets/module';
 import typescript from '../targets/typescript';
-import type { Report, Target } from '../types';
+import type { Report } from '../types';
+import type { Target } from '../schema';
 
 type WorkerData<T extends Target> = {
   target: T;

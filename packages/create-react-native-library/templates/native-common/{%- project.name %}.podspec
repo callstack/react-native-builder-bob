@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 <% } else if (project.arch !== "legacy") { -%>
   s.source_files = "ios/**/*.{h,m,mm,cpp}"
-  s.private_header_files = "ios/generated/**/*.h"
+  s.private_header_files = "ios/**/*.h"
 <% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm}"
 <% } -%>
