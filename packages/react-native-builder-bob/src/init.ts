@@ -101,7 +101,7 @@ export async function init() {
         {
           title: 'commonjs - for legacy setups (Node.js < 20)',
           value: 'commonjs',
-          selected: true,
+          selected: false,
         },
         {
           title: 'typescript - declaration files for typechecking',
@@ -297,14 +297,6 @@ export async function init() {
     entryFields.main = entries.commonjs;
   } else if (targets.includes('module')) {
     entryFields.main = entries.module;
-  }
-
-  if (targets.includes('typescript') && !pkg.exports?.['.']) {
-    if (entryFields.main === entries.commonjs) {
-      entryFields.types = types.require;
-    } else {
-      entryFields.types = types.import;
-    }
   }
 
   for (const key in entryFields) {

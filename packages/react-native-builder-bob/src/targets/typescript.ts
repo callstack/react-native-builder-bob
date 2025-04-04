@@ -257,12 +257,14 @@ export default async function build({
                 name: "exports['.'].types",
                 value: pkg.exports?.['.']?.types,
                 output: outDir,
-                error: Boolean(esm && variants.commonjs && variants.module),
-                message: `using both ${kleur.blue('commonjs')} and ${kleur.blue(
-                  'module'
-                )} targets with ${kleur.blue(
-                  'esm'
-                )} option enabled. Specify ${kleur.blue(
+                error: Boolean(
+                  pkg.exports?.['.']?.import && pkg.exports?.['.']?.require
+                ),
+                message: `using  ${kleur.blue(
+                  "exports['.'].import"
+                )} and ${kleur.blue(
+                  "exports['.'].require"
+                )}. Specify ${kleur.blue(
                   "exports['.'].import.types"
                 )} and ${kleur.blue("exports['.'].require.types")} instead.`,
               },
