@@ -271,7 +271,9 @@ Example:
 ["typescript", { "project": "tsconfig.build.json" }]
 ```
 
-The output file should be referenced in the `types` field or `exports['.'].types` field of `package.json`.
+The output file should be referenced in the `exports['.'].types` field of `package.json`.
+
+If you need to support legacy setups that use `moduleResolution: node10` or `moduleResolution: node`, you can also add a `types` field to the `package.json` file that points to the output file.
 
 #### `codegen`
 

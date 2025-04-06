@@ -1,5 +1,7 @@
 # ESM support
 
+## Default setup
+
 Libraries created with [`create-react-native-library`](./create.md) are pre-configured to work with ESM (ECMAScript Modules) out of the box.
 
 You can verify whether ESM support is enabled by checking the configuration for [`react-native-builder-bob`](./build.md) in the `package.json` file of the library:
@@ -58,11 +60,16 @@ You can also specify additional conditions for different scenarios, such as `rea
 
 The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
 
-> Note: Metro enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the `unstable_enablePackageExports` option to `true` in the [Metro configuration](https://metrobundler.dev/docs/configuration/). If this is not enabled, Metro will use the entrypoint specified in the `main` field.
+Using the `exports` field has a few benefits, such as:
+
+- It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
+- It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `react-native`, `production`, `development` etc.). More examples can be found in the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+
+> Note: Metro enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the `unstable_enablePackageExports` option to `true` in the [Metro configuration](https://metrobundler.dev/docs/configuration/). If this is not enabled, Metro will use the entrypoint specified in the `main` field. Features such as [subpath exports](https://nodejs.org/api/packages.html#subpath-exports) and [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) will not work when `exports` supported is not enabled.
 
 ## Dual package setup
 
-The previously mentioned setup only works with tools that support ES modules. If you want to support tools that don't support ESM and use the CommonJS module system, you can set up a dual package setup.
+The previously mentioned setup only works with tools that support ES modules. If you want to support tools that don't support ESM and use the CommonJS module system, you can configure a dual package setup.
 
 A dual package setup means that you have 2 builds of your library: one for ESM and one for CommonJS. The ESM build is used by tools that support ES modules, while the CommonJS build is used by tools that don't support ES modules.
 
@@ -82,25 +89,7 @@ To configure a dual package setup, you can follow these steps:
    }
    ```
 
-2. Optionally change the `main` field in your `package.json` to point to the CommonJS build:
-
-   ```diff
-   - "main": "./lib/module/index.js",
-   + "main": "./lib/commonjs/index.js",
-   ```
-
-   This is needed if you want to support tools that don't support the `exports` field and need to use the CommonJS build.
-
-3. Optionally add a `module` field in your `package.json` to point to the ESM build:
-
-   ```diff
-     "main": "./lib/commonjs/index.js",
-   + "module": "./lib/module/index.js",
-   ```
-
-   The `module` field is a non-standard field that some tools use to determine the ESM entry point.
-
-4. Change the `exports` field in your `package.json` to include 2 conditions:
+2. Change the `exports` field in your `package.json` to include 2 conditions:
 
    ```diff
    "exports": {
@@ -128,7 +117,62 @@ To configure a dual package setup, you can follow these steps:
 
    The `default` field is the fallback entry point for both conditions. It's used for the actual JS code when the library is imported or required.
 
-> **Important:** With this approach, the ESM and CommonJS versions of the package are treated as separate modules by Node.js as they are different files, leading to [potential issues](https://nodejs.org/docs/latest-v19.x/api/packages.html#dual-package-hazard) if the package is both imported and required in the same runtime environment. If the package relies on any state that can cause issues if 2 separate instances are loaded, it's necessary to isolate the state into a separate CommonJS module that can be shared between the ESM and CommonJS builds.
+3. Optionally change the `main` field in your `package.json` to point to the CommonJS build:
+
+   ```diff
+   - "main": "./lib/module/index.js",
+   + "main": "./lib/commonjs/index.js",
+   ```
+
+   This is needed if you want to support tools that don't support the `exports` field and need to use the CommonJS build.
+
+4. Optionally add a `module` field in your `package.json` to point to the ESM build:
+
+   ```diff
+     "main": "./lib/commonjs/index.js",
+   + "module": "./lib/module/index.js",
+   ```
+
+   The `module` field is a non-standard field that some tools use to determine the ESM entry point.
+
+5. Optionally add a `types` field in your `package.json` to point to the CommonJS type definitions:
+
+   ```diff
+     "main": "./lib/commonjs/index.js",
+     "module": "./lib/module/index.js",
+   + "types": "./lib/typescript/commonjs/src/index.d.ts",
+   ```
+
+   This is necessary to support legacy TypeScript setup, i.e. which have `moduleResolution: "node10"` or `moduleResolution: "node"` under the `compilerOptions` section in the `tsconfig.json`.
+
+Putting it all together, the fields in your `package.json` file should look like this:
+
+```json
+{
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  }
+}
+```
+
+### Dual package hazard
+
+With this approach, the ESM and CommonJS versions of the package are treated as separate modules by Node.js as they are different files. On Node.js, `import` will load the ESM package and `require` will load the CommonJS package, leading to [potential issues](https://nodejs.org/docs/latest-v19.x/api/packages.html#dual-package-hazard) if the package is both imported and required in the same runtime environment.
+
+If the library relies on any state that can cause issues if 2 separate instances are loaded (e.g. global state, constructors, react context etc.), it's necessary to isolate the state into a separate CommonJS module that can be shared between the ESM and CommonJS builds.
 
 ## Guidelines
 
@@ -189,3 +233,10 @@ There are still a few things to keep in mind if you want your library to be ESM-
     "./package.json": "./package.json"
   }
   ```
+
+## References
+
+- [Node.js documentation on ESM](https://nodejs.org/docs/latest/api/esm.html)
+- [Publishing dual module ESM libraries](https://satya164.page/posts/publishing-dual-module-esm-libraries)
+- [Are the types wrong?](https://github.com/arethetypeswrong/arethetypeswrong.github.io)
+- [tshy - TypeScript HYbridizer](https://github.com/isaacs/tshy)
