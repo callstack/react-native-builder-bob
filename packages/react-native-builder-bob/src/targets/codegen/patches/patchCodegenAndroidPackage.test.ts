@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach, afterEach } from '@jest/globals';
+import { expect, test, describe, beforeEach, afterEach } from 'vitest';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage';
