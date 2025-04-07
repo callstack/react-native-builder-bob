@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.3...create-react-native-library@0.49.4) (2025-04-07)
+
+### Bug Fixes
+
+- fix engines field ([ef93d26](https://github.com/callstack/react-native-builder-bob/commit/ef93d26d2f5f28ae72a802388dd2361022f05ec5)) - by @
+
 ## [0.49.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.2...create-react-native-library@0.49.3) (2025-04-07)
 
 ### Bug Fixes
