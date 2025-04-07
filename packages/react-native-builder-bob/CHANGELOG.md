@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.3](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.2...react-native-builder-bob@0.40.3) (2025-04-07)
+
+### Bug Fixes
+
+- require node 23.4.0 to avoid ESM warning ([aa2a3f3](https://github.com/callstack/react-native-builder-bob/commit/aa2a3f3dd30438442125ba16e27e3951c99092f1)) - by @
+
 ## [0.40.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.1...react-native-builder-bob@0.40.2) (2025-04-07)
 
 ### Bug Fixes
