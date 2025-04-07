@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.2...create-react-native-library@0.49.3) (2025-04-07)
+
+### Bug Fixes
+
+- update engines field to compatible node versions ([d803cfd](https://github.com/callstack/react-native-builder-bob/commit/d803cfd6007a3328216585e5d017bbb5fd362560)) - by @
+- update template .nvmrc to require Node 20.19.0 ([e7206d3](https://github.com/callstack/react-native-builder-bob/commit/e7206d334d762d18004ae3c3fa5d44621e668ce4)) - by @satya164
+
 ## [0.49.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.1...create-react-native-library@0.49.2) (2025-04-04)
 
 ### Bug Fixes
