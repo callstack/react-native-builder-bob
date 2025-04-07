@@ -29,7 +29,7 @@
     "babel-config.js"
   ],
   "engines": {
-    "node": ">= 20.19.0"
+    "node": ">= 20.19.0 || >= 22.12.0 || >= 23.1.0"
   },
   "publishConfig": {
     "access": "public",
