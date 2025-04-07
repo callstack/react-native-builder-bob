@@ -1,5 +1,5 @@
 import { type SpawnOptions } from 'node:child_process';
-import { spawn } from './spawn';
+import { spawn } from './spawn.ts';
 
 /**
  * Runs the React Native Community CLI with the specified arguments

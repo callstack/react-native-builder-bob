@@ -1,5 +1,8 @@
-import { join } from 'path';
-import { name } from '../../package.json';
+import { join } from 'node:path';
+import { createRequire } from 'node:module';
+import pack from '../../package.json' with { type: 'json' };
+
+const require = createRequire(import.meta.url);
 
 const searchPlaces = [
   'bob.config.mjs',
@@ -15,10 +18,10 @@ export const loadConfig = (
     const result = requireConfig(root, filename);
 
     if (filename === 'package.json' && result != null) {
-      if (result.content[name] != null) {
+      if (result.content[pack.name] != null) {
         return {
           filepath: result.filepath,
-          config: result.content[name],
+          config: result.content[pack.name],
         };
       }
     }
@@ -47,7 +50,6 @@ const requireConfig = (root: string, filename: string) => {
   const filepath = join(root, filename);
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const content = require(filepath);
 
     return {

@@ -1,12 +1,17 @@
 import { type } from 'arktype';
 import fs from 'fs-extra';
 import kleur from 'kleur';
-import path from 'path';
-import yargs from 'yargs';
-import { config, type Config, type Target, type TargetOptions } from './schema';
-import { loadConfig } from './utils/loadConfig';
-import * as logger from './utils/logger';
-import { run } from './utils/workerize';
+import path from 'node:path';
+import type { Options } from 'yargs';
+import {
+  config,
+  type Config,
+  type Target,
+  type TargetOptions,
+} from './schema.ts';
+import { loadConfig } from './utils/loadConfig.ts';
+import * as logger from './utils/logger.ts';
+import { run } from './utils/workerize.ts';
 
 export const args = {
   target: {
@@ -14,7 +19,7 @@ export const args = {
     description: 'The target to build',
     choices: ['commonjs', 'module', 'typescript', 'codegen'] satisfies Target[],
   },
-} satisfies Record<'target', yargs.Options>;
+} satisfies Record<'target', Options>;
 
 type Argv = {
   $0: string;

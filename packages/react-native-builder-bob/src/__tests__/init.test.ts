@@ -1,13 +1,15 @@
-import { afterEach, beforeEach, expect, test, jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, vi, type Mock } from 'vitest';
 import { readFile } from 'fs-extra';
 import mockFs from 'mock-fs';
 import { stdin } from 'mock-stdin';
-import { join } from 'path';
-import { init } from '../init';
+import { join } from 'node:path';
+import { init } from '../init.ts';
 
-jest.mock('../../package.json', () => ({
-  name: 'react-native-builder-bob',
-  version: '0.5.0',
+vi.mock('../../package.json', () => ({
+  default: {
+    name: 'react-native-builder-bob',
+    version: '0.5.0',
+  },
 }));
 
 let io: ReturnType<typeof stdin> | undefined;
@@ -58,17 +60,17 @@ beforeEach(() => {
 afterEach(() => {
   io?.restore();
   mockFs.restore();
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test('initializes the configuration', async () => {
-  jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+  vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
   process.chdir(root);
 
   const run = async () => {
     await waitFor(() => {
-      const lastCall = (process.stdout.write as jest.Mock).mock.lastCall;
+      const lastCall = (process.stdout.write as Mock).mock.lastCall;
 
       if (lastCall == null) {
         throw new Error('No output');

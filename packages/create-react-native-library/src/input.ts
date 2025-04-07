@@ -1,9 +1,9 @@
 import githubUsername from 'github-username';
 import validateNpmPackage from 'validate-npm-package-name';
-import type yargs from 'yargs';
-import { version } from '../package.json';
-import type { Question } from './utils/prompt';
-import { spawn } from './utils/spawn';
+import type { Options } from 'yargs';
+import pack from '../package.json' with { type: 'json' };
+import type { Question } from './utils/prompt.ts';
+import { spawn } from './utils/spawn.ts';
 
 export type ArgName =
   | 'slug'
@@ -118,7 +118,7 @@ const TYPE_CHOICES: {
   },
 ];
 
-export const acceptedArgs: Record<ArgName, yargs.Options> = {
+export const acceptedArgs: Record<ArgName, Options> = {
   slug: {
     description: 'Name of the npm package',
     type: 'string',
@@ -345,7 +345,7 @@ export function createMetadata(answers: Answers) {
     )
   );
 
-  libraryMetadata.version = version;
+  libraryMetadata.version = pack.version;
 
   return libraryMetadata;
 }

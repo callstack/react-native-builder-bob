@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
-import path from 'path';
+import path from 'node:path';
 import https from 'https';
-import { spawn } from '../utils/spawn';
-import sortObjectKeys from '../utils/sortObjectKeys';
-import type { TemplateConfiguration } from '../template';
+import { spawn } from '../utils/spawn.ts';
+import sortObjectKeys from '../utils/sortObjectKeys.ts';
+import type { TemplateConfiguration } from '../template.ts';
 
 const FILES_TO_DELETE = [
   '__tests__',

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
 
 const path = require('path');
-const { loadConfig } = require('./lib/utils/loadConfig');
+const { loadConfig } = require('./lib/utils/loadConfig.js');
 
 /**
  * Get Babel configuration for the example project.

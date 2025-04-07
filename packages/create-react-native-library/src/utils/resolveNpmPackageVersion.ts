@@ -1,4 +1,4 @@
-import { spawn } from './spawn';
+import { spawn } from './spawn.ts';
 
 export async function resolveNpmPackageVersion(
   name: string,

@@ -91,7 +91,7 @@
 <% if (project.moduleConfig === 'nitro-modules') { -%>
     "nitro-codegen": "^<%- versions.nitroCodegen %>",
 <% } -%>
-    "prettier": "^3.0.3",
+    "prettier": "^3.5.3",
     "react": "19.0.0",
     "react-native": "0.78.1",
     "react-native-builder-bob": "^<%- versions.bob %>",
@@ -102,7 +102,7 @@
 <% if (example !== 'expo') { -%>
     "turbo": "^1.10.7",
 <% } -%>
-    "typescript": "^5.2.2"
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",

@@ -1,13 +1,11 @@
-import path from 'path';
-import fs from 'fs-extra';
-import kleur from 'kleur';
 import dedent from 'dedent';
+import fs from 'fs-extra';
 import isGitDirty from 'is-git-dirty';
-import prompts, { type PromptObject } from './utils/prompts';
-import { loadConfig } from './utils/loadConfig';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
-const { name, version } = require('../package.json');
+import kleur from 'kleur';
+import path from 'node:path';
+import pack from '../package.json' with { type: 'json' };
+import { loadConfig } from './utils/loadConfig.ts';
+import prompts, { type PromptObject } from './utils/prompts.ts';
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -75,9 +73,10 @@ export async function init() {
   }
 
   pkg.devDependencies = Object.fromEntries(
-    [...Object.entries(pkg.devDependencies || {}), [name, `^${version}`]].sort(
-      ([a], [b]) => a.localeCompare(b)
-    )
+    [
+      ...Object.entries(pkg.devDependencies || {}),
+      [pack.name, `^${pack.version}`],
+    ].sort(([a], [b]) => a.localeCompare(b))
   );
 
   const questions: PromptObject[] = [
@@ -373,7 +372,7 @@ export async function init() {
     pkg.files = files;
   }
 
-  pkg[name] = {
+  pkg[pack.name] = {
     source,
     output,
     targets: targets.map((t: string) => {

@@ -1,7 +1,7 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
 import dedent from 'dedent';
-import type { TemplateConfiguration } from './template';
+import type { TemplateConfiguration } from './template.ts';
 import kleur from 'kleur';
 
 export async function printNextSteps(

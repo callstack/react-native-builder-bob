@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
 
 // This is added to the example app's build.gradle file to invoke codegen before every build

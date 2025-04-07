@@ -1,9 +1,9 @@
-import path from 'path';
+import path from 'node:path';
 import kleur from 'kleur';
 import fs from 'fs-extra';
 import { execFileSync } from 'child_process';
 import { platform } from 'os';
-import type { Report } from '../types';
+import type { Report } from '../types.ts';
 
 type Options = {
   root: string;

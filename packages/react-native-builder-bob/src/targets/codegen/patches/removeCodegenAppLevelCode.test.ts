@@ -1,8 +1,8 @@
-import { expect, test, describe, beforeEach, afterEach } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import fs from 'fs-extra';
-import path from 'node:path';
-import { removeCodegenAppLevelCode } from './removeCodegenAppLevelCode';
 import mockfs from 'mock-fs';
+import path from 'node:path';
+import { removeCodegenAppLevelCode } from './removeCodegenAppLevelCode.ts';
 
 const mockPackageJson = {
   codegenConfig: {

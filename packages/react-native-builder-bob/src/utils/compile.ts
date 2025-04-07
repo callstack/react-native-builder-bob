@@ -1,10 +1,10 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
 import glob from 'glob';
-import type { Input, Variants } from '../types';
-import { isCodegenSpec } from './isCodegenSpec';
+import type { Input, Variants } from '../types.ts';
+import { isCodegenSpec } from './isCodegenSpec.ts';
 
 export type CompileOptions = {
   esm?: boolean;

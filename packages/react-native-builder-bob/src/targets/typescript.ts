@@ -1,12 +1,12 @@
 import kleur from 'kleur';
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
 import which from 'which';
 import spawn from 'cross-spawn';
 import del from 'del';
 import JSON5 from 'json5';
 import { platform } from 'os';
-import type { Input, Variants } from '../types';
+import type { Input, Variants } from '../types.ts';
 
 type Options = Input & {
   options?: {

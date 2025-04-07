@@ -1,7 +1,7 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
-import type { TemplateConfiguration } from '../template';
-import sortObjectKeys from '../utils/sortObjectKeys';
+import type { TemplateConfiguration } from '../template.ts';
+import sortObjectKeys from '../utils/sortObjectKeys.ts';
 
 type PackageJson = {
   devDependencies?: Record<string, string>;

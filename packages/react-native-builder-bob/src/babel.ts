@@ -1,12 +1,12 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { ConfigAPI, NodePath, PluginObj, PluginPass } from '@babel/core';
 import type {
   ImportDeclaration,
   ExportAllDeclaration,
   ExportNamedDeclaration,
 } from '@babel/types';
-import { isCodegenSpec } from './utils/isCodegenSpec';
+import { isCodegenSpec } from './utils/isCodegenSpec.ts';
 
 type Options = {
   /**

@@ -1,11 +1,11 @@
-import kleur from 'kleur';
-import type { Input } from '../../types';
-import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
-import fs from 'fs-extra';
-import path from 'path';
 import del from 'del';
-import { runRNCCli } from '../../utils/runRNCCli';
-import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
+import fs from 'fs-extra';
+import kleur from 'kleur';
+import path from 'node:path';
+import type { Input } from '../../types.ts';
+import { runRNCCli } from '../../utils/runRNCCli.ts';
+import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage.ts';
+import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode.ts';
 
 type Options = Omit<Input, 'output'>;
 

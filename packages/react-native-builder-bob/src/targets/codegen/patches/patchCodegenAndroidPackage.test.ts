@@ -1,9 +1,9 @@
-import { expect, test, describe, beforeEach, afterEach } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import fs from 'fs-extra';
-import path from 'node:path';
-import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage';
 import mockfs from 'mock-fs';
-import type { Report } from '../../../types';
+import path from 'node:path';
+import type { Report } from '../../../types.ts';
+import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage.ts';
 
 const mockPackageJson = {
   codegenConfig: {

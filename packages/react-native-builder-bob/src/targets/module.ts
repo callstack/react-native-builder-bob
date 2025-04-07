@@ -1,8 +1,8 @@
-import path from 'path';
+import path from 'node:path';
 import kleur from 'kleur';
 import del from 'del';
-import compile, { type CompileOptions } from '../utils/compile';
-import type { Input, Variants } from '../types';
+import compile, { type CompileOptions } from '../utils/compile.ts';
+import type { Input, Variants } from '../types.ts';
 
 type Options = Input & {
   options?: CompileOptions;

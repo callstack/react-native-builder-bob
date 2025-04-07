@@ -1,7 +1,8 @@
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { transformFileAsync } from '@babel/core';
 import fs from 'node:fs';
 import path from 'node:path';
+import plugin from '../babel.ts';
 
 test.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
   const filepath = path.resolve(
@@ -21,7 +22,7 @@ test.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
     babelrc: false,
     plugins: [
       '@babel/plugin-syntax-typescript',
-      [require.resolve('../babel.ts'), { extension: 'mjs' }],
+      [plugin, { extension: 'mjs' }],
     ],
   });
 

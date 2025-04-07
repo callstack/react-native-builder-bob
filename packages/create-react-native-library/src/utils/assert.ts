@@ -1,7 +1,7 @@
 import kleur from 'kleur';
-import { spawn } from './spawn';
-import type { Answers, Args } from '../input';
-import type { Question } from './prompt';
+import { spawn } from './spawn.ts';
+import type { Answers, Args } from '../input.ts';
+import type { Question } from './prompt.ts';
 
 export async function assertNpxExists() {
   try {

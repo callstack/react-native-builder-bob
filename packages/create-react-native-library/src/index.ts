@@ -1,30 +1,34 @@
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import ora from 'ora';
-import path from 'path';
-import yargs from 'yargs';
-import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
-import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
-import generateExampleApp from './exampleApp/generateExampleApp';
-import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
+import path from 'node:path';
+import yargs, { type Arguments } from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript.ts';
+import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies.ts';
+import generateExampleApp from './exampleApp/generateExampleApp.ts';
+import {
+  printErrorHelp,
+  printNextSteps,
+  printUsedRNVersion,
+} from './inform.ts';
 import {
   acceptedArgs,
   createMetadata,
   createQuestions,
   type Answers,
   type Args,
-} from './input';
-import { applyTemplates, generateTemplateConfiguration } from './template';
-import { assertNpxExists, assertUserInput } from './utils/assert';
-import { createInitialGitCommit } from './utils/initialCommit';
-import { prompt } from './utils/prompt';
-import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
+} from './input.ts';
+import { applyTemplates, generateTemplateConfiguration } from './template.ts';
+import { assertNpxExists, assertUserInput } from './utils/assert.ts';
+import { createInitialGitCommit } from './utils/initialCommit.ts';
+import { prompt } from './utils/prompt.ts';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion.ts';
 
 const FALLBACK_BOB_VERSION = '0.38.3';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-yargs
+yargs(hideBin(process.argv))
   .command(
     '$0 [name]',
     'create a react native library',
@@ -39,9 +43,10 @@ yargs
     // don't pass kebab-case args to handler.
     'strip-dashed': true,
   })
-  .strict().argv;
+  .strict()
+  .parse();
 
-async function create(_argv: yargs.Arguments<Args>) {
+async function create(_argv: Arguments<Args>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _, $0, ...argv } = _argv;
 

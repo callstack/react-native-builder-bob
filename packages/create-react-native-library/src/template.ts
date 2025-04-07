@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
 import type {
@@ -6,7 +6,7 @@ import type {
   ExampleApp,
   ProjectType,
   SupportedArchitecture,
-} from './input';
+} from './input.ts';
 
 export type TemplateVersions = {
   bob: string;

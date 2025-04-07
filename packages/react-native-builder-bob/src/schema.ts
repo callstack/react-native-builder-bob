@@ -77,11 +77,11 @@ export type Target = typeof target.infer;
 export type TargetOptions<T extends Target> = T extends typeof commonjs.name
   ? typeof commonjs.options.infer
   : T extends typeof module.name
-  ? typeof module.options.infer
-  : T extends typeof typescript.name
-  ? typeof typescript.options.infer
-  : T extends typeof custom.name
-  ? typeof custom.options.infer
-  : T extends typeof codegen.name
-  ? undefined
-  : never;
+    ? typeof module.options.infer
+    : T extends typeof typescript.name
+      ? typeof typescript.options.infer
+      : T extends typeof custom.name
+        ? typeof custom.options.infer
+        : T extends typeof codegen.name
+          ? undefined
+          : never;

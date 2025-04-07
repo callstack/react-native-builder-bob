@@ -1,8 +1,8 @@
 import kleur from 'kleur';
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
-import type { Input } from '../types';
-import { spawn } from '../utils/spawn';
+import type { Input } from '../types.ts';
+import { spawn } from '../utils/spawn.ts';
 import del from 'del';
 
 type Options = Omit<Input, 'output'> & {
