@@ -12,7 +12,6 @@ You can verify whether ESM support is enabled by checking the configuration for 
   "output": "lib",
   "targets": [
     ["module", { "esm": true }],
-    ["commonjs", { "esm": true }],
     "typescript"
   ]
 }
@@ -63,9 +62,7 @@ The `./package.json` field is used to point to the library's `package.json` file
 Using the `exports` field has a few benefits, such as:
 
 - It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
-- It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `react-native`, `production`, `development` etc.). More examples can be found in the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
-
-> Note: Metro enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the `unstable_enablePackageExports` option to `true` in the [Metro configuration](https://metrobundler.dev/docs/configuration/). If this is not enabled, Metro will use the entrypoint specified in the `main` field. Features such as [subpath exports](https://nodejs.org/api/packages.html#subpath-exports) and [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) will not work when `exports` supported is not enabled.
+- It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `module`, `react-native`, `production`, `development` etc.).
 
 ## Dual package setup
 
@@ -174,14 +171,32 @@ With this approach, the ESM and CommonJS versions of the package are treated as 
 
 If the library relies on any state that can cause issues if 2 separate instances are loaded (e.g. global state, constructors, react context etc.), it's necessary to isolate the state into a separate CommonJS module that can be shared between the ESM and CommonJS builds.
 
+## Compatibility
+
+[Node.js](https://nodejs.org) v12 and higher natively support ESM and the `exports` field. However, an ESM library can synchronously loaded in a CommonJS environment in only in recent Node.js versions. The following Node.js versions support synchronous `require()` for ESM libraries without any flags or warnings:
+
+- v20.19.0 and higher (LTS)
+- v22.12.0 and higher (LTS)
+- v23.4.0 and higher
+
+Older versions can still load your library asynchronously using `import()`.
+
+Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+
+[Metro](https://metrobundler.dev) enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the [`unstable_enablePackageExports` option to `true`](https://metrobundler.dev/docs/package-exports/) in the Metro configuration. If this is not enabled, Metro will use the entrypoint specified in the `main` field. Features such as [subpath exports](https://nodejs.org/api/packages.html#subpath-exports) and [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) will not work when `exports` supported is not enabled.
+
+[Jest](https://jestjs.io) supports the `exports` field, but doesn't support ESM natively. Experimental support is [available under a flag](https://jestjs.io/docs/ecmascript-modules), but requires changes to how tests are written. It can still load ESM libraries using a transform such as [`babel-jest`](https://github.com/jestjs/jest/tree/main/packages/babel-jest).
+
 ## Guidelines
 
 There are still a few things to keep in mind if you want your library to be ESM-compatible:
 
-- Avoid using default exports in your library. Named exports are recommended. Default exports produce a CommonJS module with a `default` property, which will work differently than the ESM build and can cause issues.
+- Avoid using default exports in your library. Named exports are recommended. Default exports produce a CommonJS module with a `default` property, which will work differently than the ESM build and can cause issues if you have a dual package setup. Needing to use `.default` in CommonJS environment may also be confusing for users.
 - If the library uses platform-specific extensions (e.g., `.ios.js` or `.android.js`), the ESM output will not be compatible with Node.js, i.e. it's not possible to use the library in Node.js with `import` syntax. It's necessary to omit file extensions from the imports to make platform-specific extensions work, however, Node.js requires file extensions to be present.
 
-  Bundlers such as Metro can handle this without additional configuration. Other bundlers may need to be configured to make extensionless imports to work, (e.g. it's necessary to specify [`resolve.fullySpecified: false`](https://webpack.js.org/configuration/module/#resolvefullyspecified) for Webpack).
+  While Bob automatically adds file extensions to the import statements during the build process if `esm` is set to `true`, it will skip the imports that reference files with platform-specific extensions to avoid breaking the resolution.
+
+  Bundlers such as Metro can handle imports without file extensions for ESM without additional configuration. Other bundlers may need to be configured to make extensionless imports to work, (e.g. it's necessary to specify [`resolve.fullySpecified: false`](https://webpack.js.org/configuration/module/#resolvefullyspecified) for Webpack).
 
   It's still possible to use the library in Node.js using the CommonJS build with `require`:
 
@@ -189,16 +204,30 @@ There are still a few things to keep in mind if you want your library to be ESM-
   const { foo } = require('my-library');
   ```
 
-  Alternatively, if you want to be able to use the library in Node.js with `import` syntax, you can use `require` to import code with platform-specific extensions in your library:
+  Alternatively, if you want to be able to use the library in Node.js with `import` syntax, there are a few options:
 
-  ```js
-  // will import `foo.native.js`, `foo.ios.js`, `foo.js` etc.
-  const { foo } = require('./foo');
-  ```
+  - Use `Platform.select` instead of platform-specific extensions:
 
-  Make sure to have a file without any platform-specific extensions that will be loaded by Node.js.
+    ```js
+    import { Platform } from 'react-native';
 
-  Also note that if your module (e.g. `foo.js` in this case) contains ESM syntax, it will only work on Node.js 20 or newer.
+    const foo = Platform.select({
+      android: require('./fooAndroid.js'),
+      ios: require('./fooIOS.js'),
+      default: require('./fooFallback.js'),
+    });
+    ```
+
+  - Use `require` to import code with platform-specific extensions in your library:
+
+    ```js
+    // will import `foo.native.js`, `foo.ios.js`, `foo.js` etc.
+    const { foo } = require('./foo');
+    ```
+
+    Make sure to have a file without any platform-specific extensions that will be loaded by Node.js.
+
+    Also note that if your module (e.g. `foo.js` in this case) contains ESM syntax, it will only work on a recent Node.js version. See [Compatibility](#compatibility) section for more information.
 
 - Avoid using `.cjs`, `.mjs`, `.cts` or `.mts` extensions. Metro always requires file extensions in import statements when using `.cjs` or `.mjs` which breaks platform-specific extension resolution.
 - Avoid using `"moduleResolution": "node16"` or `"moduleResolution": "nodenext"` in your `tsconfig.json` file. They require file extensions in import statements which breaks platform-specific extension resolution.

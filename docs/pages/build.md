@@ -176,7 +176,7 @@ In addition, the following options are supported:
 
 ##### `esm`
 
-Setting this option to `true` will output ES modules compatible code for Node.js 12+, modern browsers and other tools that support `package.json`'s `exports` field.
+Setting this option to `true` will output ES modules compatible code for Node.js 12+, modern browsers and tools that support `package.json`'s `exports` field.
 
 See the [ESM support](./esm.md) guide for more details.
 
@@ -241,7 +241,9 @@ Example:
 
 Enable compiling source files with Babel and use CommonJS module system. This is essentially the same as the `module` target and accepts the same options, but transforms the `import`/`export` statements in your code to `require`/`module.exports`.
 
-This is useful for supporting usage of this module with `require` in Node versions older than 20 (it can still be used with `import` for Node.js 12+ if `module` target with `esm` is enabled), and some tools such as [Jest](https://jestjs.io). The output file should be referenced in the `main` field. If you have a [dual package setup](esm.md#dual-package-setup) with both ESM and CommonJS builds, it needs to be specified in `exports['.'].require` field of `package.json`.
+This is useful for supporting tools that don't support ES modules yet, see [the Compatibility section in our ESM guide](./esm.md#compatibility) for more details.
+
+The output file should be referenced in the `main` field. If you have a [dual package setup](esm.md#dual-package-setup) with both ESM and CommonJS builds, it needs to be specified in `exports['.'].require` field of `package.json`.
 
 Example:
 
