@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.6](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.5...create-react-native-library@0.49.6) (2025-04-08)
+
+### Bug Fixes
+
+- add types field back to support legacy moduleResolution ([75f37e0](https://github.com/callstack/react-native-builder-bob/commit/75f37e0a3a4dc41a277b72d5378f47946e179b2a)) - by @
+
 ## [0.49.5](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.4...create-react-native-library@0.49.5) (2025-04-07)
 
 ### Bug Fixes
