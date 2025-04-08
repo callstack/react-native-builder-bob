@@ -424,6 +424,6 @@ export default async function build({
       throw e;
     }
 
-    throw new Error('Failed to build definition files.');
+    throw new Error('Failed to build definition files.', { cause: e });
   }
 }

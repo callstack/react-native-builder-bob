@@ -25,6 +25,7 @@ export default async function androidAssemble({
   );
 
   const gradleWrapper = platform() === 'win32' ? 'gradlew.bat' : './gradlew';
+
   if (await fs.pathExists(path.join(androidPath, gradleWrapper))) {
     execFileSync(gradleWrapper, ['assemble'], { cwd: androidPath });
   } else {

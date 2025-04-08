@@ -307,7 +307,9 @@ export default async function compile({
               }`
             );
 
-            throw new Error(`Found incorrect path in '${name}' field.`);
+            throw new Error(`Found incorrect path in '${name}' field.`, {
+              cause: e,
+            });
           }
 
           throw e;

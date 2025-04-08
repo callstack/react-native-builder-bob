@@ -22,7 +22,24 @@ export const spawn = async (...args: Parameters<typeof crossSpawn>) => {
       if (code === 0) {
         resolve(stdout.trim());
       } else {
-        reject(new Error(stderr.trim()));
+        const error = new Error(stderr.trim() || 'Unknown error');
+
+        Object.defineProperties(error, {
+          stdout: {
+            enumerable: false,
+            value: stdout,
+          },
+          stderr: {
+            enumerable: false,
+            value: stderr,
+          },
+          code: {
+            enumerable: false,
+            value: code,
+          },
+        });
+
+        reject(error);
       }
     });
   });

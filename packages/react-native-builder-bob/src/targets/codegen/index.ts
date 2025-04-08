@@ -4,8 +4,8 @@ import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage
 import fs from 'fs-extra';
 import path from 'path';
 import del from 'del';
-import { runRNCCli } from '../../utils/runRNCCli';
 import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
+import { spawn } from '../../utils/spawn';
 
 type Options = Omit<Input, 'output'>;
 
@@ -42,7 +42,7 @@ export default async function build({ root, report }: Options) {
   }
 
   try {
-    await runRNCCli(['codegen']);
+    await spawn('npx', ['@react-native-community/cli', 'codegen']);
 
     if (codegenType === 'modules' || codegenType === 'all') {
       await patchCodegenAndroidPackage(root, packageJson, report);
@@ -53,8 +53,8 @@ export default async function build({ root, report }: Options) {
   } catch (e: unknown) {
     if (e != null && typeof e === 'object') {
       if ('stdout' in e && e.stdout != null) {
-        throw new Error(
-          `Errors found while generating codegen files:\n${e.stdout.toString()}`
+        report.error(
+          `Errors found while running codegen:\n\n${e.stdout.toString()}`
         );
       } else if ('message' in e && typeof e.message === 'string') {
         if (
@@ -62,13 +62,13 @@ export default async function build({ root, report }: Options) {
             "Error: Cannot find module '@react-native-community/cli/package.json'"
           )
         ) {
-          throw new Error(
+          report.error(
             "You don't have `@react-native-community/cli` in your root package's dev dependencies. Please install it and make sure it uses the same version as your application."
           );
         }
       }
     }
 
-    throw e;
+    throw new Error('Failed to run codegen.', { cause: e });
   }
 }
