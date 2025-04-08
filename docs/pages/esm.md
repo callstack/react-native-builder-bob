@@ -173,13 +173,13 @@ If the library relies on any state that can cause issues if 2 separate instances
 
 ## Compatibility
 
-[Node.js](https://nodejs.org) v12 and higher natively support ESM and the `exports` field. However, an ESM library can synchronously loaded in a CommonJS environment in only in recent Node.js versions. The following Node.js versions support synchronous `require()` for ESM libraries without any flags or warnings:
+[Node.js](https://nodejs.org) v12 and higher natively support ESM and the `exports` field. However, in a CommonJS environment, an ESM library can be loaded synchronously only in recent Node.js versions. The following Node.js versions support synchronous `require()` for ESM libraries without any flags or warnings:
 
 - v20.19.0 and higher (LTS)
 - v22.12.0 and higher (LTS)
 - v23.4.0 and higher
 
-Older versions can still load your library asynchronously using `import()`.
+Older versions can still load your library asynchronously using `import()` in CommonJS environments.
 
 Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
 
