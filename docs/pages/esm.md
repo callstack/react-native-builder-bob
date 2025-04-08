@@ -37,6 +37,7 @@ To make use of the output files, ensure that your `package.json` file contains t
 
 ```json
 "main": "./lib/module/index.js",
+"types": "./lib/typescript/src/index.d.ts",
 "exports": {
   ".": {
     "types": "./lib/typescript/src/index.d.ts",
@@ -132,11 +133,12 @@ To configure a dual package setup, you can follow these steps:
 
    The `module` field is a non-standard field that some tools use to determine the ESM entry point.
 
-5. Optionally add a `types` field in your `package.json` to point to the CommonJS type definitions:
+5. Optionally change the `types` field in your `package.json` to point to the CommonJS type definitions:
 
    ```diff
      "main": "./lib/commonjs/index.js",
      "module": "./lib/module/index.js",
+   - "types": "./lib/typescript/src/index.d.ts",
    + "types": "./lib/typescript/commonjs/src/index.d.ts",
    ```
 

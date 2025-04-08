@@ -16,6 +16,7 @@ exports[`initializes the configuration 1`] = `
   },
   "source": "./src/index.ts",
   "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
   "scripts": {
     "prepare": "bob build"
   },

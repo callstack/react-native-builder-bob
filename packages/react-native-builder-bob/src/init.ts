@@ -293,10 +293,22 @@ export async function init() {
   if (targets.includes('commonjs') && targets.includes('module')) {
     entryFields.main = entries.commonjs;
     entryFields.module = entries.module;
+
+    if (targets.includes('typescript')) {
+      entryFields.types = types.require;
+    }
   } else if (targets.includes('commonjs')) {
     entryFields.main = entries.commonjs;
+
+    if (targets.includes('typescript')) {
+      entryFields.types = types.require;
+    }
   } else if (targets.includes('module')) {
     entryFields.main = entries.module;
+
+    if (targets.includes('typescript')) {
+      entryFields.types = types.import;
+    }
   }
 
   for (const key in entryFields) {

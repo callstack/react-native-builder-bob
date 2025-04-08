@@ -79,6 +79,7 @@ To configure your project manually, follow these steps:
    ```json
    "source": "./src/index.tsx",
    "main": "./lib/module/index.js",
+   "types": "./lib/typescript/src/index.d.ts",
    "exports": {
      ".": {
         "types": "./lib/typescript/src/index.d.ts",
@@ -95,9 +96,10 @@ To configure your project manually, follow these steps:
    Here is what each of these fields mean:
 
    - `source`: The path to the source code. It is used by `react-native-builder-bob` to detect the correct output files and provide better error messages.
-   - `main`: The entry point for the CommonJS build. This is used by Node - such as tests, SSR etc.
-   - `files`: The files to include in the package when publishing with `npm`.
+   - `main`: The entry point for legacy setups that don't support the `exports` field. See [Compatibility](./esm.md#compatibility) for more details.
+   - `types`: The entry point for the TypeScript definitions for legacy setups with `moduleResolution: node10` or `moduleResolution: node`.
    - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+, modern browsers and tools. See [the ESM support guide](./esm.md) for more details.
+   - `files`: The files to include in the package when publishing with `npm`.
 
    Make sure to change specify correct files according to the targets you have enabled.
 
