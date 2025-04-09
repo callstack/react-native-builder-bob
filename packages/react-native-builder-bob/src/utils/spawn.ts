@@ -22,7 +22,9 @@ export const spawn = async (...args: Parameters<typeof crossSpawn>) => {
       if (code === 0) {
         resolve(stdout.trim());
       } else {
-        const error = new Error(stderr.trim() || 'Unknown error');
+        const error = new Error(
+          stderr.trim() || `Command exited with code ${code}`
+        );
 
         Object.defineProperties(error, {
           stdout: {
