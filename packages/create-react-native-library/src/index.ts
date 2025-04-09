@@ -20,8 +20,9 @@ import { createInitialGitCommit } from './utils/initialCommit';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
-const FALLBACK_BOB_VERSION = '0.38.3';
+const FALLBACK_BOB_VERSION = '0.40.4';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
+const SUPPORTED_REACT_NATIVE_VERSION = '0.78.2';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
@@ -69,6 +70,8 @@ async function create(_argv: yargs.Arguments<Args>) {
   const promptAnswers = await prompt(questions, argv);
   const answers: Answers = {
     ...promptAnswers,
+    reactNativeVersion:
+      promptAnswers.reactNativeVersion ?? SUPPORTED_REACT_NATIVE_VERSION,
     local,
   };
 
@@ -94,7 +97,7 @@ async function create(_argv: yargs.Arguments<Args>) {
 
   await fs.mkdirp(folder);
 
-  if (answers.reactNativeVersion != null) {
+  if (answers.reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION) {
     printUsedRNVersion(answers.reactNativeVersion, config);
   }
 

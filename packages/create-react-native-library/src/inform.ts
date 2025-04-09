@@ -129,7 +129,7 @@ export function printUsedRNVersion(
 ) {
   if (config.example === 'vanilla') {
     console.log(
-      `${kleur.blue('ℹ')} Using ${kleur.cyan(
+      `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
         `react-native@${version}`
       )} for the example`
     );

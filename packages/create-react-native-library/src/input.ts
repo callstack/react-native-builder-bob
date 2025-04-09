@@ -181,7 +181,7 @@ export type Answers = {
   languages: ProjectLanguages;
   type: ProjectType;
   example: ExampleApp;
-  reactNativeVersion?: string;
+  reactNativeVersion: string;
   local?: boolean;
 };
 
