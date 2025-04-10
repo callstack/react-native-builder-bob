@@ -227,7 +227,7 @@ This option has no effect when overriding the default babel configuration withou
 
 ##### `copyFlow`
 
-If your source code is written in [Flow](http://www.typescriptlang.org/), You can specify the `copyFlow` option to `true` to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
+If your source code is written in [Flow](https://flow.org/), You can specify the `copyFlow` option to `true` to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
 
 ##### `sourceMaps`
 
@@ -255,7 +255,7 @@ Example:
 
 #### `typescript`
 
-Enable generating type definitions with `tsc` if your source code is written in [TypeScript](http://www.typescriptlang.org/).
+Enable generating type definitions with `tsc` if your source code is written in [TypeScript](https://www.typescriptlang.org/).
 
 When both `module` and `commonjs` targets are enabled, and `esm` is set to `true` for the `module` target, this will output 2 sets of type definitions: one for the CommonJS build and one for the ES module build.
 
