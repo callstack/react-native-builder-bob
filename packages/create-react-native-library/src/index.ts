@@ -20,7 +20,7 @@ import { createInitialGitCommit } from './utils/initialCommit';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
-const FALLBACK_BOB_VERSION = '0.40.4';
+const FALLBACK_BOB_VERSION = '0.40.5';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
 const SUPPORTED_REACT_NATIVE_VERSION = '0.78.2';
 
