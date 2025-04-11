@@ -4,7 +4,7 @@
   "description": "<%- project.description %>",
   "main": "src/index",
   "codegenConfig": {
-    "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
+    "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": <%- project.viewConfig !== null ? '"all"': '"modules"' %>,
     "jsSrcsDir": "src"
   },

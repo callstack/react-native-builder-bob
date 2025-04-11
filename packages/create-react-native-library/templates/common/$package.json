@@ -172,9 +172,6 @@
         }
       ],
 <% } -%>
-<% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
-      "codegen",
-<% } -%>
       [
         "module",
         {
@@ -191,13 +188,9 @@
 <% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
   },
   "codegenConfig": {
-    "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
+    "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": "<%- project.viewConfig !== null ? 'all': 'modules' -%>",
     "jsSrcsDir": "src",
-    "outputDir": {
-      "ios": "ios/generated",
-      "android": "android/generated"
-    },
     "android": {
       "javaPackageName": "com.<%- project.package %>"
     <% if (example === 'vanilla') { -%>
@@ -208,9 +201,6 @@
         "<%- project.name -%>View": "<%- project.name -%>View"
       }
     <% } -%>
-    },
-    "includesGeneratedCode": true
-    <% } else { -%>
     }
     <% } -%>
 <% } -%>
