@@ -4,7 +4,10 @@ import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage
 import fs from 'fs-extra';
 import path from 'path';
 import del from 'del';
-import { removeCodegenAppLevelCode } from './patches/removeCodegenAppLevelCode';
+import {
+  getCodegenCLISourceSupport,
+  removeCodegenAppLevelCode,
+} from './patches/removeCodegenAppLevelCode';
 import { spawn } from '../../utils/spawn';
 
 type Options = Omit<Input, 'output'>;
@@ -42,12 +45,21 @@ export default async function build({ root, report }: Options) {
   }
 
   try {
-    await spawn('npx', ['@react-native-community/cli', 'codegen']);
+    const codegenCLISupportsSource = await getCodegenCLISourceSupport();
+
+    await spawn('npx', [
+      '@react-native-community/cli',
+      'codegen',
+      ...(codegenCLISupportsSource ? ['--source', 'library'] : []),
+    ]);
 
     if (codegenType === 'modules' || codegenType === 'all') {
       await patchCodegenAndroidPackage(root, packageJson, report);
     }
-    await removeCodegenAppLevelCode(root, packageJson);
+
+    if (!codegenCLISupportsSource) {
+      await removeCodegenAppLevelCode(root, packageJson);
+    }
 
     report.success('Generated native code with codegen');
   } catch (e: unknown) {
