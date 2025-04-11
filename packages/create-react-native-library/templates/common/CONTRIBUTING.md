@@ -18,13 +18,14 @@ yarn
 ```
 
 > Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development.
-<% if (project.moduleConfig === 'nitro-modules') { -%>
 
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
 
 You need to run [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate code required for this project. The example app will not build without this step.
 
 Run **Nitrogen** in following cases:
+
 - When you make changes to any `*.nitro.ts` files.
 - When running the project for the first time (since the generated files are not committed to the repository).
 
@@ -33,8 +34,8 @@ To invoke **Nitrogen**, use the following command:
 ```sh
 yarn nitrogen
 ```
-<% } -%>
 
+<% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
@@ -65,7 +66,6 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-<% if (project.arch === 'new') { -%>
 To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
 
 ```sh
@@ -74,7 +74,6 @@ Running "<%- project.name -%>Example" with {"fabric":true,"initialProps":{"concu
 
 Note the `"fabric":true` and `"concurrentRoot":true` properties.
 
-<% } -%>
 <% if (!project.native) { -%>
 To run the example app on Web:
 

@@ -3,13 +3,11 @@
   "version": "0.0.0",
   "description": "<%- project.description %>",
   "main": "src/index",
-<% if (project.arch === 'new') { -%>
   "codegenConfig": {
     "name": "RN<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": <%- project.viewConfig !== null ? '"all"': '"modules"' %>,
     "jsSrcsDir": "src"
   },
-<% } -%>
   "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "UNLICENSED",
   "homepage": "<%- repo -%>#readme"

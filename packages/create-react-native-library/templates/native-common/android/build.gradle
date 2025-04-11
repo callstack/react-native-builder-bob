@@ -15,7 +15,7 @@ buildscript {
   }
 }
 
-<% if (project.cpp || project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -28,9 +28,7 @@ apply plugin: "kotlin-android"
 apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinking.gradle'
 <% } -%>
 
-<% if (project.arch === "new") { -%>
 apply plugin: "com.facebook.react"
-<% } -%>
 
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
@@ -60,15 +58,12 @@ android {
     }
   }
 
-<% if (project.cpp) { -%>
-  ndkVersion getExtOrDefault("ndkVersion")
-<% } -%>
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-<% if (project.cpp || project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 
     externalNativeBuild {
       cmake {
@@ -88,7 +83,7 @@ android {
     }
 <% } -%>
   }
-<% if (project.cpp || project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules') { -%>
 
   externalNativeBuild {
     cmake {
@@ -119,7 +114,6 @@ android {
     ]
   }
 <% } -%>
-<% if (project.arch === "new") { -%>
 
   buildFeatures {
     buildConfig true
@@ -127,7 +121,6 @@ android {
     prefab true
 <% } -%>
   }
-<% } -%>
 
   buildTypes {
     release {
@@ -143,7 +136,6 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-<% if (project.arch === "new") { -%>
 
   sourceSets {
     main {
@@ -153,7 +145,6 @@ android {
       ]
     }
   }
-<% } -%>
 }
 
 repositories {

@@ -29,6 +29,8 @@ This will ask you a few questions about your project and generate a new project 
 
 After the project is created, you can find the development workflow in the generated `CONTRIBUTING.md` file.
 
+> Note: If you want to create a library using the legacy native modules and view APIs instead of the new architecture, you can use the `0.49.8` version of `create-react-native-library`: `npx create-react-native-library@0.49.8 awesome-library`.
+
 ## Local library
 
 While the default templates are for libraries that are published to npm, you can also create a local library that is not published but used locally in your app.

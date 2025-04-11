@@ -18,13 +18,11 @@ export type ArgName =
   | 'example'
   | 'reactNativeVersion';
 
-export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
+export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'js';
 
 export type ProjectType =
   | 'turbo-module'
   | 'fabric-view'
-  | 'legacy-module'
-  | 'legacy-view'
   | 'nitro-module'
   | 'library';
 
@@ -36,17 +34,12 @@ const LANGUAGE_CHOICES: {
   {
     title: 'Kotlin & Swift',
     value: 'kotlin-swift',
-    types: ['nitro-module', 'legacy-module', 'legacy-view'],
+    types: ['nitro-module'],
   },
   {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
-    types: ['turbo-module', 'fabric-view', 'legacy-module', 'legacy-view'],
-  },
-  {
-    title: 'C++ for Android & iOS',
-    value: 'cpp',
-    types: ['turbo-module', 'legacy-module'],
+    types: ['turbo-module', 'fabric-view'],
   },
   {
     title: 'JavaScript for Android, iOS & Web',
@@ -100,16 +93,6 @@ const TYPE_CHOICES: {
     value: 'nitro-module',
     description:
       'type-safe, fast integration for native APIs to JS (experimental)',
-  },
-  {
-    title: 'Legacy Native module',
-    value: 'legacy-module',
-    description: 'bridge for native APIs to JS (old architecture)',
-  },
-  {
-    title: 'Legacy Native view',
-    value: 'legacy-view',
-    description: 'bridge for native views to JS (old architecture)',
   },
   {
     title: 'JavaScript library',
@@ -167,7 +150,6 @@ export const acceptedArgs: Record<ArgName, yargs.Options> = {
 } as const;
 
 export type Args = Record<ArgName | 'name', string>;
-export type SupportedArchitecture = 'new' | 'legacy';
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
 export type Answers = {

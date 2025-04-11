@@ -261,39 +261,33 @@ export default async function generateExampleApp({
       'android.enableJetifier=false'
     );
 
-    // If the library is on new architecture, enable new arch for iOS and Android
-    if (config.project.arch === 'new') {
-      // iOS
-      // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
-      const podfile = await fs.readFile(
-        path.join(directory, 'ios', 'Podfile'),
-        'utf8'
-      );
+    // Enable new arch for iOS and Android
+    // iOS
+    // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
+    const podfile = await fs.readFile(
+      path.join(directory, 'ios', 'Podfile'),
+      'utf8'
+    );
 
-      await fs.writeFile(
-        path.join(directory, 'ios', 'Podfile'),
-        "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
-      );
+    await fs.writeFile(
+      path.join(directory, 'ios', 'Podfile'),
+      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
+    );
 
-      // Android
-      // Make sure newArchEnabled=true is present in android/gradle.properties
-      if (gradleProperties.split('\n').includes('#newArchEnabled=true')) {
-        gradleProperties = gradleProperties.replace(
-          '#newArchEnabled=true',
-          'newArchEnabled=true'
-        );
-      } else if (
-        gradleProperties.split('\n').includes('newArchEnabled=false')
-      ) {
-        gradleProperties = gradleProperties.replace(
-          'newArchEnabled=false',
-          'newArchEnabled=true'
-        );
-      } else if (
-        !gradleProperties.split('\n').includes('newArchEnabled=true')
-      ) {
-        gradleProperties += '\nnewArchEnabled=true';
-      }
+    // Android
+    // Make sure newArchEnabled=true is present in android/gradle.properties
+    if (gradleProperties.split('\n').includes('#newArchEnabled=true')) {
+      gradleProperties = gradleProperties.replace(
+        '#newArchEnabled=true',
+        'newArchEnabled=true'
+      );
+    } else if (gradleProperties.split('\n').includes('newArchEnabled=false')) {
+      gradleProperties = gradleProperties.replace(
+        'newArchEnabled=false',
+        'newArchEnabled=true'
+      );
+    } else if (!gradleProperties.split('\n').includes('newArchEnabled=true')) {
+      gradleProperties += '\nnewArchEnabled=true';
     }
 
     await fs.writeFile(

@@ -1,12 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
-import type {
-  Answers,
-  ExampleApp,
-  ProjectType,
-  SupportedArchitecture,
-} from './input';
+import type { Answers, ExampleApp, ProjectType } from './input';
 
 export type TemplateVersions = {
   bob: string;
@@ -35,8 +30,6 @@ export type TemplateConfiguration = {
     package_cpp: string;
     identifier: string;
     native: boolean;
-    arch: SupportedArchitecture;
-    cpp: boolean;
     swift: boolean;
     viewConfig: ViewConfig;
     moduleConfig: ModuleConfig;
@@ -62,10 +55,6 @@ const EXAMPLE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/example-common'
 );
-const EXAMPLE_MODULE_LEGACY_FILES = path.resolve(
-  __dirname,
-  '../templates/example-module-legacy'
-);
 const EXAMPLE_MODULE_NEW_FILES = path.resolve(
   __dirname,
   '../templates/example-module-new'
@@ -74,7 +63,6 @@ const EXAMPLE_VIEW_FILES = path.resolve(__dirname, '../templates/example-view');
 
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
 const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
-const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
@@ -85,29 +73,19 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
 );
 
 const NATIVE_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/native-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
-  view_legacy: path.resolve(__dirname, '../templates/native-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/native-view-new'),
   module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
 } as const;
 
 const OBJC_FILES = {
   module_common: path.resolve(__dirname, '../templates/objc-library'),
-  view_legacy: path.resolve(__dirname, '../templates/objc-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/objc-view-new'),
 } as const;
 
 const KOTLIN_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/kotlin-library-legacy'),
   module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
-  view_legacy: path.resolve(__dirname, '../templates/kotlin-view-legacy'),
   view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
-} as const;
-
-const SWIFT_FILES = {
-  module_legacy: path.resolve(__dirname, '../templates/swift-library-legacy'),
-  view_legacy: path.resolve(__dirname, '../templates/swift-view-legacy'),
 } as const;
 
 export function generateTemplateConfiguration({
@@ -120,11 +98,6 @@ export function generateTemplateConfiguration({
   answers: Answers;
 }): TemplateConfiguration {
   const { slug, languages, type } = answers;
-
-  const arch =
-    type === 'legacy-module' || type === 'legacy-view' || type === 'library'
-      ? 'legacy'
-      : 'new';
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   let namespace: string | undefined;
@@ -159,8 +132,6 @@ export function generateTemplateConfiguration({
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
-      arch,
-      cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
       viewConfig: getViewConfig(type),
       moduleConfig: getModuleConfig(type),
@@ -182,8 +153,6 @@ function getModuleConfig(projectType: ProjectType): ModuleConfig {
       return 'nitro-modules';
     case 'turbo-module':
       return 'turbo-modules';
-    case 'legacy-module':
-      return 'native-modules';
     default:
       return null;
   }
@@ -191,8 +160,6 @@ function getModuleConfig(projectType: ProjectType): ModuleConfig {
 
 function getViewConfig(projectType: ProjectType): ViewConfig {
   switch (projectType) {
-    case 'legacy-view':
-      return 'paper-view';
     case 'fabric-view':
       return 'fabric-view';
     default:
@@ -217,11 +184,7 @@ export async function applyTemplates(
       if (config.project.viewConfig !== null) {
         await applyTemplate(config, EXAMPLE_VIEW_FILES, folder);
       } else {
-        if (config.project.arch === 'legacy') {
-          await applyTemplate(config, EXAMPLE_MODULE_LEGACY_FILES, folder);
-        } else {
-          await applyTemplate(config, EXAMPLE_MODULE_NEW_FILES, folder);
-        }
+        await applyTemplate(config, EXAMPLE_MODULE_NEW_FILES, folder);
       }
     }
   }
@@ -242,43 +205,22 @@ export async function applyTemplates(
     }
 
     if (config.project.moduleConfig !== null) {
-      await applyTemplate(
-        config,
-        NATIVE_FILES[`module_${config.project.arch}`],
-        folder
-      );
+      await applyTemplate(config, NATIVE_FILES[`module_new`], folder);
     } else {
-      await applyTemplate(
-        config,
-        NATIVE_FILES[`view_${config.project.arch}`],
-        folder
-      );
+      await applyTemplate(config, NATIVE_FILES[`view_new`], folder);
     }
 
-    if (config.project.swift) {
-      await applyTemplate(config, SWIFT_FILES[`module_legacy`], folder);
+    if (config.project.moduleConfig !== null) {
+      await applyTemplate(config, OBJC_FILES[`module_common`], folder);
     } else {
-      if (config.project.moduleConfig !== null) {
-        await applyTemplate(config, OBJC_FILES[`module_common`], folder);
-      } else {
-        await applyTemplate(
-          config,
-          OBJC_FILES[`view_${config.project.arch}`],
-          folder
-        );
-      }
+      await applyTemplate(config, OBJC_FILES[`view_new`], folder);
     }
 
     const templateType = `${
       config.project.moduleConfig !== null ? 'module' : 'view'
-    }_${config.project.arch}` as const;
+    }_new` as const;
 
     await applyTemplate(config, KOTLIN_FILES[templateType], folder);
-
-    if (config.project.cpp) {
-      await applyTemplate(config, CPP_FILES, folder);
-      await fs.remove(path.join(folder, 'ios', `${config.project.name}.m`));
-    }
   }
 }
 
@@ -295,13 +237,20 @@ async function applyTemplate(
   const files = await fs.readdir(source);
 
   for (const f of files) {
-    const target = path.join(
-      destination,
-      ejs.render(f.replace(/^\$/, ''), config, {
+    let name;
+
+    try {
+      name = ejs.render(f.replace(/^\$/, ''), config, {
         openDelimiter: '{',
         closeDelimiter: '}',
-      })
-    );
+      });
+    } catch (e) {
+      throw new Error(`Failed to render template file name: ${f}`, {
+        cause: e,
+      });
+    }
+
+    const target = path.join(destination, name);
 
     const file = path.join(source, f);
     const stats = await fs.stat(file);
@@ -311,7 +260,17 @@ async function applyTemplate(
     } else if (!BINARIES.some((r) => r.test(file))) {
       const content = await fs.readFile(file, 'utf8');
 
-      await fs.writeFile(target, ejs.render(content, config));
+      let result;
+
+      try {
+        result = ejs.render(content, config);
+      } catch (e) {
+        throw new Error(`Failed to render template file content: ${f}`, {
+          cause: e,
+        });
+      }
+
+      await fs.writeFile(target, result);
     } else {
       await fs.copyFile(file, target);
     }
