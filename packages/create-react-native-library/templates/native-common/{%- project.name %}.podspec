@@ -13,15 +13,11 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => min_ios_version_supported }
   s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
 
-<% if (project.cpp) { -%>
-  s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}"
-<% } else if (project.swift) { -%>
+<% if (project.swift) { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-<% } else if (project.arch !== "legacy") { -%>
+<% } else { -%>
   s.source_files = "ios/**/*.{h,m,mm,cpp}"
   s.private_header_files = "ios/**/*.h"
-<% } else { -%>
-  s.source_files = "ios/**/*.{h,m,mm}"
 <% } -%>
 <% if (project.moduleConfig === "nitro-modules") { -%>
 
