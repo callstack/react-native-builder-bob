@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { CODEGEN_DOCS } from './patchCodegenAndroidPackage';
+import { spawn } from '../../../utils/spawn';
 
 const FILES_TO_REMOVE = [
   'RCTAppDependencyProvider.h',
@@ -67,4 +68,19 @@ export async function removeCodegenAppLevelCode(
   );
 
   await Promise.allSettled([...androidPromises, ...iosPromises]);
+}
+
+/**
+ * Codegen generates a different set of files if the target is an app instead.
+ * The following commit adds support for a --source argument to support calling codegen as a library:
+ * https://github.com/facebook/react-native/commit/98b8f178110472e5fed97de80766c03b0b5e988c
+ * Here we just check if the --source argument is supported.
+ */
+export async function getCodegenCLISourceSupport(): Promise<boolean> {
+  const codegenCLIHelpOutput = await spawn('npx', [
+    '@react-native-community/cli',
+    'codegen',
+    '--help',
+  ]);
+  return codegenCLIHelpOutput.includes('--source');
 }
