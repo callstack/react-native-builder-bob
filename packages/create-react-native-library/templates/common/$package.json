@@ -171,9 +171,6 @@
         }
       ],
 <% } -%>
-<% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
-      "codegen",
-<% } -%>
       [
         "module",
         {
@@ -207,9 +204,6 @@
         "<%- project.name -%>View": "<%- project.name -%>View"
       }
     <% } -%>
-    },
-    "includesGeneratedCode": true
-    <% } else { -%>
     }
     <% } -%>
 <% } -%>
