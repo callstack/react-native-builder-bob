@@ -5,9 +5,7 @@ import dedent from 'dedent';
 import isGitDirty from 'is-git-dirty';
 import prompts, { type PromptObject } from './utils/prompts';
 import { loadConfig } from './utils/loadConfig';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports,import-x/no-commonjs
-const { name, version } = require('../package.json');
+import pack from '../package.json';
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -37,7 +35,11 @@ export async function init() {
   const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
   const result = loadConfig(root);
 
-  if (result?.config && pkg.devDependencies && name in pkg.devDependencies) {
+  if (
+    result?.config &&
+    pkg.devDependencies &&
+    pack.name in pkg.devDependencies
+  ) {
     const { shouldContinue } = await prompts({
       type: 'confirm',
       name: 'shouldContinue',
@@ -75,9 +77,10 @@ export async function init() {
   }
 
   pkg.devDependencies = Object.fromEntries(
-    [...Object.entries(pkg.devDependencies || {}), [name, `^${version}`]].sort(
-      ([a], [b]) => a.localeCompare(b)
-    )
+    [
+      ...Object.entries(pkg.devDependencies || {}),
+      [pack.name, `^${pack.version}`],
+    ].sort(([a], [b]) => a.localeCompare(b))
   );
 
   const questions: PromptObject[] = [
@@ -385,7 +388,7 @@ export async function init() {
     pkg.files = files;
   }
 
-  pkg[name] = {
+  pkg[pack.name] = {
     source,
     output,
     targets: targets.map((t: string) => {
