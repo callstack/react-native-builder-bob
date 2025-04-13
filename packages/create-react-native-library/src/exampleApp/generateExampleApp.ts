@@ -19,6 +19,8 @@ const FILES_TO_DELETE = [
   'tsconfig.json',
 ];
 
+const FILES_TO_MOVE = ['.bundle', 'Gemfile'];
+
 const PACKAGES_TO_REMOVE = [
   '@react-native/eslint-config',
   '@tsconfig/react-native',
@@ -42,14 +44,14 @@ const PACKAGES_TO_ADD_WEB = {
 
 export default async function generateExampleApp({
   config,
-  destination,
+  root,
   reactNativeVersion = 'latest',
 }: {
   config: TemplateConfiguration;
-  destination: string;
+  root: string;
   reactNativeVersion?: string;
 }) {
-  const directory = path.join(destination, 'example');
+  const directory = path.join(root, 'example');
 
   // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
   const testAppArgs = [
@@ -115,6 +117,13 @@ export default async function generateExampleApp({
   // Remove unnecessary files and folders
   for (const file of FILES_TO_DELETE) {
     await fs.remove(path.join(directory, file));
+  }
+
+  // Move files to the root
+  for (const file of FILES_TO_MOVE) {
+    if (await fs.pathExists(path.join(directory, file))) {
+      await fs.move(path.join(directory, file), path.join(root, file));
+    }
   }
 
   // Patch the example app's package.json

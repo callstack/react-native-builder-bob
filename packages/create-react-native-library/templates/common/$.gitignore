@@ -46,7 +46,7 @@ android.iml
 example/ios/Pods
 
 # Ruby
-example/vendor/
+/vendor/
 
 # node.js
 #
