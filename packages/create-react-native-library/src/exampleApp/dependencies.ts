@@ -16,7 +16,12 @@ export async function alignDependencyVersionsWithExampleApp(
     path.join(folder, 'example', 'package.json')
   );
 
-  const PACKAGES_TO_COPY = ['react', 'react-native', '@types/react'];
+  const PACKAGES_TO_COPY = [
+    'react',
+    'react-native',
+    '@types/react',
+    '@react-native/babel-preset',
+  ];
 
   if (
     config.example === 'vanilla' &&
