@@ -50,10 +50,14 @@ module.exports = function (api, options, cwd) {
         },
       ],
       require.resolve('@babel/preset-typescript'),
-      require.resolve('@babel/preset-flow'),
     ],
     plugins: [
       require.resolve('@babel/plugin-transform-strict-mode'),
+      [
+        require.resolve('babel-plugin-syntax-hermes-parser'),
+        { parseLangTypes: 'flow' },
+      ],
+      require.resolve('@babel/plugin-transform-flow-strip-types'),
       [
         require.resolve('./lib/babel'),
         {
