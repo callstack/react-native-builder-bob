@@ -1,4 +1,4 @@
-#import <<%- project.name -%>/RN<%- project.name -%>Spec.h>
+#import <<%- project.name -%>Spec/<%- project.name -%>Spec.h>
 
 @interface <%- project.name -%> : NSObject <Native<%- project.name -%>Spec>
 
