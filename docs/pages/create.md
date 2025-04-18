@@ -7,7 +7,7 @@ If you want to create your own React Native library, scaffolding the project can
 - Minimal boilerplate for libraries on which you can build upon
 - Example React Native app to test your library code
 - [TypeScript](https://www.typescriptlang.org/) to ensure type-safe code and better DX
-- Support for [Turbo Modules](https://reactnative.dev/docs/next/the-new-architecture/pillars-turbomodules) & [Fabric](https://reactnative.dev/docs/next/the-new-architecture/pillars-fabric-components)
+- Support for [Turbo Modules](https://reactnative.dev/docs/turbo-native-modules-introduction) & [Fabric](https://reactnative.dev/docs/fabric-native-components-introduction)
 - Support for [Kotlin](https://kotlinlang.org/) on Android & [Swift](https://developer.apple.com/swift/) on iOS
 - Support for C++ to write cross-platform native code
 - [Expo](https://expo.io/) for libraries without native code and web support
@@ -86,8 +86,8 @@ This creates a symlink to the library under `node_modules` which makes autolinki
 
 Once the project is created, you can follow the official React Native docs to learn the API for writing native modules and components:
 
-- [Native Modules](https://reactnative.dev/docs/native-modules-intro)
-- [Native UI Components for Android](https://reactnative.dev/docs/native-components-android)
-- [Native UI Components for iOS](https://reactnative.dev/docs/native-components-ios)
-- [Turbo Modules](https://reactnative.dev/docs/the-new-architecture/pillars-turbomodules)
-- [Fabric Components](https://reactnative.dev/docs/the-new-architecture/pillars-fabric-components)
+- [Native Modules](https://reactnative.dev/docs/legacy/native-modules-intro)
+- [Native UI Components for Android](https://reactnative.dev/docs/legacy/native-components-android)
+- [Native UI Components for iOS](https://reactnative.dev/docs/legacy/native-components-ios)
+- [Turbo Modules](https://reactnative.dev/docs/turbo-native-modules-introduction)
+- [Fabric Components](https://reactnative.dev/docs/fabric-native-components-introduction)
