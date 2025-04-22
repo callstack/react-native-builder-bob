@@ -1,46 +1,24 @@
 import path from 'path';
-import fs from 'fs-extra';
 import dedent from 'dedent';
 import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
 
-export async function printNextSteps(
-  local: boolean,
-  folder: string,
-  config: TemplateConfiguration
-) {
+export async function printNextSteps({
+  local,
+  folder,
+  config,
+  linkedLocalLibrary,
+  addedNitro,
+  packageManager,
+}: {
+  local: boolean;
+  folder: string;
+  config: TemplateConfiguration;
+  linkedLocalLibrary: boolean;
+  addedNitro: boolean;
+  packageManager: string;
+}) {
   if (local) {
-    let linked;
-
-    const packageManager = (await fs.pathExists(
-      path.join(process.cwd(), 'yarn.lock')
-    ))
-      ? 'yarn'
-      : 'npm';
-
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
-
-    if (await fs.pathExists(packageJsonPath)) {
-      const packageJson = await fs.readJSON(packageJsonPath);
-      const isReactNativeProject = Boolean(
-        packageJson.dependencies?.['react-native']
-      );
-
-      if (isReactNativeProject) {
-        packageJson.dependencies = packageJson.dependencies || {};
-        packageJson.dependencies[config.project.slug] =
-          packageManager === 'yarn'
-            ? `link:./${path.relative(process.cwd(), folder)}`
-            : `file:./${path.relative(process.cwd(), folder)}`;
-
-        await fs.writeJSON(packageJsonPath, packageJson, {
-          spaces: 2,
-        });
-
-        linked = true;
-      }
-    }
-
     console.log(
       dedent(`
       ${kleur.magenta(
@@ -48,13 +26,18 @@ export async function printNextSteps(
       )}${kleur.gray(':')}
 
       ${
-        (linked
+        (linkedLocalLibrary
           ? `- Run ${kleur.blue(
               `${packageManager} install`
             )} to link the library\n`
           : `- Link the library at ${kleur.blue(
               path.relative(process.cwd(), folder)
             )} based on your project setup\n`) +
+        (config.project.moduleConfig === 'nitro-modules' && !addedNitro
+          ? `- Run ${kleur.blue(
+              `${packageManager} add react-native-nitro-modules`
+            )} to install nitro modules \n`
+          : '') +
         `- Run ${kleur.blue(
           'pod install --project-directory=ios'
         )} to install dependencies with CocoaPods\n` +

@@ -19,6 +19,12 @@ import { assertNpxExists, assertUserInput } from './utils/assert';
 import { createInitialGitCommit } from './utils/initialCommit';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
+import {
+  addNitroDependencyToLocalLibrary,
+  linkLocalLibrary,
+  promptLocalLibrary,
+} from './utils/local';
+import { determinePackageManager } from './utils/packageManager';
 
 const FALLBACK_BOB_VERSION = '0.40.5';
 const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
@@ -143,7 +149,17 @@ async function create(_argv: yargs.Arguments<Args>) {
     spaces: 2,
   });
 
-  if (!local) {
+  const packageManager = await determinePackageManager();
+
+  let addedNitro = false;
+  let linkedLocalLibrary = false;
+  if (local) {
+    if (config.project.moduleConfig === 'nitro-modules') {
+      addedNitro = await addNitroDependencyToLocalLibrary(config);
+    }
+
+    linkedLocalLibrary = await linkLocalLibrary(config, folder, packageManager);
+  } else {
     await createInitialGitCommit(folder);
   }
 
@@ -153,33 +169,14 @@ async function create(_argv: yargs.Arguments<Args>) {
     )}!\n`
   );
 
-  await printNextSteps(local, folder, config);
-}
-
-async function promptLocalLibrary(argv: Args) {
-  let local = false;
-
-  if (typeof argv.local === 'boolean') {
-    local = argv.local;
-  } else {
-    const hasPackageJson = await fs.pathExists(
-      path.join(process.cwd(), 'package.json')
-    );
-
-    if (hasPackageJson) {
-      // If we're under a project with package.json, ask the user if they want to create a local library
-      const answers = await prompt({
-        type: 'confirm',
-        name: 'local',
-        message: `Looks like you're under a project folder. Do you want to create a local library?`,
-        initial: true,
-      });
-
-      local = answers.local;
-    }
-  }
-
-  return local;
+  await printNextSteps({
+    local,
+    folder,
+    config,
+    packageManager,
+    addedNitro,
+    linkedLocalLibrary,
+  });
 }
 
 async function promptPath(argv: Args, local: boolean) {
