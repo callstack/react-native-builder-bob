@@ -6,7 +6,12 @@ import yargs from 'yargs';
 import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
-import { printErrorHelp, printNextSteps, printUsedRNVersion } from './inform';
+import {
+  printErrorHelp,
+  printLocalLibNextSteps,
+  printNonLocalLibNextSteps,
+  printUsedRNVersion,
+} from './inform';
 import {
   acceptedArgs,
   createMetadata,
@@ -149,33 +154,43 @@ async function create(_argv: yargs.Arguments<Args>) {
     spaces: 2,
   });
 
+  const printSuccessMessage = () =>
+    spinner.succeed(
+      `Project created successfully at ${kleur.yellow(
+        path.relative(process.cwd(), folder)
+      )}!\n`
+    );
+
+  if (!local) {
+    await createInitialGitCommit(folder);
+
+    printSuccessMessage();
+
+    printNonLocalLibNextSteps(config);
+    return;
+  }
+
   const packageManager = await determinePackageManager();
 
   let addedNitro = false;
-  let linkedLocalLibrary = false;
-  if (local) {
-    if (config.project.moduleConfig === 'nitro-modules') {
-      addedNitro = await addNitroDependencyToLocalLibrary(config);
-    }
-
-    linkedLocalLibrary = await linkLocalLibrary(config, folder, packageManager);
-  } else {
-    await createInitialGitCommit(folder);
+  if (config.project.moduleConfig === 'nitro-modules') {
+    addedNitro = await addNitroDependencyToLocalLibrary(config);
   }
 
-  spinner.succeed(
-    `Project created successfully at ${kleur.yellow(
-      path.relative(process.cwd(), folder)
-    )}!\n`
+  const linkedLocalLibrary = await linkLocalLibrary(
+    config,
+    folder,
+    packageManager
   );
 
-  await printNextSteps({
-    local,
-    folder,
+  printSuccessMessage();
+
+  printLocalLibNextSteps({
     config,
     packageManager,
-    addedNitro,
     linkedLocalLibrary,
+    addedNitro,
+    folder,
   });
 }
 

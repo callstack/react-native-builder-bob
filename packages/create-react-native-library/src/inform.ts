@@ -3,24 +3,55 @@ import dedent from 'dedent';
 import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
 
-export async function printNextSteps({
-  local,
+export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
+  const platforms = {
+    ios: { name: 'iOS', color: 'cyan' },
+    android: { name: 'Android', color: 'green' },
+    ...(config.example === 'expo'
+      ? ({ web: { name: 'Web', color: 'blue' } } as const)
+      : null),
+  } as const;
+
+  console.log(
+    dedent(`
+      ${kleur.magenta(
+        `${kleur.bold('Get started')} with the project`
+      )}${kleur.gray(':')}
+
+        ${kleur.gray('$')} yarn
+      ${Object.entries(platforms)
+        .map(
+          ([script, { name, color }]) => `
+      ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
+        ':'
+      )}
+
+        ${kleur.gray('$')} yarn example ${script}`
+        )
+        .join('\n')}
+
+      ${kleur.yellow(
+        `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
+      )}
+    `)
+  );
+}
+
+export function printLocalLibNextSteps({
   folder,
   config,
   linkedLocalLibrary,
   addedNitro,
   packageManager,
 }: {
-  local: boolean;
   folder: string;
   config: TemplateConfiguration;
   linkedLocalLibrary: boolean;
   addedNitro: boolean;
   packageManager: string;
 }) {
-  if (local) {
-    console.log(
-      dedent(`
+  console.log(
+    dedent(`
       ${kleur.magenta(
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}
@@ -51,40 +82,7 @@ export async function printNextSteps({
 
       ${kleur.yellow(`Good luck!`)}
     `)
-    );
-  } else {
-    const platforms = {
-      ios: { name: 'iOS', color: 'cyan' },
-      android: { name: 'Android', color: 'green' },
-      ...(config.example === 'expo'
-        ? ({ web: { name: 'Web', color: 'blue' } } as const)
-        : null),
-    } as const;
-
-    console.log(
-      dedent(`
-      ${kleur.magenta(
-        `${kleur.bold('Get started')} with the project`
-      )}${kleur.gray(':')}
-
-        ${kleur.gray('$')} yarn
-      ${Object.entries(platforms)
-        .map(
-          ([script, { name, color }]) => `
-      ${kleur[color](`Run the example app on ${kleur.bold(name)}`)}${kleur.gray(
-        ':'
-      )}
-
-        ${kleur.gray('$')} yarn example ${script}`
-        )
-        .join('\n')}
-
-      ${kleur.yellow(
-        `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
-      )}
-    `)
-    );
-  }
+  );
 }
 
 export function printErrorHelp(message: string, error: Error) {
