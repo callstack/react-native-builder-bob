@@ -65,6 +65,16 @@ Using the `exports` field has a few benefits, such as:
 - It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
 - It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `module`, `react-native`, `production`, `development` etc.).
 
+### A note on `import.meta`
+
+The [`import.meta`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta) object is available in ESM. As per the spec, different tools may add different properties to it.
+
+For example, Node.js adds [`import.meta.resolve`](https://nodejs.org/api/esm.html#importmetaresolvespecifier) and more, Webpack adds [`import.meta.webpackHot`](https://webpack.js.org/api/module-variables/#importmetawebpackhot), [`import.meta.webpackContext`](https://webpack.js.org/api/module-variables/#importmetawebpackcontext) and more, Vite adds [`import.meta.env`](https://vite.dev/guide/env-and-mode) and more, etc. Most tools support the `import.meta.url` property, which is a URL string representing the module's location.
+
+Additionally, the `import.meta` syntax is currently not supported in [Metro](https://metrobundler.dev/) (React Native) and will result in a syntax error.
+
+So be careful when using properties from `import.meta`, as relying on properties only available in specific tools may lock your library into supporting only those specific tools. Also, since this is an ESM-only feature, you should avoid using it if you compile your library to CommonJS as well.
+
 ## Dual package setup
 
 The previously mentioned setup only works with tools that support ES modules. If you want to support tools that don't support ESM and use the CommonJS module system, you can configure a dual package setup.
@@ -173,6 +183,63 @@ With this approach, the ESM and CommonJS versions of the package are treated as 
 
 If the library relies on any state that can cause issues if 2 separate instances are loaded (e.g. global state, constructors, react context etc.), it's necessary to isolate the state into a separate CommonJS module that can be shared between the ESM and CommonJS builds.
 
+### Alternative approach
+
+An alternative approach to classic dual package setup is to use tool specific conditions instead of specifying both `import` and `require`. This way, each tool can load the appropriate build without resulting in a dual package hazard.
+
+For example, here is a setup that uses ESM for Webpack, Vite, Rollup, Metro (React Native) and Node.js, and CommonJS for the rest:
+
+```json
+{
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "exports": {
+    ".": {
+      "react-native": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.native.js"
+      },
+      "module": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "node": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "default": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  }
+}
+```
+
+Here, we specify 4 conditions:
+
+- `react-native`: Used when the library is imported in a React Native environment with Metro.
+- `module`: Used when the library is imported in a bundler such as Webpack, Vite or Rollup.
+- `node`: Used when the library is imported in Node.js.
+- `default`: Fallback used when the library is imported in an environment that doesn't support the other conditions.
+
+One thing to note is that TypeScript may need to be configured to resolve to the appropriate condition. It's pre-configured for React Native apps, but in other scenarios, it maybe necessary to specify `customConditions` in the `tsconfig.json` file:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "customConditions": ["module"]
+  }
+}
+```
+
+This is just an example to illustrate the idea. In practice, you may want to specify appropriate conditions for your library based on the tools you want to support.
+
+You can find a list of conditions supported in various tools in the [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+
 ## Compatibility
 
 [Node.js](https://nodejs.org) v12 and higher natively support ESM and the `exports` field. However, in a CommonJS environment, an ESM library can be loaded synchronously only in recent Node.js versions. The following Node.js versions support synchronous `require()` for ESM libraries without any flags or warnings:
@@ -183,7 +250,7 @@ If the library relies on any state that can cause issues if 2 separate instances
 
 Older versions can still load your library asynchronously using `import()` in CommonJS environments.
 
-Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
 
 [Metro](https://metrobundler.dev) enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the [`unstable_enablePackageExports` option to `true`](https://metrobundler.dev/docs/package-exports/) in the Metro configuration. If this is not enabled, Metro will use the entrypoint specified in the `main` field. Features such as [subpath exports](https://nodejs.org/api/packages.html#subpath-exports) and [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) will not work when `exports` supported is not enabled.
 
@@ -252,7 +319,7 @@ There are still a few things to keep in mind if you want your library to be ESM-
     ".": {
       "import": {
         "types": "./lib/typescript/module/src/index.d.ts",
-        "react-native": "./lib/modules/index.native.js",
+        "react-native": "./lib/module/index.native.js",
         "default": "./lib/module/index.js"
       },
       "require": {
@@ -262,6 +329,27 @@ There are still a few things to keep in mind if you want your library to be ESM-
       }
     },
     "./package.json": "./package.json"
+  }
+  ```
+
+  Or as a separate condition:
+
+  ```json
+  "exports": {
+    ".": {
+      "react-native": {
+        "types": "./lib/typescript/module/src/index.native.d.ts",
+        "default": "./lib/module/index.native.js"
+      },
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    },
   }
   ```
 
