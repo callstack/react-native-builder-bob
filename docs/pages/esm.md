@@ -225,7 +225,7 @@ Here, we specify 4 conditions:
 - `node`: Used when the library is imported in Node.js.
 - `default`: Fallback used when the library is imported in an environment that doesn't support the other conditions.
 
-One thing to note is that TypeScript may need to be configured to resolve to the appropriate condition. It's pre-configured for React Native apps, but in other scenarios, it maybe necessary to specify `customConditions` in the `tsconfig.json` file:
+One thing to note is that TypeScript may need to be configured to resolve to the appropriate condition. It's pre-configured for React Native apps, but in other scenarios, it maybe necessary to specify [`customConditions`](https://www.typescriptlang.org/tsconfig/#customConditions) in the `tsconfig.json` file:
 
 ```json
 {
