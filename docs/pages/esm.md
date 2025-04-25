@@ -238,7 +238,7 @@ One thing to note is that TypeScript may need to be configured to resolve to the
 
 This is just an example to illustrate the idea. In practice, you may want to specify appropriate conditions for your library based on the tools you want to support.
 
-You can find a list of conditions supported in various tools in the [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+You can find a list of conditions supported in various tools in the [Runtime Keys](https://runtime-keys.proposal.wintercg.org/) proposal specification, [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
 
 ## Compatibility
 
@@ -250,7 +250,7 @@ You can find a list of conditions supported in various tools in the [Node.js doc
 
 Older versions can still load your library asynchronously using `import()` in CommonJS environments.
 
-Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and the [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
+Most modern tools such as [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Vite](https://vitejs.dev) etc. also support ESM and the `exports` field. See the supported conditions in the [Runtime Keys](https://runtime-keys.proposal.wintercg.org/) proposal specification, [Node.js documentation](https://nodejs.org/docs/latest/api/packages.html#community-conditions-definitions) and [Webpack documentation](https://webpack.js.org/guides/package-exports/#conditions).
 
 [Metro](https://metrobundler.dev) enables support for `package.json` exports by default from version [0.82.0](https://github.com/facebook/metro/releases/tag/v0.82.0). In previous versions, experimental support can be enabled by setting the [`unstable_enablePackageExports` option to `true`](https://metrobundler.dev/docs/package-exports/) in the Metro configuration. If this is not enabled, Metro will use the entrypoint specified in the `main` field. Features such as [subpath exports](https://nodejs.org/api/packages.html#subpath-exports) and [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) will not work when `exports` supported is not enabled.
 
