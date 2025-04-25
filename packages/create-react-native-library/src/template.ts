@@ -39,6 +39,7 @@ export type TemplateConfiguration = {
     email: string;
     url: string;
   };
+  /** Git repo URL */
   repo: string;
   example: ExampleApp;
   year: number;
