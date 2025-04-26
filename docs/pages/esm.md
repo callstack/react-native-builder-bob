@@ -47,7 +47,7 @@ To make use of the output files, ensure that your `package.json` file contains t
 },
 ```
 
-The `main` field is for tools that don't support the `exports` field (e.g. [Metro](https://metrobundler.dev) < 0.82.0).
+The `main` field is for tools that don't support the `exports` field (e.g. [Metro](https://metrobundler.dev) < 0.82.0). The `types` field is for legacy TypeScript setups that use `moduleResolution: "node10"` or `moduleResolution: "node"`.
 
 The `exports` field is used by Node.js 12+, modern browsers and tools to determine the correct entry point. The entrypoint is specified in the `.` key and will be used when the library is imported or required directly (e.g. `import 'my-library'` or `require('my-library')`).
 
@@ -198,7 +198,7 @@ For example, here is a setup that uses ESM for Webpack, Vite, Rollup, Metro (Rea
     ".": {
       "react-native": {
         "types": "./lib/typescript/module/src/index.d.ts",
-        "default": "./lib/module/index.native.js"
+        "default": "./lib/module/index.js"
       },
       "node": {
         "types": "./lib/typescript/module/src/index.d.ts",
