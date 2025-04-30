@@ -13,8 +13,9 @@ export async function promptLocalLibrary(argv: Args): Promise<boolean> {
     return argv.local;
   }
 
-  const hasPackageJson = findAppPackageJsonPath() !== null;
-  if (!hasPackageJson) {
+  const packageJsonPath = await findAppPackageJsonPath();
+
+  if (packageJsonPath === null) {
     return false;
   }
 
