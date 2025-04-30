@@ -24,8 +24,6 @@ npx react-native-builder-bob@latest init
 
 This will ask you a few questions and add the required configuration and scripts for building the code. The code will be compiled automatically when the package is published.
 
-> Note: the `init` command doesn't add the [`codegen` target](#codegen) yet. You can either add it manually or create a new library with `create-react-native-library`.
-
 You can find details on what exactly it adds in the [Manual configuration](#manual-configuration) section.
 
 ## Manual configuration
@@ -46,9 +44,7 @@ To configure your project manually, follow these steps:
      "output": "lib",
      "targets": [
        ["module", { "esm": true }],
-       ["commonjs", { "esm": true }],
        "typescript",
-       "codegen"
      ]
    }
    ```
@@ -119,18 +115,6 @@ To configure your project manually, follow these steps:
    ```
 
    This makes sure that Jest doesn't try to run the tests in the generated files.
-
-7. Configure [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)
-
-   If your library supports the [New React Native Architecture](https://reactnative.dev/architecture/landing-page), you should also configure Codegen. This is not required for libraries that only support the old architecture.
-
-   You can follow the [Official Codegen Setup Guide](https://reactnative.dev/docs/the-new-architecture/using-codegen) to enable Codegen.
-
-   It's also recommended to ship your Codegen generated scaffold code with your library since it has numerous benefits. To see the benefits and implement this behavior, you can see the [Official Codegen Shipping Guide](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
-
-   See [How to opt-out of shipping the Codegen generated code](./faq.md#how-to-opt-out-of-shipping-codegen-generated-scaffold-code) if you don't want to ship the Codegen generated scaffold code.
-
-   > Note: If you enable Codegen generated code shipping, React Native won't build the scaffold code automatically when you build your test app. You need to rebuild the codegen scaffold code manually each time you make changes to your spec. If you want to automate this process, you can create a new project with `create-react-native-library` and inspect the example app.
 
 And we're done 🎉
 
@@ -281,9 +265,120 @@ If you need to support legacy setups that use `moduleResolution: node10` or `mod
 
 #### `codegen`
 
-Enable generating the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code, which is used with the New React Native Architecture.
+Enable generating the [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen) scaffold code when building the library.
 
-You can ensure your Codegen generated scaffold code is stable through different React Native versions by shipping it with your library. You can find more in the [React Native Official Docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries).
+If you use this `target`, you'll also want to use `"includesGeneratedCode": true` to ship the generated code with your library. Before you do so, make sure to [read the official docs](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries) to understand the advantages and tradeoffs of this approach.
+
+If you want to ship codegen generated code with your library, you can do the following steps to integrate it with the library's workflow:
+
+1. Add the `codegen` target to the `react-native-builder-bob` field in your `package.json` or `bob.config.js`:
+
+   ```diff
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      // …
+   +  "codegen"
+    ]
+   ```
+
+   This will enable the codegen script to run when you publish the library (if `bob build` is configured to be run on publish).
+
+2. Add `@react-native-community/cli` as a `devDependency` in your `package.json`:
+
+   ```diff
+   "devDependencies": {
+     // …
+   + "@react-native-community/cli": "^x.x.x"
+   }
+   ```
+
+   For the `@react-native-community/cli` version, refer to the `example/package.json` file. The version should be the same as the one used in the `example` app.
+
+3. Add `"includesGeneratedCode": true` and `"outputDir"` to the `codegenConfig` field in your `package.json`:
+
+   ```diff
+   "codegenConfig": {
+     // …
+   + "outputDir": {
+   +   "ios": "ios/generated",
+   +   "android": "android/generated"
+   + },
+   + "includesGeneratedCode": true
+   }
+   ```
+
+4. Update imports in your ios code to use the new paths for the generated code:
+
+   - If you have a Turbo Module, replace `YourProjectNameSpec.h` with `YourProjectName/YourProjectNameSpec.h`:
+
+     ```diff
+     - #import <YourProjectNameSpec/YourProjectNameSpec.h>
+     + #import <YourProjectName/YourProjectNameSpec.h>
+     ```
+
+   - If you have a Fabric View, replace `react/renderer/components/YourProjectNameViewSpec/` with `YourProjectName/`:
+
+     ```diff
+     - #import <react/renderer/components/YourProjectNameViewSpec/ComponentDescriptors.h>
+     - #import <react/renderer/components/YourProjectNameViewSpec/EventEmitters.h>
+     - #import <react/renderer/components/YourProjectNameViewSpec/Props.h>
+     - #import <react/renderer/components/YourProjectNameViewSpec/RCTComponentViewHelpe
+     rs.h>
+     + #import <YourProjectName/ComponentDescriptors.h>
+     + #import <YourProjectName/EventEmitters.h>
+     + #import <YourProjectName/Props.h>
+     + #import <YourProjectName/RCTComponentViewHelpers.h>
+     ```
+
+5. Add a `react-native.config.js` at the root with the correct `cmakeListsPath`:
+
+   ```js
+   /**
+    * @type {import('@react-native-community/cli-types').UserDependencyConfig}
+    */
+   module.exports = {
+     dependency: {
+       platforms: {
+         android: {
+           cmakeListsPath: 'generated/jni/CMakeLists.txt',
+         },
+       },
+     },
+   };
+   ```
+
+   This makes sure that gradle will pickup the `CMakeLists.txt` file generated by the codegen script on Android.
+
+6. Add a gradle task to `example/android/app/build.gradle` to automatically run the codegen script when building the example app:
+
+   ```groovy
+   tasks.register('invokeLibraryCodegen', Exec) {
+     workingDir "$rootDir/../../"
+
+     def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+
+     if (isWindows) {
+       commandLine 'cmd', '/c', 'npx bob build --target codegen'
+     } else {
+       commandLine 'sh', '-c', 'npx bob build --target codegen'
+     }
+   }
+
+   preBuild.dependsOn invokeLibraryCodegen
+   ```
+
+7. Add a `pre_install` hook to `example/ios/Podfile` to automatically run the codegen script when installing pods:
+
+   ```ruby
+   pre_install do |installer|
+     system("cd ../../ && npx bob build --target codegen")
+   end
+   ```
+
+   This will likely be inside the `target 'YourAppName' do` block.
+
+And you're done! Make sure to run `pod install` in the `example/ios` folder and then run the example app to make sure everything works.
 
 #### `custom`
 

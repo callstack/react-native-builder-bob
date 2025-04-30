@@ -3,7 +3,6 @@ import kleur from 'kleur';
 import ora from 'ora';
 import path from 'path';
 import yargs from 'yargs';
-import { addCodegenBuildScript } from './exampleApp/addCodegenBuildScript';
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import {
@@ -131,19 +130,7 @@ async function create(_argv: yargs.Arguments<Args>) {
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
   if (config.example !== 'none') {
-    await alignDependencyVersionsWithExampleApp(
-      rootPackageJson,
-      folder,
-      config
-    );
-  }
-
-  if (
-    config.example === 'vanilla' &&
-    (config.project.moduleConfig === 'turbo-modules' ||
-      config.project.viewConfig === 'fabric-view')
-  ) {
-    addCodegenBuildScript(folder);
+    await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
   }
 
   const libraryMetadata = createMetadata(answers);
