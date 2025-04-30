@@ -14,7 +14,7 @@ const { loadConfig } = require('./lib/utils/loadConfig');
  * @param {object} options.pkg Content of package.json of the library
  * @returns {import('@babel/core').TransformOptions} Babel configuration
  */
-const getConfig = (defaultConfig, { root, pkg }) => {
+const getConfig = (defaultConfig, { root }) => {
   const result = loadConfig(root);
 
   if (result == null) {
@@ -33,20 +33,6 @@ const getConfig = (defaultConfig, { root, pkg }) => {
     ...defaultConfig,
     overrides: [
       ...(defaultConfig.overrides == null ? [] : defaultConfig.overrides),
-      {
-        exclude: /\/node_modules\//,
-        plugins: [
-          [
-            require.resolve('babel-plugin-module-resolver'),
-            {
-              extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
-              alias: {
-                [pkg.name]: path.join(root, pkg.source),
-              },
-            },
-          ],
-        ],
-      },
       {
         include: path.join(root, source),
         presets: [

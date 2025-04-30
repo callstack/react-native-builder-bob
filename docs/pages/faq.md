@@ -73,9 +73,7 @@ There are 2 parts to this process.
 
    The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. We configure several tools to make this work:
 
-   - [Babel](https://babeljs.io) is configured to use the alias in `example/babel.config.js` using [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver). This transforms the imports to point to the source code instead.
-   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, and to use the appropriate peer dependencies. This configuration exists in the `example/metro.config.js` file.
-   - [Webpack](https://webpack.js.org/) is configured to compile the library source code when running on the Web. This configuration exists in the `example/webpack.config.js` file.
+   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, to use the appropriate peer dependencies, and to import source code of the library in the example. This configuration exists in the `example/metro.config.js` file.
    - [TypeScript](https://www.typescriptlang.org/) is configured to use the source code for type checking by using the `paths` property under `compilerOptions`. This configuration exists in the `tsconfig.json` file at the root.
 
 2. **Linking the native code**
