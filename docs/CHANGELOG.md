@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.5](https://github.com/callstack/react-native-builder-bob/compare/docs@0.6.4...docs@0.6.5) (2025-04-30)
+
+### Bug Fixes
+
+- don't ship generated code with the library ([#819](https://github.com/callstack/react-native-builder-bob/issues/819)) ([d369d18](https://github.com/callstack/react-native-builder-bob/commit/d369d18ed67edcc66cb8da67266e769be3ad271d)) - by @satya164
+
 ## [0.6.4](https://github.com/callstack/react-native-builder-bob/compare/docs@0.6.3...docs@0.6.4) (2025-04-08)
 
 ### Bug Fixes

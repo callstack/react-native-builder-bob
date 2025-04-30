@@ -3,11 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.7](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.6...react-native-builder-bob@0.40.7) (2025-04-30)
+
+### Bug Fixes
+
+- fix schema for configFile option ([5bec132](https://github.com/callstack/react-native-builder-bob/commit/5bec132fe73fb56b1870c9d357f7af91c9546e79)) - by @
+- migrate to babel-plugin-syntax-hermes-parser ([#822](https://github.com/callstack/react-native-builder-bob/issues/822)) ([a797db3](https://github.com/callstack/react-native-builder-bob/commit/a797db31ff02072e1f4ecf722b11872113d9d190)), closes [/github.com/facebook/react-native/issues/50683#issuecomment-2804970384](https://github.com//github.com/facebook/react-native/issues/50683/issues/issuecomment-2804970384) - by @huntie
+
 ## [0.40.6](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.5...react-native-builder-bob@0.40.6) (2025-04-11)
 
 ### Bug Fixes
 
-* pass source flag to codegen cli when possible ([#815](https://github.com/callstack/react-native-builder-bob/issues/815)) ([7724e47](https://github.com/callstack/react-native-builder-bob/commit/7724e474d0b92d08a3a7b2946946114339acc19e)) - by @atlj
+- pass source flag to codegen cli when possible ([#815](https://github.com/callstack/react-native-builder-bob/issues/815)) ([7724e47](https://github.com/callstack/react-native-builder-bob/commit/7724e474d0b92d08a3a7b2946946114339acc19e)) - by @atlj
 
 ## [0.40.5](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.4...react-native-builder-bob@0.40.5) (2025-04-09)
 

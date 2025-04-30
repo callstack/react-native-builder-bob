@@ -3,11 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.9](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.8...create-react-native-library@0.49.9) (2025-04-30)
+
+### Bug Fixes
+
+- don't ship generated code with the library ([#819](https://github.com/callstack/react-native-builder-bob/issues/819)) ([d369d18](https://github.com/callstack/react-native-builder-bob/commit/d369d18ed67edcc66cb8da67266e769be3ad271d)) - by @satya164
+- fix typo in podspec ([8ed72ef](https://github.com/callstack/react-native-builder-bob/commit/8ed72efd555db2405a78c5b6ca746c18443ac18b)) - by @satya164
+- install nitro modules dependency automatically for local modules ([#828](https://github.com/callstack/react-native-builder-bob/issues/828)) ([9ffb17c](https://github.com/callstack/react-native-builder-bob/commit/9ffb17cb038e9f276d19b87b649e0ec3a6a82e6b)) - by @atlj
+- migrate to babel-plugin-syntax-hermes-parser ([#822](https://github.com/callstack/react-native-builder-bob/issues/822)) ([a797db3](https://github.com/callstack/react-native-builder-bob/commit/a797db31ff02072e1f4ecf722b11872113d9d190)), closes [/github.com/facebook/react-native/issues/50683#issuecomment-2804970384](https://github.com//github.com/facebook/react-native/issues/50683/issues/issuecomment-2804970384) - by @huntie
+- move Gemfile to the root ([bc1b53e](https://github.com/callstack/react-native-builder-bob/commit/bc1b53e789eda7864b25ea5a4329425a88a84e13)) - by @satya164
+- use react native babel config for node_modules ([#823](https://github.com/callstack/react-native-builder-bob/issues/823)) ([a260218](https://github.com/callstack/react-native-builder-bob/commit/a260218a99443cac14106fff76321f32fbde32c7)), closes [#747](https://github.com/callstack/react-native-builder-bob/issues/747) - by @satya164
+
 ## [0.49.8](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.7...create-react-native-library@0.49.8) (2025-04-11)
 
 ### Bug Fixes
 
-* pass source flag to codegen cli when possible ([#815](https://github.com/callstack/react-native-builder-bob/issues/815)) ([7724e47](https://github.com/callstack/react-native-builder-bob/commit/7724e474d0b92d08a3a7b2946946114339acc19e)) - by @atlj
+- pass source flag to codegen cli when possible ([#815](https://github.com/callstack/react-native-builder-bob/issues/815)) ([7724e47](https://github.com/callstack/react-native-builder-bob/commit/7724e474d0b92d08a3a7b2946946114339acc19e)) - by @atlj
 
 ## [0.49.7](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.6...create-react-native-library@0.49.7) (2025-04-09)
 
