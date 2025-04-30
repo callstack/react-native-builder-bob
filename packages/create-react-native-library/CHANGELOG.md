@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.10](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.9...create-react-native-library@0.49.10) (2025-04-30)
+
+### Bug Fixes
+
+- fix incorrect local library prompt. closes [#830](https://github.com/callstack/react-native-builder-bob/issues/830) ([555f84a](https://github.com/callstack/react-native-builder-bob/commit/555f84a0805ee8d1a29a8df788929b148c53bcb3)) - by @satya164
+
 ## [0.49.9](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.8...create-react-native-library@0.49.9) (2025-04-30)
 
 ### Bug Fixes
