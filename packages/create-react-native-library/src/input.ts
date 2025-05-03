@@ -1,11 +1,12 @@
+import fs from 'fs-extra';
 import githubUsername from 'github-username';
+import path from 'path';
 import validateNpmPackage from 'validate-npm-package-name';
 import type yargs from 'yargs';
 import { version } from '../package.json';
+import { SUPPORTED_REACT_NATIVE_VERSION } from './constants';
 import type { Question } from './utils/prompt';
 import { spawn } from './utils/spawn';
-import fs from 'fs-extra';
-import path from 'path';
 
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'js';
 
@@ -91,59 +92,57 @@ const TYPE_CHOICES: {
 ];
 
 export const acceptedArgs = {
-  slug: {
+  'slug': {
     description: 'Name of the npm package',
     type: 'string',
   },
-  description: {
+  'description': {
     description: 'Description of the npm package',
     type: 'string',
   },
-  authorName: {
+  'author-name': {
     description: 'Name of the package author',
     type: 'string',
   },
-  authorEmail: {
+  'author-email': {
     description: 'Email address of the package author',
     type: 'string',
   },
-  authorUrl: {
+  'author-url': {
     description: 'URL for the package author',
     type: 'string',
   },
-  repoUrl: {
+  'repo-url': {
     description: 'URL for the repository',
     type: 'string',
   },
-  languages: {
+  'languages': {
     description: 'Languages you want to use',
     choices: LANGUAGE_CHOICES.map(({ value }) => value),
   },
-  type: {
+  'type': {
     description: 'Type of library you want to develop',
     choices: TYPE_CHOICES.map(({ value }) => value),
   },
-  reactNativeVersion: {
-    description: 'Version of React Native to use, uses latest if not specified',
+  'react-native-version': {
+    description: 'Version of React Native to use',
     type: 'string',
+    default: SUPPORTED_REACT_NATIVE_VERSION,
   },
-  local: {
+  'local': {
     description: 'Whether to create a local library',
     type: 'boolean',
   },
-  example: {
+  'example': {
     description: 'Type of the example app to create',
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
-  interactive: {
+  'interactive': {
     description: 'Whether to run in interactive mode',
     type: 'boolean',
   },
-} as const satisfies Record<
-  Exclude<keyof Answers, 'name' | 'directory'>,
-  yargs.Options
->;
+} as const satisfies Record<string, yargs.Options>;
 
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 

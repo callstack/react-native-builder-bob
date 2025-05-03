@@ -3,6 +3,11 @@ import kleur from 'kleur';
 import ora from 'ora';
 import path from 'path';
 import yargs from 'yargs';
+import {
+  FALLBACK_BOB_VERSION,
+  FALLBACK_NITRO_MODULES_VERSION,
+  SUPPORTED_REACT_NATIVE_VERSION,
+} from './constants';
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import {
@@ -20,17 +25,13 @@ import {
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import { assertNpxExists } from './utils/assert';
 import { createInitialGitCommit } from './utils/initialCommit';
-import { prompt } from './utils/prompt';
-import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 import {
   addNitroDependencyToLocalLibrary,
   linkLocalLibrary,
 } from './utils/local';
 import { determinePackageManager } from './utils/packageManager';
-
-const FALLBACK_BOB_VERSION = '0.40.5';
-const FALLBACK_NITRO_MODULES_VERSION = '0.22.1';
-const SUPPORTED_REACT_NATIVE_VERSION = '0.78.2';
+import { prompt } from './utils/prompt';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
 type Args = Partial<Answers> & {
   name?: string;
@@ -68,15 +69,9 @@ async function create(_argv: Args) {
 
   const questions = await createQuestions(argv);
 
-  const promptAnswers = await prompt<Answers, typeof argv>(questions, argv, {
+  const answers = await prompt<Answers, typeof argv>(questions, argv, {
     interactive: argv.interactive,
   });
-
-  const answers = {
-    ...promptAnswers,
-    reactNativeVersion:
-      promptAnswers.reactNativeVersion ?? SUPPORTED_REACT_NATIVE_VERSION,
-  };
 
   const bobVersion = await bobVersionPromise;
 
