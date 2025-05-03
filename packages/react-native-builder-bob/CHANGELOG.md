@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.8](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.7...react-native-builder-bob@0.40.8) (2025-05-03)
+
+### Bug Fixes
+
+- add missing dependency for bob ([4ac8987](https://github.com/callstack/react-native-builder-bob/commit/4ac89870541015467890b0b854d6029c53f3b494)) - by @satya164
+
 ## [0.40.7](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.6...react-native-builder-bob@0.40.7) (2025-04-30)
 
 ### Bug Fixes
