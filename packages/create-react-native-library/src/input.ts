@@ -4,19 +4,8 @@ import type yargs from 'yargs';
 import { version } from '../package.json';
 import type { Question } from './utils/prompt';
 import { spawn } from './utils/spawn';
-
-export type ArgName =
-  | 'slug'
-  | 'description'
-  | 'authorName'
-  | 'authorEmail'
-  | 'authorUrl'
-  | 'repoUrl'
-  | 'languages'
-  | 'type'
-  | 'local'
-  | 'example'
-  | 'reactNativeVersion';
+import fs from 'fs-extra';
+import path from 'path';
 
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'js';
 
@@ -101,7 +90,7 @@ const TYPE_CHOICES: {
   },
 ];
 
-export const acceptedArgs: Record<ArgName, yargs.Options> = {
+export const acceptedArgs = {
   slug: {
     description: 'Name of the npm package',
     type: 'string',
@@ -147,13 +136,19 @@ export const acceptedArgs: Record<ArgName, yargs.Options> = {
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
-} as const;
+  interactive: {
+    description: 'Whether to run in interactive mode',
+    type: 'boolean',
+  },
+} as const satisfies Record<
+  Exclude<keyof Answers, 'name' | 'directory'>,
+  yargs.Options
+>;
 
-export type Args = Record<ArgName | 'name', string>;
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
 export type Answers = {
-  name: string;
+  directory: string;
   slug: string;
   description: string;
   authorName: string;
@@ -165,19 +160,20 @@ export type Answers = {
   example: ExampleApp;
   reactNativeVersion: string;
   local?: boolean;
+  interactive?: boolean;
 };
 
 export async function createQuestions({
-  basename,
+  name,
   local,
 }: {
-  basename: string;
-  local: boolean;
+  name?: string;
+  local?: boolean;
 }) {
-  let name, email;
+  let fullname, email;
 
   try {
-    name = await spawn('git', ['config', '--get', 'user.name']);
+    fullname = await spawn('git', ['config', '--get', 'user.name']);
     email = await spawn('git', ['config', '--get', 'user.email']);
   } catch (e) {
     // Ignore error
@@ -185,14 +181,57 @@ export async function createQuestions({
 
   const questions: Question<keyof Answers>[] = [
     {
+      type:
+        local == null &&
+        (await fs.pathExists(path.join(process.cwd(), 'package.json')))
+          ? 'confirm'
+          : null,
+      name: 'local',
+      message: `Looks like you're under a project folder. Do you want to create a local library?`,
+      initial: local,
+      default: false,
+    },
+    {
+      type: (_, answers) => (name && !(answers.local ?? local) ? null : 'text'),
+      name: 'directory',
+      message: `Where do you want to create the library?`,
+      initial: (_: string, answers: Answers) => {
+        if ((answers.local ?? local) && name && !name?.includes('/')) {
+          return `modules/${name}`;
+        }
+
+        return name ?? '';
+      },
+      validate: (input) => {
+        if (!input) {
+          return 'Cannot be empty';
+        }
+
+        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
+          return 'Folder already exists';
+        }
+
+        return true;
+      },
+      default: name,
+    },
+    {
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
-      initial: validateNpmPackage(basename).validForNewPackages
-        ? /^(@|react-native)/.test(basename)
-          ? basename
-          : `react-native-${basename}`
-        : undefined,
+      initial: (_: string, answers: Answers) => {
+        const basename = path.basename(answers.directory ?? name ?? '');
+
+        if (validateNpmPackage(basename).validForNewPackages) {
+          if (/^(@|react-native)/.test(basename)) {
+            return basename;
+          }
+
+          return `react-native-${basename}`;
+        }
+
+        return '';
+      },
       validate: (input) =>
         validateNpmPackage(input).validForNewPackages ||
         'Must be a valid npm package name',
@@ -204,14 +243,14 @@ export async function createQuestions({
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     {
-      type: local ? null : 'text',
+      type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'authorName',
       message: 'What is the name of package author?',
-      initial: name,
+      initial: fullname,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     {
-      type: local ? null : 'text',
+      type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
       initial: email,
@@ -219,13 +258,13 @@ export async function createQuestions({
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     {
-      type: local ? null : 'text',
+      type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
       // @ts-expect-error this is supported, but types are wrong
-      initial: async (previous: string) => {
+      initial: async (_: string, answers: Answers) => {
         try {
-          const username = await githubUsername(previous);
+          const username = await githubUsername(answers.authorEmail);
 
           return `https://github.com/${username}`;
         } catch (e) {
@@ -237,7 +276,7 @@ export async function createQuestions({
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
-      type: local ? null : 'text',
+      type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
       initial: (_: string, answers: Answers) => {
@@ -303,8 +342,9 @@ export async function createQuestions({
 
 export function createMetadata(answers: Answers) {
   // Some of the passed args can already be derived from the generated package.json file.
-  const ignoredAnswers: (keyof Answers)[] = [
+  const ignoredAnswers: (keyof Answers | 'name')[] = [
     'name',
+    'directory',
     'slug',
     'description',
     'authorName',
@@ -314,6 +354,7 @@ export function createMetadata(answers: Answers) {
     'example',
     'reactNativeVersion',
     'local',
+    'interactive',
   ];
 
   type AnswerEntries<T extends keyof Answers = keyof Answers> = [
