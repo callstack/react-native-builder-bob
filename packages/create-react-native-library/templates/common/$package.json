@@ -193,7 +193,6 @@
     "jsSrcsDir": "src",
     "android": {
       "javaPackageName": "com.<%- project.package %>"
-    <% if (example === 'vanilla') { -%>
     <% if (project.viewConfig === 'fabric-view') { -%>
     },
     "ios": {
@@ -202,7 +201,6 @@
       }
     <% } -%>
     }
-    <% } -%>
 <% } -%>
   }
 }
