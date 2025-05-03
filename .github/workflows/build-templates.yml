@@ -1,6 +1,8 @@
 name: Build template
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
   push:
     branches:
       - main
@@ -65,17 +67,26 @@ jobs:
       - name: Create library
         run: |
           rm -rf ${{ env.work_dir }} # Workaround for tests failing intermittently
-          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
-            --slug @bob/react-native-test \
-            --description test \
-            --author-name test \
-            --author-email test@test \
-            --author-url https://test.test \
-            --repo-url https://test.test \
-            --type ${{ matrix.type.name }} \
-            --languages ${{ matrix.type.language }} \
-            --example ${{ matrix.type.language == 'js' && 'expo' || 'vanilla' }} \
-            --no-local
+
+          args=(
+            --slug @bob/react-native-test
+            --description test
+            --author-name test
+            --author-email test@test
+            --author-url https://test.test
+            --repo-url https://test.test
+            --type ${{ matrix.type.name }}
+            --languages ${{ matrix.type.language }}
+            --example ${{ matrix.type.language == 'js' && 'expo' || 'vanilla' }}
+          )
+
+          if [[ ${{ github.event_name }} == 'schedule' ]]; then
+            args+=(
+              --react-native-version latest
+            )
+          fi
+
+          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} ${args[@]}
 
       - name: Restore dependencies of library
         id: library-yarn-cache
