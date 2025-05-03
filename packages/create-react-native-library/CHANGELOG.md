@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.0...create-react-native-library@0.50.1) (2025-05-03)
+
+### Bug Fixes
+
+- use kebab case for CLI arguments ([b81d4e4](https://github.com/callstack/react-native-builder-bob/commit/b81d4e485561061f808f57d2f8ae030b3cd880ae)) - by @satya164
+
 # [0.50.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.49.10...create-react-native-library@0.50.0) (2025-05-03)
 
 ### Bug Fixes
