@@ -244,6 +244,12 @@ jobs:
             ${{ env.work_dir }}/**/ios/Podfile.lock
           key: ${{ steps.library-cocoapods-cache.outputs.cache-primary-key }}
 
+      - name: Use appropriate Xcode version
+        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+
       - name: Build example (iOS)
         if: env.ios_build == 1
         working-directory: ${{ env.work_dir }}
