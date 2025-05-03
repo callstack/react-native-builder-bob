@@ -60,6 +60,7 @@
     "kleur": "^4.1.4",
     "metro-config": "^0.80.9",
     "prompts": "^2.4.2",
+    "react-native-monorepo-config": "^0.1.7",
     "which": "^2.0.2",
     "yargs": "^17.5.1"
   },

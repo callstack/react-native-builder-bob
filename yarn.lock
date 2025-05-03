@@ -7335,7 +7335,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.3.2":
+"fast-glob@npm:^3.3.2, fast-glob@npm:^3.3.3":
   version: 3.3.3
   resolution: "fast-glob@npm:3.3.3"
   dependencies:
@@ -12353,6 +12353,7 @@ __metadata:
     mock-fs: ^5.2.0
     mock-stdin: ^1.0.0
     prompts: ^2.4.2
+    react-native-monorepo-config: ^0.1.7
     vitest: ^3.1.1
     which: ^2.0.2
     yargs: ^17.5.1
@@ -12360,6 +12361,16 @@ __metadata:
     bob: bin/bob
   languageName: unknown
   linkType: soft
+
+"react-native-monorepo-config@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "react-native-monorepo-config@npm:0.1.7"
+  dependencies:
+    escape-string-regexp: ^5.0.0
+    fast-glob: ^3.3.3
+  checksum: 828b8132c0121f23993b34a4a979971b80061ff8810ff1275fc26e76a264d44bad14d219990013a0f4b705ac8e64a270549fbd906bfd4217d468f6aa08ec7712
+  languageName: node
+  linkType: hard
 
 "react@npm:^18.2.0":
   version: 18.2.0
