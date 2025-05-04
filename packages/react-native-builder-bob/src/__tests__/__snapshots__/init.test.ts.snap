@@ -9,12 +9,12 @@ exports[`initializes the configuration 1`] = `
   },
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
     "./package.json": "./package.json"
   },
-  "source": "./src/index.ts",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "scripts": {

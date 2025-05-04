@@ -19,8 +19,6 @@ const FILES_TO_DELETE = [
   'tsconfig.json',
 ];
 
-const FILES_TO_MOVE = ['.bundle', 'Gemfile'];
-
 const PACKAGES_TO_REMOVE = [
   '@react-native/eslint-config',
   '@tsconfig/react-native',
@@ -119,13 +117,6 @@ export default async function generateExampleApp({
     await fs.remove(path.join(directory, file));
   }
 
-  // Move files to the root
-  for (const file of FILES_TO_MOVE) {
-    if (await fs.pathExists(path.join(directory, file))) {
-      await fs.move(path.join(directory, file), path.join(root, file));
-    }
-  }
-
   // Patch the example app's package.json
   const pkg = await fs.readJSON(path.join(directory, 'package.json'));
 
@@ -142,7 +133,7 @@ export default async function generateExampleApp({
   const SCRIPTS_TO_ADD = {
     'build:android':
       'react-native build-android --extra-params "--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a"',
-    'build:ios': `react-native build-ios --scheme ${config.project.name}Example --mode Debug --extra-params "-sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO"`,
+    'build:ios': `react-native build-ios --mode Debug`,
   };
 
   if (config.example === 'vanilla') {

@@ -257,13 +257,20 @@ export async function init() {
 
     if (targets.includes('commonjs') && targets.includes('module')) {
       exportsField['.'] = {
+        source: entries.source,
         import: importField,
         require: requireField,
       };
     } else if (targets.includes('commonjs')) {
-      exportsField['.'] = requireField;
+      exportsField['.'] = {
+        source: entries.source,
+        ...requireField,
+      };
     } else if (targets.includes('module')) {
-      exportsField['.'] = importField;
+      exportsField['.'] = {
+        source: entries.source,
+        ...importField,
+      };
     }
 
     if (
@@ -288,10 +295,8 @@ export async function init() {
   }
 
   const entryFields: {
-    [key in 'source' | 'main' | 'module' | 'types']?: string;
-  } = {
-    source: entries.source,
-  };
+    [key in 'main' | 'module' | 'types']?: string;
+  } = {};
 
   if (targets.includes('commonjs') && targets.includes('module')) {
     entryFields.main = entries.commonjs;

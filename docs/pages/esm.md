@@ -40,6 +40,7 @@ To make use of the output files, ensure that your `package.json` file contains t
 "types": "./lib/typescript/src/index.d.ts",
 "exports": {
   ".": {
+    "source": "./src/index.tsx",
     "types": "./lib/typescript/src/index.d.ts",
     "default": "./lib/module/index.js"
   },
@@ -51,8 +52,9 @@ The `main` field is for tools that don't support the `exports` field (e.g. [Metr
 
 The `exports` field is used by Node.js 12+, modern browsers and tools to determine the correct entry point. The entrypoint is specified in the `.` key and will be used when the library is imported or required directly (e.g. `import 'my-library'` or `require('my-library')`).
 
-Here, we specify 2 conditions:
+Here, we specify 3 conditions:
 
+- `source`: A custom condition used by `react-native-builder-bob` to determine the source file for the library.
 - `types`: Used for the TypeScript definitions.
 - `default`: Used for the actual JS code when the library is imported or required.
 
