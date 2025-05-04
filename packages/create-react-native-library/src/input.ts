@@ -50,8 +50,8 @@ const EXAMPLE_CHOICES = (
       title: 'Test App by Microsoft',
       value: 'test-app',
       description: "app's native code is abstracted away",
-      // The test app is disabled for now until proper
-      // Codegen spec shipping is implemented
+      // Test App currently doesn't work with React Native 0.79.2
+      // due to missing `Gemfile` in the template
       disabled: !process.env.CRNL_ENABLE_TEST_APP,
     },
     {

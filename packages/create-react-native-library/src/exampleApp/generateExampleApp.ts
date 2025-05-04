@@ -1,9 +1,10 @@
 import fs from 'fs-extra';
-import path from 'path';
+import getLatestVersion from 'get-latest-version';
 import https from 'https';
-import { spawn } from '../utils/spawn';
-import sortObjectKeys from '../utils/sortObjectKeys';
+import path from 'path';
 import type { TemplateConfiguration } from '../template';
+import sortObjectKeys from '../utils/sortObjectKeys';
+import { spawn } from '../utils/spawn';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -51,60 +52,70 @@ export default async function generateExampleApp({
 }) {
   const directory = path.join(root, 'example');
 
-  // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
-  const testAppArgs = [
-    '--package',
-    `react-native-test-app@latest`,
-    'init',
-    '--name',
-    `${config.project.name}Example`,
-    `--destination`,
-    directory,
-    ...(reactNativeVersion !== 'latest'
-      ? ['--version', reactNativeVersion]
-      : []),
-    '--platform',
-    'ios',
-    '--platform',
-    'android',
-  ];
-
-  // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
-  const vanillaArgs = [
-    `@react-native-community/cli`,
-    'init',
-    `${config.project.name}Example`,
-    '--package-name',
-    `${config.project.package}.example`,
-    '--directory',
-    directory,
-    '--version',
-    reactNativeVersion,
-    '--skip-install',
-    '--pm',
-    'npm',
-  ];
-
-  // `npx create-expo-app example --no-install --template blank`
-  const expoArgs = [
-    'create-expo-app@latest',
-    directory,
-    '--no-install',
-    '--template',
-    'blank',
-  ];
-
   let args: string[] = [];
 
   switch (config.example) {
     case 'vanilla':
-      args = vanillaArgs;
+      // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
+      args = [
+        `@react-native-community/cli`,
+        'init',
+        `${config.project.name}Example`,
+        '--package-name',
+        `${config.project.package}.example`,
+        '--directory',
+        directory,
+        '--version',
+        reactNativeVersion,
+        '--skip-install',
+        '--pm',
+        'npm',
+      ];
       break;
     case 'test-app':
-      args = testAppArgs;
+      {
+        // Test App requires React Native version to be a semver version
+        const matchedReactNativeVersion = /(\d+\.\d+[-.0-9a-z]*)/.test(
+          reactNativeVersion
+        )
+          ? reactNativeVersion
+          : await getLatestVersion('react-native', {
+              range: reactNativeVersion,
+            });
+
+        if (!matchedReactNativeVersion) {
+          throw new Error(
+            `Could not find a matching version for react-native: ${reactNativeVersion}`
+          );
+        }
+
+        // `npx --package react-native-test-app@latest init --name ${projectName}Example --destination example --version ${reactNativeVersion}`
+        args = [
+          '--package',
+          `react-native-test-app@latest`,
+          'init',
+          '--name',
+          `${config.project.name}Example`,
+          `--destination`,
+          directory,
+          '--version',
+          matchedReactNativeVersion,
+          '--platform',
+          'ios',
+          '--platform',
+          'android',
+        ];
+      }
       break;
     case 'expo':
-      args = expoArgs;
+      // `npx create-expo-app example --no-install --template blank`
+      args = [
+        'create-expo-app@latest',
+        directory,
+        '--no-install',
+        '--template',
+        'blank',
+      ];
       break;
   }
 
