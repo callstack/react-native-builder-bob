@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.1...create-react-native-library@0.50.2) (2025-05-04)
+
+### Bug Fixes
+
+- fix handling react native version for test app ([eebf3cb](https://github.com/callstack/react-native-builder-bob/commit/eebf3cba10dcb0307efe00a4be12d908e14e0fea)) - by @satya164
+- upgrade to latest react-native ([#832](https://github.com/callstack/react-native-builder-bob/issues/832)) ([5bc7888](https://github.com/callstack/react-native-builder-bob/commit/5bc7888a43b105014a62aba28cd1ad55465ea9d3)) - by @satya164
+
 ## [0.50.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.0...create-react-native-library@0.50.1) (2025-05-03)
 
 ### Bug Fixes
