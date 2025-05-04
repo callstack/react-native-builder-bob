@@ -146,7 +146,7 @@ export const acceptedArgs = {
 
 export type ExampleApp = 'none' | 'test-app' | 'expo' | 'vanilla';
 
-export type Answers = {
+type PromptAnswers = {
   directory: string;
   slug: string;
   description: string;
@@ -157,8 +157,12 @@ export type Answers = {
   languages: ProjectLanguages;
   type: ProjectType;
   example: ExampleApp;
-  reactNativeVersion: string;
-  local?: boolean;
+  local: boolean;
+};
+
+export type Answers = PromptAnswers & {
+  name?: string;
+  reactNativeVersion?: string;
   interactive?: boolean;
 };
 
@@ -178,7 +182,7 @@ export async function createQuestions({
     // Ignore error
   }
 
-  const questions: Question<keyof Answers>[] = [
+  const questions: Question<keyof PromptAnswers>[] = [
     {
       type:
         local == null &&
@@ -194,7 +198,7 @@ export async function createQuestions({
       type: (_, answers) => (name && !(answers.local ?? local) ? null : 'text'),
       name: 'directory',
       message: `Where do you want to create the library?`,
-      initial: (_: string, answers: Answers) => {
+      initial: (_, answers) => {
         if ((answers.local ?? local) && name && !name?.includes('/')) {
           return `modules/${name}`;
         }
@@ -207,7 +211,7 @@ export async function createQuestions({
         }
 
         if (fs.pathExistsSync(path.join(process.cwd(), input))) {
-          return 'Folder already exists';
+          return 'Directory already exists';
         }
 
         return true;
@@ -218,8 +222,10 @@ export async function createQuestions({
       type: 'text',
       name: 'slug',
       message: 'What is the name of the npm package?',
-      initial: (_: string, answers: Answers) => {
-        const basename = path.basename(answers.directory ?? name ?? '');
+      initial: (_, answers) => {
+        const basename = path.basename(
+          typeof answers.directory === 'string' ? answers.directory : name ?? ''
+        );
 
         if (validateNpmPackage(basename).validForNewPackages) {
           if (/^(@|react-native)/.test(basename)) {
@@ -260,8 +266,11 @@ export async function createQuestions({
       type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
-      // @ts-expect-error this is supported, but types are wrong
-      initial: async (_: string, answers: Answers) => {
+      initial: async (_, answers) => {
+        if (typeof answers.authorEmail !== 'string') {
+          return '';
+        }
+
         try {
           const username = await githubUsername(answers.authorEmail);
 
@@ -270,7 +279,7 @@ export async function createQuestions({
           // Ignore error
         }
 
-        return undefined;
+        return '';
       },
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
@@ -278,8 +287,12 @@ export async function createQuestions({
       type: (_, answers) => (answers.local ?? local ? null : 'text'),
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
-      initial: (_: string, answers: Answers) => {
-        if (/^https?:\/\/github.com\/[^/]+/.test(answers.authorUrl)) {
+      initial: (_, answers) => {
+        if (
+          typeof answers.authorUrl === 'string' &&
+          typeof answers.slug === 'string' &&
+          /^https?:\/\/github.com\/[^/]+/.test(answers.authorUrl)
+        ) {
           return `${answers.authorUrl}/${answers.slug
             .replace(/^@/, '')
             .replace(/\//g, '-')}`;
@@ -301,7 +314,8 @@ export async function createQuestions({
       message: 'Which languages do you want to use?',
       choices: (_, values) => {
         return LANGUAGE_CHOICES.filter((choice) => {
-          if (choice.types) {
+          if (choice.types && typeof values.type === 'string') {
+            // @ts-expect-error `includes doesn't support checking arbitrary types
             return choice.types.includes(values.type);
           }
 
@@ -339,9 +353,9 @@ export async function createQuestions({
   return questions;
 }
 
-export function createMetadata(answers: Answers) {
+export function createMetadata(answers: Partial<PromptAnswers>) {
   // Some of the passed args can already be derived from the generated package.json file.
-  const ignoredAnswers: (keyof Answers | 'name')[] = [
+  const ignoredAnswers: (keyof Answers)[] = [
     'name',
     'directory',
     'slug',
@@ -356,9 +370,9 @@ export function createMetadata(answers: Answers) {
     'interactive',
   ];
 
-  type AnswerEntries<T extends keyof Answers = keyof Answers> = [
+  type AnswerEntries<T extends keyof PromptAnswers = keyof PromptAnswers> = [
     T,
-    Answers[T],
+    PromptAnswers[T],
   ][];
 
   const libraryMetadata = Object.fromEntries(

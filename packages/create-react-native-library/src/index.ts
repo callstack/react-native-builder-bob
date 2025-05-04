@@ -34,7 +34,6 @@ import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 
 type Args = Partial<Answers> & {
-  name?: string;
   $0: string;
   [key: string]: unknown;
 };
@@ -95,7 +94,10 @@ async function create(_argv: Args) {
 
   await fs.mkdirp(folder);
 
-  if (answers.reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION) {
+  if (
+    answers.reactNativeVersion != null &&
+    answers.reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
+  ) {
     printUsedRNVersion(answers.reactNativeVersion, config);
   }
 

@@ -1,5 +1,9 @@
-import prompts, { type Answers, type InitialReturnValue } from 'prompts';
 import kleur from 'kleur';
+import prompts, {
+  type Answers,
+  type InitialReturnValue,
+  type PromptType,
+} from 'prompts';
 
 type Choice = {
   title: string;
@@ -7,15 +11,26 @@ type Choice = {
   description?: string;
 };
 
-export type Question<T extends string> = Omit<
-  prompts.PromptObject<T>,
-  'validate' | 'name' | 'choices'
-> & {
+export type Question<T extends string> = {
   name: T;
+  type:
+    | PromptType
+    | null
+    | ((
+        prev: unknown,
+        values: Partial<Record<T, unknown>>
+      ) => PromptType | null);
+  message: string;
   validate?: (value: string) => boolean | string;
   choices?:
     | Choice[]
-    | ((prev: unknown, values: Partial<Answers<T>>) => Choice[]);
+    | ((prev: unknown, values: Partial<Record<T, unknown>>) => Choice[]);
+  initial?:
+    | InitialReturnValue
+    | ((
+        prev: unknown,
+        values: Partial<Record<T, unknown>>
+      ) => InitialReturnValue | Promise<InitialReturnValue>);
   default?: InitialReturnValue;
 };
 
