@@ -47,7 +47,7 @@ const EXAMPLE_CHOICES = (
       disabled: false,
     },
     {
-      title: 'React Native Test App by Microsoft',
+      title: 'Test App by Microsoft',
       value: 'test-app',
       description: "app's native code is abstracted away",
       // The test app is disabled for now until proper

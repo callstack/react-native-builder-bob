@@ -36,20 +36,6 @@ yarn nitrogen
 ```
 
 <% } -%>
-<% if (project.native) { -%>
-You also need to install the required ruby gems for the iOS project with [bundler](https://bundler.io/). To install the gems, run the following command in the root directory:
-
-```sh
-bundle install
-```
-
-Now, you can install [CocoaPods](https://cocoapods.org/) for the iOS project. To do this, run the following command in the `example/ios` directory:
-
-```sh
-bundle exec pod install
-```
-
-<% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.

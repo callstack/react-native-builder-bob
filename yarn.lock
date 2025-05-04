@@ -12353,7 +12353,7 @@ __metadata:
     mock-fs: ^5.2.0
     mock-stdin: ^1.0.0
     prompts: ^2.4.2
-    react-native-monorepo-config: ^0.1.7
+    react-native-monorepo-config: ^0.1.8
     vitest: ^3.1.1
     which: ^2.0.2
     yargs: ^17.5.1
@@ -12362,13 +12362,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-monorepo-config@npm:^0.1.7":
-  version: 0.1.7
-  resolution: "react-native-monorepo-config@npm:0.1.7"
+"react-native-monorepo-config@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "react-native-monorepo-config@npm:0.1.8"
   dependencies:
     escape-string-regexp: ^5.0.0
     fast-glob: ^3.3.3
-  checksum: 828b8132c0121f23993b34a4a979971b80061ff8810ff1275fc26e76a264d44bad14d219990013a0f4b705ac8e64a270549fbd906bfd4217d468f6aa08ec7712
+  checksum: 3c9abfd2dcd7d4da0d5d8d59f1e997f68283a6dc04935c310fece2a6ab62045e2b19f976d27894243f1cba6d9b9f1c3771e9f1428cd7cb0f7e00ed9c1e7251a5
   languageName: node
   linkType: hard
 
