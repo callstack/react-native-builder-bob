@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.10](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.9...react-native-builder-bob@0.40.10) (2025-05-05)
+
+### Bug Fixes
+
+- add additional check for codegenNativeComponent ([cc93396](https://github.com/callstack/react-native-builder-bob/commit/cc933964f1386753c8136f4e37e33cb11848a2f3)), closes [/github.com/callstack/react-native-builder-bob/issues/625#issuecomment-2850456503](https://github.com//github.com/callstack/react-native-builder-bob/issues/625/issues/issuecomment-2850456503) - by @satya164
+
 ## [0.40.9](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.8...react-native-builder-bob@0.40.9) (2025-05-04)
 
 ### Bug Fixes
