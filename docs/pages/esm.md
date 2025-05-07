@@ -44,6 +44,7 @@ To make use of the output files, ensure that your `package.json` file contains t
     "types": "./lib/typescript/src/index.d.ts",
     "default": "./lib/module/index.js"
   },
+  "./app.plugin.js": "./if-you-provide-expo-config-plugin",
   "./package.json": "./package.json"
 },
 ```
