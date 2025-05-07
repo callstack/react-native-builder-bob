@@ -44,7 +44,6 @@ To make use of the output files, ensure that your `package.json` file contains t
     "types": "./lib/typescript/src/index.d.ts",
     "default": "./lib/module/index.js"
   },
-  "./app.plugin.js": "./if-you-provide-expo-config-plugin",
   "./package.json": "./package.json"
 },
 ```
@@ -61,7 +60,7 @@ Here, we specify 3 conditions:
 
 You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
 
-The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
+The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)). Make sure to also add any other files that other tools may read, for example `./app.plugin.js` if you provide a [Expo Config plugin](https://docs.expo.dev/config-plugins/plugins-and-mods/#apppluginjs).
 
 Using the `exports` field has a few benefits, such as:
 
