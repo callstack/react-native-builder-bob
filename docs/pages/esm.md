@@ -202,11 +202,11 @@ For example, here is a setup that uses ESM for Webpack, Vite, Rollup, Metro (Rea
         "types": "./lib/typescript/module/src/index.d.ts",
         "default": "./lib/module/index.js"
       },
-      "node": {
+      "module": {
         "types": "./lib/typescript/module/src/index.d.ts",
         "default": "./lib/module/index.js"
       },
-      "module": {
+      "module-sync": {
         "types": "./lib/typescript/module/src/index.d.ts",
         "default": "./lib/module/index.js"
       },
@@ -223,8 +223,8 @@ For example, here is a setup that uses ESM for Webpack, Vite, Rollup, Metro (Rea
 Here, we specify 4 conditions:
 
 - `react-native`: Used when the library is imported in a React Native environment with Metro.
-- `node`: Used when the library is imported in Node.js.
-- `module`: Used when the library is imported in a bundler such as Webpack, Vite or Rollup.
+- `module`: Used when the library is imported in some bundler ssuch as Webpack, Vite or Rollup.
+- `module-sync`: Used when the library is imported on Node.js 22.10.0+ - regardless of whether it's imported with `import` or `require`.
 - `default`: Fallback used when the library is imported in an environment that doesn't support the other conditions.
 
 One thing to note is that TypeScript may need to be configured to resolve to the appropriate condition. It's pre-configured for React Native apps, but in other scenarios, it maybe necessary to specify [`customConditions`](https://www.typescriptlang.org/tsconfig/#customConditions) in the `tsconfig.json` file:
