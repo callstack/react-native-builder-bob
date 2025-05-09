@@ -224,7 +224,9 @@ export async function createQuestions({
       message: 'What is the name of the npm package?',
       initial: (_, answers) => {
         const basename = path.basename(
-          typeof answers.directory === 'string' ? answers.directory : name ?? ''
+          typeof answers.directory === 'string'
+            ? answers.directory
+            : (name ?? '')
         );
 
         if (validateNpmPackage(basename).validForNewPackages) {
@@ -248,14 +250,14 @@ export async function createQuestions({
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     {
-      type: (_, answers) => (answers.local ?? local ? null : 'text'),
+      type: (_, answers) => ((answers.local ?? local) ? null : 'text'),
       name: 'authorName',
       message: 'What is the name of package author?',
       initial: fullname,
       validate: (input) => Boolean(input) || 'Cannot be empty',
     },
     {
-      type: (_, answers) => (answers.local ?? local ? null : 'text'),
+      type: (_, answers) => ((answers.local ?? local) ? null : 'text'),
       name: 'authorEmail',
       message: 'What is the email address for the package author?',
       initial: email,
@@ -263,7 +265,7 @@ export async function createQuestions({
         /^\S+@\S+$/.test(input) || 'Must be a valid email address',
     },
     {
-      type: (_, answers) => (answers.local ?? local ? null : 'text'),
+      type: (_, answers) => ((answers.local ?? local) ? null : 'text'),
       name: 'authorUrl',
       message: 'What is the URL for the package author?',
       initial: async (_, answers) => {
@@ -284,7 +286,7 @@ export async function createQuestions({
       validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
     },
     {
-      type: (_, answers) => (answers.local ?? local ? null : 'text'),
+      type: (_, answers) => ((answers.local ?? local) ? null : 'text'),
       name: 'repoUrl',
       message: 'What is the URL for the repository?',
       initial: (_, answers) => {
