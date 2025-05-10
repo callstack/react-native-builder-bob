@@ -212,8 +212,8 @@ function validate<T extends string>(
     const question = Array.isArray(questions)
       ? questions.find((q) => q.name === key)
       : questions.name === key
-      ? questions
-      : null;
+        ? questions
+        : null;
 
     if (question == null) {
       continue;
