@@ -24,11 +24,7 @@ For TypeScript, it also generates 2 sets of type definitions if the [`commonjs`]
 It's recommended to specify `"moduleResolution": "bundler"` in your `tsconfig.json` file to match Metro's behavior:
 
 ```json
-{
-  "compilerOptions": {
-    "moduleResolution": "bundler"
-  }
-}
+{ "compilerOptions": { "moduleResolution": "bundler" } }
 ```
 
 Specifying `"moduleResolution": "bundler"` means that you don't need to use file extensions in the import statements. Bob automatically adds them when possible during the build process.
@@ -60,12 +56,26 @@ Here, we specify 3 conditions:
 
 You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
 
-The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)). Make sure to also add any other files that other tools may read, for example `./app.plugin.js` if you provide a [Expo Config plugin](https://docs.expo.dev/config-plugins/plugins-and-mods/#apppluginjs).
+The `./package.json` field is used to point to the library's `package.json` file. It's necessary for tools that may need to read the `package.json` file directly (e.g. [React Native Codegen](https://reactnative.dev/docs/the-new-architecture/what-is-codegen)).
 
 Using the `exports` field has a few benefits, such as:
 
-- It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
 - It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `module`, `react-native`, `production`, `development` etc.).
+- It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
+
+  So make sure to explicitly specify any files that need to be readable by other tools, e.g. `./app.plugin.js` if you provide a [Expo Config plugin](https://docs.expo.dev/config-plugins/plugins-and-mods/#apppluginjs):
+
+  ```diff
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json",
+  + "./app.plugin.js": "./app.plugin.js"
+  },
+  ```
 
 ### A note on `import.meta`
 
