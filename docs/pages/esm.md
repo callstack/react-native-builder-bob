@@ -64,8 +64,22 @@ The `./package.json` field is used to point to the library's `package.json` file
 
 Using the `exports` field has a few benefits, such as:
 
-- It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
 - It allows you to specify different entry points for different environments with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) (e.g. `node`, `browser`, `module`, `react-native`, `production`, `development` etc.).
+- It [restricts access to the library's internals](https://nodejs.org/api/packages.html#main-entry-point-export) by default. You can explicitly specify which files are accessible with [subpath exports](https://nodejs.org/api/packages.html#subpath-exports).
+
+  So make sure to explicitly specify any files that need to be readable by other tools, e.g. `./app.plugin.js` if you provide a [Expo Config plugin](https://docs.expo.dev/config-plugins/plugins-and-mods/#apppluginjs):
+
+  ```diff
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json",
+  + "./app.plugin.js": "./app.plugin.js"
+  },
+  ```
 
 ### A note on `import.meta`
 
