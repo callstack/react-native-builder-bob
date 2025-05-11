@@ -1,7 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.jsx',
+import nextra from 'nextra';
+
+const withNextra = nextra({
+  defaultShowCopyCode: true,
+  mdxOptions: {
+    rehypePrettyCodeOptions: {
+      theme: {
+        light: 'solarized-light',
+        dark: 'catppuccin-frappe',
+      },
+    },
+  },
 });
 
 let assetPrefix = '';
@@ -14,7 +22,7 @@ if (process.env.GITHUB_ACTIONS) {
   basePath = `/${repo}`;
 }
 
-module.exports = withNextra({
+export default withNextra({
   output: 'export',
   images: {
     unoptimized: true,
