@@ -24,7 +24,11 @@ For TypeScript, it also generates 2 sets of type definitions if the [`commonjs`]
 It's recommended to specify `"moduleResolution": "bundler"` in your `tsconfig.json` file to match Metro's behavior:
 
 ```json
-{ "compilerOptions": { "moduleResolution": "bundler" } }
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
 ```
 
 Specifying `"moduleResolution": "bundler"` means that you don't need to use file extensions in the import statements. Bob automatically adds them when possible during the build process.
