@@ -189,6 +189,7 @@ export default async function generateExampleApp({
 
   const PACKAGES_TO_ADD_DEV = {
     'react-native-builder-bob': `^${config.versions.bob}`,
+    'react-native-monorepo-config': `^0.1.9`,
   };
 
   if (config.project.moduleConfig === 'nitro-modules') {

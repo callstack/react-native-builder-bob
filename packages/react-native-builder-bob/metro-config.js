@@ -12,6 +12,8 @@ const { withMetroConfig } = require('react-native-monorepo-config');
  * @param {string} options.root Root directory of the monorepo
  * @param {string} options.project Directory containing the example project
  * @returns {import('metro-config').MetroConfig} Metro configuration
+ *
+ * @deprecated use `react-native-monorepo-config` instead
  */
 exports.getConfig = (baseConfig, { root, project }) =>
   withMetroConfig(baseConfig, { root, dirname: project });
