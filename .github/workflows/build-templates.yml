@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     env:
-      XCODE_VERSION: 16.2
+      XCODE_VERSION: 16.3
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
@@ -30,8 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu
-          - macos
+          - ubuntu-latest
+          - macos-15
         type:
           - name: turbo-module
             language: kotlin-objc
@@ -40,15 +40,16 @@ jobs:
           - name: nitro-module
             language: kotlin-swift
         include:
-          - os: ubuntu
-            type.name: library
-            type.language: js
+          - os: ubuntu-latest
+            type:
+              name: library
+              language: js
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type.name }}-${{ matrix.type.language }}
       cancel-in-progress: true
 
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -130,14 +131,14 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           # Build Android for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == ubuntu ]]; then
+          if [[ ${{ matrix.os }} =~ ubuntu ]]; then
             if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == *-objc ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == *-objc ]]; then
               echo "android_build=1" >> $GITHUB_ENV
             fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
-          if [[ ${{ matrix.os }} == macos ]]; then
+          if [[ ${{ matrix.os }} =~ macos ]]; then
             if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == kotlin-* ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == kotlin-* ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
@@ -239,8 +240,9 @@ jobs:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
             ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-${{ hashFiles(format('{0}/**/*ViewNativeComponent.ts', env.work_dir), format('{0}/**/Native*.ts', env.work_dir), format('{0}/**/*.nitro.ts', env.work_dir)) }}
           restore-keys: |
+            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-
             ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-
             ${{ runner.os }}-library-cocoapods-
 
