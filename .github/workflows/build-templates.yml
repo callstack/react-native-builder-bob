@@ -239,8 +239,9 @@ jobs:
           path: |
             ${{ env.work_dir }}/**/ios/Pods
             ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}
+          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-${{ hashFiles(format('{0}/**/*ViewNativeComponent.ts', env.work_dir), format('{0}/**/Native*.ts', env.work_dir), format('{0}/**/*.nitro.ts', env.work_dir)) }}
           restore-keys: |
+            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-
             ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-
             ${{ runner.os }}-library-cocoapods-
 
