@@ -10,7 +10,7 @@ type PackageJson = {
 export async function addNitroDependencyToLocalLibrary(
   config: TemplateConfiguration
 ): Promise<boolean> {
-  if (config.versions.nitroModules === undefined) {
+  if (config.versions.nitro === undefined) {
     return false;
   }
 
@@ -22,7 +22,7 @@ export async function addNitroDependencyToLocalLibrary(
   const appPackageJson: PackageJson = await fs.readJson(appPackageJsonPath);
   const dependencies = appPackageJson['dependencies'] ?? {};
 
-  dependencies['react-native-nitro-modules'] = config.versions.nitroModules;
+  dependencies['react-native-nitro-modules'] = config.versions.nitro;
 
   appPackageJson['dependencies'] = dependencies;
   await fs.writeJson(appPackageJsonPath, appPackageJson, {

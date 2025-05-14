@@ -38,8 +38,7 @@ type Args = Partial<Answers> & {
   [key: string]: unknown;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-yargs
+void yargs
   .command('$0 [name]', 'create a react native library', acceptedArgs, create)
   .demandCommand()
   .recommendCommands()
@@ -82,9 +81,7 @@ async function create(_argv: Args) {
   const config = generateTemplateConfiguration({
     versions: {
       bob: bobVersion,
-      nitroModules: nitroModulesVersion,
-      // Nitro codegen's version is always the same as nitro modules version.
-      nitroCodegen: nitroModulesVersion,
+      nitro: nitroModulesVersion,
     },
     basename: path.basename(answers.name ?? answers.directory),
     answers,

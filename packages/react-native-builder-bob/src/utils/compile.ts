@@ -100,7 +100,7 @@ export default async function compile({
 
       if (!sourceExt.test(filepath)) {
         // Copy files which aren't source code
-        fs.copy(filepath, outputFilename);
+        await fs.copy(filepath, outputFilename);
         return;
       }
 
@@ -111,7 +111,10 @@ export default async function compile({
       const codegenEnabled = 'codegenConfig' in pkg;
 
       if (codegenEnabled && isCodegenSpec(filepath)) {
-        fs.copy(filepath, path.join(output, path.relative(source, filepath)));
+        await fs.copy(
+          filepath,
+          path.join(output, path.relative(source, filepath))
+        );
         return;
       }
 
@@ -145,7 +148,7 @@ export default async function compile({
         throw new Error('Output code was null');
       }
 
-      let code = result.code;
+      let code = result.code || '';
 
       if (sourceMaps && result.map) {
         const mapFilename = outputFilename + '.map';
@@ -161,7 +164,7 @@ export default async function compile({
       await fs.writeFile(outputFilename, code);
 
       if (copyFlow) {
-        fs.copy(filepath, outputFilename + '.flow');
+        await fs.copy(filepath, outputFilename + '.flow');
       }
     })
   );
@@ -258,83 +261,83 @@ export default async function compile({
   const generatedEntryPath = await getGeneratedEntryPath();
 
   if (fields.some((field) => field.value)) {
-    await Promise.all(
-      fields.map(async ({ name, value }) => {
-        if (!value) {
-          return;
-        }
+    for (const { name, value } of fields) {
+      if (!value) {
+        continue;
+      }
 
-        if (name.startsWith('exports') && value && !/^\.\//.test(value)) {
-          report.error(
-            `The ${kleur.blue(name)} field in ${kleur.blue(
-              `package.json`
-            )} should be a relative path starting with ${kleur.blue(
-              './'
-            )}. Found: ${kleur.blue(value)}`
-          );
+      if (name.startsWith('exports') && value && !/^\.\//.test(value)) {
+        report.error(
+          `The ${kleur.blue(name)} field in ${kleur.blue(
+            `package.json`
+          )} should be a relative path starting with ${kleur.blue(
+            './'
+          )}. Found: ${kleur.blue(value)}`
+        );
 
-          throw new Error(`Found incorrect path in '${name}' field.`);
-        }
+        throw new Error(`Found incorrect path in '${name}' field.`);
+      }
 
-        try {
-          require.resolve(path.join(root, value));
-        } catch (e: unknown) {
-          if (
-            e != null &&
-            typeof e === 'object' &&
-            'code' in e &&
-            e.code === 'MODULE_NOT_FOUND'
-          ) {
-            if (!generatedEntryPath) {
-              report.warn(
-                `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
-                  'source'
-                )} field in your ${kleur.blue('package.json')}.`
-              );
-            }
-
-            report.error(
-              `The ${kleur.blue(name)} field in ${kleur.blue(
-                'package.json'
-              )} points to a non-existent file: ${kleur.blue(
-                value
-              )}.\nVerify the path points to the correct file under ${kleur.blue(
-                path.relative(root, output)
-              )}${
-                generatedEntryPath
-                  ? ` (found ${kleur.blue(generatedEntryPath)}).`
-                  : '.'
-              }`
+      try {
+        require.resolve(path.join(root, value));
+      } catch (e: unknown) {
+        if (
+          e != null &&
+          typeof e === 'object' &&
+          'code' in e &&
+          e.code === 'MODULE_NOT_FOUND'
+        ) {
+          if (!generatedEntryPath) {
+            report.warn(
+              `Failed to detect the entry point for the generated files. Make sure you have a valid ${kleur.blue(
+                'source'
+              )} field in your ${kleur.blue('package.json')}.`
             );
-
-            throw new Error(`Found incorrect path in '${name}' field.`, {
-              cause: e,
-            });
           }
 
-          throw e;
-        }
-      })
-    );
+          report.error(
+            `The ${kleur.blue(name)} field in ${kleur.blue(
+              'package.json'
+            )} points to a non-existent file: ${kleur.blue(
+              value
+            )}.\nVerify the path points to the correct file under ${kleur.blue(
+              path.relative(root, output)
+            )}${
+              generatedEntryPath
+                ? ` (found ${kleur.blue(generatedEntryPath)}).`
+                : '.'
+            }`
+          );
 
-    if (
-      modules === 'commonjs' &&
-      pkg.exports?.['.']?.import === `./${generatedEntryPath}`
-    ) {
-      report.warn(
-        `The the ${kleur.blue(
-          "exports['.'].import"
-        )} field points to a CommonJS module. This is likely a mistake.`
-      );
-    } else if (
-      modules === 'preserve' &&
-      pkg.exports?.['.']?.require === `./${generatedEntryPath}`
-    ) {
-      report.warn(
-        `The the ${kleur.blue(
-          "exports['.'].import"
-        )} field points to a ES module. This is likely a mistake.`
-      );
+          throw new Error(`Found incorrect path in '${name}' field.`, {
+            cause: e,
+          });
+        }
+
+        throw e;
+      }
+    }
+
+    if (generatedEntryPath) {
+      if (
+        modules === 'commonjs' &&
+        pkg.exports?.['.']?.import === `./${generatedEntryPath}`
+      ) {
+        report.warn(
+          `The the ${kleur.blue(
+            "exports['.'].import"
+          )} field points to a CommonJS module. This is likely a mistake.`
+        );
+      } else if (
+        modules === 'preserve' &&
+        pkg.exports?.['.']?.require === `./${generatedEntryPath}`
+      ) {
+        report.warn(
+          `The the ${kleur.blue(
+            "exports['.'].import"
+          )} field points to a ES module. This is likely a mistake.`
+        );
+      }
     }
   } else {
     report.warn(

@@ -104,7 +104,7 @@
 <% if (example !== 'expo') { -%>
     "turbo": "^1.10.7",
 <% } -%>
-    "typescript": "^5.2.2"
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",

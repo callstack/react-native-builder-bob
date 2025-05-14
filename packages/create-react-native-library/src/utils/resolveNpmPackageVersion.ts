@@ -12,7 +12,9 @@ export async function resolveNpmPackageVersion(
 
     result = await Promise.race([
       new Promise<string>((resolve) => {
-        setTimeout(() => resolve(fallback), timeout);
+        setTimeout(() => {
+          resolve(fallback);
+        }, timeout);
       }),
       promise,
     ]);

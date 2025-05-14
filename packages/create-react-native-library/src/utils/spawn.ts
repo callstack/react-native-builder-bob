@@ -8,12 +8,12 @@ export const spawn = async (...args: Parameters<typeof crossSpawn>) => {
     let stderr = '';
 
     child.stdout?.setEncoding('utf8');
-    child.stdout?.on('data', (data) => {
+    child.stdout?.on('data', (data: string) => {
       stdout += data;
     });
 
     child.stderr?.setEncoding('utf8');
-    child.stderr?.on('data', (data) => {
+    child.stderr?.on('data', (data: string) => {
       stderr += data;
     });
 

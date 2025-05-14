@@ -1,6 +1,6 @@
 import promptsModule from 'prompts';
 
-export default function prompts(
+export default async function prompts(
   args: promptsModule.PromptObject | promptsModule.PromptObject[],
   options?: promptsModule.Options
 ) {

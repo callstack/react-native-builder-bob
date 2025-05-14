@@ -5,8 +5,7 @@ import type { Answers, ExampleApp, ProjectType } from './input';
 
 export type TemplateVersions = {
   bob: string;
-  nitroModules?: string;
-  nitroCodegen?: string;
+  nitro: string | undefined;
 };
 
 export type ModuleConfig =
@@ -126,7 +125,7 @@ export function generateTemplateConfiguration({
             basename
           : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
             `${project.charAt(0).toUpperCase()}${project
-              .replace(/[^a-z0-9](\w)/g, (_, $1) => $1.toUpperCase())
+              .replace(/[^a-z0-9](\w)/g, (_, $1: string) => $1.toUpperCase())
               .slice(1)}`,
       package: pack,
       package_dir: pack.replace(/\./g, '/'),
@@ -154,7 +153,8 @@ function getModuleConfig(projectType: ProjectType): ModuleConfig {
       return 'nitro-modules';
     case 'turbo-module':
       return 'turbo-modules';
-    default:
+    case 'fabric-view':
+    case 'library':
       return null;
   }
 }
@@ -163,7 +163,9 @@ function getViewConfig(projectType: ProjectType): ViewConfig {
   switch (projectType) {
     case 'fabric-view':
       return 'fabric-view';
-    default:
+    case 'nitro-module':
+    case 'turbo-module':
+    case 'library':
       return null;
   }
 }

@@ -59,11 +59,11 @@ export async function removeCodegenAppLevelCode(
     );
   }
 
-  const androidPromises = FILES_TO_REMOVE.map((fileName) =>
+  const androidPromises = FILES_TO_REMOVE.map(async (fileName) =>
     fs.rm(path.join(codegenAndroidPath, fileName))
   );
 
-  const iosPromises = FILES_TO_REMOVE.map((fileName) =>
+  const iosPromises = FILES_TO_REMOVE.map(async (fileName) =>
     fs.rm(path.join(codegenIosPath, fileName))
   );
 

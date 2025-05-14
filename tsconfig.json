@@ -8,9 +8,11 @@
       "react-native-builder-bob": ["./packages/react-native-builder-bob/src"]
     },
     "outDir": "./typescript",
+    "allowJs": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
+    "erasableSyntaxOnly": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],

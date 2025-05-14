@@ -75,7 +75,7 @@ export async function build(argv: Argv) {
     });
   } else {
     await Promise.all(
-      targets.map((target) =>
+      targets.map(async (target) =>
         buildTarget({
           root,
           target: Array.isArray(target) ? target[0] : target,
@@ -90,7 +90,7 @@ export async function build(argv: Argv) {
   }
 }
 
-async function buildTarget<T extends Target>({
+async function buildTarget({
   root,
   target,
   source,
@@ -100,7 +100,7 @@ async function buildTarget<T extends Target>({
   variants,
 }: {
   root: string;
-  target: T;
+  target: Target;
   source: string;
   output: string;
   exclude: string;
@@ -124,6 +124,7 @@ async function buildTarget<T extends Target>({
         source: path.resolve(root, source),
         output: path.resolve(root, output, target),
         exclude,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         options: options as TargetOptions<'commonjs' | 'module'>,
         variants,
         report,
@@ -148,6 +149,7 @@ async function buildTarget<T extends Target>({
           root,
           source: path.resolve(root, source),
           output: path.resolve(root, output, 'typescript'),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           options: options as TargetOptions<'typescript'>,
           esm,
           variants,
@@ -166,6 +168,7 @@ async function buildTarget<T extends Target>({
       await run('custom', {
         root,
         source: path.resolve(root, source),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         options: options as TargetOptions<'custom'>,
         report,
       });

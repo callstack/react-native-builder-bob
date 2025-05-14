@@ -7021,9 +7021,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-satya164@npm:^5.0.3":
-  version: 5.0.3
-  resolution: "eslint-config-satya164@npm:5.0.3"
+"eslint-config-satya164@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "eslint-config-satya164@npm:5.1.1"
   dependencies:
     "@eslint-community/eslint-plugin-eslint-comments": ^4.4.1
     "@eslint-react/eslint-plugin": ^1.38.0
@@ -7041,7 +7041,7 @@ __metadata:
   peerDependencies:
     eslint: "*"
     prettier: "*"
-  checksum: a52acd38458d7afa571325e6d8fddadc365ee3a27fa07befe21d680720eebc25da0b576af3bab3c837752945500c61bfaff367e98147b466dfa57b8d6e79515d
+  checksum: dcf0dfc375bea13fb12c58ea48f24442e97409a07fddfbdcd2ce6e63e2448d580476474c1ed90c2cdd7ec0a6cab899a1542ec351881a8825b214111bb9110e42
   languageName: node
   linkType: hard
 
@@ -13643,10 +13643,10 @@ __metadata:
     commitlint: ^17.0.2
     concurrently: ^7.2.2
     eslint: ^9.26.0
-    eslint-config-satya164: ^5.0.3
+    eslint-config-satya164: ^5.1.1
     globals: ^16.0.0
     prettier: ^3.5.3
-    typescript: ^5.2.2
+    typescript: ^5.8.3
   languageName: unknown
   linkType: soft
 
@@ -14922,7 +14922,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4 || ^5.0.0, typescript@npm:^5.2.2":
+"typescript@npm:^4.6.4 || ^5.0.0":
   version: 5.2.2
   resolution: "typescript@npm:5.2.2"
   bin:
@@ -14932,13 +14932,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.4 || ^5.0.0#~builtin<compat/typescript>, typescript@patch:typescript@^5.2.2#~builtin<compat/typescript>":
+"typescript@npm:^5.8.3":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: cb1d081c889a288b962d3c8ae18d337ad6ee88a8e81ae0103fa1fecbe923737f3ba1dbdb3e6d8b776c72bc73bfa6d8d850c0306eed1a51377d2fccdfd75d92c4
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.6.4 || ^5.0.0#~builtin<compat/typescript>":
   version: 5.2.2
   resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=14eedb"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 07106822b4305de3f22835cbba949a2b35451cad50888759b6818421290ff95d522b38ef7919e70fb381c5fe9c1c643d7dea22c8b31652a717ddbd57b7f4d554
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^5.8.3#~builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3#~builtin<compat/typescript>::version=5.8.3&hash=14eedb"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 1b503525a88ff0ff5952e95870971c4fb2118c17364d60302c21935dedcd6c37e6a0a692f350892bafcef6f4a16d09073fe461158547978d2f16fbe4cb18581c
   languageName: node
   linkType: hard
 

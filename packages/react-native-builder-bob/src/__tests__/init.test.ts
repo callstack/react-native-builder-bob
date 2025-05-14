@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, test, vi, type Mock } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { readFile } from 'fs-extra';
 import mockFs from 'mock-fs';
 import { stdin } from 'mock-stdin';
@@ -32,6 +32,7 @@ const waitFor = async (callback: () => void) => {
       } catch (error) {
         if (timeout <= 0) {
           clearInterval(intervalId);
+          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
           reject(error);
         }
 
@@ -64,13 +65,15 @@ afterEach(() => {
 });
 
 test('initializes the configuration', async () => {
-  vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+  const writeMock = vi
+    .spyOn(process.stdout, 'write')
+    .mockImplementation(() => true);
 
   process.chdir(root);
 
   const run = async () => {
     await waitFor(() => {
-      const lastCall = (process.stdout.write as Mock).mock.lastCall;
+      const lastCall = writeMock.mock.lastCall;
 
       if (lastCall == null) {
         throw new Error('No output');
@@ -81,44 +84,44 @@ test('initializes the configuration', async () => {
       }
     });
 
-    await waitFor(() =>
-      expect(process.stdout.write).toHaveBeenLastCalledWith(
+    await waitFor(() => {
+      expect(writeMock).toHaveBeenLastCalledWith(
         expect.stringMatching('Where are your source files?')
-      )
-    );
+      );
+    });
 
     io?.send(enter);
 
-    await waitFor(() =>
-      expect(process.stdout.write).toHaveBeenLastCalledWith(
+    await waitFor(() => {
+      expect(writeMock).toHaveBeenLastCalledWith(
         expect.stringMatching('Where do you want to generate the output files?')
-      )
-    );
+      );
+    });
 
     io?.send(enter);
 
-    await waitFor(() =>
-      expect(process.stdout.write).toHaveBeenLastCalledWith(
+    await waitFor(() => {
+      expect(writeMock).toHaveBeenLastCalledWith(
         expect.stringMatching('Which targets do you want to build?')
-      )
-    );
+      );
+    });
 
     io?.send(enter);
 
-    await waitFor(() =>
-      expect(process.stdout.write).toHaveBeenLastCalledWith(
+    await waitFor(() => {
+      expect(writeMock).toHaveBeenLastCalledWith(
         expect.stringMatching(
           "You have enabled 'typescript' compilation, but we couldn't find a 'tsconfig.json' in project root"
         )
-      )
-    );
+      );
+    });
 
     io?.send(enter);
   };
 
   await Promise.all([run(), init()]);
 
-  expect(process.stdout.write).toHaveBeenLastCalledWith(
+  expect(writeMock).toHaveBeenLastCalledWith(
     expect.stringMatching('configured successfully!')
   );
 

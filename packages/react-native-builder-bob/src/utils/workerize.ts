@@ -68,7 +68,7 @@ export const run = async <T extends Target>(
 
     worker.on('exit', (code) => {
       if (code !== 0) {
-        reject(new Error(`Worker exited with code ${code}`));
+        reject(new Error(`Worker exited with code ${String(code)}`));
       } else {
         resolve();
       }
@@ -77,6 +77,7 @@ export const run = async <T extends Target>(
 };
 
 if (!isMainThread) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const { target, data } = workerData as WorkerData<Target>;
 
   const report: Report = {
@@ -88,7 +89,7 @@ if (!isMainThread) {
 
   if (target in targets) {
     // @ts-expect-error - typescript doesn't support correlated union types https://github.com/microsoft/TypeScript/issues/30581
-    targets[target]({ ...data, report });
+    void targets[target]({ ...data, report });
   } else {
     throw new Error(`Unknown target: ${target}`);
   }

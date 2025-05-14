@@ -276,7 +276,9 @@ export async function createQuestions({
         try {
           const username = await githubUsername(answers.authorEmail);
 
-          return `https://github.com/${username}`;
+          if (username) {
+            return `https://github.com/${username}`;
+          }
         } catch (e) {
           // Ignore error
         }
@@ -378,6 +380,7 @@ export function createMetadata(answers: Partial<PromptAnswers>) {
   ][];
 
   const libraryMetadata = Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     (Object.entries(answers) as AnswerEntries).filter(
       ([answer]) => !ignoredAnswers.includes(answer)
     )

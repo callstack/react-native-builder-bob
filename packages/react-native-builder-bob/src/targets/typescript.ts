@@ -318,7 +318,7 @@ export default async function build({
               report.warn(
                 `The ${kleur.blue(field.name)} field in ${kleur.blue(
                   `package.json`
-                )} should not be set when ${field.message}.`
+                )} should not be set when ${String(field.message)}.`
               );
             }
 
@@ -380,7 +380,7 @@ export default async function build({
     if (validFields.every((field) => field.value == null)) {
       const suggestedTypesPaths = (
         await Promise.all(
-          validFields.map((field) => getGeneratedTypesPath(field))
+          validFields.map(async (field) => getGeneratedTypesPath(field))
         )
       )
         .filter((path): path is string => path != null)

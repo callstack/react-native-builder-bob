@@ -117,6 +117,9 @@ export default async function generateExampleApp({
         'blank',
       ];
       break;
+    case 'none': {
+      // Do nothing
+    }
   }
 
   await spawn('npx', args, {
@@ -193,15 +196,18 @@ export default async function generateExampleApp({
 
   if (config.project.moduleConfig === 'nitro-modules') {
     const packagesToAddNitro = {
-      'react-native-nitro-modules': `^${config.versions.nitroModules}`,
+      'react-native-nitro-modules': `^${config.versions.nitro || 'latest'}`,
     };
+
     Object.assign(dependencies, packagesToAddNitro);
   }
 
   Object.assign(devDependencies, PACKAGES_TO_ADD_DEV);
 
   if (config.example === 'expo') {
-    const sdkVersion = dependencies.expo.split('.')[0].replace(/[^\d]/, '');
+    const sdkVersion: string = dependencies.expo
+      .split('.')[0]
+      .replace(/[^\d]/, '');
 
     let bundledNativeModules: Record<string, string>;
 
@@ -213,11 +219,12 @@ export default async function generateExampleApp({
             (res) => {
               let data = '';
 
-              res.on('data', (chunk) => (data += chunk));
+              res.on('data', (chunk: string) => (data += chunk));
               res.on('end', () => {
                 try {
                   resolve(JSON.parse(data));
                 } catch (e) {
+                  // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                   reject(e);
                 }
               });

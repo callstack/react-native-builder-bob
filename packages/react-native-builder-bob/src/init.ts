@@ -52,13 +52,14 @@ export async function init() {
     }
   }
 
-  const { source } = await prompts({
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  const { source } = (await prompts({
     type: 'text',
     name: 'source',
     message: 'Where are your source files?',
     initial: 'src',
     validate: (input) => Boolean(input),
-  });
+  })) as { source: string };
 
   let entryFile;
 
@@ -130,7 +131,12 @@ export async function init() {
     });
   }
 
-  const { output, targets, flow } = await prompts(questions);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  const { output, targets, flow } = (await prompts(questions)) as {
+    output: string;
+    targets: string[];
+    flow?: boolean;
+  };
 
   const target =
     targets[0] === 'commonjs' || targets[0] === 'module'
@@ -320,13 +326,14 @@ export async function init() {
   }
 
   for (const key in entryFields) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const entry = entryFields[key as keyof typeof entryFields];
 
     if (pkg[key] && pkg[key] !== entry) {
       const { replace } = await prompts({
         type: 'confirm',
         name: 'replace',
-        message: `Your package.json has the '${key}' field set to '${pkg[key]}'.\n  Do you want to replace it with '${entry}'?`,
+        message: `Your package.json has the '${key}' field set to '${String(pkg[key])}'.\n  Do you want to replace it with '${String(entry)}'?`,
         initial: true,
       });
 
@@ -359,7 +366,7 @@ export async function init() {
     const { replace } = await prompts({
       type: 'confirm',
       name: 'replace',
-      message: `Your package.json has the 'scripts.prepare' field set to '${pkg.scripts.prepare}'.\n  Do you want to replace it with '${prepare}'?`,
+      message: `Your package.json has the 'scripts.prepare' field set to '${String(pkg.scripts.prepare)}'.\n  Do you want to replace it with '${prepare}'?`,
       initial: true,
     });
 
