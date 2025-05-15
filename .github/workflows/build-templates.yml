@@ -193,6 +193,10 @@ jobs:
         working-directory: ${{ env.work_dir }}
         if: matrix.type.language == 'js'
         run: |
+          # Clean up built JS files
+          # So we test that bundling works without any pre-built files
+          rm -rf lib/*
+
           yarn example expo export --platform web
 
       - name: Install JDK
