@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
     "test": "yarn workspace react-native-builder-bob test",
-    "docs": "yarn workspace docs"
+    "docs": "yarn workspace docs",
+    "release": "lerna publish"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -24,8 +25,9 @@
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.22.0",
     "@evilmartians/lefthook": "^1.5.0",
-    "@lerna-lite/cli": "^1.13.0",
-    "@lerna-lite/run": "^1.13.0",
+    "@lerna-lite/cli": "^4.1.2",
+    "@lerna-lite/publish": "^4.1.2",
+    "@lerna-lite/run": "^4.1.2",
     "@vitest/eslint-plugin": "^1.1.39",
     "commitlint": "^17.0.2",
     "concurrently": "^7.2.2",
