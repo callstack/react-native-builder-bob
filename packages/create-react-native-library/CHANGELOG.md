@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.2...create-react-native-library@0.50.3) (2025-05-15)
+
+### Bug Fixes
+
+- add --only-version to release-it to skip unnecessary prompts ([7dada27](https://github.com/callstack/react-native-builder-bob/commit/7dada27143c09c8c703e9b5f7bb8e877a7e6f25b)) - by @
+- enable package exports for metro. fixes [#842](https://github.com/callstack/react-native-builder-bob/issues/842) ([#843](https://github.com/callstack/react-native-builder-bob/issues/843)) ([72d95df](https://github.com/callstack/react-native-builder-bob/commit/72d95df655e6dbc7e982ee3790263236f13b2f71)) - by @satya164
+- fix nitro module versions ([0f6f749](https://github.com/callstack/react-native-builder-bob/commit/0f6f74989a7fef685abcea5741404dc3d1dce64b)) - by @satya164
+
 ## [0.50.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.1...create-react-native-library@0.50.2) (2025-05-04)
 
 ### Bug Fixes
