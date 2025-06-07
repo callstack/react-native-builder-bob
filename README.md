@@ -1,4 +1,8 @@
-# Bob
+<a href="https://www.callstack.com/open-source" align="center">
+  <picture>
+    <img alt="React Native Builder Bob" src="https://github.com/user-attachments/assets/d9717af6-8ab5-4b77-a120-64efef0a4b0f">
+  </picture>
+</a>
 
 [![create-react-native-library][create-react-native-library-version-badge]][create-react-native-library]
 [![react-native-builder-bob][react-native-builder-bob-version-badge]][react-native-builder-bob]
