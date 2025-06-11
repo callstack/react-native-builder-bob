@@ -20,6 +20,7 @@
     "cpp",
 <% if (project.moduleConfig === "nitro-modules") { -%>
     "nitrogen",
+    "nitro.json",
 <% } -%>
     "*.podspec",
     "react-native.config.js",
