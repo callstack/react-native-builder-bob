@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.51.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.3...create-react-native-library@0.51.0) (2025-06-14)
+
+### Bug Fixes
+
+- abort git repository creation if it takes too long ([#861](https://github.com/callstack/react-native-builder-bob/issues/861)) ([5d0e5cf](https://github.com/callstack/react-native-builder-bob/commit/5d0e5cf0e34e3cdb2f28c8499117e44341dbcaa8)) - by @satya164
+- Add `nitro.json` to npm package ([#860](https://github.com/callstack/react-native-builder-bob/issues/860)) ([46c0b13](https://github.com/callstack/react-native-builder-bob/commit/46c0b135eae04e73a35e311accf66bd4cfdc9cf8)) - by @mrousavy
+
+### Features
+
+- enable 16 KB page size on Android ([#859](https://github.com/callstack/react-native-builder-bob/issues/859)) ([a802ef3](https://github.com/callstack/react-native-builder-bob/commit/a802ef3982f88ae0af9c00747d233791b0b37126)) - by @mrousavy
+
 ## [0.50.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.2...create-react-native-library@0.50.3) (2025-05-15)
 
 ### Bug Fixes
