@@ -58,7 +58,6 @@
     "is-git-dirty": "^2.0.1",
     "json5": "^2.2.1",
     "kleur": "^4.1.4",
-    "metro-config": "^0.80.9",
     "prompts": "^2.4.2",
     "react-native-monorepo-config": "^0.1.8",
     "which": "^2.0.2",
@@ -79,6 +78,7 @@
     "@types/which": "^2.0.1",
     "@types/yargs": "^17.0.10",
     "concurrently": "^7.2.2",
+    "metro-config": "^0.82.4",
     "mock-fs": "^5.2.0",
     "mock-stdin": "^1.0.0",
     "vitest": "^3.1.1"
