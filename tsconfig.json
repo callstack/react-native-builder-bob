@@ -32,7 +32,7 @@
     "verbatimModuleSyntax": true
   },
   "exclude": [
-    "lib",
+    "**/lib",
     "packages/react-native-builder-bob/src/__fixtures__",
     "packages/create-react-native-library/templates"
   ]

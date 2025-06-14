@@ -68,6 +68,7 @@ export default async function generateExampleApp({
         '--version',
         reactNativeVersion,
         '--skip-install',
+        '--skip-git-init',
         '--pm',
         'npm',
       ];

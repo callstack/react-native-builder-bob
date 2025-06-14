@@ -160,7 +160,28 @@ async function create(_argv: Args) {
       folder,
     });
   } else {
-    await createInitialGitCommit(folder);
+    spinner.text = 'Initializing git repository';
+
+    try {
+      const abortController = new AbortController();
+
+      // Creating git repository can get stuck in some cases,
+      // e.g. if git asks for ssh passphrase.
+      // We abort it after a timeout so that this doesn't hang forever.
+      await Promise.race([
+        createInitialGitCommit(folder, abortController.signal),
+        new Promise<void>((_resolve, reject) => {
+          setTimeout(() => {
+            const error = new Error('Creating git repository took too long');
+
+            abortController.abort(error.message);
+            reject(error);
+          }, 5000);
+        }),
+      ]);
+    } catch (error) {
+      spinner.warn('Failed to create git repository');
+    }
 
     printSuccessMessage();
 
