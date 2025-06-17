@@ -1,4 +1,4 @@
-<a href="https://www.callstack.com/open-source" align="center">
+<a href="https://www.callstack.com/open-source?utm_campaign=generic&utm_source=github&utm_medium=referral&utm_content=react-native-builder-bob" align="center">
   <picture>
     <img alt="React Native Builder Bob" src="https://github.com/user-attachments/assets/d9717af6-8ab5-4b77-a120-64efef0a4b0f">
   </picture>
