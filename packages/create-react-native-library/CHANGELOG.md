@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.51.0...create-react-native-library@0.51.1) (2025-06-21)
+
+### Bug Fixes
+
+- **template:** Add missing configutation for nitro-modules ([#862](https://github.com/callstack/react-native-builder-bob/issues/862)) ([fe58737](https://github.com/callstack/react-native-builder-bob/commit/fe587371a9241eca30faf2fb4576eb9a995eecf0)) - by @serjooo
+- **template:** remove the view manager template for iOS ([#864](https://github.com/callstack/react-native-builder-bob/issues/864)) ([7e7eeed](https://github.com/callstack/react-native-builder-bob/commit/7e7eeed72955efe586ea1f41427dca681aae8e92)) - by @ArturKalach
+
 # [0.51.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.50.3...create-react-native-library@0.51.0) (2025-06-14)
 
 ### Bug Fixes
