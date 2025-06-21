@@ -24,11 +24,8 @@ Pod::Spec.new do |s|
 
 <% if (project.moduleConfig === "nitro-modules") { -%>
   s.source_files = [
-    # Implementation (Swift)
-    "ios/**/*.{swift}",
-    # Autolinking/Registration (Objective-C++)
+    "ios/**/*.{swift}",=
     "ios/**/*.{m,mm}",
-    # Implementation (C++ objects)
     "cpp/**/*.{hpp,cpp}",
   ]
 
