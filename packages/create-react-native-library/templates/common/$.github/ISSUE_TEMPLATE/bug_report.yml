@@ -63,6 +63,5 @@ body:
     attributes:
       label: Reproducible example repository 
       description: Please provide a link to a repository on GitHub with a reproducible example.
-      render: js
     validations:
       required: true
