@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 
 <% if (project.moduleConfig === "nitro-modules") { -%>
   s.source_files = [
-    "ios/**/*.{swift}",=
+    "ios/**/*.{swift}",
     "ios/**/*.{m,mm}",
     "cpp/**/*.{hpp,cpp}",
   ]
