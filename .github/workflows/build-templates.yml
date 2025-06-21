@@ -231,37 +231,14 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-
-      - name: Restore cocoapods
-        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
-        id: library-cocoapods-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ${{ env.work_dir }}/**/ios/Pods
-            ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-${{ hashFiles(format('{0}/**/*ViewNativeComponent.ts', env.work_dir), format('{0}/**/Native*.ts', env.work_dir), format('{0}/**/*.nitro.ts', env.work_dir)) }}
-          restore-keys: |
-            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-${{ hashFiles(format('{0}/yarn.lock', env.work_dir)) }}-
-            ${{ runner.os }}-library-cocoapods-${{ hashFiles(format('{0}/example/ios/Podfile', env.work_dir)) }}-
-            ${{ runner.os }}-library-cocoapods-
-
       - name: Install cocoapods
-        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
+        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
         working-directory: ${{ env.work_dir }}
         run: |
           cd example
           bundle install
+          bundle exec pod repo update --verbose
           bundle exec pod install --project-directory=ios
-
-      - name: Cache cocoapods
-        if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1 && steps.library-cocoapods-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ${{ env.work_dir }}/**/ios/Pods
-            ${{ env.work_dir }}/**/ios/Podfile.lock
-          key: ${{ steps.library-cocoapods-cache.outputs.cache-primary-key }}
 
       - name: Build example (iOS)
         if: env.ios_build == 1
