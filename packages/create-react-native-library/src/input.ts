@@ -210,8 +210,23 @@ export async function createQuestions({
           return 'Cannot be empty';
         }
 
-        if (fs.pathExistsSync(path.join(process.cwd(), input))) {
-          return 'Directory already exists';
+        const targetPath = path.join(process.cwd(), input);
+
+        if (fs.pathExistsSync(targetPath)) {
+          const stat = fs.statSync(targetPath);
+
+          if (!stat.isDirectory()) {
+            return 'Path exists and is not a directory';
+          }
+
+          const files = fs.readdirSync(targetPath);
+
+          const isEmpty =
+            files.length === 0 || (files.length === 1 && files[0] === '.git');
+
+          if (!isEmpty) {
+            return 'Directory already exists';
+          }
         }
 
         return true;
