@@ -35,9 +35,8 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
-  if (supportsNamespace()) {
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
-    namespace "com.margelo.nitro.<%- project.package -%>"
+  namespace "com.margelo.nitro.<%- project.package -%>"
 <% } else { -%>
   namespace "com.<%- project.package -%>"
 <% } -%>

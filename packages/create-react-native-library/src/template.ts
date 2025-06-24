@@ -156,6 +156,7 @@ function getModuleConfig(projectType: ProjectType): ModuleConfig {
       return 'turbo-modules';
     case 'fabric-view':
     case 'library':
+    case 'nitro-view':
       return null;
   }
 }

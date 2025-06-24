@@ -18,9 +18,8 @@ yarn
 ```
 
 > Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development.
-> <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
 
 You need to run [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate code required for this project. The example app will not build without this step.
@@ -35,8 +34,6 @@ To invoke **Nitrogen**, use the following command:
 ```sh
 yarn nitrogen
 ```
-
-<% } -%>
 
 <% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
