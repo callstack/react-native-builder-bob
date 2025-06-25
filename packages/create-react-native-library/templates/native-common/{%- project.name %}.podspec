@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => min_ios_version_supported }
   s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
 
-<% if (project.moduleConfig !== "nitro-modules") { -%>
+<% if (project.moduleConfig !== "nitro-modules" || project.viewConfig === "nitro-view") { -%>
 <% if (project.swift) { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 <% } else { -%>
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
 <% } -%>
 <% } -%>
 
-<% if (project.moduleConfig === "nitro-modules") { -%>
+<% if (project.moduleConfig === "nitro-modules" || project.viewConfig === "nitro-view") { -%>
   s.source_files = [
     "ios/**/*.{swift}",
     "ios/**/*.{m,mm}",

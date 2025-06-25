@@ -48,7 +48,7 @@
     "clean": "del-cli lib",
 <% } -%>
     "prepare": "bob build",
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "nitro-codegen",
 <% } -%>
     "release": "release-it --only-version"
@@ -91,14 +91,14 @@
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
     "jest": "^29.7.0",
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitro-codegen": "^<%- versions.nitro %>",
 <% } -%>
     "prettier": "^3.0.3",
     "react": "19.0.0",
     "react-native": "0.78.1",
     "react-native-builder-bob": "^<%- versions.bob %>",
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
 <% } -%>
     "release-it": "^17.10.0",
@@ -109,7 +109,7 @@
   },
   "peerDependencies": {
     "react": "*",
-<% if (project.moduleConfig === 'nitro-modules') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native": "*",
     "react-native-nitro-modules": "^<%- versions.nitro %>"
 <% } else { -%>
@@ -164,7 +164,7 @@
     "source": "src",
     "output": "lib",
     "targets": [
-<% if (project.moduleConfig === "nitro-modules") { -%>
+<% if (project.moduleConfig === "nitro-modules" || project.viewConfig === "nitro-view") { -%>
       [
         "custom",
         {
