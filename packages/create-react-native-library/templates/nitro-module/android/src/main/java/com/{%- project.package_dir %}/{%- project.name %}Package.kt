@@ -1,4 +1,4 @@
-package com.<%- project.package %>
+package com.margelo.nitro.<%- project.package %>
 
 import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
