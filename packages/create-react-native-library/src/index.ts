@@ -72,9 +72,8 @@ async function create(_argv: Args) {
   });
 
   const bobVersion = await bobVersionPromise;
-
   const nitroModulesVersion =
-    answers.type === 'nitro-module'
+    answers.type === 'nitro-module' || answers.type === 'nitro-view'
       ? await nitroModulesVersionPromise
       : undefined;
 
