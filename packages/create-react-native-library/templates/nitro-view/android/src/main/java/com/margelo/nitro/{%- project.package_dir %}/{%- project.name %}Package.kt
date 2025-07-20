@@ -5,7 +5,8 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
-import com.margelo.nitro.<%- project.package_cpp -%>.views.Hybrid<%- project.name -%>Manager
+
+import <%- project.package_cpp -%>.views.Hybrid<%- project.name -%>Manager
 
 class <%- project.name -%>Package : TurboReactPackage() {
     override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
