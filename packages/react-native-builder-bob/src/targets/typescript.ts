@@ -205,7 +205,11 @@ export default async function build({
       { cwd: root }
     );
 
-    await del([tsbuildinfo]);
+    try {
+      await del([tsbuildinfo]);
+    } catch (e) {
+      // Ignore
+    }
 
     if (esm) {
       if (outputs?.commonjs && outputs?.module) {
