@@ -129,7 +129,7 @@ export function generateTemplateConfiguration({
               .replace(/[^a-z0-9](\w)/g, (_, $1: string) => $1.toUpperCase())
               .slice(1)}`,
       package: pack,
-      package_dir: pack.replace(/\./g, '/'),
+      package_dir: pack.replace(/\./g, path.sep),
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',

@@ -105,7 +105,9 @@ export default async function build({
       }
     } else {
       const execpath = process.env.npm_execpath;
-      const cli = execpath?.split('/').pop()?.includes('yarn') ? 'yarn' : 'npm';
+      const cli = execpath?.split(path.sep).pop()?.includes('yarn')
+        ? 'yarn'
+        : 'npm';
 
       if (cli === 'yarn') {
         const result = await spawn('yarn', ['bin', 'tsc'], {

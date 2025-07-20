@@ -76,7 +76,8 @@ export async function patchCodegenAndroidPackage(
 
   const newPackagePath = path.resolve(
     codegenAndroidPath,
-    `java/${codegenJavaPackageName.replace(/\./g, '/')}`
+    'java',
+    codegenJavaPackageName.replace(/\./g, path.sep)
   );
 
   if (!(await fs.pathExists(newPackagePath))) {

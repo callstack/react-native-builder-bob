@@ -206,8 +206,8 @@ export async function createQuestions({
       name: 'directory',
       message: `Where do you want to create the library?`,
       initial: (_, answers) => {
-        if ((answers.local ?? local) && name && !name?.includes('/')) {
-          return `modules/${name}`;
+        if ((answers.local ?? local) && name && !name?.includes(path.sep)) {
+          return path.join('modules', name);
         }
 
         return name ?? '';
