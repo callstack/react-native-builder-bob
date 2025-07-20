@@ -42,6 +42,10 @@ jobs:
             type:
               name: library
               language: js
+          - os: windows-latest
+            type:
+              name: library
+              language: js
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.type.name }}-${{ matrix.type.language }}
@@ -61,10 +65,12 @@ jobs:
           yarn workspace create-react-native-library prepare
 
       - name: Get working directory
+        shell: bash
         run: |
           echo "work_dir=${{ matrix.os }}-${{ matrix.type.name }}-${{ matrix.type.language }}" >> $GITHUB_ENV
 
       - name: Create library
+        shell: bash
         run: |
           rm -rf ${{ env.work_dir }} # Workaround for tests failing intermittently
 
@@ -102,6 +108,7 @@ jobs:
       - name: Install dependencies of library
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
         working-directory: ${{ env.work_dir }}
+        shell: bash
         run: |
           touch yarn.lock # Without this Yarn will fail due to the parent directory being a Yarn workspace
           rm -f example/yarn.lock # Workaround for cached yarn.lock from older version
@@ -117,6 +124,7 @@ jobs:
           key: ${{ steps.library-yarn-cache.outputs.cache-primary-key }}
 
       - name: Use local version of react-native-builder-bob
+        shell: bash
         run: |
           cd packages/react-native-builder-bob
           npm pack
@@ -127,6 +135,7 @@ jobs:
 
       - name: Get build target
         working-directory: ${{ env.work_dir }}
+        shell: bash
         run: |
           # Build Android for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} =~ ubuntu ]]; then
@@ -160,6 +169,7 @@ jobs:
       - name: Check turborepo cache
         if: env.android_build == 1 || env.ios_build == 1
         working-directory: ${{ env.work_dir }}
+        shell: bash
         run: |
           TURBO_CACHE_STATUS_ANDROID=$(node -p "($(yarn turbo run build:android --cache-dir=".turbo" --dry=json)).tasks.find(t => t.task === 'build:android').cache.status")
           TURBO_CACHE_STATUS_IOS=$(node -p "($(yarn turbo run build:ios --cache-dir=".turbo" --dry=json)).tasks.find(t => t.task === 'build:ios').cache.status")
@@ -193,8 +203,9 @@ jobs:
           yarn prepare
 
       - name: Build example (Web)
-        working-directory: ${{ env.work_dir }}
         if: matrix.type.language == 'js'
+        working-directory: ${{ env.work_dir }}
+        shell: bash
         run: |
           # Clean up built JS files
           # So we test that bundling works without any pre-built files

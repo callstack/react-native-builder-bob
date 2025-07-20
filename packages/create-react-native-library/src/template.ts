@@ -277,7 +277,10 @@ async function applyTemplate(
       let result;
 
       try {
-        result = ejs.render(content, config);
+        result = ejs
+          .render(content, config)
+          // Make sure that line endings are 'lf' (Unix style)
+          .replace(/\r\n/g, '\n');
       } catch (e) {
         throw new Error(`Failed to render template file content: ${f}`, {
           cause: e,
