@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.13](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.12...react-native-builder-bob@0.40.13) (2025-07-20)
+
+### Bug Fixes
+
+- ignore error in tsbuildinfo deletion ([7ec4317](https://github.com/callstack/react-native-builder-bob/commit/7ec43176305b4aafaf1a199b8856153b630c97a1)), closes [#867](https://github.com/callstack/react-native-builder-bob/issues/867) - by @satya164
+- use path.sep for better windows compatibility ([05ece3e](https://github.com/callstack/react-native-builder-bob/commit/05ece3eef7037a66bb886ce73d1f9da1c9335f46)) - by @satya164
+
 ## [0.40.12](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.11...react-native-builder-bob@0.40.12) (2025-06-14)
 
 ### Bug Fixes

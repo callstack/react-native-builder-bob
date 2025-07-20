@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.52.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.51.1...create-react-native-library@0.52.0) (2025-07-20)
+
+### Bug Fixes
+
+- allow project creation in directories with only .git folder ([#866](https://github.com/callstack/react-native-builder-bob/issues/866)) ([a933e02](https://github.com/callstack/react-native-builder-bob/commit/a933e020aea5cf3cda419954fd3df3b2f5e247a9)) - by @saseungmin
+- fix `…Package.kt` being in wrong Java `package` for Nitro ([#869](https://github.com/callstack/react-native-builder-bob/issues/869)) ([14730be](https://github.com/callstack/react-native-builder-bob/commit/14730be2e3a3da92bd27feaf8bd89731306cf9ee)) - by @mrousavy
+- remove folly flags that make Nitro Views crash with SIGABRT on RN 0.80 ([#871](https://github.com/callstack/react-native-builder-bob/issues/871)) ([1410c2f](https://github.com/callstack/react-native-builder-bob/commit/1410c2f459f6b55677152bd77a2019b7a6551543)) - by @mrousavy
+- use path.sep for better windows compatibility ([05ece3e](https://github.com/callstack/react-native-builder-bob/commit/05ece3eef7037a66bb886ce73d1f9da1c9335f46)) - by @satya164
+
+### Features
+
+- add option to create nitro views ([#805](https://github.com/callstack/react-native-builder-bob/issues/805)) ([830bc59](https://github.com/callstack/react-native-builder-bob/commit/830bc59ac3504755f2913fa66e9ce0d451c64040)) - by @Juozas-Petkelis
+
 ## [0.51.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.51.0...create-react-native-library@0.51.1) (2025-06-21)
 
 ### Bug Fixes
