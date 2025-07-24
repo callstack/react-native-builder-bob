@@ -3,6 +3,8 @@
 const path = require('path');
 const { loadConfig } = require('./lib/utils/loadConfig');
 
+const tag = '[react-native-builder-bob]'
+
 /**
  * Get Babel configuration for the example project.
  * This sets up appropriate presets and plugins for the library.
@@ -18,14 +20,14 @@ const getConfig = (defaultConfig, { root }) => {
   const result = loadConfig(root);
 
   if (result == null) {
-    throw new Error(`Couldn't find a valid configuration at ${root}.`);
+    throw new Error(`${tag} Couldn't find a valid configuration at ${root}.`);
   }
 
   const { source } = result.config;
 
   if (source == null) {
     throw new Error(
-      "Couldn't determine the source directory. Does your config specify a 'source' field?"
+      `${tag} Couldn't determine the source directory. Does your config specify a 'source' field?`
     );
   }
 
