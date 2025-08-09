@@ -144,11 +144,3 @@ dependencies {
   implementation project(":react-native-nitro-modules")
 <% } -%>
 }
-
-<% if (project.moduleConfig === "turbo-modules" || project.viewConfig === "fabric-view") { -%>
-react {
-  jsRootDir = file("../src/")
-  libraryName = "<%- project.viewConfig !== null ? project.name + 'View' : project.name -%>"
-  codegenJavaPackageName = "com.<%- project.package -%>"
-}
-<% } -%>
