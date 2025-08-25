@@ -4,11 +4,17 @@ export async function createInitialGitCommit(
   folder: string,
   signal?: AbortSignal
 ) {
-  const isInGitRepo =
-    (await spawn('git', ['rev-parse', '--is-inside-work-tree'], {
-      cwd: folder,
-      signal,
-    })) === 'true';
+  let isInGitRepo = false;
+
+  try {
+    isInGitRepo =
+      (await spawn('git', ['rev-parse', '--is-inside-work-tree'], {
+        cwd: folder,
+        signal,
+      })) === 'true';
+  } catch (error) {
+    // Ignore errors
+  }
 
   if (!isInGitRepo) {
     await spawn('git', ['init'], { cwd: folder, signal });
