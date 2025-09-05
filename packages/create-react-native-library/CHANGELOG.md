@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.0...create-react-native-library@0.54.1) (2025-09-05)
+
+### Bug Fixes
+
+- fix canceling in-progress workflows ([4ccd647](https://github.com/callstack/react-native-builder-bob/commit/4ccd6473a393fd530263c60a47fd1a7c4a7310cf)) - by @satya164
+
 # [0.54.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.53.0...create-react-native-library@0.54.0) (2025-09-05)
 
 ### Bug Fixes
