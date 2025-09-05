@@ -131,6 +131,8 @@ jobs:
     env:
       XCODE_VERSION: 16.2
       TURBO_CACHE_DIR: .turbo/ios
+      RCT_USE_RN_DEP: 1
+      RCT_USE_PREBUILT_RNCORE: 1
 
     steps:
       - name: Checkout
