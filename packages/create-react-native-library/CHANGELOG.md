@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.54.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.53.0...create-react-native-library@0.54.0) (2025-09-05)
+
+### Bug Fixes
+
+- cancel previous ci jobs for android & ios ([a0b57e4](https://github.com/callstack/react-native-builder-bob/commit/a0b57e448f070ed4f06961a9bb51976db8dd306f)) - by @satya164
+
+### Features
+
+- enable iOS prebuilds on CI ([757316d](https://github.com/callstack/react-native-builder-bob/commit/757316d67ff615cc90e4d04a788aaa1a6b0b965d)) - by @satya164
+
 # [0.53.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.52.1...create-react-native-library@0.53.0) (2025-08-25)
 
 ### Bug Fixes
