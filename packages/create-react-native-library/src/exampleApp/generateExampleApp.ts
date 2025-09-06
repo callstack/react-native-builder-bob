@@ -22,6 +22,7 @@ const FILES_TO_DELETE = [
 
 const PACKAGES_TO_REMOVE = [
   '@react-native/eslint-config',
+  '@react-native/new-app-screen',
   '@tsconfig/react-native',
   '@types/jest',
   '@types/react-test-renderer',
@@ -36,9 +37,9 @@ const PACKAGES_TO_REMOVE = [
 ];
 
 const PACKAGES_TO_ADD_WEB = {
-  '@expo/metro-runtime': '~3.2.1',
-  'react-dom': '18.2.0',
-  'react-native-web': '~0.18.10',
+  '@expo/metro-runtime': '~5.0.4',
+  'react-dom': '19.1.0',
+  'react-native-web': '~0.21.1',
 };
 
 export default async function generateExampleApp({
