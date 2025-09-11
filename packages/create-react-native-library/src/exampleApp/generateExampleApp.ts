@@ -141,6 +141,12 @@ export default async function generateExampleApp({
   // Remove Jest config for now
   delete pkg.jest;
 
+  // Make sure we have at least empty objects
+  // Otherwise generation will fails if package doesn't contain these fields
+  pkg.scripts = pkg.scripts || {};
+  pkg.dependencies = pkg.dependencies || {};
+  pkg.devDependencies = pkg.devDependencies || {};
+
   const { scripts, dependencies, devDependencies } = pkg;
 
   delete scripts.test;
