@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.2...create-react-native-library@0.54.3) (2025-09-11)
+
+### Bug Fixes
+
+- fix example failing with expo template ([dd399e3](https://github.com/callstack/react-native-builder-bob/commit/dd399e33d211219647a783d84871968189aef493)) - by @satya164
+
 ## [0.54.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.1...create-react-native-library@0.54.2) (2025-09-06)
 
 **Note:** Version bump only for package create-react-native-library
