@@ -2,8 +2,6 @@
 
 @implementation <%- project.name -%>
 
-RCT_EXPORT_MODULE()
-
 - (NSNumber *)multiply:(double)a b:(double)b {
     NSNumber *result = @(a * b);
 
@@ -14,6 +12,11 @@ RCT_EXPORT_MODULE()
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
     return std::make_shared<facebook::react::Native<%- project.name -%>SpecJSI>(params);
+}
+
++ (NSString *)moduleName
+{
+  return @"<%- project.name -%>";
 }
 
 @end
