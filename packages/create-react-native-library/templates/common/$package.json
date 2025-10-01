@@ -48,9 +48,6 @@
     "clean": "del-cli lib",
 <% } -%>
     "prepare": "bob build",
-<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
-    "nitrogen": "nitro-codegen",
-<% } -%>
     "release": "release-it --only-version"
   },
   "keywords": [
@@ -92,7 +89,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^29.7.0",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
-    "nitro-codegen": "^<%- versions.nitro %>",
+    "nitrogen": "^<%- versions.nitro %>",
 <% } -%>
     "prettier": "^3.6.2",
     "react": "19.1.0",
