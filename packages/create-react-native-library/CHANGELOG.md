@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.4](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.3...create-react-native-library@0.54.4) (2025-10-04)
+
+### Bug Fixes
+
+- rename nitro-codegen to nitrogen ([#891](https://github.com/callstack/react-native-builder-bob/issues/891)) ([55612c7](https://github.com/callstack/react-native-builder-bob/commit/55612c7d887f8c45be78b6a8327cf1fbc2138009)) - by @riteshshukla04
+- update iOS TurboModule template ([#889](https://github.com/callstack/react-native-builder-bob/issues/889)) ([c396f1b](https://github.com/callstack/react-native-builder-bob/commit/c396f1b863b2ef22aa124860974dc3b335c72c92)) - by @krozniata
+
 ## [0.54.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.2...create-react-native-library@0.54.3) (2025-09-11)
 
 ### Bug Fixes
