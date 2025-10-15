@@ -18,7 +18,7 @@
     "android",
     "ios",
     "cpp",
-<% if (project.moduleConfig === "nitro-modules") { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen",
     "nitro.json",
 <% } -%>
@@ -48,6 +48,9 @@
     "clean": "del-cli lib",
 <% } -%>
     "prepare": "bob build",
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+    "nitrogen": "nitrogen",
+<% } -%>
     "release": "release-it --only-version"
   },
   "keywords": [
