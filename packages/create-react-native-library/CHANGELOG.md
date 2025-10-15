@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.6](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.5...create-react-native-library@0.54.6) (2025-10-15)
+
+### Bug Fixes
+
+- nitrogen script missing during release-it ([#895](https://github.com/callstack/react-native-builder-bob/issues/895)) ([4fe7282](https://github.com/callstack/react-native-builder-bob/commit/4fe7282f0d24865785436e08ff1bf9043026d2cd)) - by @riteshshukla04
+
 ## [0.54.5](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.4...create-react-native-library@0.54.5) (2025-10-04)
 
 ### Bug Fixes
