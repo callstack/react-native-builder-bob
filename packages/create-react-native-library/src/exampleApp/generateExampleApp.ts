@@ -34,6 +34,7 @@ const PACKAGES_TO_REMOVE = [
   'prettier',
   'react-test-renderer',
   'typescript',
+  'react-native-safe-area-context',
 ];
 
 const PACKAGES_TO_ADD_WEB = {
