@@ -197,6 +197,8 @@ export default async function generateExampleApp({
   PACKAGES_TO_REMOVE.forEach((name) => {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete devDependencies[name];
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete dependencies[name];
   });
 
   const PACKAGES_TO_ADD_DEV = {
