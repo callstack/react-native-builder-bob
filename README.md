@@ -10,6 +10,14 @@
 
 👷‍♂️ Set of CLIs to scaffold and build React Native libraries for different targets.
 
+## Table of contents
+- [Documentation](#documentation)
+- [Development workflow](#development-workflow)
+- [Publishing](#publishing)
+- [Acknowledgements](#acknowledgments)
+- [Alternatives](#alternatives)
+- [License](#license)
+
 ## Documentation
 
 Documentation is available at [https://callstack.github.io/react-native-builder-bob/](https://callstack.github.io/react-native-builder-bob/).
