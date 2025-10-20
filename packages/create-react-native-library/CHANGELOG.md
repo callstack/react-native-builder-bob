@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.7](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.6...create-react-native-library@0.54.7) (2025-10-20)
+
+### Bug Fixes
+
+- remove react-native-safe-area-context from example app ([#897](https://github.com/callstack/react-native-builder-bob/issues/897)) ([cbe21ba](https://github.com/callstack/react-native-builder-bob/commit/cbe21ba33fa256821009b68357959c55513ce135)), closes [#896](https://github.com/callstack/react-native-builder-bob/issues/896) - by @jaworek
+
 ## [0.54.6](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.5...create-react-native-library@0.54.6) (2025-10-15)
 
 ### Bug Fixes
