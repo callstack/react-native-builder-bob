@@ -1,4 +1,6 @@
-# ESM support
+---
+title: ESM support
+---
 
 ## Default setup
 

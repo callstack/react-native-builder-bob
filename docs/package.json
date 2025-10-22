@@ -4,17 +4,14 @@
   "private": true,
   "description": "Documentation for react-native-builder-bob",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build"
+    "build": "rspress build",
+    "dev": "rspress dev",
+    "preview": "rspress preview"
   },
   "dependencies": {
-    "next": "^13.5.3",
-    "nextra": "^2.13.1",
-    "nextra-theme-docs": "^2.13.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "18.11.10"
+    "@callstack/rspress-preset": "^0.4.3",
+    "@callstack/rspress-theme": "^0.4.3",
+    "@rspress/core": "2.0.0-beta.32",
+    "@shikijs/transformers": "^3.13.0"
   }
 }

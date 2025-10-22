@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import githubUsername from 'github-username';
 import path from 'path';
 import validateNpmPackage from 'validate-npm-package-name';
-import type yargs from 'yargs';
+import type * as yargs from 'yargs';
 import { version } from '../package.json';
 import { SUPPORTED_REACT_NATIVE_VERSION } from './constants';
 import type { Question } from './utils/prompt';

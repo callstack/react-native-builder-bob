@@ -13,7 +13,7 @@
   "packageManager": "yarn@3.6.1",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --build",
     "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
     "test": "yarn workspace react-native-builder-bob test",
     "docs": "yarn workspace docs",

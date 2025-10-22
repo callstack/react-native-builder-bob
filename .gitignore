@@ -84,3 +84,4 @@ typings/
 # generated files
 lib/
 typescript/
+doc_build/

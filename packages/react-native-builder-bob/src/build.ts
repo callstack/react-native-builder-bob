@@ -2,7 +2,7 @@ import { type } from 'arktype';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import path from 'path';
-import yargs from 'yargs';
+import type * as yargs from 'yargs';
 import { config, type Config, type Target, type TargetOptions } from './schema';
 import { loadConfig } from './utils/loadConfig';
 import * as logger from './utils/logger';
