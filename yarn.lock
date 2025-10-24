@@ -3828,6 +3828,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rspress/plugin-llms@patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/plugin-llms@patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch::version=2.0.0-beta.34&hash=4f23cf&locator=root-workspace-0b6124%40workspace%3A."
+  dependencies:
+    remark-mdx: ^3.1.1
+    remark-parse: ^11.0.0
+    remark-stringify: ^11.0.0
+    unified: ^11.0.5
+    unist-util-visit: ^5.0.0
+  peerDependencies:
+    "@rspress/core": ^2.0.0-beta.34
+  checksum: 50fc80713bac495004159fc930e0d6706776529f7e5c43a933b7b8e9e6bdf33c79b1f0efae9d513262489f46ee12ac1dced1737a10b28775fd2cb5d90e57fb72
+  languageName: node
+  linkType: hard
+
 "@rspress/plugin-sitemap@npm:2.0.0-beta.34":
   version: 2.0.0-beta.34
   resolution: "@rspress/plugin-sitemap@npm:2.0.0-beta.34"

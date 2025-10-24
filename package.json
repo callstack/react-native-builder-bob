@@ -37,6 +37,9 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
   },
+  "resolutions": {
+    "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index c47a273839fed26bdfccc00bc90fbc1df95e43c9..bf8392629cf394717fa08cdcfeb5ce48c73f5856 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -125,7 +125,7 @@ const rsbuildPluginLlms = ({ disableSSGRef, baseRef, pageDataList, routes, title
+                 const disableSSG = disableSSGRef.current;
+                 const newPageDataList = mergeRouteMetaWithPageData(routes, pageDataList, langRef.current, include, exclude);
+                 const navList = Array.isArray(nav) ? nav.map((i)=>{
+-                    const nav = i.nav.default || i.nav;
++                    const nav = i.nav?.default || i.nav || [];
+                     const lang = i.lang;
+                     return nav.map((i)=>({
+                             ...i,
