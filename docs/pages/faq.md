@@ -1,4 +1,6 @@
-# Frequently Asked Questions
+---
+title: Frequently Asked Questions
+---
 
 ## Why should I compile my project with `react-native-builder-bob`?
 
@@ -136,7 +138,7 @@ This is because the example app is configured as a Yarn workspace, and there is 
 
    If the consumer doesn't use Yarn workspaces, they can disable it by adding the following to the `.yarnrc` file in the root of their project:
 
-   ```rc
+   ```sh
    workspaces-experimental false
    ```
 

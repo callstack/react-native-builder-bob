@@ -1,4 +1,6 @@
-# Scaffold a React Native library
+---
+title: Scaffold a React Native library
+---
 
 If you want to create your own React Native library, scaffolding the project can be a daunting task. `create-react-native-library` can scaffold a new project for you with all the necessary tools configured.
 

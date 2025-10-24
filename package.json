@@ -13,7 +13,7 @@
   "packageManager": "yarn@3.6.1",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --build",
     "watch": "concurrently 'yarn typecheck --watch' 'lerna run --parallel prepare -- --watch'",
     "test": "yarn workspace react-native-builder-bob test",
     "docs": "yarn workspace docs",
@@ -36,6 +36,9 @@
     "globals": "^16.0.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
+  },
+  "resolutions": {
+    "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch"
   },
   "commitlint": {
     "extends": [

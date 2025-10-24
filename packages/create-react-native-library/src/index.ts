@@ -32,13 +32,14 @@ import {
 import { determinePackageManager } from './utils/packageManager';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
+import { hideBin } from 'yargs/helpers';
 
 type Args = Partial<Answers> & {
   $0: string;
   [key: string]: unknown;
 };
 
-void yargs
+void yargs(hideBin(process.argv))
   .command('$0 [name]', 'create a react native library', acceptedArgs, create)
   .demandCommand()
   .recommendCommands()
@@ -47,7 +48,7 @@ void yargs
     // don't pass kebab-case args to handler.
     'strip-dashed': true,
   })
-  .strict().argv;
+  .parse();
 
 async function create(_argv: Args) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

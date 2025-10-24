@@ -1,4 +1,6 @@
-# Build a React Native library
+---
+title: Build a React Native library
+---
 
 When code is in non-standard syntaxes such as JSX, TypeScript etc, it needs to be compiled before it can run. Configuring this manually can be error-prone and annoying. `react-native-builder-bob` aims to simplify this process by wrapping `babel` and `tsc` and taking care of the configuration. See [this section](./faq.md#why-should-i-compile-my-project-with-react-native-builder-bob) for a longer explanation.
 
@@ -100,7 +102,7 @@ To configure your project manually, follow these steps:
 
 5. Add the output directory to `.gitignore` and `.eslintignore`
 
-   ```gitignore
+   ```sh
    # generated files by bob
    lib/
    ```

@@ -1,0 +1,77 @@
+.container {
+  margin: 0 auto;
+  width: calc(100% - 8 * 2px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  padding: calc(var(--rp-content-padding-y) * 1.5) 0 var(--rp-content-padding-y)
+    0;
+}
+
+.heroMain {
+  display: flex;
+  flex-direction: column;
+  text-wrap: balance;
+  max-width: 55%;
+}
+
+.heroName {
+  color: var(--rp-c-text-1);
+  font-family: 'Alliance No.2', Arial, sans-serif;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+}
+
+.featureList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  display: flex;
+  gap: 32px;
+  width: 100%;
+  margin-top: calc(var(--rp-content-padding-y) * 2);
+}
+
+.feature {
+  display: flex;
+  flex: 1;
+  position: relative;
+  color: var(--rp-c-text-1);
+  border: 1px dashed var(--rp-c-divider);
+  border-radius: var(--rp-radius-small);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 32px;
+}
+
+.featureTitle {
+  color: var(--rp-c-text-1);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.featureDescription {
+  flex: 1;
+  color: var(--rp-c-text-2);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.codeBlock {
+  position: relative;
+  width: 100%;
+  background-color: var(--rp-code-block-bg);
+  color: var(--rp-code-block-color);
+  margin: 16px 0;
+}
+
+.codeBlock pre {
+  padding: 18px 56px 18px 0;
+}
