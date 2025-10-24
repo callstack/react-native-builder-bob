@@ -1508,29 +1508,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@callstack/rspress-preset@npm:^0.4.3":
-  version: 0.4.3
-  resolution: "@callstack/rspress-preset@npm:0.4.3"
+"@callstack/rspress-preset@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@callstack/rspress-preset@npm:0.4.4"
   dependencies:
-    "@callstack/rspress-theme": 0.4.3
-    "@rspress/plugin-llms": 2.0.0-beta.32
-    "@rspress/plugin-sitemap": 2.0.0-beta.32
+    "@callstack/rspress-theme": 0.4.4
+    "@rspress/plugin-llms": 2.0.0-beta.34
+    "@rspress/plugin-sitemap": 2.0.0-beta.34
     "@vercel/analytics": ^1.5.0
     rsbuild-plugin-open-graph: ^1.0.2
     zod: ^3.23.8
   peerDependencies:
-    "@rspress/core": 2.0.0-beta.32
-  checksum: 2bb60fc6e9d2b963703d40f2ece223094bd3f49c82b1c82de4fd8595d4de03a6ca50008a74a85716d761f77097e56c1d2331beeaa9bce72512ae604ef8ff9d00
+    "@rspress/core": 2.0.0-beta.34
+  checksum: ef187d32d49fcc9ac3b009846e09ed02d5574e66dbc3cdd91051c9c6cea41f107df65c658f8430032a19c40090c1d032fb4dfdf2372ee95acee78b4fa7d9e683
   languageName: node
   linkType: hard
 
-"@callstack/rspress-theme@npm:0.4.3, @callstack/rspress-theme@npm:^0.4.3":
-  version: 0.4.3
-  resolution: "@callstack/rspress-theme@npm:0.4.3"
+"@callstack/rspress-theme@npm:0.4.4, @callstack/rspress-theme@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@callstack/rspress-theme@npm:0.4.4"
   peerDependencies:
-    "@rspress/core": ^2.0.0-beta.32
+    "@rspress/core": ^2.0.0-beta.34
     react: ^19.0.0
-  checksum: a8a9bc4e5fdff5979acbce0a26233c6b4ca2e8eb4036cd49f4ad764be1d58d61f95386abb5e6f0031e09b5b4e340abf3996482db4eb1c5b03f3884df0ba67e8d
+  checksum: 71dde3764e9b9a0835799fcfdc6c03540037a0143c7392fc0c7bfe3a330be9e48ae68f38c59ff5c97903f1d42c246bc0ebd92d336617839f8f3b0e2b671857fe
   languageName: node
   linkType: hard
 
@@ -2701,18 +2701,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@mdx-js/react@npm:2.3.0"
-  dependencies:
-    "@types/mdx": ^2.0.0
-    "@types/react": ">=16"
-  peerDependencies:
-    react: ">=16"
-  checksum: f45fe779556e6cd9a787f711274480e0638b63c460f192ebdcd77cc07ffa61e23c98cb46dd46e577093e1cb4997a232a848d1fb0ba850ae204422cf603add524
-  languageName: node
-  linkType: hard
-
 "@mdx-js/react@npm:^3.1.1":
   version: 3.1.1
   resolution: "@mdx-js/react@npm:3.1.1"
@@ -3516,7 +3504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rsbuild/core@npm:~1.5.4":
+"@rsbuild/core@npm:~1.5.12":
   version: 1.5.17
   resolution: "@rsbuild/core@npm:1.5.17"
   dependencies:
@@ -3693,24 +3681,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/core@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/core@npm:2.0.0-beta.32"
+"@rspress/core@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/core@npm:2.0.0-beta.34"
   dependencies:
     "@mdx-js/mdx": ^3.1.1
     "@mdx-js/react": ^3.1.1
-    "@rsbuild/core": ~1.5.4
+    "@rsbuild/core": ~1.5.12
     "@rsbuild/plugin-react": ~1.4.0
     "@rspress/mdx-rs": 0.6.6
-    "@rspress/runtime": 2.0.0-beta.32
-    "@rspress/shared": 2.0.0-beta.32
-    "@rspress/theme-default": 2.0.0-beta.32
+    "@rspress/runtime": 2.0.0-beta.34
+    "@rspress/shared": 2.0.0-beta.34
+    "@rspress/theme-default": 2.0.0-beta.34
     "@shikijs/rehype": ^3.12.2
     "@types/unist": ^3.0.3
-    "@unhead/react": ^2.0.14
+    "@unhead/react": ^2.0.17
     cac: ^6.7.14
     chokidar: ^3.6.0
-    enhanced-resolve: 5.18.3
     github-slugger: ^2.0.0
     hast-util-heading-rank: ^3.0.0
     html-to-text: ^9.0.5
@@ -3733,7 +3720,7 @@ __metadata:
     unist-util-visit-children: ^3.0.0
   bin:
     rspress: bin/rspress.js
-  checksum: 82a56acdc9419d46b1557d089e5d9585cd9f04db8e4079be4e550913cc4b8e490d82b7230b2f91612b9b69f3c7c5b548a7af84a9586553541eb4b91e55258f0d
+  checksum: 239a326919d6bc9dd87a53f6f157f5c45b9ddf4beafcd8414e3ab3fcbeb5b07a2cbb1e58ea375d99d10f4cab855ab9e085667ca5e085a735d7720214fc8b2c1d
   languageName: node
   linkType: hard
 
@@ -3826,9 +3813,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/plugin-llms@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/plugin-llms@npm:2.0.0-beta.32"
+"@rspress/plugin-llms@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/plugin-llms@npm:2.0.0-beta.34"
   dependencies:
     remark-mdx: ^3.1.1
     remark-parse: ^11.0.0
@@ -3836,54 +3823,54 @@ __metadata:
     unified: ^11.0.5
     unist-util-visit: ^5.0.0
   peerDependencies:
-    "@rspress/core": ^2.0.0-beta.32
-  checksum: 4d685c0713106b34cd02a7b0bd610e28fe5868bb3849a3f63eb01207ee9e37e7b82756021ff9674353976c0beefd6145a740c200bf3fb253c0c3864764a925a5
+    "@rspress/core": ^2.0.0-beta.34
+  checksum: 18fe0a90b3070a72e8fd475d70ab5c2a22c40d7428bf4a9ba249e6bf2f499ec82fa83311714562778f6ef8dcfb27e5071890a918ab3a0fc74246a87b4b2a2e5d
   languageName: node
   linkType: hard
 
-"@rspress/plugin-sitemap@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/plugin-sitemap@npm:2.0.0-beta.32"
+"@rspress/plugin-sitemap@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/plugin-sitemap@npm:2.0.0-beta.34"
   peerDependencies:
-    "@rspress/core": ^2.0.0-beta.32
-  checksum: 45107047acfac2a41302cd3ad489dea94a6205649a2ed55e7cd98f47962791a398920868ab9251e5f574f505d29e1ff61600173334f2456be3eb3e6dfc2548c7
+    "@rspress/core": ^2.0.0-beta.34
+  checksum: a687a85cee58136b2faf6739c69e69ce1290adc63a63d78e4a03ecc9486dddf0b6a5db3ae86cbf0805d55a5f907af75329a0abd0ad38d672ecbb99136bf5b9be
   languageName: node
   linkType: hard
 
-"@rspress/runtime@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/runtime@npm:2.0.0-beta.32"
+"@rspress/runtime@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/runtime@npm:2.0.0-beta.34"
   dependencies:
-    "@rspress/shared": 2.0.0-beta.32
-    "@unhead/react": ^2.0.14
+    "@rspress/shared": 2.0.0-beta.34
+    "@unhead/react": ^2.0.17
     react: ^19.1.1
     react-dom: ^19.1.1
     react-router-dom: ^6.30.1
-  checksum: b6053b273cf62f0c313fa6999cb7d2f1ec9439e2e6debb6f9234c1cdd2963b25ec676d84351c521e6ef1897177726b2dc32fcadc76b055eee215cd31713b9806
+  checksum: 28e1efe1dc37cf7c3e828ce3457b7f4b5a82c8fa6052ef535a87b89ffbadf02d0a6f7ae958cbe93c31f46cc0e68b4f6b866cdf77c40f776e00d9aca0cbdf651e
   languageName: node
   linkType: hard
 
-"@rspress/shared@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/shared@npm:2.0.0-beta.32"
+"@rspress/shared@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/shared@npm:2.0.0-beta.34"
   dependencies:
-    "@rsbuild/core": ~1.5.4
+    "@rsbuild/core": ~1.5.12
     "@shikijs/rehype": ^3.12.2
     gray-matter: 4.0.3
     lodash-es: ^4.17.21
     unified: ^11.0.5
-  checksum: 59172370f5f9151ac8c5c2ad54ebb6ddf2b2ee4f0e93b75417261a1690470f1c9e7070fd10dedac07fe7cdfad9e2ab9a4c88250ce32e018510ff182d49f65ca7
+  checksum: f3df67c6baa99d01c58eddd075f745a821a45f91d6855b3d09c50fc5eddb4d48f37d37d237b9794dc493a40e36bcba5381836e094084207d216b01af1c8ff12c
   languageName: node
   linkType: hard
 
-"@rspress/theme-default@npm:2.0.0-beta.32":
-  version: 2.0.0-beta.32
-  resolution: "@rspress/theme-default@npm:2.0.0-beta.32"
+"@rspress/theme-default@npm:2.0.0-beta.34":
+  version: 2.0.0-beta.34
+  resolution: "@rspress/theme-default@npm:2.0.0-beta.34"
   dependencies:
-    "@mdx-js/react": 2.3.0
-    "@rspress/runtime": 2.0.0-beta.32
-    "@rspress/shared": 2.0.0-beta.32
-    "@unhead/react": ^2.0.14
+    "@mdx-js/react": ^3.1.1
+    "@rspress/runtime": 2.0.0-beta.34
+    "@rspress/shared": 2.0.0-beta.34
+    "@unhead/react": ^2.0.17
     body-scroll-lock: 4.0.0-beta.0
     copy-to-clipboard: ^3.3.3
     flexsearch: 0.7.43
@@ -3894,7 +3881,7 @@ __metadata:
     react: ^19.1.1
     react-dom: ^19.1.1
     shiki: ^3.12.2
-  checksum: 1858b5005ec0c4b6e588a16183d4fe34a94860d3fe6df0742b4773f81e32c0cfc8028eb7bbc2c4cc03b9e8e9571a034f70ce891127c3f157085d4b548abbbf26
+  checksum: c4a7158fb2ee833a453f1eb32bbb5c9d5284c175a220baf8e252cd43b236b80367ca8cf5e0989535c1e0a955fd24a39f554edd46a0652a9333c3ee222bdd0324
   languageName: node
   linkType: hard
 
@@ -4443,31 +4430,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.7
-  resolution: "@types/prop-types@npm:15.7.7"
-  checksum: 023b95f7dd82e1c594f51dcb93ec4c382600cef6eeee29a2ac7b782b92c0882eab8da16d4cbd6e18b39e85ac8d94ebf4ca02c6e248ce5b5fb4b16dbab5d82861
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:>=16":
-  version: 18.2.23
-  resolution: "@types/react@npm:18.2.23"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: efb9d1ed1940c0e7ba08a21ffba5e266d8dbbb8fe618cfb97bc902dfc96385fdd8189e3f7f64b4aa13134f8e61947d60560deb23be151253c3a97b0d070897ca
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:*":
-  version: 0.16.4
-  resolution: "@types/scheduler@npm:0.16.4"
-  checksum: a57b0f10da1b021e6bd5eeef8a1917dd3b08a8715bd8029e2ded2096d8f091bb1bb1fef2d66e139588a983c4bfbad29b59e48011141725fa83c76e986e1257d7
-  languageName: node
-  linkType: hard
-
 "@types/semver@npm:^7.5.5":
   version: 7.7.0
   resolution: "@types/semver@npm:7.7.0"
@@ -4638,7 +4600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@unhead/react@npm:^2.0.14":
+"@unhead/react@npm:^2.0.17":
   version: 2.0.19
   resolution: "@unhead/react@npm:2.0.19"
   dependencies:
@@ -6301,13 +6263,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.2":
-  version: 3.1.2
-  resolution: "csstype@npm:3.1.2"
-  checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
-  languageName: node
-  linkType: hard
-
 "dargs@npm:^7.0.0":
   version: 7.0.0
   resolution: "dargs@npm:7.0.0"
@@ -6548,9 +6503,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "docs@workspace:docs"
   dependencies:
-    "@callstack/rspress-preset": ^0.4.3
-    "@callstack/rspress-theme": ^0.4.3
-    "@rspress/core": 2.0.0-beta.32
+    "@callstack/rspress-preset": ^0.4.4
+    "@callstack/rspress-theme": ^0.4.4
+    "@rspress/core": 2.0.0-beta.34
     "@shikijs/transformers": ^3.13.0
   languageName: unknown
   linkType: soft
@@ -6718,16 +6673,6 @@ __metadata:
   dependencies:
     once: ^1.4.0
   checksum: 530a5a5a1e517e962854a31693dbb5c0b2fc40b46dad2a56a2deec656ca040631124f4795823acc68238147805f8b021abbe221f4afed5ef3c8e8efc2024908b
-  languageName: node
-  linkType: hard
-
-"enhanced-resolve@npm:5.18.3":
-  version: 5.18.3
-  resolution: "enhanced-resolve@npm:5.18.3"
-  dependencies:
-    graceful-fs: ^4.2.4
-    tapable: ^2.2.0
-  checksum: e2b2188a7f9b68616984b5ce1f43b97bef3c5fde4d193c24ea4cfdb4eb784a700093f049f14155733a3cb3ae1204550590aa37dda7e742022c8f447f618a4816
   languageName: node
   linkType: hard
 
@@ -13647,13 +13592,6 @@ __metadata:
     "@pkgr/core": ^0.2.3
     tslib: ^2.8.1
   checksum: ebbc345153c5cadcdd5b15b3a97ced98cfcff7cb6c2ef4c448e60814dd64e9dea0e0e77a7f0dd3daf6c4c287e170b83cbed8f4d5c08c8566152b293c4d889e11
-  languageName: node
-  linkType: hard
-
-"tapable@npm:^2.2.0":
-  version: 2.3.0
-  resolution: "tapable@npm:2.3.0"
-  checksum: ada1194219ad550e3626d15019d87a2b8e77521d8463ab1135f46356e987a4c37eff1e87ffdd5acd573590962e519cc81e8ea6f7ed632c66bb58c0f12bd772a4
   languageName: node
   linkType: hard
 
