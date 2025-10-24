@@ -33,7 +33,7 @@ export function Hero() {
                 }}
               />
             </div>
-            <Button href="/create">Learn more</Button>
+            <Button href="/react-native-builder-bob/create">Learn more</Button>
           </div>
 
           <div className={styles.feature}>
@@ -51,7 +51,7 @@ export function Hero() {
                 }}
               />
             </div>
-            <Button href="/build">Learn more</Button>
+            <Button href="/react-native-builder-bob/build">Learn more</Button>
           </div>
         </div>
       </div>

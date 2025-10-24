@@ -32,5 +32,6 @@ export default withCallstackPreset(
         ],
       },
     },
+    base: '/react-native-builder-bob/',
   })
 );
