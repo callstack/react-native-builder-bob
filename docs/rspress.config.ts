@@ -9,7 +9,7 @@ export default withCallstackPreset(
       description:
         'Bob is a collection of tools to make it easier to build React Native libraries.',
       editUrl:
-        'https://github.com/callstack/react-native-builder-bob/edit/main',
+        'https://github.com/callstack/react-native-builder-bob/edit/main/docs/pages',
       rootUrl: 'https://oss.callstack.com/react-native-builder-bob',
       icon: 'assets/favicon.png',
       logoLight: 'construction_worker.png',
