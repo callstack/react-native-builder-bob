@@ -14,8 +14,8 @@
 .heroMain {
   display: flex;
   flex-direction: column;
-  text-wrap: balance;
-  max-width: 55%;
+  text-wrap: pretty;
+  max-width: 30em;
 }
 
 .heroName {
@@ -40,13 +40,14 @@
 .feature {
   display: flex;
   flex: 1;
+  max-width: 100%;
   position: relative;
   color: var(--rp-c-text-1);
   border: 1px dashed var(--rp-c-divider);
   border-radius: var(--rp-radius-small);
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 24px;
   padding: 32px;
 }
 
@@ -62,6 +63,7 @@
   color: var(--rp-c-text-2);
   font-size: 16px;
   line-height: 1.5;
+  text-wrap: balance;
 }
 
 .codeBlock {
@@ -69,7 +71,7 @@
   width: 100%;
   background-color: var(--rp-code-block-bg);
   color: var(--rp-code-block-color);
-  margin: 16px 0;
+  margin: 8px 0;
 }
 
 .codeBlock pre {
