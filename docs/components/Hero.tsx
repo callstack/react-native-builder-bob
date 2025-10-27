@@ -1,7 +1,6 @@
-import styles from './Hero.module.css';
 import { Button } from '@callstack/rspress-theme';
-import { CodeBlockRuntime } from '@rspress/core/theme';
-import { transformerNotationHighlight } from '@shikijs/transformers';
+import { getCustomMDXComponent } from '@rspress/core/theme';
+import styles from './Hero.module.css';
 
 export function Hero() {
   return (
@@ -17,44 +16,69 @@ export function Hero() {
         </div>
 
         <div className={styles.featureList}>
-          <div className={styles.feature}>
-            <h2 className={styles.featureTitle}>Create</h2>
-            <p className={styles.featureDescription}>
-              Scaffold a new React Native library with everything
-              pre-configured. Choose between templates such as Turbo Modules or
-              Nitro Modules.
-            </p>
-            <div className={styles.codeBlock}>
-              <CodeBlockRuntime
-                lang="sh"
-                code={`npx create-react-native-library@latest`}
-                shikiOptions={{
-                  transformers: [transformerNotationHighlight()],
-                }}
-              />
-            </div>
-            <Button href="/react-native-builder-bob/create">Learn more</Button>
-          </div>
-
-          <div className={styles.feature}>
-            <h2 className={styles.featureTitle}>Build</h2>
-            <p className={styles.featureDescription}>
-              Compile your React Native library to work with multiple tools.
-              Support Metro, Webpack, Vite, NodeJS & more with a single build.
-            </p>
-            <div className={styles.codeBlock}>
-              <CodeBlockRuntime
-                lang="sh"
-                code={`npx react-native-builder-bob@latest init`}
-                shikiOptions={{
-                  transformers: [transformerNotationHighlight()],
-                }}
-              />
-            </div>
-            <Button href="/react-native-builder-bob/build">Learn more</Button>
-          </div>
+          <Feature
+            title="Create"
+            description="Scaffold a new React Native library with everything pre-configured. Choose between templates such as Turbo Modules or"
+            code={`npx create-react-native-library@latest`}
+            link="/react-native-builder-bob/create"
+          />
+          <Feature
+            title="Build"
+            description="Compile your React Native library to work with multiple tools. Support Metro, Webpack, Vite, NodeJS & more with a single build."
+            code={`npx react-native-builder-bob@latest init`}
+            link="/react-native-builder-bob/build"
+          />
         </div>
       </div>
+    </div>
+  );
+}
+
+const { pre: Pre } = getCustomMDXComponent();
+
+function Feature({
+  title,
+  description,
+  code,
+  link,
+}: {
+  title: string;
+  description: string;
+  code: string;
+  link: string;
+}) {
+  return (
+    <div className={styles.feature}>
+      <h2 className={styles.featureTitle}>{title}</h2>
+      <p className={styles.featureDescription}>{description}</p>
+      <div className={styles.codeBlock}>
+        <Pre
+          lang="bash"
+          className="shiki css-variables"
+          style={{
+            backgroundColor: 'var(--shiki-background)',
+            color: 'var(--shiki-foreground)',
+          }}
+        >
+          <code style={{ whiteSpace: 'pre' }}>
+            {code.split(' ').map((part, index) => {
+              return (
+                <span
+                  style={{
+                    color:
+                      index === 0
+                        ? 'var(--shiki-token-function)'
+                        : 'var(--shiki-token-string)',
+                  }}
+                >
+                  {part}{' '}
+                </span>
+              );
+            })}
+          </code>
+        </Pre>
+      </div>
+      <Button href={link}>Learn more</Button>
     </div>
   );
 }

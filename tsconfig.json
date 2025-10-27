@@ -44,6 +44,7 @@
   ],
   "exclude": [
     "**/lib",
+    "**/doc_build",
     "packages/react-native-builder-bob/src/__fixtures__",
     "packages/create-react-native-library/templates"
   ]
