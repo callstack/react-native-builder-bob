@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.8](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.7...create-react-native-library@0.54.8) (2025-10-27)
+
+### Bug Fixes
+
+- Migrate from `TurboReactPackage` to `BaseReactPackage` ([#903](https://github.com/callstack/react-native-builder-bob/issues/903)) ([6dd0eb8](https://github.com/callstack/react-native-builder-bob/commit/6dd0eb83814893ac9e3e6ce824682a6abc902dbd)) - by @mrousavy
+
 ## [0.54.7](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.6...create-react-native-library@0.54.7) (2025-10-20)
 
 ### Bug Fixes
