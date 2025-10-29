@@ -12,8 +12,8 @@ export default withCallstackPreset(
         'https://github.com/callstack/react-native-builder-bob/edit/main/docs/pages',
       rootUrl: 'https://callstack.github.io/react-native-builder-bob',
       icon: 'assets/favicon.png',
-      logoLight: 'construction_worker.png',
-      logoDark: 'construction_worker.png',
+      logoLight: 'logo-light.svg',
+      logoDark: 'logo-dark.svg',
       rootDir: 'pages',
       socials: {
         github: 'https://github.com/callstack/react-native-builder-bob',
