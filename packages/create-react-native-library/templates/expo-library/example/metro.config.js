@@ -16,5 +16,6 @@ const config = withMetroConfig(getDefaultConfig(__dirname), {
 });
 
 config.resolver.unstable_enablePackageExports = true;
+config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;
