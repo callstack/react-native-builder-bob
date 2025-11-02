@@ -94,6 +94,7 @@ Thanks to the authors of these libraries for inspiration:
 Some other tools for building React Native libraries that you may want to check out:
 
 - [create-expo-module](https://docs.expo.dev/modules/get-started/)
+- [create-nitro-module](https://github.com/patrickkabwe/create-nitro-module)
 - [react-native-module-init](https://github.com/brodybits/react-native-module-init) (Unmaintained)
 
 ## LICENSE
