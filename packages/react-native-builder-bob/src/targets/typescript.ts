@@ -112,6 +112,7 @@ export default async function build({
       if (cli === 'yarn') {
         const result = await spawn('yarn', ['bin', 'tsc'], {
           cwd: root,
+          env: { ...process.env, FORCE_COLOR: '0' },
         });
 
         tsc = result.trim();
