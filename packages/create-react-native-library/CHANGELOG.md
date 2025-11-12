@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.55.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.8...create-react-native-library@0.55.0) (2025-11-12)
+
+### Bug Fixes
+
+- validate directory name before skipping the prompt ([eb4b06b](https://github.com/callstack/react-native-builder-bob/commit/eb4b06b21366e69d7d237e524a34a35d606a7d2b)) - by @satya164
+
+### Features
+
+- add option to configure tools individually ([#907](https://github.com/callstack/react-native-builder-bob/issues/907)) ([4a8f860](https://github.com/callstack/react-native-builder-bob/commit/4a8f8609f374dc38ec5370f745211977c1423533)) - by @satya164
+
 ## [0.54.8](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.54.7...create-react-native-library@0.54.8) (2025-10-27)
 
 ### Bug Fixes

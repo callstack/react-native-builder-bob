@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.15](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.14...react-native-builder-bob@0.40.15) (2025-11-12)
+
+### Bug Fixes
+
+- fix locating tsc in workspaces using yarn 1 ([7f5952f](https://github.com/callstack/react-native-builder-bob/commit/7f5952f81e914cdcc1c6540e083b44927236206c)) - by @artus9033
+
 ## [0.40.14](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.13...react-native-builder-bob@0.40.14) (2025-10-27)
 
 **Note:** Version bump only for package react-native-builder-bob
