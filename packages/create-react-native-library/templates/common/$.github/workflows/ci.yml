@@ -25,8 +25,10 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+<% if (tools.includes('eslint')) { -%>
       - name: Lint files
         run: yarn lint
+<% } -%>
 
       - name: Typecheck files
         run: yarn typecheck

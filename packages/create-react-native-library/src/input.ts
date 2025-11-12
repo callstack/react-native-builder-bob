@@ -7,6 +7,7 @@ import { version } from '../package.json';
 import { SUPPORTED_REACT_NATIVE_VERSION } from './constants';
 import type { Question } from './utils/prompt';
 import { spawn } from './utils/spawn';
+import { AVAILABLE_TOOLS } from './utils/configureTools';
 
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'js';
 
@@ -145,6 +146,11 @@ export const acceptedArgs = {
     type: 'string',
     choices: EXAMPLE_CHOICES.map(({ value }) => value),
   },
+  'tools': {
+    description: 'Tools to configure',
+    type: 'array',
+    choices: Object.keys(AVAILABLE_TOOLS),
+  },
   'interactive': {
     description: 'Whether to run in interactive mode',
     type: 'boolean',
@@ -164,6 +170,7 @@ type PromptAnswers = {
   languages: ProjectLanguages;
   type: ProjectType;
   example: ExampleApp;
+  tools: string[];
   local: boolean;
 };
 
@@ -385,6 +392,17 @@ export async function createQuestions({
           return true;
         });
       },
+    },
+    {
+      type: (_, answers) => ((answers.local ?? local) ? null : 'multiselect'),
+      name: 'tools',
+      message: 'Which tools do you want to configure?',
+      choices: Object.entries(AVAILABLE_TOOLS).map(([key, tool]) => ({
+        value: key,
+        title: tool.name,
+        description: tool.description,
+        selected: true,
+      })),
     },
   ];
 

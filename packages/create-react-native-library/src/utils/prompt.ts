@@ -231,15 +231,39 @@ function validate<T extends string>(
           ? question.choices(undefined, argv)
           : question.choices;
 
-      if (choices && choices.every((choice) => choice.value !== value)) {
-        if (choices.length > 1) {
-          validation = `Must be one of ${choices
-            .map((choice) => kleur.green(choice.value))
-            .join(', ')}`;
-        } else if (choices[0]) {
-          validation = `Must be '${kleur.green(choices[0].value)}'`;
+      if (choices) {
+        let type = question.type;
+
+        if (typeof question.type === 'function') {
+          type = question.type(null, argv);
+        }
+
+        if (type === 'multiselect') {
+          if (Array.isArray(value)) {
+            const invalidChoices = value.filter((val) =>
+              choices.every((choice) => choice.value !== val)
+            );
+
+            if (invalidChoices.length > 0) {
+              validation = `Must be an array of ${choices
+                .map((choice) => kleur.green(choice.value))
+                .join(', ')}`;
+            }
+          } else {
+            validation = 'Must be an array';
+          }
         } else {
-          validation = false;
+          if (choices.every((choice) => choice.value !== value)) {
+            if (choices.length > 1) {
+              validation = `Must be one of ${choices
+                .map((choice) => kleur.green(choice.value))
+                .join(', ')}`;
+            } else if (choices[0]) {
+              validation = `Must be '${kleur.green(choices[0].value)}'`;
+            } else {
+              validation = false;
+            }
+          }
         }
       }
     }
