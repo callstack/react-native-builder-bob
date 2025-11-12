@@ -95,8 +95,11 @@ export async function prompt<
         // @ts-expect-error assume the passed value is correct
         defaultAnswers[question.name] = question.default;
 
-        // Don't prompt questions with a default value when not interactive
-        if (!interactive) {
+        // Don't prompt questions with a valid default value when not interactive
+        if (
+          !interactive &&
+          question.validate?.(String(question.default)) !== false
+        ) {
           continue;
         }
       }

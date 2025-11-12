@@ -189,6 +189,33 @@ export async function createQuestions({
     // Ignore error
   }
 
+  const validateDirectory = (input: string) => {
+    if (!input) {
+      return 'Cannot be empty';
+    }
+
+    const targetPath = path.join(process.cwd(), input);
+
+    if (fs.pathExistsSync(targetPath)) {
+      const stat = fs.statSync(targetPath);
+
+      if (!stat.isDirectory()) {
+        return 'Path exists and is not a directory';
+      }
+
+      const files = fs.readdirSync(targetPath);
+
+      const isEmpty =
+        files.length === 0 || (files.length === 1 && files[0] === '.git');
+
+      if (!isEmpty) {
+        return 'Directory already exists';
+      }
+    }
+
+    return true;
+  };
+
   const questions: Question<keyof PromptAnswers>[] = [
     {
       type:
@@ -202,7 +229,17 @@ export async function createQuestions({
       default: false,
     },
     {
-      type: (_, answers) => (name && !(answers.local ?? local) ? null : 'text'),
+      type: (_, answers) => {
+        if (
+          name &&
+          !(answers.local ?? local) &&
+          validateDirectory(name) === true
+        ) {
+          return null;
+        }
+
+        return 'text';
+      },
       name: 'directory',
       message: `Where do you want to create the library?`,
       initial: (_, answers) => {
@@ -212,32 +249,7 @@ export async function createQuestions({
 
         return name ?? '';
       },
-      validate: (input) => {
-        if (!input) {
-          return 'Cannot be empty';
-        }
-
-        const targetPath = path.join(process.cwd(), input);
-
-        if (fs.pathExistsSync(targetPath)) {
-          const stat = fs.statSync(targetPath);
-
-          if (!stat.isDirectory()) {
-            return 'Path exists and is not a directory';
-          }
-
-          const files = fs.readdirSync(targetPath);
-
-          const isEmpty =
-            files.length === 0 || (files.length === 1 && files[0] === '.git');
-
-          if (!isEmpty) {
-            return 'Directory already exists';
-          }
-        }
-
-        return true;
-      },
+      validate: validateDirectory,
       default: name,
     },
     {
