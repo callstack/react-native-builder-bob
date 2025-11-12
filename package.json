@@ -10,7 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/react-navigation/react-navigation.git"
   },
-  "packageManager": "yarn@3.6.1",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --build",
@@ -40,6 +39,7 @@
   "resolutions": {
     "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch"
   },
+  "packageManager": "yarn@4.11.0",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

@@ -100,7 +100,7 @@
     "example"
   ],
 <% } -%>
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.11.0",
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
