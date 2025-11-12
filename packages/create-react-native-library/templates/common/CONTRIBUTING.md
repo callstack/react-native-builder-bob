@@ -84,10 +84,16 @@ yarn example web
 ```
 
 <% } -%>
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
+Make sure your code passes TypeScript:
 
 ```sh
 yarn typecheck
+```
+
+<% if (tools.includes('eslint')) { -%>
+To check for linting errors, run the following:
+
+```sh
 yarn lint
 ```
 
@@ -97,11 +103,16 @@ To fix formatting errors, run the following:
 yarn lint --fix
 ```
 
+<% } -%>
+<% if (tools.includes('jest')) { -%>
 Remember to add tests for your change if possible. Run the unit tests by:
 
 ```sh
 yarn test
 ```
+
+<% } -%>
+<% if (tools.includes('lefthook')) { -%>
 
 ### Commit message convention
 
@@ -115,14 +126,9 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 - `chore`: tooling changes, e.g. change CI config.
 
 Our pre-commit hooks verify that your commit message matches this format when committing.
+<% } -%>
 
-### Linting and tests
-
-[ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/)
-
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
-
-Our pre-commit hooks verify that the linter and tests pass when committing.
+<% if (tools.includes('release-it')) { -%>
 
 ### Publishing to npm
 
@@ -134,14 +140,20 @@ To publish new versions, run the following:
 yarn release
 ```
 
+<% } -%>
+
 ### Scripts
 
 The `package.json` file contains various scripts for common tasks:
 
 - `yarn`: setup project by installing dependencies.
 - `yarn typecheck`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
-- `yarn test`: run unit tests with Jest.
+<% if (tools.includes('eslint')) { -%>
+- `yarn lint`: lint files with [ESLint](https://eslint.org/).
+<% } -%>
+<% if (tools.includes('jest')) { -%>
+- `yarn test`: run unit tests with [Jest](https://jestjs.io/).
+<% } -%>
 - `yarn example start`: start the Metro server for the example app.
 - `yarn example android`: run the example app on Android.
 - `yarn example ios`: run the example app on iOS.

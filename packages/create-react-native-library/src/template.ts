@@ -42,6 +42,7 @@ export type TemplateConfiguration = {
   repo: string;
   example: ExampleApp;
   year: number;
+  tools: string[];
 };
 
 const BINARIES = [
@@ -144,6 +145,7 @@ export function generateTemplateConfiguration({
     },
     repo: answers.repoUrl,
     example: answers.example,
+    tools: answers.tools,
     year: new Date().getFullYear(),
   };
 }
@@ -241,7 +243,7 @@ export async function applyTemplates(
 /**
  * This copies the template files and renders them via ejs
  */
-async function applyTemplate(
+export async function applyTemplate(
   config: TemplateConfiguration,
   source: string,
   destination: string

@@ -1,9 +1,11 @@
 pre-commit:
   parallel: true
   commands:
+<% if (tools.includes('eslint')) { %>
     lint:
       glob: "*.{js,ts,jsx,tsx}"
       run: npx eslint {staged_files}
+<% } %>
     types:
       glob: "*.{js,ts, jsx, tsx}"
       run: npx tsc

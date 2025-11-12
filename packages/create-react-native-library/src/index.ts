@@ -33,6 +33,7 @@ import { determinePackageManager } from './utils/packageManager';
 import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
 import { hideBin } from 'yargs/helpers';
+import { configureTools } from './utils/configureTools';
 
 type Args = Partial<Answers> & {
   $0: string;
@@ -118,6 +119,17 @@ async function create(_argv: Args) {
 
   if (config.example !== 'none') {
     await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
+  }
+
+  if (!answers.local && answers.tools.length > 0) {
+    spinner.text = 'Configuring tools';
+
+    await configureTools({
+      tools: answers.tools,
+      config,
+      root: folder,
+      packageJson: rootPackageJson,
+    });
   }
 
   const libraryMetadata = createMetadata(answers);
