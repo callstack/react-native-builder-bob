@@ -128,9 +128,9 @@ const TURBOREPO = {
 
 export const AVAILABLE_TOOLS = {
   'eslint': ESLINT,
+  'jest': JEST,
   'lefthook': LEFTHOOK,
   'release-it': RELEASE_IT,
-  'jest': JEST,
 } as const satisfies Record<string, Tool>;
 
 const REQUIRED_TOOLS = {

@@ -49,6 +49,10 @@ jspm_packages/
 !.yarn/sdks
 !.yarn/versions
 
+# Yalc
+.yalc
+yalc.lock
+
 # Typescript v1 declaration files
 typings/
 
