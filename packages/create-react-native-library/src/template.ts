@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import ejs from 'ejs';
-import type { Answers, ExampleApp, ProjectType } from './input';
+import type { Answers, ExampleApp, ProjectType } from './prompt';
 
 export type TemplateVersions = {
   bob: string;
@@ -189,7 +189,7 @@ export async function applyTemplates(
   } else {
     await applyTemplate(config, COMMON_FILES, folder);
 
-    if (config.example !== 'none') {
+    if (config.example != null) {
       await applyTemplate(config, EXAMPLE_COMMON_FILES, folder);
 
       if (config.project.viewConfig !== null) {
@@ -206,7 +206,7 @@ export async function applyTemplates(
   } else {
     await applyTemplate(config, NATIVE_COMMON_FILES, folder);
 
-    if (config.example !== 'none') {
+    if (config.example != null) {
       await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
     }
 
