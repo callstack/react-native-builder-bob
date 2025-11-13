@@ -48,6 +48,7 @@
     "github-username": "^6.0.0",
     "kleur": "^4.1.4",
     "ora": "^5.4.1",
+    "pigment": "file:.yalc/pigment",
     "prompts": "^2.4.2",
     "validate-npm-package-name": "^4.0.0",
     "yargs": "^17.5.1"
