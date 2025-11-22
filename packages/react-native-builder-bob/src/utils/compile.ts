@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
-import glob from 'glob';
+import { globSync } from 'glob';
 import type { Input, Variants } from '../types';
 import { isCodegenSpec } from './isCodegenSpec';
 
@@ -39,7 +39,7 @@ export default async function compile({
   jsxRuntime = 'automatic',
   variants,
 }: Options) {
-  const files = glob.sync('**/*', {
+  const files = globSync('**/*', {
     cwd: source,
     absolute: true,
     nodir: true,
