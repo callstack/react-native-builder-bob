@@ -37,8 +37,7 @@
     "typescript": "^5.8.3"
   },
   "resolutions": {
-    "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch",
-    "glob": "^10.5.0"
+    "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch"
   },
   "packageManager": "yarn@4.11.0",
   "commitlint": {
