@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.16](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.15...react-native-builder-bob@0.40.16) (2025-11-24)
+
+### Bug Fixes
+
+- update glob to v10.5.0 to resolve CVE-2025-64756 ([#910](https://github.com/callstack/react-native-builder-bob/issues/910)) ([5aa16f8](https://github.com/callstack/react-native-builder-bob/commit/5aa16f8a4db4a147143e3c374f78c519ef148cc5)) - by @ram-ui-dev
+
 ## [0.40.15](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.14...react-native-builder-bob@0.40.15) (2025-11-12)
 
 ### Bug Fixes
