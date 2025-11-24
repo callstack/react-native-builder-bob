@@ -12,7 +12,7 @@
 
 ## Documentation
 
-Documentation is available at [https://callstack.github.io/react-native-builder-bob/](https://callstack.github.io/react-native-builder-bob/).
+Documentation is available at [https://oss.callstack.com/react-native-builder-bob/](https://oss.callstack.com/react-native-builder-bob/).
 
 ## Development workflow
 
