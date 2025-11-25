@@ -20,8 +20,9 @@
     "cpp",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen",
-    "nitro.json",
-<% } -%>
+      "nitro.json",
+<%
+    } -%>
     "*.podspec",
     "react-native.config.js",
     "!ios/build",
@@ -38,17 +39,36 @@
   "scripts": {
 <% if (example !== 'none') { -%>
     "example": "yarn workspace <%- project.slug -%>-example",
-<% } -%>
+<%
+    } -%>
 <% if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-<% } else { -%>
+<%
+    } else { -%>
     "clean": "del-cli lib",
-<% } -%>
+<%
+    } -%>
     "prepare": "bob build",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "nitrogen",
-<% } -%>
-    "typecheck": "tsc"
+<%
+    } -%>
+    "typecheck": "tsc"<% if (example !== 'none' && example !== 'expo') { %>,
+<%# Platform-specific IDE commands %>
+<% const platform = process.platform; %>
+<% if (platform === 'darwin') { %>
+    "open:android": "open -a \\\"Android Studio\\\" example/android",
+        "open:ios": "xed example/ios"
+<%
+      } else if (platform === 'linux') { %>
+    "open:android": "studio example/android"
+<%
+      } else if (platform === 'win32') { %>
+    "open:android": "start /d example\\\\android ."
+<%
+      } %>
+<%
+    } %>
   },
   "keywords": [
     "react-native",
@@ -71,35 +91,41 @@
   "devDependencies": {
 <% if (example === 'vanilla' && (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view')) { -%>
     "@react-native-community/cli": "20.0.1",
-<% } -%>
+<%
+    } -%>
     "@react-native/babel-preset": "0.81.1",
     "@types/react": "^19.1.12",
     "del-cli": "^6.0.0",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "^<%- versions.nitro %>",
-<% } -%>
+<%
+    } -%>
     "react": "19.1.0",
     "react-native": "0.81.1",
     "react-native-builder-bob": "^<%- versions.bob %>",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
-<% } -%>
+<%
+    } -%>
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": "*",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native": "*",
-    "react-native-nitro-modules": "^<%- versions.nitro %>"
-<% } else { -%>
+      "react-native-nitro-modules": "^<%- versions.nitro %>"
+<%
+    } else { -%>
     "react-native": "*"
-<% } -%>
+<%
+    } -%>
   },
 <% if (example !== 'none') { -%>
   "workspaces": [
-    "example"
-  ],
-<% } -%>
+      "example"
+    ],
+<%
+  } -%>
   "packageManager": "yarn@4.11.0",
   "react-native-builder-bob": {
     "source": "src",
@@ -107,13 +133,14 @@
     "targets": [
 <% if (project.moduleConfig === "nitro-modules" || project.viewConfig === "nitro-view") { -%>
       [
-        "custom",
-        {
-          "script": "nitrogen",
-          "clean": "nitrogen/"
-        }
-      ],
-<% } -%>
+          "custom",
+          {
+            "script": "nitrogen",
+            "clean": "nitrogen/"
+          }
+        ],
+<%
+      } -%>
       [
         "module",
         {
@@ -128,21 +155,23 @@
       ]
     ]
 <% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
-  },
-  "codegenConfig": {
-    "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
-    "type": "<%- project.viewConfig !== null ? 'all': 'modules' -%>",
-    "jsSrcsDir": "src",
-    "android": {
-      "javaPackageName": "com.<%- project.package %>"
-    <% if (project.viewConfig === 'fabric-view') { -%>
     },
-    "ios": {
-      "componentProvider": {
-        "<%- project.name -%>View": "<%- project.name -%>View"
+    "codegenConfig": {
+      "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
+      "type": "<%- project.viewConfig !== null ? 'all': 'modules' -%>",
+      "jsSrcsDir": "src",
+      "android": {
+        "javaPackageName": "com.<%- project.package %>"
+    <% if (project.viewConfig === 'fabric-view') { -%>
+        },
+        "ios": {
+          "componentProvider": {
+            "<%- project.name -%>View": "<%- project.name -%>View"
+          }
+    <%
+        } -%>
       }
-    <% } -%>
-    }
-<% } -%>
+<%
+    } -%>
   }
 }
