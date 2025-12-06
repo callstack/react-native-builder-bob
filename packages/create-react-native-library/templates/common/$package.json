@@ -78,7 +78,7 @@
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "^<%- versions.nitro %>",
 <% } -%>
-    "react-native": "0.81.1",
+    "@tyepes/react-native": "0.81.1",
     "react-native-builder-bob": "^<%- versions.bob %>",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
