@@ -87,11 +87,9 @@
   },
   "peerDependencies": {
     "react": "*",
-<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native": "*",
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>"
-<% } else { -%>
-    "react-native": "*"
 <% } -%>
   },
 <% if (example !== 'none') { -%>
