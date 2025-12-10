@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.55.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.55.2...create-react-native-library@0.55.3) (2025-12-10)
+
+### Bug Fixes
+
+- fix compatibility with node 22 ([fac94bb](https://github.com/callstack/react-native-builder-bob/commit/fac94bb0e2f34dd0f1b65977371fa256a5002e05)) - by @
+
 ## [0.55.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.55.1...create-react-native-library@0.55.2) (2025-12-10)
 
 ### Bug Fixes
