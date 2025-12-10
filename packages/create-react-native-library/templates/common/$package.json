@@ -69,9 +69,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-<% if (example === 'vanilla' && (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view')) { -%>
-    "@react-native-community/cli": "20.0.1",
-<% } -%>
     "@react-native/babel-preset": "0.81.1",
     "@types/react": "^19.1.12",
     "del-cli": "^6.0.0",

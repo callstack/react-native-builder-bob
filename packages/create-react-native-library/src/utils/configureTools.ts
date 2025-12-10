@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 import { applyTemplate, type TemplateConfiguration } from '../template';
 import sortObjectKeys from './sortObjectKeys';
+import { SUPPORTED_REACT_NATIVE_VERSION } from '../constants';
 
 type Tool = {
   name: string;
@@ -35,7 +36,7 @@ const ESLINT = {
       '@eslint/compat': '^1.3.2',
       '@eslint/eslintrc': '^3.3.1',
       '@eslint/js': '^9.35.0',
-      '@react-native/eslint-config': '^0.81.1',
+      '@react-native/eslint-config': SUPPORTED_REACT_NATIVE_VERSION,
       'eslint-config-prettier': '^10.1.8',
       'eslint-plugin-prettier': '^5.5.4',
       'eslint': '^9.35.0',
@@ -134,7 +135,7 @@ export const AVAILABLE_TOOLS = {
 } as const satisfies Record<string, Tool>;
 
 const REQUIRED_TOOLS = {
-  turbo: TURBOREPO,
+  turborepo: TURBOREPO,
 } as const satisfies Record<string, Tool>;
 
 const ALL_TOOLS = {

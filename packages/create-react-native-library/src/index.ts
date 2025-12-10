@@ -101,7 +101,7 @@ async function create() {
     await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
   }
 
-  if (!answers.local && answers.tools.length > 0) {
+  if (!answers.local) {
     spinner.text = 'Configuring tools';
 
     await configureTools({
