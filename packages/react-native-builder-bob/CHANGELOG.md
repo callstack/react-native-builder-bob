@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.17](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.16...react-native-builder-bob@0.40.17) (2025-12-10)
+
+### Bug Fixes
+
+- fix module blocklist on windows ([a8d8ab6](https://github.com/callstack/react-native-builder-bob/commit/a8d8ab628d3b4f4f0241c1331d7141b9af8f82a3)), closes [#849](https://github.com/callstack/react-native-builder-bob/issues/849) [#913](https://github.com/callstack/react-native-builder-bob/issues/913) [#914](https://github.com/callstack/react-native-builder-bob/issues/914) - by @satya164
+
 ## [0.40.16](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.15...react-native-builder-bob@0.40.16) (2025-11-24)
 
 ### Bug Fixes
