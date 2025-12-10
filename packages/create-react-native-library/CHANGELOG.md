@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.56.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.55.3...create-react-native-library@0.56.0) (2025-12-10)
+
+### Bug Fixes
+
+- fix broken nitro view template ([4c80678](https://github.com/callstack/react-native-builder-bob/commit/4c806787f0e8890cd965103dc9234bb5c6ca093e)) - by @satya164
+- fix configuring turborepo ([191f3a5](https://github.com/callstack/react-native-builder-bob/commit/191f3a56f3cf11e84b0ba5c1fa240c413975b127)) - by @satya164
+
+### Features
+
+- bump react native to 0.83 ([#916](https://github.com/callstack/react-native-builder-bob/issues/916)) ([c14e26c](https://github.com/callstack/react-native-builder-bob/commit/c14e26c57eb4bb958d03f0d934118b2676e88e13)) - by @satya164
+
 ## [0.55.3](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.55.2...create-react-native-library@0.55.3) (2025-12-10)
 
 ### Bug Fixes
