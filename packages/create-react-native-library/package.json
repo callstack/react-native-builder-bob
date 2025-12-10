@@ -48,7 +48,7 @@
     "github-username": "^6.0.0",
     "kleur": "^4.1.4",
     "ora": "^5.4.1",
-    "pigment": "^0.3.10",
+    "pigment": "^0.3.11",
     "validate-npm-package-name": "^4.0.0"
   },
   "devDependencies": {

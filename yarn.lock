@@ -6249,7 +6249,7 @@ __metadata:
     github-username: "npm:^6.0.0"
     kleur: "npm:^4.1.4"
     ora: "npm:^5.4.1"
-    pigment: "npm:^0.3.10"
+    pigment: "npm:^0.3.11"
     validate-npm-package-name: "npm:^4.0.0"
   bin:
     create-react-native-library: bin/create-react-native-library
@@ -11903,13 +11903,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pigment@npm:^0.3.10":
-  version: 0.3.10
-  resolution: "pigment@npm:0.3.10"
+"pigment@npm:^0.3.11":
+  version: 0.3.11
+  resolution: "pigment@npm:0.3.11"
   dependencies:
     ansi-escapes: "npm:^7.2.0"
     wrap-ansi: "npm:^9.0.2"
-  checksum: 10c0/302abd9d23258a654181b226f572df7e0aedd2644f5e0f4201d9d2c8c19299b79fc95998524e96b3b94f5ae65bc6665eb076109bf5b003c54494028926ec02b9
+  checksum: 10c0/6692f1078249fd92c5f7c1dd661e1c86b58cf91c9468f49ad69bbca01cbe51a8aef81bcc5b0f5bb87f94ef9d62fcfbb5b48ff732b59fd4ca50a2beac3c5fbfe4
   languageName: node
   linkType: hard
 
