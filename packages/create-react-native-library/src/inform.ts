@@ -113,13 +113,19 @@ export function printUsedRNVersion(
         `react-native@${version}`
       )} for the example`
     );
-  } else {
+  } else if (config.example != null) {
     console.warn(
       `${kleur.yellow(
         '⚠'
       )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
         config.example
       )}`
+    );
+  } else {
+    console.warn(
+      `${kleur.yellow(
+        '⚠'
+      )} Ignoring --react-native-version for library without example app`
     );
   }
 }

@@ -120,7 +120,8 @@ export default async function generateExampleApp({
         'blank',
       ];
       break;
-    case 'none': {
+    case undefined:
+    case null: {
       // Do nothing
     }
   }

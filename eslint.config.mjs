@@ -31,6 +31,7 @@ export default defineConfig(
     '**/.vscode/',
     '**/node_modules/',
     '**/coverage/',
+    '**/doc_build/',
     '**/out/',
     '**/lib/',
     '**/templates/',

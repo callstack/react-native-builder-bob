@@ -1,8 +1,8 @@
+import pak from '../package.json';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import ora from 'ora';
 import path from 'path';
-import yargs from 'yargs';
 import {
   FALLBACK_BOB_VERSION,
   FALLBACK_NITRO_MODULES_VERSION,
@@ -11,50 +11,24 @@ import {
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import {
-  printErrorHelp,
   printLocalLibNextSteps,
   printNonLocalLibNextSteps,
   printUsedRNVersion,
 } from './inform';
-import {
-  acceptedArgs,
-  createMetadata,
-  createQuestions,
-  type Answers,
-} from './input';
+import { prompt } from './prompt';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import { assertNpxExists } from './utils/assert';
+import { configureTools } from './utils/configureTools';
 import { createInitialGitCommit } from './utils/initialCommit';
 import {
   addNitroDependencyToLocalLibrary,
   linkLocalLibrary,
 } from './utils/local';
 import { determinePackageManager } from './utils/packageManager';
-import { prompt } from './utils/prompt';
 import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
-import { hideBin } from 'yargs/helpers';
-import { configureTools } from './utils/configureTools';
+import { createMetadata } from './utils/createMetadata';
 
-type Args = Partial<Answers> & {
-  $0: string;
-  [key: string]: unknown;
-};
-
-void yargs(hideBin(process.argv))
-  .command('$0 [name]', 'create a react native library', acceptedArgs, create)
-  .demandCommand()
-  .recommendCommands()
-  .fail(printErrorHelp)
-  .parserConfiguration({
-    // don't pass kebab-case args to handler.
-    'strip-dashed': true,
-  })
-  .parse();
-
-async function create(_argv: Args) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _, $0, ...argv } = _argv;
-
+async function create() {
   // Prefetch bob version in background while asking questions
   const bobVersionPromise = resolveNpmPackageVersion(
     'react-native-builder-bob',
@@ -67,11 +41,17 @@ async function create(_argv: Args) {
 
   await assertNpxExists();
 
-  const questions = await createQuestions(argv);
-
-  const answers = await prompt<Answers, typeof argv>(questions, argv, {
-    interactive: argv.interactive,
+  const answers = await prompt.show({
+    name: pak.name,
+    version: pak.version,
+    description: pak.description,
   });
+
+  if (answers == null) {
+    process.exit(0);
+  }
+
+  console.log(''); // Empty new line after prompts
 
   const bobVersion = await bobVersionPromise;
   const nitroModulesVersion =
@@ -101,7 +81,7 @@ async function create(_argv: Args) {
 
   const spinner = ora().start();
 
-  if (config.example !== 'none') {
+  if (config.example != null) {
     spinner.text = 'Generating example app';
 
     await generateExampleApp({
@@ -117,7 +97,7 @@ async function create(_argv: Args) {
 
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
-  if (config.example !== 'none') {
+  if (config.example != null) {
     await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
   }
 
@@ -200,3 +180,11 @@ async function create(_argv: Args) {
     printNonLocalLibNextSteps(config);
   }
 }
+
+create().catch((e: unknown) => {
+  console.log('\n');
+  console.log(kleur.red('× An error occurred while creating the project.\n'));
+  console.error(e);
+
+  process.exit(1);
+});

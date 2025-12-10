@@ -86,7 +86,10 @@ jobs:
             --type ${{ matrix.type.name }}
             --languages ${{ matrix.type.language }}
             --example ${{ matrix.type.language == 'js' && 'expo' || 'vanilla' }}
-            --tools eslint lefthook release-it jest
+            --tools eslint
+            --tools jest
+            --tools lefthook
+            --tools release-it
           )
 
           if [[ ${{ github.event_name }} == 'schedule' ]]; then
