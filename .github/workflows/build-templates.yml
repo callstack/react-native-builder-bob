@@ -145,20 +145,20 @@ jobs:
         run: |
           # Build Android for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} =~ ubuntu ]]; then
-            if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == *-objc ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == *-objc ]]; then
+            if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == *-objc ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == *-objc ]] || [[ ${{ matrix.type.name }} == nitro-* ]]; then
               echo "android_build=1" >> $GITHUB_ENV
             fi
           fi
 
           # Build iOS for only some matrices to skip redundant builds
           if [[ ${{ matrix.os }} =~ macos ]]; then
-            if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == kotlin-* ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == kotlin-* ]]; then
+            if [[ ${{ matrix.type.name }} == *-view && ${{ matrix.type.language }} == kotlin-* ]] || [[ ${{ matrix.type.name }} == *-module && ${{ matrix.type.language }} == kotlin-* ]] || [[ ${{ matrix.type.name }} == nitro-* ]]; then
               echo "ios_build=1" >> $GITHUB_ENV
             fi
           fi
 
       - name: Generate nitrogen code
-        if: matrix.type == 'nitro-view' || matrix.type == 'nitro-module'
+        if: matrix.type.name == 'nitro-view' || matrix.type.name == 'nitro-module'
         working-directory: ${{ env.work_dir }}
         run: yarn nitrogen
 
