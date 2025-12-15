@@ -142,9 +142,9 @@ This is because the example app is configured as a Yarn workspace, and there is 
    workspaces-experimental false
    ```
 
-2. **Upgrade to Yarn 3**
+2. **Upgrade to Yarn Modern**
 
-   Yarn 1 is no longer maintained, so it's recommended to upgrade to Yarn 3. Yarn 3 works with React Native projects with the `node-modules` linker. To upgrade, consumers can follow the [official upgrade guide](https://yarnpkg.com/migration/guide).
+   Yarn 1 (also referred to as "Yarn Classic") is no longer maintained, so it's recommended to upgrade to the latest version of Yarn. Yarn Modern works with React Native projects with the `node-modules` linker. To upgrade, consumers can follow the [official upgrade guide](https://yarnpkg.com/migration/guide).
 
    It's also necessary to use `node-modules` linker. To use it, consumers can add the following to the `.yarnrc.yml` file in the root of their project:
 
