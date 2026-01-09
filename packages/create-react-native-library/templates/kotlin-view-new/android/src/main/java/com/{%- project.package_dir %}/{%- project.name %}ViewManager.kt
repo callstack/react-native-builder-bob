@@ -31,8 +31,8 @@ class <%- project.name -%>ViewManager : SimpleViewManager<<%- project.name -%>Vi
   }
 
   @ReactProp(name = "color")
-  override fun setColor(view: <%- project.name -%>View?, color: String?) {
-    view?.setBackgroundColor(Color.parseColor(color))
+  override fun setColor(view: <%- project.name -%>View?, color: Int?) {
+    view?.setBackgroundColor(color ?: Color.TRANSPARENT)
   }
 
   companion object {

@@ -1,7 +1,11 @@
-import { codegenNativeComponent, type ViewProps } from 'react-native';
+import {
+  codegenNativeComponent,
+  type ColorValue,
+  type ViewProps,
+} from 'react-native';
 
 interface NativeProps extends ViewProps {
-  color?: string;
+  color?: ColorValue;
 }
 
 export default codegenNativeComponent<NativeProps>('<%- project.name -%>View');
