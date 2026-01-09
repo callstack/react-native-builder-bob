@@ -8,10 +8,8 @@ import androidx.core.graphics.toColorInt
 @DoNotStrip
 class Hybrid<%- project.name %>(val context: ThemedReactContext) : Hybrid<%- project.name %>Spec() {
 
-  // View
   override val view: View = View(context)
 
-  // Props
   private var _color = "#000"
   override var color: String
       get() = _color
