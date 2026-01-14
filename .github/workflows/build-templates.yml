@@ -18,7 +18,7 @@ on:
 jobs:
   build:
     env:
-      XCODE_VERSION: 16.3
+      XCODE_VERSION: 26
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       RCT_REMOVE_LEGACY_ARCH: 1
