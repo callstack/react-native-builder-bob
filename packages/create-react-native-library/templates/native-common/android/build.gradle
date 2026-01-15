@@ -1,6 +1,17 @@
 buildscript {
-  ext.getExtOrDefault = {name ->
-    return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['<%- project.name -%>_' + name]
+  ext.<%- project.name -%> = [
+    kotlinVersion: "2.0.21",
+    minSdkVersion: 24,
+    compileSdkVersion: 36,
+    targetSdkVersion: 36
+  ]
+
+  ext.getExtOrDefault = { prop ->
+    if (rootProject.ext.has(prop)) {
+      return rootProject.ext.get(prop)
+    }
+
+    return <%- project.name -%>[prop]
   }
 
   repositories {
@@ -30,10 +41,6 @@ apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinki
 
 apply plugin: "com.facebook.react"
 
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["<%- project.name -%>_" + name]).toInteger()
-}
-
 android {
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
   namespace "com.margelo.nitro.<%- project.package -%>"
@@ -41,11 +48,11 @@ android {
   namespace "com.<%- project.package -%>"
 <% } -%>
 
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  compileSdkVersion getExtOrDefault("compileSdkVersion")
 
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
-    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    minSdkVersion getExtOrDefault("minSdkVersion")
+    targetSdkVersion getExtOrDefault("targetSdkVersion")
 <% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
     externalNativeBuild {
@@ -78,22 +85,22 @@ android {
 
   packagingOptions {
     excludes = [
-            "META-INF",
-            "META-INF/**",
-            "**/libc++_shared.so",
-            "**/libfbjni.so",
-            "**/libjsi.so",
-            "**/libfolly_json.so",
-            "**/libfolly_runtime.so",
-            "**/libglog.so",
-            "**/libhermes.so",
-            "**/libhermes-executor-debug.so",
-            "**/libhermes_executor.so",
-            "**/libreactnative.so",
-            "**/libreactnativejni.so",
-            "**/libturbomodulejsijni.so",
-            "**/libreact_nativemodule_core.so",
-            "**/libjscexecutor.so"
+      "META-INF",
+      "META-INF/**",
+      "**/libc++_shared.so",
+      "**/libfbjni.so",
+      "**/libjsi.so",
+      "**/libfolly_json.so",
+      "**/libfolly_runtime.so",
+      "**/libglog.so",
+      "**/libhermes.so",
+      "**/libhermes-executor-debug.so",
+      "**/libhermes_executor.so",
+      "**/libreactnative.so",
+      "**/libreactnativejni.so",
+      "**/libturbomodulejsijni.so",
+      "**/libreact_nativemodule_core.so",
+      "**/libjscexecutor.so"
     ]
   }
 <% } -%>
@@ -111,7 +118,7 @@ android {
     }
   }
 
-  lintOptions {
+  lint {
     disable "GradleCompatible"
   }
 
@@ -119,27 +126,10 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
-  sourceSets {
-    main {
-      java.srcDirs += [
-        "generated/java",
-        "generated/jni"
-      ]
-    }
-  }
 }
-
-repositories {
-  mavenCentral()
-  google()
-}
-
-def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
   implementation "com.facebook.react:react-android"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
   implementation project(":react-native-nitro-modules")
 <% } -%>
