@@ -9,8 +9,8 @@
   },
   "autolinking": {
     "<%- project.name -%>": {
-      "swift": "Hybrid<%- project.name -%>",
-      "kotlin": "Hybrid<%- project.name -%>"
+      "swift": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>",
+      "kotlin": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>"
     }
   },
   "ignorePaths": ["node_modules"]
