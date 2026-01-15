@@ -72,6 +72,7 @@ const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
   __dirname,
   '../templates/native-common-example'
 );
+const NITRO_COMMON_FILES = path.resolve(__dirname, '../templates/nitro-common');
 
 const NATIVE_FILES = {
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
@@ -211,11 +212,13 @@ export async function applyTemplates(
     }
 
     if (config.project.moduleConfig === 'nitro-modules') {
+      await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
       return;
     }
 
     if (config.project.viewConfig === 'nitro-view') {
+      await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['view_nitro'], folder);
       return;
     }

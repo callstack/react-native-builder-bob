@@ -111,7 +111,7 @@ android {
     }
   }
 
-  lintOptions {
+  lint {
     disable "GradleCompatible"
   }
 
@@ -119,27 +119,10 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
-  sourceSets {
-    main {
-      java.srcDirs += [
-        "generated/java",
-        "generated/jni"
-      ]
-    }
-  }
 }
-
-repositories {
-  mavenCentral()
-  google()
-}
-
-def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
   implementation "com.facebook.react:react-android"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
   implementation project(":react-native-nitro-modules")
 <% } -%>
