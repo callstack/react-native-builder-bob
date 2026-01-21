@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.57.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.56.1...create-react-native-library@0.57.0) (2026-01-21)
+
+### Features
+
+- add support for expo example in native libraries ([#725](https://github.com/callstack/react-native-builder-bob/issues/725)) ([d63d2b0](https://github.com/callstack/react-native-builder-bob/commit/d63d2b0ad93eb6b6a820692e03840adb38936cd2)) - by @satya164
+- re-enable microsoft test app ([f8f45f3](https://github.com/callstack/react-native-builder-bob/commit/f8f45f330ba54aa278b39a8420ba3e6aa3915b8e)) - by @satya164
+
 ## [0.56.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.56.0...create-react-native-library@0.56.1) (2026-01-09)
 
 **Note:** Version bump only for package create-react-native-library
