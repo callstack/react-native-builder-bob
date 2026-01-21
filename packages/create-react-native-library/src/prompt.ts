@@ -74,30 +74,25 @@ const LANGUAGE_CHOICES: {
   },
 ];
 
-const EXAMPLE_CHOICES = (
-  [
-    {
-      title: 'App with Community CLI',
-      value: 'vanilla',
-      description: "Provides access to app's native code",
-      disabled: false,
-    },
-    {
-      title: 'Test App by Microsoft',
-      value: 'test-app',
-      description: "App's native code is abstracted away",
-      // Test App currently doesn't work with React Native 0.79.2
-      // due to missing `Gemfile` in the template
-      disabled: !process.env.CRNL_ENABLE_TEST_APP,
-    },
-    {
-      title: 'App with Expo CLI',
-      value: 'expo',
-      description: 'Managed expo app with web support',
-      disabled: false,
-    },
-  ] as const
-).filter((choice) => !choice.disabled);
+const EXAMPLE_CHOICES = [
+  {
+    title: 'App with Community CLI',
+    value: 'vanilla',
+    description: "Provides access to app's native code",
+    disabled: false,
+  },
+  {
+    title: 'Test App by Microsoft',
+    value: 'test-app',
+    description: "App's native code is abstracted away",
+  },
+  {
+    title: 'App with Expo CLI',
+    value: 'expo',
+    description: 'Managed expo app with web support',
+    disabled: false,
+  },
+] as const;
 
 const validateDirectory = (input: string) => {
   if (!input) {
