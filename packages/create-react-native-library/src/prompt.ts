@@ -78,19 +78,17 @@ const EXAMPLE_CHOICES = [
   {
     title: 'App with Community CLI',
     value: 'vanilla',
-    description: "Provides access to app's native code",
-    disabled: false,
-  },
-  {
-    title: 'Test App by Microsoft',
-    value: 'test-app',
-    description: "App's native code is abstracted away",
+    description: 'Classic React Native app with native code access',
   },
   {
     title: 'App with Expo CLI',
     value: 'expo',
-    description: 'Managed expo app with web support',
-    disabled: false,
+    description: 'Managed Expo app for easier upgrades',
+  },
+  {
+    title: 'Test App by Microsoft',
+    value: 'test-app',
+    description: "Test app with app's native code abstracted",
   },
 ] as const;
 
@@ -324,10 +322,8 @@ export const prompt = create(['[name]'], {
       skip: (): boolean => {
         const answers = prompt.read();
 
-        if (typeof answers.type === 'string') {
-          return answers.type === 'library'
-            ? choice.value !== 'expo'
-            : choice.value === 'expo';
+        if (answers.type === 'library') {
+          return choice.value !== 'expo';
         }
 
         return false;

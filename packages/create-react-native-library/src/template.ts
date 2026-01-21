@@ -61,9 +61,9 @@ const EXAMPLE_MODULE_NEW_FILES = path.resolve(
   '../templates/example-module-new'
 );
 const EXAMPLE_VIEW_FILES = path.resolve(__dirname, '../templates/example-view');
+const EXAMPLE_EXPO_FILES = path.resolve(__dirname, '../templates/example-expo');
 
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
-const EXPO_FILES = path.resolve(__dirname, '../templates/expo-library');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
@@ -203,12 +203,16 @@ export async function applyTemplates(
 
   if (answers.languages === 'js') {
     await applyTemplate(config, JS_FILES, folder);
-    await applyTemplate(config, EXPO_FILES, folder);
+    await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
   } else {
     await applyTemplate(config, NATIVE_COMMON_FILES, folder);
 
     if (config.example != null) {
       await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
+    }
+
+    if (config.example === 'expo') {
+      await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
     }
 
     if (config.project.moduleConfig === 'nitro-modules') {
