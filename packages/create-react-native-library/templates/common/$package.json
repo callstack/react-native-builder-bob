@@ -135,8 +135,10 @@
     <% if (project.viewConfig === 'fabric-view') { -%>
     },
     "ios": {
-      "componentProvider": {
-        "<%- project.name -%>View": "<%- project.name -%>View"
+      "components": {
+        "<%- project.name -%>View": {
+          "className": "<%- project.name -%>View"
+        }
       }
     <% } -%>
     }
