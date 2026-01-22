@@ -16,18 +16,16 @@ class <%- project.name -%>Package : BaseReactPackage() {
     }
   }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
-      val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()
-      moduleInfos[<%- project.name -%>Module.NAME] = ReactModuleInfo(
-        <%- project.name -%>Module.NAME,
-        <%- project.name -%>Module.NAME,
-        false,  // canOverrideExistingModule
-        false,  // needsEagerInit
-        false,  // isCxxModule
-        true // isTurboModule
+  override fun getReactModuleInfoProvider() = ReactModuleInfoProvider {
+    mapOf(
+      <%- project.name -%>Module.NAME to ReactModuleInfo(
+        name = <%- project.name -%>Module.NAME,
+        className = <%- project.name -%>Module.NAME,
+        canOverrideExistingModule = false,
+        needsEagerInit = false,
+        isCxxModule = false,
+        isTurboModule = true
       )
-      moduleInfos
-    }
+    )
   }
 }
