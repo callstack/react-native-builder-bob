@@ -106,6 +106,13 @@ jobs:
         run: |
           /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
 
+<% if (example === 'expo') { -%>
+      - name: Prebuild expo app for iOS
+        if: env.turbo_cache_hit != 1
+        run: |
+          yarn example expo prebuild --platform android
+<% } -%>
+
       - name: Cache Gradle
         if: env.turbo_cache_hit != 1
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
@@ -166,6 +173,12 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+<% if (example === 'expo') { -%>
+      - name: Prebuild expo app for iOS
+        if: env.turbo_cache_hit != 1
+        run: |
+          yarn example expo prebuild --platform ios
+<% } else { -%>
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'
         run: |
@@ -173,6 +186,7 @@ jobs:
           bundle install
           bundle exec pod repo update --verbose
           bundle exec pod install --project-directory=ios
+<% } -%>
 
       - name: Build example for iOS
         run: |

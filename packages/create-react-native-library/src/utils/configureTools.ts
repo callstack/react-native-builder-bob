@@ -124,7 +124,6 @@ const TURBOREPO = {
       turbo: '^2.5.6',
     },
   },
-  condition: (config: TemplateConfiguration) => config.example !== 'expo',
 };
 
 export const AVAILABLE_TOOLS = {

@@ -159,11 +159,18 @@ export default async function generateExampleApp({
   delete scripts.test;
   delete scripts.lint;
 
-  const SCRIPTS_TO_ADD = {
-    'build:android':
-      'react-native build-android --extra-params "--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a"',
-    'build:ios': `react-native build-ios --mode Debug`,
-  };
+  const SCRIPTS_TO_ADD =
+    config.example === 'expo'
+      ? {
+          'build:ios': `xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/${config.project.name}Example.xcworkspace -UseNewBuildSystem=YES -scheme ${config.project.name}Example -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet`,
+          'build:android':
+            'cd android && ./gradlew assembleDebug -DtestBuildType=debug -Dorg.gradle.jvmargs=-Xmx4g',
+        }
+      : {
+          'build:android':
+            'react-native build-android --extra-params "--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a"',
+          'build:ios': `react-native build-ios --mode Debug`,
+        };
 
   if (config.example === 'vanilla') {
     Object.assign(scripts, SCRIPTS_TO_ADD);
