@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.57.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.57.0...create-react-native-library@0.57.1) (2026-02-10)
+
+### Bug Fixes
+
+- fix missing turborepo setup for expo example ([6e95b03](https://github.com/callstack/react-native-builder-bob/commit/6e95b0304b906098056f299dccdd662c3dc47995)) - by @
+
 # [0.57.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.56.1...create-react-native-library@0.57.0) (2026-01-21)
 
 ### Features
