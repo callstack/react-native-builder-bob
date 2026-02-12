@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.57.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.57.1...create-react-native-library@0.57.2) (2026-02-12)
+
+### Bug Fixes
+
+- don't generate test workflow if jest isn't picked ([568f092](https://github.com/callstack/react-native-builder-bob/commit/568f092c051fc06f3a1ce21a84838d60b64be343)) - by @satya164
+
 ## [0.57.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.57.0...create-react-native-library@0.57.1) (2026-02-10)
 
 ### Bug Fixes
