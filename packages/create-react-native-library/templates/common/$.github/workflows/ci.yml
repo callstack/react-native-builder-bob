@@ -33,6 +33,7 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
+<% if (tools.includes('jest')) { -%>
   test:
     runs-on: ubuntu-latest
 
@@ -45,6 +46,7 @@ jobs:
 
       - name: Run unit tests
         run: yarn test --maxWorkers=2 --coverage
+<% } -%>
 
   build-library:
     runs-on: ubuntu-latest
