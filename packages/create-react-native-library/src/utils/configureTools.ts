@@ -40,7 +40,7 @@ const ESLINT = {
       'eslint-config-prettier': '^10.1.8',
       'eslint-plugin-prettier': '^5.5.4',
       'eslint': '^9.35.0',
-      'prettier': '^2.8.8',
+      'prettier': '^3.0.0',
     },
   },
 };
