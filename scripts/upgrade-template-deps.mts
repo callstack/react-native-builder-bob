@@ -73,12 +73,21 @@ function updateDeps(filePath: string, changes: Record<string, Change>) {
   });
 
   const content = fs.readFileSync(filePath, 'utf8');
+  let inDepSection = false;
 
   const updated = content
     .split('\n')
     .map((line) => {
-      // Skip lines with EJS expressions (dynamically resolved versions)
-      if (line.includes('<%')) {
+      if (
+        line.includes('"dependencies"') ||
+        line.includes('"devDependencies"')
+      ) {
+        inDepSection = true;
+      } else if (inDepSection && /^\s*[}\]]/.test(line)) {
+        inDepSection = false;
+      }
+
+      if (!inDepSection || line.includes('<%')) {
         return line;
       }
 
