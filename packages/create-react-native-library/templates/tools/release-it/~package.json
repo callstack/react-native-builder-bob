@@ -22,7 +22,7 @@
     }
   },
   "devDependencies": {
-    "@release-it/conventional-changelog": "^10.0.1",
-    "release-it": "^19.0.4"
+    "@release-it/conventional-changelog": "^10.0.6",
+    "release-it": "^19.2.4"
   }
 }
