@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -50,5 +51,11 @@ jobs:
               --body "Automated upgrade of template dependencies via \`scripts/upgrade-template-deps.mts\`." \
               --label "dependencies"
           fi
+
+          # Workflows triggered by github.token don't run on the pushed branch,
+          # so dispatch the required validation workflows explicitly.
+          for workflow in check-project.yml build-templates.yml; do
+            gh workflow run "$workflow" --ref "$branch"
+          done
         env:
           GH_TOKEN: ${{ github.token }}
