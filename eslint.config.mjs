@@ -1,5 +1,6 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { recommended, vitest, typechecked } from 'eslint-config-satya164';
+import globals from 'globals';
 
 export default defineConfig(
   recommended,
@@ -21,6 +22,13 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
+    },
+  },
+
+  {
+    files: ['scripts/**'],
+    languageOptions: {
+      globals: globals.node,
     },
   },
 

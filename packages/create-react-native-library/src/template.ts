@@ -260,6 +260,10 @@ export async function applyTemplate(
   const files = await fs.readdir(source);
 
   for (const f of files) {
+    if (f.startsWith('~')) {
+      continue;
+    }
+
     let name;
 
     try {
