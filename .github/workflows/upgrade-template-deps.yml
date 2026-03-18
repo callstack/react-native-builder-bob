@@ -1,0 +1,54 @@
+name: Upgrade template dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade-template-deps:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run upgrade script
+        run: node scripts/upgrade-template-deps.mts
+
+      - name: Create or update pull request
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          branch="upgrade-template-deps"
+
+          git checkout -B "$branch"
+          git add -A
+          git commit -m "chore: upgrade template dependencies"
+          git push -u origin "$branch" --force
+
+          existing_pr=$(gh pr list --head "$branch" --json number --jq '.[0].number')
+
+          if [ -n "$existing_pr" ]; then
+            echo "Updated existing PR #$existing_pr"
+          else
+            gh pr create \
+              --title "chore: upgrade template dependencies" \
+              --body "Automated upgrade of template dependencies via \`scripts/upgrade-template-deps.mts\`." \
+              --label "dependencies"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

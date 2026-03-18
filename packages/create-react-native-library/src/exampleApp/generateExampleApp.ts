@@ -1,11 +1,12 @@
+import dedent from 'dedent';
 import fs from 'fs-extra';
 import getLatestVersion from 'get-latest-version';
 import https from 'https';
 import path from 'path';
+import { SUPPORTED_MONOREPO_CONFIG_VERSION } from '../constants';
 import type { TemplateConfiguration } from '../template';
 import sortObjectKeys from '../utils/sortObjectKeys';
 import { spawn } from '../utils/spawn';
-import dedent from 'dedent';
 
 const FILES_TO_DELETE = [
   '__tests__',
@@ -216,7 +217,7 @@ export default async function generateExampleApp({
 
   const PACKAGES_TO_ADD_DEV = {
     'react-native-builder-bob': `^${config.versions.bob}`,
-    'react-native-monorepo-config': `^0.3.3`,
+    'react-native-monorepo-config': `^${SUPPORTED_MONOREPO_CONFIG_VERSION}`,
   };
 
   if (

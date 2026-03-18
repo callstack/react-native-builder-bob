@@ -1,0 +1,10 @@
+{
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"]
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^19.8.1",
+    "commitlint": "^19.8.1",
+    "lefthook": "^2.0.3"
+  }
+}

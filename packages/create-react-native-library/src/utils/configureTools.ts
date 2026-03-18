@@ -2,12 +2,10 @@ import fs from 'fs-extra';
 import path from 'node:path';
 import { applyTemplate, type TemplateConfiguration } from '../template';
 import sortObjectKeys from './sortObjectKeys';
-import { SUPPORTED_REACT_NATIVE_VERSION } from '../constants';
 
 type Tool = {
   name: string;
   description: string;
-  package: Record<string, unknown>;
   condition?: (config: TemplateConfiguration) => boolean;
 };
 
@@ -21,109 +19,26 @@ type Options = {
 const ESLINT = {
   name: 'ESLint with Prettier',
   description: 'Lint and format code',
-  package: {
-    scripts: {
-      lint: 'eslint "**/*.{js,ts,tsx}"',
-    },
-    prettier: {
-      quoteProps: 'consistent',
-      singleQuote: true,
-      tabWidth: 2,
-      trailingComma: 'es5',
-      useTabs: false,
-    },
-    devDependencies: {
-      '@eslint/compat': '^1.3.2',
-      '@eslint/eslintrc': '^3.3.1',
-      '@eslint/js': '^9.35.0',
-      '@react-native/eslint-config': SUPPORTED_REACT_NATIVE_VERSION,
-      'eslint-config-prettier': '^10.1.8',
-      'eslint-plugin-prettier': '^5.5.4',
-      'eslint': '^9.35.0',
-      'prettier': '^2.8.8',
-    },
-  },
 };
 
 const LEFTHOOK = {
   name: 'Lefthook with Commitlint',
   description: 'Manage Git hooks and lint commit messages',
-  package: {
-    commitlint: {
-      extends: ['@commitlint/config-conventional'],
-    },
-    devDependencies: {
-      '@commitlint/config-conventional': '^19.8.1',
-      'commitlint': '^19.8.1',
-      'lefthook': '^2.0.3',
-    },
-  },
 };
 
 const RELEASE_IT = {
   name: 'Release It',
   description: 'Automate versioning and package publishing tasks',
-  package: {
-    'scripts': {
-      release: 'release-it --only-version',
-    },
-    'release-it': {
-      git: {
-        // eslint-disable-next-line no-template-curly-in-string
-        commitMessage: 'chore: release ${version}',
-        // eslint-disable-next-line no-template-curly-in-string
-        tagName: 'v${version}',
-      },
-      npm: {
-        publish: true,
-      },
-      github: {
-        release: true,
-      },
-      plugins: {
-        '@release-it/conventional-changelog': {
-          preset: {
-            name: 'angular',
-          },
-        },
-      },
-    },
-    'devDependencies': {
-      'release-it': '^19.0.4',
-      '@release-it/conventional-changelog': '^10.0.1',
-    },
-  },
 };
 
 const JEST = {
   name: 'Jest',
   description: 'Test JavaScript and TypeScript code',
-  package: {
-    scripts: {
-      test: 'jest',
-    },
-    jest: {
-      preset: 'react-native',
-      modulePathIgnorePatterns: [
-        '<rootDir>/example/node_modules',
-        '<rootDir>/lib/',
-      ],
-    },
-    devDependencies: {
-      '@types/jest': '^29.5.14',
-      'jest': '^29.7.0',
-    },
-  },
 };
 
 const TURBOREPO = {
   name: 'Turborepo',
   description: 'Cache build outputs on CI',
-  package: {
-    devDependencies: {
-      turbo: '^2.5.6',
-    },
-  },
 };
 
 export const AVAILABLE_TOOLS = {
@@ -168,39 +83,49 @@ export async function configureTools({
       continue;
     }
 
-    const files = path.resolve(__dirname, `../../templates/tools/${key}`);
+    const toolDir = path.resolve(__dirname, `../../templates/tools/${key}`);
 
-    if (fs.existsSync(files)) {
-      await applyTemplate(config, files, root);
+    if (fs.existsSync(toolDir)) {
+      await applyTemplate(config, toolDir, root);
     }
 
-    for (const [key, value] of Object.entries(tool.package)) {
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        !Array.isArray(value)
-      ) {
-        if (typeof packageJson[key] === 'object' || packageJson[key] == null) {
-          packageJson[key] = {
-            ...packageJson[key],
-            ...value,
-          };
+    const pkgPath = path.join(toolDir, '~package.json');
 
+    if (fs.existsSync(pkgPath)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const toolPkg = (await fs.readJson(pkgPath)) as Record<string, unknown>;
+
+      for (const [field, value] of Object.entries(toolPkg)) {
+        if (
+          typeof value === 'object' &&
+          value !== null &&
+          !Array.isArray(value)
+        ) {
           if (
-            key === 'dependencies' ||
-            key === 'devDependencies' ||
-            key === 'peerDependencies'
+            typeof packageJson[field] === 'object' ||
+            packageJson[field] == null
           ) {
-            // @ts-expect-error: We know they are objects here
-            packageJson[key] = sortObjectKeys(packageJson[key]);
+            packageJson[field] = {
+              ...packageJson[field],
+              ...value,
+            };
+
+            if (
+              field === 'dependencies' ||
+              field === 'devDependencies' ||
+              field === 'peerDependencies'
+            ) {
+              // @ts-expect-error: We know they are objects here
+              packageJson[field] = sortObjectKeys(packageJson[field]);
+            }
+          } else {
+            throw new Error(
+              `Cannot merge '${field}' field because it is not an object (got '${String(packageJson[field])}').`
+            );
           }
         } else {
-          throw new Error(
-            `Cannot merge '${key}' field because it is not an object (got '${String(packageJson[key])}').`
-          );
+          packageJson[field] = value;
         }
-      } else {
-        packageJson[key] = value;
       }
     }
   }
