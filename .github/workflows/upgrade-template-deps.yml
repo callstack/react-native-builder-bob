@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
   contents: write
   pull-requests: write
 
@@ -15,8 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -51,11 +59,5 @@ jobs:
               --body "Automated upgrade of template dependencies via \`scripts/upgrade-template-deps.mts\`." \
               --label "dependencies"
           fi
-
-          # Workflows triggered by github.token don't run on the pushed branch,
-          # so dispatch the required validation workflows explicitly.
-          for workflow in check-project.yml build-templates.yml; do
-            gh workflow run "$workflow" --ref "$branch"
-          done
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}

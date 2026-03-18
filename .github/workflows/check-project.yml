@@ -1,6 +1,5 @@
 name: Check project
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
