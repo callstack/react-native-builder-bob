@@ -1,4 +1,4 @@
-import del from 'del';
+import { deleteAsync } from 'del';
 import fs from 'fs-extra';
 import JSON5 from 'json5';
 import kleur from 'kleur';
@@ -38,7 +38,7 @@ export default async function build({
     `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
-  await del([output]);
+  await deleteAsync([output]);
 
   report.info(`Generating type definitions with ${kleur.blue('tsc')}`);
 
@@ -186,7 +186,7 @@ export default async function build({
     );
 
     try {
-      await del([tsbuildinfo]);
+      await deleteAsync([tsbuildinfo]);
     } catch (e) {
       // Ignore
     }
@@ -209,7 +209,7 @@ export default async function build({
     );
 
     try {
-      await del([tsbuildinfo]);
+      await deleteAsync([tsbuildinfo]);
     } catch (e) {
       // Ignore
     }

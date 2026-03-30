@@ -16,6 +16,7 @@
     "@react-native/eslint-config": "0.83.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.1"
   }

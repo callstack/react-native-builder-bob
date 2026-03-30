@@ -1,6 +1,6 @@
 import path from 'path';
 import kleur from 'kleur';
-import del from 'del';
+import { deleteAsync } from 'del';
 import compile, { type CompileOptions } from '../utils/compile';
 import type { Input, Variants } from '../types';
 
@@ -23,7 +23,7 @@ export default async function build({
     `Cleaning up previous build at ${kleur.blue(path.relative(root, output))}`
   );
 
-  await del([output]);
+  await deleteAsync([output]);
 
   await compile({
     ...options,

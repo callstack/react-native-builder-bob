@@ -51,7 +51,7 @@ beforeEach(() => {
         name: 'library',
         version: '1.0.0',
       }),
-      'src': {
+      src: {
         'index.ts': "export default 'hello world';",
       },
     },

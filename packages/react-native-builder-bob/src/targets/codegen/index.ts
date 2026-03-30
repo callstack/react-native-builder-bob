@@ -3,7 +3,7 @@ import type { Input } from '../../types';
 import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
 import fs from 'fs-extra';
 import path from 'path';
-import del from 'del';
+import { deleteAsync } from 'del';
 import {
   getCodegenCLISourceSupport,
   removeCodegenAppLevelCode,
@@ -23,7 +23,7 @@ export default async function build({ root, report }: Options) {
         path.relative(root, codegenIosPath)
       )}`
     );
-    await del([codegenIosPath]);
+    await deleteAsync([codegenIosPath]);
   }
 
   const codegenAndroidPath = packageJson.codegenConfig?.outputDir?.android;
@@ -33,7 +33,7 @@ export default async function build({ root, report }: Options) {
         path.relative(root, codegenAndroidPath)
       )}`
     );
-    await del([codegenAndroidPath]);
+    await deleteAsync([codegenAndroidPath]);
   }
 
   const codegenType = packageJson.codegenConfig?.type;

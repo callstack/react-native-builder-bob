@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-deprecated, @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
+/* eslint-disable import-x/no-commonjs, no-undef */
 
 const { withMetroConfig } = require('react-native-monorepo-config');
 
@@ -16,5 +16,4 @@ const { withMetroConfig } = require('react-native-monorepo-config');
  * @returns {import('metro-config').MetroConfig} Metro configuration
  */
 exports.getConfig = (baseConfig, { root, project }) =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   withMetroConfig(baseConfig, { root, dirname: project });

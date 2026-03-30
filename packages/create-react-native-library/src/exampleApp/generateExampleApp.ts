@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import fs from 'fs-extra';
-import getLatestVersion from 'get-latest-version';
+import { getLatestVersion } from 'get-latest-version';
 import https from 'https';
 import path from 'path';
 import { SUPPORTED_MONOREPO_CONFIG_VERSION } from '../constants';
