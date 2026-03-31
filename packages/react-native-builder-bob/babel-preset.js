@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
+/* eslint-disable import-x/no-commonjs, no-undef */
 
 const browserslist = require('browserslist');
 
@@ -11,11 +11,9 @@ const browserslist = require('browserslist');
  */
 module.exports = function (api, options, cwd) {
   const opt = (name) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     options[name] !== undefined
       ? options[name]
-      : // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        api.caller((caller) => (caller != null ? caller[name] : undefined));
+      : api.caller((caller) => (caller != null ? caller[name] : undefined));
 
   const supportsStaticESM = opt('supportsStaticESM');
   const rewriteImportExtensions = opt('rewriteImportExtensions');

@@ -20,7 +20,7 @@ describe('patchCodegenAndroidPackage', () => {
     mockfs({
       [mockProjectPath]: {
         'package.json': JSON.stringify(mockPackageJson),
-        'ios': {
+        ios: {
           generated: {
             'RCTAppDependencyProvider.h': '',
             'RCTAppDependencyProvider.mm': '',
@@ -31,7 +31,7 @@ describe('patchCodegenAndroidPackage', () => {
             'ReactAppDependencyProvider.podspec': '',
           },
         },
-        'android': {
+        android: {
           generated: {
             'RCTAppDependencyProvider.h': '',
             'RCTAppDependencyProvider.mm': '',
@@ -78,12 +78,12 @@ describe('patchCodegenAndroidPackage', () => {
     mockfs({
       [mockProjectPath]: {
         'package.json': JSON.stringify(mockPackageJson),
-        'ios': {
+        ios: {
           generated: {
             someRandomFile: '',
           },
         },
-        'android': {
+        android: {
           generated: {
             someRandomFile: '',
           },

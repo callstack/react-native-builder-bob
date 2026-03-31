@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import type { Input } from '../types';
 import { spawn } from '../utils/spawn';
-import del from 'del';
+import { deleteAsync } from 'del';
 
 type Options = Omit<Input, 'output'> & {
   options?: {
@@ -28,7 +28,7 @@ export default async function customTarget({ options, root, report }: Options) {
   if (pathToClean) {
     report.info(`Cleaning up ${kleur.blue(pathToClean)}`);
 
-    await del([path.resolve(root, pathToClean)]);
+    await deleteAsync([path.resolve(root, pathToClean)]);
   }
 
   const packageManagerExecutable = process.env.npm_execpath ?? 'npm';

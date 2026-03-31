@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-require-imports, import-x/no-commonjs, no-undef */
+/* eslint-disable import-x/no-commonjs, no-undef */
 
 const path = require('path');
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- Ignore missing types for this module
 const { loadConfig } = require('./lib/utils/loadConfig');
 

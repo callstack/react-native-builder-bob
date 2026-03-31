@@ -81,7 +81,7 @@
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
 <% } -%>
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "peerDependencies": {
     "react": "*",
