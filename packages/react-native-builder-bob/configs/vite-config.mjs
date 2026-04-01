@@ -36,15 +36,11 @@ const jsx = (regex) => ({
 });
 
 export default defineConfig(({ mode }) => ({
-  plugins: [
-    jsx(/\/(@expo|expo-.+)\//),
-    commonjs(),
-    react(),
-  ],
+  plugins: [jsx(/\/(@expo|expo-.+)\//), commonjs(), react()],
   define: {
-    '__DEV__': JSON.stringify(mode !== 'production'),
+    __DEV__: JSON.stringify(mode !== 'production'),
     'process.env.EXPO_OS': JSON.stringify('web'),
-    'global': 'globalThis',
+    global: 'globalThis',
   },
   resolve: {
     extensions,
@@ -52,6 +48,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       'react-native': 'react-native-web',
     },
+    dedupe: ['react', 'react-dom', 'react-native-web'],
   },
   optimizeDeps: {
     esbuildOptions: {

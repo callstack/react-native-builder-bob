@@ -86,7 +86,8 @@ jobs:
             --repo-url https://test.test
             --type ${{ matrix.type.name }}
             --languages ${{ matrix.type.language }}
-            --example ${{ matrix.type.language == 'js' && 'expo' || 'vanilla' }}
+            --example vanilla
+            --tools vite
             --tools eslint
             --tools jest
             --tools lefthook
@@ -138,7 +139,11 @@ jobs:
           tgz=$(ls react-native-builder-bob-*.tgz)
           cd -
           cd ${{ env.work_dir }}
-          YARN_CHECKSUM_BEHAVIOR=ignore yarn add --dev ../packages/react-native-builder-bob/$tgz
+
+          export YARN_CHECKSUM_BEHAVIOR=ignore
+
+          yarn add --dev ../packages/react-native-builder-bob/$tgz
+          yarn --cwd example add --dev ../../packages/react-native-builder-bob/$tgz
 
       - name: Get build target
         working-directory: ${{ env.work_dir }}
@@ -209,17 +214,6 @@ jobs:
         run: |
           yarn prepare
 
-      - name: Build example (Web)
-        if: matrix.type.language == 'js'
-        working-directory: ${{ env.work_dir }}
-        shell: bash
-        run: |
-          # Clean up built JS files
-          # So we test that bundling works without any pre-built files
-          rm -rf lib/*
-
-          yarn example expo export --platform web
-
       - name: Install JDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
@@ -271,3 +265,13 @@ jobs:
         working-directory: ${{ env.work_dir }}
         run: |
           yarn turbo run build:ios --cache-dir=".turbo"
+
+      - name: Build example (Web)
+        working-directory: ${{ env.work_dir }}
+        shell: bash
+        run: |
+          # Clean up built JS files
+          # So we test that bundling works without any pre-built files
+          rm -rf lib/*
+
+          yarn example build:web

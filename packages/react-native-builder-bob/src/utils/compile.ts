@@ -140,7 +140,7 @@ export default async function compile({
         ...(babelrc || configFile
           ? null
           : {
-              presets: [require.resolve('../../babel-preset')],
+              presets: [require.resolve('../../configs/babel-preset')],
             }),
       });
 
