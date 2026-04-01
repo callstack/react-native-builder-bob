@@ -7,7 +7,7 @@ export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
   const platforms = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },
-    ...(config.example === 'expo'
+    ...(config.example === 'expo' || config.tools.includes('vite')
       ? ({ web: { name: 'Web', color: 'blue' } } as const)
       : null),
   } as const;

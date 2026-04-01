@@ -319,15 +319,6 @@ export const prompt = create(['[name]'], {
       title: choice.title,
       value: choice.value,
       description: choice.description,
-      skip: (): boolean => {
-        const answers = prompt.read();
-
-        if (answers.type === 'library') {
-          return choice.value !== 'expo';
-        }
-
-        return false;
-      },
     })),
     required: true,
     skip: (): boolean => {
@@ -344,8 +335,27 @@ export const prompt = create(['[name]'], {
       value: key,
       title: tool.name,
       description: tool.description,
+      skip: (): boolean => {
+        if ('condition' in tool && tool.condition) {
+          return !tool.condition({ example: prompt.read().example });
+        }
+
+        return false;
+      },
     })),
-    default: Object.keys(AVAILABLE_TOOLS),
+    default: (): string[] => {
+      const answers = prompt.read();
+
+      return Object.entries(AVAILABLE_TOOLS)
+        .filter(([, tool]) => {
+          if ('condition' in tool && tool.condition) {
+            return tool.condition({ example: answers.example });
+          }
+
+          return true;
+        })
+        .map(([key]) => key);
+    },
     required: true,
     skip: (): boolean => {
       const answers = prompt.read();

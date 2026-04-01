@@ -57,7 +57,10 @@ function getTemplatePackageFiles() {
     path.join(TEMPLATES_DIR, 'common', '$package.json'),
     ...fs
       .readdirSync(path.join(TEMPLATES_DIR, 'tools'))
-      .map((dir) => path.join(TEMPLATES_DIR, 'tools', dir, '~package.json'))
+      .flatMap((dir) => [
+        path.join(TEMPLATES_DIR, 'tools', dir, '~package.json'),
+        path.join(TEMPLATES_DIR, 'tools', dir, 'example', '~package.json'),
+      ])
       .filter((filePath) => fs.existsSync(filePath)),
   ];
 }

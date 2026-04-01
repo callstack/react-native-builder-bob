@@ -41,7 +41,6 @@ const PACKAGES_TO_REMOVE = [
 
 const PACKAGES_TO_ADD_EXPO_WEB = {
   '@expo/metro-runtime': '~5.0.4',
-  'react-dom': '19.1.0',
   'react-native-web': '~0.21.1',
 };
 
@@ -173,9 +172,11 @@ export default async function generateExampleApp({
           'build:ios': `react-native build-ios --mode Debug`,
         };
 
-  if (config.example === 'vanilla') {
+  if (config.example != null) {
     Object.assign(scripts, SCRIPTS_TO_ADD);
-  } else if (config.example === 'test-app') {
+  }
+
+  if (config.example === 'test-app') {
     // `react-native-test-app` doesn't bundle application by default in 'Release' mode and also `bundle` command doesn't create a directory.
     // `mkdist` script should be removed after stable React Native major contains this fix: https://github.com/facebook/react-native/pull/45182.
 
@@ -276,8 +277,6 @@ export default async function generateExampleApp({
       scripts.android = 'expo run:android';
       scripts.ios = 'expo run:ios';
 
-      delete scripts.web;
-
       await fs.writeFile(
         path.join(directory, '.gitignore'),
         dedent`
@@ -286,13 +285,21 @@ export default async function generateExampleApp({
         ios/
         `
       );
-    } else {
-      Object.entries(PACKAGES_TO_ADD_EXPO_WEB).forEach(([name, version]) => {
-        dependencies[name] = bundledNativeModules[name] || version;
-      });
-
-      scripts.web = 'expo start --web';
     }
+
+    const reactVersion = dependencies.react ?? devDependencies.react;
+
+    if (typeof reactVersion !== 'string') {
+      throw new Error("Couldn't find the package 'react' in the example app.");
+    }
+
+    Object.entries(PACKAGES_TO_ADD_EXPO_WEB).forEach(([name, version]) => {
+      dependencies[name] = bundledNativeModules[name] || version;
+    });
+
+    dependencies['react-dom'] = reactVersion;
+    scripts.web = 'expo start --web';
+    scripts['build:web'] = 'expo export --platform web';
 
     const app = await fs.readJSON(path.join(directory, 'app.json'));
 
