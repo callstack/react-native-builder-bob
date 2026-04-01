@@ -1,6 +1,6 @@
 {
   "name": "react-native-builder-bob",
-  "version": "0.40.18",
+  "version": "0.41.0",
   "description": "CLI to build JavaScript files for React Native libraries",
   "keywords": [
     "react-native",
@@ -19,11 +19,11 @@
   "homepage": "https://oss.callstack.com/react-native-builder-bob/build",
   "main": "lib/index.js",
   "exports": {
-     "./package.json": "./package.json",
-     "./babel-config": "./configs/babel-config.js",
-     "./babel-preset": "./configs/babel-preset.js",
-     "./metro-config": "./configs/metro-config.js",
-     "./vite-config": "./configs/vite-config.mjs"
+    "./package.json": "./package.json",
+    "./babel-config": "./configs/babel-config.js",
+    "./babel-preset": "./configs/babel-preset.js",
+    "./metro-config": "./configs/metro-config.js",
+    "./vite-config": "./configs/vite-config.mjs"
   },
   "bin": {
     "bob": "bin/bob"

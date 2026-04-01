@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.41.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.18...react-native-builder-bob@0.41.0) (2026-04-01)
+
+### Features
+
+- add web support to all examples with vite ([#933](https://github.com/callstack/react-native-builder-bob/issues/933)) ([5b19e50](https://github.com/callstack/react-native-builder-bob/commit/5b19e5026fa9407135d3e6fb4a7af27a441dfecc)) - by @satya164
+
 ## [0.40.18](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.17...react-native-builder-bob@0.40.18) (2026-02-10)
 
 **Note:** Version bump only for package react-native-builder-bob

@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.6.12",
+  "version": "0.7.0",
   "private": true,
   "description": "Documentation for react-native-builder-bob",
   "scripts": {
