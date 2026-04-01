@@ -9,8 +9,14 @@
   },
   "autolinking": {
     "<%- project.name -%>": {
-      "swift": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>",
-      "kotlin": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>"
+      "ios": {
+        "language": "swift",
+        "implementationClassName": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>"
+      },
+      "android": {
+        "language": "kotlin",
+        "implementationClassName": "<% if (project.viewConfig === 'nitro-view') { -%>Hybrid<% } -%><%- project.name -%>"
+      }
     }
   },
   "ignorePaths": ["node_modules"]
