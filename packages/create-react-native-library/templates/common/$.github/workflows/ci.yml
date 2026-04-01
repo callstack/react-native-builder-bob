@@ -61,7 +61,7 @@ jobs:
       - name: Build package
         run: yarn prepare
 
-<% if (project.native) { -%>
+<% if (example != null) { -%>
   build-android:
     runs-on: ubuntu-latest
 
@@ -109,7 +109,7 @@ jobs:
           /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
 
 <% if (example === 'expo') { -%>
-      - name: Prebuild expo app for iOS
+      - name: Prebuild expo app for Android
         if: env.turbo_cache_hit != 1
         run: |
           yarn example expo prebuild --platform android
@@ -193,7 +193,8 @@ jobs:
       - name: Build example for iOS
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
-<% } else { -%>
+<% } -%>
+<% if (example === 'expo' || tools.includes('vite')) { -%>
   build-web:
     runs-on: ubuntu-latest
 
@@ -206,5 +207,5 @@ jobs:
 
       - name: Build example for Web
         run: |
-          yarn example expo export --platform web
+          yarn example build:web
 <% } -%>

@@ -32,16 +32,6 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 <<%- project.name -%>View color="tomato" />
 ```
 
-<% } else if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view' || project.moduleConfig === 'turbo-modules') { -%>
-
-```js
-import { multiply } from '<%- project.slug -%>';
-
-// ...
-
-const result = multiply(3, 7);
-```
-
 <% } else { -%>
 
 ```js
@@ -49,7 +39,7 @@ import { multiply } from '<%- project.slug -%>';
 
 // ...
 
-const result = await multiply(3, 7);
+const result = multiply(3, 7);
 ```
 
 <% } -%>

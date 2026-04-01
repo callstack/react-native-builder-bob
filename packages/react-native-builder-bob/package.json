@@ -26,7 +26,8 @@
     "lib",
     "babel-preset.js",
     "metro-config.js",
-    "babel-config.js"
+    "babel-config.js",
+    "vite-config.mjs"
   ],
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >= 23.4.0"

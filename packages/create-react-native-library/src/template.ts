@@ -56,6 +56,7 @@ const EXAMPLE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/example-common'
 );
+const EXAMPLE_BARE_FILES = path.resolve(__dirname, '../templates/example-bare');
 const EXAMPLE_MODULE_NEW_FILES = path.resolve(
   __dirname,
   '../templates/example-module-new'
@@ -64,13 +65,14 @@ const EXAMPLE_VIEW_FILES = path.resolve(__dirname, '../templates/example-view');
 const EXAMPLE_EXPO_FILES = path.resolve(__dirname, '../templates/example-expo');
 
 const JS_FILES = path.resolve(__dirname, '../templates/js-library');
+const JS_VIEW_FILES = path.resolve(__dirname, '../templates/js-view');
 const NATIVE_COMMON_FILES = path.resolve(
   __dirname,
   '../templates/native-common'
 );
-const NATIVE_COMMON_EXAMPLE_FILES = path.resolve(
+const EXAMPLE_NATIVE_COMMON_FILES = path.resolve(
   __dirname,
-  '../templates/native-common-example'
+  '../templates/example-native-common'
 );
 const NITRO_COMMON_FILES = path.resolve(__dirname, '../templates/nitro-common');
 
@@ -203,27 +205,50 @@ export async function applyTemplates(
 
   if (answers.languages === 'js') {
     await applyTemplate(config, JS_FILES, folder);
-    await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
+
+    if (config.example != null) {
+      if (config.example === 'expo') {
+        await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
+      } else {
+        await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
+      }
+    }
   } else {
     await applyTemplate(config, NATIVE_COMMON_FILES, folder);
 
-    if (config.example != null) {
-      await applyTemplate(config, NATIVE_COMMON_EXAMPLE_FILES, folder);
-    }
-
     if (config.example === 'expo') {
       await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
+
+      if (config.project.native) {
+        await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
+      }
+    } else if (config.example != null) {
+      await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
+
+      if (config.project.native) {
+        await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
+      }
     }
 
     if (config.project.moduleConfig === 'nitro-modules') {
       await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
+
+      if (config.example === 'expo' || config.tools.includes('vite')) {
+        await applyTemplate(config, JS_FILES, folder);
+      }
+
       return;
     }
 
     if (config.project.viewConfig === 'nitro-view') {
       await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['view_nitro'], folder);
+
+      if (config.example === 'expo' || config.tools.includes('vite')) {
+        await applyTemplate(config, JS_VIEW_FILES, folder);
+      }
+
       return;
     }
 
@@ -244,6 +269,14 @@ export async function applyTemplates(
     }_new` as const;
 
     await applyTemplate(config, KOTLIN_FILES[templateType], folder);
+
+    if (config.example === 'expo' || config.tools.includes('vite')) {
+      if (config.project.viewConfig !== null) {
+        await applyTemplate(config, JS_VIEW_FILES, folder);
+      } else {
+        await applyTemplate(config, JS_FILES, folder);
+      }
+    }
   }
 }
 

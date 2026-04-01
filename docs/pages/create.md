@@ -11,8 +11,8 @@ If you want to create your own React Native library, scaffolding the project can
 - [TypeScript](https://www.typescriptlang.org/) to ensure type-safe code and better DX
 - Support for [Turbo Modules](https://reactnative.dev/docs/turbo-native-modules-introduction) & [Fabric](https://reactnative.dev/docs/fabric-native-components-introduction)
 - Support for [Kotlin](https://kotlinlang.org/) on Android & [Swift](https://developer.apple.com/swift/) on iOS
-- Support for C++ to write cross-platform native code
-- [Expo](https://expo.io/) for libraries without native code and web support
+- Example apps with [Community CLI](https://github.com/react-native-community/cli), [Expo](https://expo.dev/) or [React Native Test App](https://github.com/microsoft/react-native-test-app)
+- Support for Web with [Expo Web](https://docs.expo.dev/workflow/web/) or [Vite](https://vitejs.dev/)
 - [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/), [Lefthook](https://github.com/evilmartians/lefthook) and [Release It](https://github.com/release-it/release-it) pre-configured
 - [`react-native-builder-bob`](./build.md) pre-configured to compile your files
 - [GitHub Actions](https://github.com/features/actions) pre-configured to run tests and lint on the CI
