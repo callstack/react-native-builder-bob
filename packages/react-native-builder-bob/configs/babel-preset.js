@@ -59,7 +59,7 @@ module.exports = function (api, options, cwd) {
       ],
       require.resolve('@babel/plugin-transform-flow-strip-types'),
       [
-        require.resolve('./lib/babel'),
+        require.resolve('../lib/babel'),
         {
           extension: rewriteImportExtensions ? 'js' : undefined,
         },

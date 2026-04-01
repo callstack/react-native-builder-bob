@@ -18,16 +18,20 @@
   },
   "homepage": "https://oss.callstack.com/react-native-builder-bob/build",
   "main": "lib/index.js",
+  "exports": {
+     "./package.json": "./package.json",
+     "./babel-config": "./configs/babel-config.js",
+     "./babel-preset": "./configs/babel-preset.js",
+     "./metro-config": "./configs/metro-config.js",
+     "./vite-config": "./configs/vite-config.mjs"
+  },
   "bin": {
     "bob": "bin/bob"
   },
   "files": [
     "bin",
     "lib",
-    "babel-preset.js",
-    "metro-config.js",
-    "babel-config.js",
-    "vite-config.mjs"
+    "configs"
   ],
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >= 23.4.0"

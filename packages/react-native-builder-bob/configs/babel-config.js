@@ -2,7 +2,7 @@
 
 const path = require('path');
 // @ts-ignore -- Ignore missing types for this module
-const { loadConfig } = require('./lib/utils/loadConfig');
+const { loadConfig } = require('../lib/utils/loadConfig');
 
 /**
  * Get Babel configuration for the example project.
