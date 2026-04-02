@@ -7,7 +7,7 @@ export default defineConfig((env) =>
   mergeConfig(config(env), {
     resolve: {
       alias: {
-        '<%- project.slug -%>': new URL('..', import.meta.url),
+        [pack.name]: new URL('..', import.meta.url),
       },
       dedupe: Object.keys(pack.peerDependencies),
     },
