@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.58.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.58.0...create-react-native-library@0.58.1) (2026-04-02)
+
+### Bug Fixes
+
+- dedupe peer dependencies for vite ([62c9e6c](https://github.com/callstack/react-native-builder-bob/commit/62c9e6cb522c07cc95fb0bb9b2be0909c24930c8)) - by @
+
 # [0.58.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.57.2...create-react-native-library@0.58.0) (2026-04-01)
 
 ### Bug Fixes
