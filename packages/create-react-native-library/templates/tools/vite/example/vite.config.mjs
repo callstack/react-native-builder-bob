@@ -1,15 +1,15 @@
-import { fileURLToPath } from 'node:url';
-
 import { defineConfig, mergeConfig } from 'vite';
 
-import bobConfig from 'react-native-builder-bob/vite-config';
+import config from 'react-native-builder-bob/vite-config';
+import pack from '../package.json' with { type: 'json' };
 
 export default defineConfig((env) =>
-  mergeConfig(bobConfig(env), {
+  mergeConfig(config(env), {
     resolve: {
       alias: {
-        '<%- project.slug -%>': fileURLToPath(new URL('..', import.meta.url)),
+        '<%- project.slug -%>': new URL('..', import.meta.url),
       },
+      dedupe: Object.keys(pack.peerDependencies),
     },
   })
 );
