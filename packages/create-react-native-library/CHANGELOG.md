@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.59.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.58.2...create-react-native-library@0.59.0) (2026-04-02)
+
+### Features
+
+- update nitro-modules template to new format ([#935](https://github.com/callstack/react-native-builder-bob/issues/935)) ([8b8fb76](https://github.com/callstack/react-native-builder-bob/commit/8b8fb76709505ac66b79b59cf180964815b5e0ad)) - by @riteshshukla04
+
 ## [0.58.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.58.1...create-react-native-library@0.58.2) (2026-04-02)
 
 ### Bug Fixes
