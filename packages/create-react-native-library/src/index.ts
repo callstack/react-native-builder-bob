@@ -154,6 +154,8 @@ async function create() {
   } else {
     spinner.text = 'Initializing git repository';
 
+    let timer;
+
     try {
       const abortController = new AbortController();
 
@@ -163,7 +165,7 @@ async function create() {
       await Promise.race([
         createInitialGitCommit(folder, abortController.signal),
         new Promise<void>((_resolve, reject) => {
-          setTimeout(() => {
+          timer = setTimeout(() => {
             const error = new Error('Creating git repository took too long');
 
             abortController.abort(error.message);
@@ -173,6 +175,9 @@ async function create() {
       ]);
     } catch (error) {
       spinner.warn('Failed to create git repository');
+    } finally {
+      // The process waits for the timer if we don't clear it here
+      clearTimeout(timer);
     }
 
     printSuccessMessage();
