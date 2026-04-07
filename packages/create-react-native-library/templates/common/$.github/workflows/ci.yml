@@ -79,6 +79,11 @@ jobs:
       - name: Generate nitrogen code
         run: yarn nitrogen
 <% } -%>
+<% if (project.cpp) { -%>
+
+      - name: Generate codegen native code
+        run: yarn bob build --target codegen
+<% } -%>
 
       - name: Cache turborepo for Android
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
@@ -151,6 +156,11 @@ jobs:
 
       - name: Generate nitrogen code
         run: yarn nitrogen
+<% } -%>
+<% if (project.cpp) { -%>
+
+      - name: Generate codegen native code
+        run: yarn bob build --target codegen
 <% } -%>
 
       - name: Cache turborepo for iOS
