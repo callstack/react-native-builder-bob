@@ -69,7 +69,6 @@
 .codeBlock {
   position: relative;
   width: 100%;
-  background-color: var(--rp-code-block-bg);
   color: var(--rp-code-block-color);
   margin: 8px 0;
 }

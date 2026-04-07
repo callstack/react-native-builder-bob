@@ -8,11 +8,13 @@
     "dev": "rspress dev",
     "preview": "rspress preview"
   },
+  "type": "module",
   "dependencies": {
-    "@callstack/rspress-preset": "^0.4.5",
-    "@callstack/rspress-theme": "^0.4.5",
-    "@rspress/core": "2.0.0-beta.34",
-    "@shikijs/transformers": "^3.13.0"
+    "@callstack/rspress-preset": "^0.6.3",
+    "@callstack/rspress-theme": "^0.6.3",
+    "@rspress/core": "^2.0.8",
+    "@shikijs/transformers": "^3.13.0",
+    "clsx": "^2.1.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.14"
