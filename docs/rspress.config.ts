@@ -1,5 +1,6 @@
 import { defineConfig } from '@rspress/core';
 import { withCallstackPreset } from '@callstack/rspress-preset';
+import { transformerNotationHighlight } from '@shikijs/transformers';
 
 export default withCallstackPreset(
   {
@@ -28,8 +29,17 @@ export default withCallstackPreset(
           { text: 'Scaffold a library', link: '/create' },
           { text: 'Build a library', link: '/build' },
           { text: 'ESM support', link: '/esm' },
+          {
+            text: 'Swift with Turbo Modules and Fabric',
+            link: '/swift-new-architecture',
+          },
           { text: 'FAQ', link: '/faq' },
         ],
+      },
+    },
+    markdown: {
+      shiki: {
+        transformers: [transformerNotationHighlight()],
       },
     },
     base: '/react-native-builder-bob/',

@@ -93,3 +93,5 @@ Once the project is created, you can follow the official React Native docs to le
 - [Native UI Components for iOS](https://reactnative.dev/docs/legacy/native-components-ios)
 - [Turbo Modules](https://reactnative.dev/docs/turbo-native-modules-introduction)
 - [Fabric Components](https://reactnative.dev/docs/fabric-native-components-introduction)
+
+Turbo Modules and Fabric components don't have native support for Swift. If you want to write the iOS implementation in Swift for a Turbo Module or Fabric View, see [Swift with Turbo Modules and Fabric](./swift-new-architecture.md).
