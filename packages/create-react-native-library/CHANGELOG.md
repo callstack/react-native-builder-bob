@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.59.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.59.0...create-react-native-library@0.59.1) (2026-04-07)
+
+### Bug Fixes
+
+- fix delay before the CLI exits ([6528300](https://github.com/callstack/react-native-builder-bob/commit/65283008bbd7a15060c9754f9d06e940414f655c)) - by @
+
 # [0.59.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.58.2...create-react-native-library@0.59.0) (2026-04-02)
 
 ### Features
