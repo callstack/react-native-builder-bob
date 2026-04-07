@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.7.0...docs@0.8.0) (2026-04-07)
+
+### Features
+
+- add experimental c++ turbo module ([#938](https://github.com/callstack/react-native-builder-bob/issues/938)) ([db09e6b](https://github.com/callstack/react-native-builder-bob/commit/db09e6bc22ad64b75694d83f0528e33eb21a786f)) - by @satya164
+
 # [0.7.0](https://github.com/callstack/react-native-builder-bob/compare/docs@0.6.12...docs@0.7.0) (2026-04-01)
 
 ### Features
