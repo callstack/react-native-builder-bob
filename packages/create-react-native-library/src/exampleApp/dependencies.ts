@@ -4,6 +4,9 @@ import sortObjectKeys from '../utils/sortObjectKeys';
 
 type PackageJson = {
   devDependencies?: Record<string, string>;
+  'react-native-builder-bob'?: {
+    targets?: (string | [string, unknown])[];
+  };
 };
 
 export async function alignDependencyVersionsWithExampleApp(
@@ -20,6 +23,15 @@ export async function alignDependencyVersionsWithExampleApp(
     '@types/react',
     '@react-native/babel-preset',
   ];
+
+  const usesCodegen =
+    pkg['react-native-builder-bob']?.targets?.some((target) =>
+      Array.isArray(target) ? target[0] === 'codegen' : target === 'codegen'
+    ) ?? false;
+
+  if (usesCodegen) {
+    PACKAGES_TO_COPY.push('@react-native-community/cli');
+  }
 
   const devDependencies: Record<string, string> = {};
 

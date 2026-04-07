@@ -327,22 +327,7 @@ export default async function generateExampleApp({
     spaces: 2,
   });
 
-  if (config.example !== 'expo') {
-    let gradleProperties = await fs.readFile(
-      path.join(directory, 'android', 'gradle.properties'),
-      'utf8'
-    );
-
-    // Disable Jetifier.
-    // Remove this when the app template is updated.
-    gradleProperties = gradleProperties.replace(
-      'android.enableJetifier=true',
-      'android.enableJetifier=false'
-    );
-
-    // Enable new arch for iOS and Android
-    // iOS
-    // Add ENV['RCT_NEW_ARCH_ENABLED'] = 1 on top of example/ios/Podfile
+  if (config.example === 'vanilla' && config.project.cpp) {
     const podfile = await fs.readFile(
       path.join(directory, 'ios', 'Podfile'),
       'utf8'
@@ -350,28 +335,8 @@ export default async function generateExampleApp({
 
     await fs.writeFile(
       path.join(directory, 'ios', 'Podfile'),
-      "ENV['RCT_NEW_ARCH_ENABLED'] = '1'\n\n" + podfile
-    );
-
-    // Android
-    // Make sure newArchEnabled=true is present in android/gradle.properties
-    if (gradleProperties.split('\n').includes('#newArchEnabled=true')) {
-      gradleProperties = gradleProperties.replace(
-        '#newArchEnabled=true',
-        'newArchEnabled=true'
-      );
-    } else if (gradleProperties.split('\n').includes('newArchEnabled=false')) {
-      gradleProperties = gradleProperties.replace(
-        'newArchEnabled=false',
-        'newArchEnabled=true'
-      );
-    } else if (!gradleProperties.split('\n').includes('newArchEnabled=true')) {
-      gradleProperties += '\nnewArchEnabled=true';
-    }
-
-    await fs.writeFile(
-      path.join(directory, 'android', 'gradle.properties'),
-      gradleProperties
+      "ENV['RCT_USE_RN_DEP'] = '1' # Needed to make iOS build work for C++ module\n\n" +
+        podfile
     );
   }
 }

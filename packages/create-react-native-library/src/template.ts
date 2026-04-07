@@ -29,6 +29,7 @@ export type TemplateConfiguration = {
     package_cpp: string;
     identifier: string;
     native: boolean;
+    cpp: boolean;
     swift: boolean;
     viewConfig: ViewConfig;
     moduleConfig: ModuleConfig;
@@ -75,6 +76,7 @@ const EXAMPLE_NATIVE_COMMON_FILES = path.resolve(
   '../templates/example-native-common'
 );
 const NITRO_COMMON_FILES = path.resolve(__dirname, '../templates/nitro-common');
+const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
 
 const NATIVE_FILES = {
   module_new: path.resolve(__dirname, '../templates/native-library-new'),
@@ -137,6 +139,7 @@ export function generateTemplateConfiguration({
       package_cpp: pack.replace(/\./g, '_'),
       identifier: slug.replace(/[^a-z0-9]+/g, '-').replace(/^-/, ''),
       native: languages !== 'js',
+      cpp: languages === 'cpp',
       swift: languages === 'kotlin-swift',
       viewConfig: getViewConfig(type),
       moduleConfig: getModuleConfig(type),
@@ -214,6 +217,31 @@ export async function applyTemplates(
       }
     }
   } else {
+    if (answers.languages === 'cpp') {
+      if (config.example === 'expo') {
+        await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
+
+        if (config.project.native) {
+          await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
+        }
+      } else if (config.example != null) {
+        await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
+
+        if (config.project.native) {
+          await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
+        }
+      }
+
+      await applyTemplate(config, NATIVE_FILES['module_new'], folder);
+      await applyTemplate(config, CPP_FILES, folder);
+
+      if (config.example === 'expo' || config.tools.includes('vite')) {
+        await applyTemplate(config, JS_FILES, folder);
+      }
+
+      return;
+    }
+
     await applyTemplate(config, NATIVE_COMMON_FILES, folder);
 
     if (config.example === 'expo') {

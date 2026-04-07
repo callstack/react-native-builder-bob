@@ -11,7 +11,7 @@ export type Answers = NonNullable<Awaited<ReturnType<typeof prompt.show>>>;
 
 export type ExampleApp = 'test-app' | 'expo' | 'vanilla' | undefined;
 
-export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'js';
+export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 export type ProjectType =
   | 'turbo-module'
@@ -56,6 +56,7 @@ const LANGUAGE_CHOICES: {
   title: string;
   value: ProjectLanguages;
   types: ProjectType[];
+  description?: string;
 }[] = [
   {
     title: 'Kotlin & Swift',
@@ -66,6 +67,11 @@ const LANGUAGE_CHOICES: {
     title: 'Kotlin & Objective-C',
     value: 'kotlin-objc',
     types: ['turbo-module', 'fabric-view'],
+  },
+  {
+    title: 'C++ (Experimental)',
+    value: 'cpp',
+    types: ['turbo-module'],
   },
   {
     title: 'JavaScript for Android, iOS & Web',
@@ -299,8 +305,13 @@ export const prompt = create(['[name]'], {
     choices: LANGUAGE_CHOICES.map((choice) => ({
       title: choice.title,
       value: choice.value,
+      description: choice.description,
       skip: (): boolean => {
         const answers = prompt.read();
+
+        if (choice.value === 'cpp' && answers.local === true) {
+          return true;
+        }
 
         if (typeof answers.type === 'string') {
           return !choice.types.includes(answers.type);
@@ -319,6 +330,15 @@ export const prompt = create(['[name]'], {
       title: choice.title,
       value: choice.value,
       description: choice.description,
+      skip: (): boolean => {
+        const answers = prompt.read();
+
+        if (answers.languages === 'cpp') {
+          return choice.value !== 'vanilla';
+        }
+
+        return false;
+      },
     })),
     required: true,
     skip: (): boolean => {

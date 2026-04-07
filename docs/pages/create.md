@@ -95,3 +95,5 @@ Once the project is created, you can follow the official React Native docs to le
 - [Fabric Components](https://reactnative.dev/docs/fabric-native-components-introduction)
 
 Turbo Modules and Fabric components don't have native support for Swift. If you want to write the iOS implementation in Swift for a Turbo Module or Fabric View, see [Swift with Turbo Modules and Fabric](./swift-new-architecture.md).
+
+> Note: The C++ template is currently experimental and only works with `includesGeneratedCode: true`. This can make it incompatible with React Native versions other than the one used to generate the codegen files. See [Including Generated Code into Libraries](https://reactnative.dev/docs/the-new-architecture/codegen-cli#including-generated-code-into-libraries) in the React Native docs for more details.

@@ -38,6 +38,21 @@ yarn nitrogen
 ```
 
 <% } -%>
+<% if (project.cpp) { -%>
+You need to run React Native Codegen to generate the native scaffolding for the C++ Turbo Module. The example app will not build without these generated files.
+
+Run **Codegen** in following cases:
+
+- When you make changes to `src/Native<%- project.name -%>.ts`.
+- When running the project for the first time (since the generated files are not committed to the repository).
+
+To invoke **Codegen**, use the following command:
+
+```sh
+yarn bob build --target codegen
+```
+
+<% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
