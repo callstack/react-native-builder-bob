@@ -69,12 +69,15 @@
 .codeBlock {
   position: relative;
   width: 100%;
-  background-color: var(--rp-code-block-bg);
   color: var(--rp-code-block-color);
-  margin: 8px 0;
+  margin: 0.5em 0;
+}
+
+.codeBlock > :global(.rp-codeblock) {
+  margin: 0;
 }
 
 .codeBlock pre {
-  padding: 1.25rem;
+  padding: 0 1.25rem;
   padding-right: 3.5rem;
 }

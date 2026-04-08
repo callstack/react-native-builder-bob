@@ -1,36 +1,33 @@
-import { Button } from '@callstack/rspress-theme';
-import { getCustomMDXComponent } from '@rspress/core/theme';
+import { Button, HomeHero } from '@callstack/rspress-theme';
+import { getCustomMDXComponent, HomeBackground } from '@rspress/core/theme';
+import clsx from 'clsx';
+
 import styles from './Hero.module.css';
 
 export function Hero() {
   return (
-    <div className="rp-relative">
-      <div
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        className={`rp-overflow-hidden rp-max-w-6xl ${styles.container}`}
-      >
-        <div className={styles.heroMain}>
-          <h1 className={styles.heroName}>
-            Create & build React Native libraries
-          </h1>
-        </div>
+    <>
+      <HomeBackground />
 
-        <div className={styles.featureList}>
-          <Feature
-            title="Create"
-            description="Scaffold a new React Native library with everything pre-configured. Choose between templates such as Turbo Modules or"
-            code={`npx create-react-native-library@latest`}
-            link="/react-native-builder-bob/create"
-          />
-          <Feature
-            title="Build"
-            description="Compile your React Native library to work with multiple tools. Support Metro, Webpack, Vite, NodeJS & more with a single build."
-            code={`npx react-native-builder-bob@latest init`}
-            link="/react-native-builder-bob/build"
-          />
-        </div>
-      </div>
-    </div>
+      <HomeHero
+        afterHeroActions={
+          <div className={clsx('rp-home-feature', styles.featureList)}>
+            <Feature
+              title="Create"
+              description="Scaffold a new React Native library with everything pre-configured. Choose between templates such as Turbo Modules or Nitro Modules."
+              code={`npx create-react-native-library@latest`}
+              link="/react-native-builder-bob/create"
+            />
+            <Feature
+              title="Build"
+              description="Compile your React Native library to work with multiple tools. Support Metro, Webpack, Vite, NodeJS & more with a single build."
+              code={`npx react-native-builder-bob@latest init`}
+              link="/react-native-builder-bob/build"
+            />
+          </div>
+        }
+      />
+    </>
   );
 }
 
@@ -64,6 +61,7 @@ function Feature({
             {code.split(' ').map((part, index) => {
               return (
                 <span
+                  key={index}
                   style={{
                     color:
                       index === 0
