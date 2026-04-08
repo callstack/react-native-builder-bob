@@ -4,6 +4,6 @@
     "build:web": "vite build"
   },
   "devDependencies": {
-    "react-native-web": "~0.21.1"
+    "react-native-web": "~0.21.2"
   }
 }
