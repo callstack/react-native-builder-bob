@@ -72,14 +72,14 @@
 <% if (project.cpp) { -%>
     "@react-native-community/cli": "^20.1.2",
 <% } -%>
-    "@react-native/babel-preset": "0.83.0",
+    "@react-native/babel-preset": "0.85.0",
     "@types/react": "^19.2.0",
     "del-cli": "^7.0.0",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "^<%- versions.nitro %>",
 <% } -%>
-    "react": "19.2.0",
-    "react-native": "0.83.0",
+    "react": "19.2.3",
+    "react-native": "0.85.0",
     "react-native-builder-bob": "^<%- versions.bob %>",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
