@@ -1,14 +1,14 @@
-import kleur from 'kleur';
-import type { Input } from '../../types';
-import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage';
-import fs from 'fs-extra';
-import path from 'path';
+import path from 'node:path';
 import { deleteAsync } from 'del';
+import fs from 'fs-extra';
+import kleur from 'kleur';
+import type { Input } from '../../types.ts';
+import { spawn } from '../../utils/spawn.ts';
+import { patchCodegenAndroidPackage } from './patches/patchCodegenAndroidPackage.ts';
 import {
   getCodegenCLISourceSupport,
   removeCodegenAppLevelCode,
-} from './patches/removeCodegenAppLevelCode';
-import { spawn } from '../../utils/spawn';
+} from './patches/removeCodegenAppLevelCode.ts';
 
 type Options = Omit<Input, 'output'>;
 

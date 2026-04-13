@@ -1,10 +1,13 @@
-import path from 'path';
+import { createRequire } from 'node:module';
+import path from 'node:path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
 import { globSync } from 'glob';
-import type { Input, Variants } from '../types';
-import { isCodegenSpec } from './isCodegenSpec';
+import type { Input, Variants } from '../types.ts';
+import { isCodegenSpec } from './isCodegenSpec.ts';
+
+const require = createRequire(import.meta.url);
 
 export type CompileOptions = {
   esm?: boolean;
@@ -140,7 +143,7 @@ export default async function compile({
         ...(babelrc || configFile
           ? null
           : {
-              presets: [require.resolve('../../configs/babel-preset')],
+              presets: [require.resolve('../configs/babel-preset.cjs')],
             }),
       });
 

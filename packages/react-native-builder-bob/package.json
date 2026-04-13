@@ -17,21 +17,21 @@
     "url": "https://github.com/callstack/react-native-builder-bob/issues"
   },
   "homepage": "https://oss.callstack.com/react-native-builder-bob/build",
-  "main": "lib/index.js",
+  "type": "module",
   "exports": {
-    "./package.json": "./package.json",
-    "./babel-config": "./configs/babel-config.js",
-    "./babel-preset": "./configs/babel-preset.js",
-    "./metro-config": "./configs/metro-config.js",
-    "./vite-config": "./configs/vite-config.mjs"
+    ".": "./lib/src/index.js",
+    "./babel-config": "./lib/src/configs/babel-config.cjs",
+    "./babel-preset": "./lib/src/configs/babel-preset.cjs",
+    "./metro-config": "./lib/src/configs/metro-config.mjs",
+    "./vite-config": "./lib/src/configs/vite-config.mjs",
+    "./package.json": "./package.json"
   },
   "bin": {
     "bob": "bin/bob"
   },
   "files": [
     "bin",
-    "lib",
-    "configs"
+    "lib"
   ],
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >= 23.4.0"
@@ -41,7 +41,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "prepare": "babel --extensions .ts,.tsx src --out-dir lib --source-maps --delete-dir-on-start",
+    "prepare": "del-cli lib .tsbuildinfo && tsc",
     "test": "vitest"
   },
   "dependencies": {
@@ -60,16 +60,15 @@
     "escape-string-regexp": "^5.0.0",
     "fs-extra": "^11.3.4",
     "glob": "^13.0.6",
-    "is-git-dirty": "^2.0.2",
     "json5": "^2.2.3",
     "kleur": "^4.1.5",
     "prompts": "^2.4.2",
     "react-native-monorepo-config": "^0.3.3",
+    "typescript": "^5.8.3",
     "which": "^6.0.1",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.6",
     "@types/babel__core": "^7.20.5",
     "@types/browserslist": "^4.15.4",
     "@types/cross-spawn": "^6.0.6",
@@ -82,6 +81,7 @@
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.35",
     "concurrently": "^9.2.1",
+    "del-cli": "^7.0.0",
     "metro-config": "^0.84.2",
     "mock-fs": "^5.5.0",
     "mock-stdin": "^1.0.0",

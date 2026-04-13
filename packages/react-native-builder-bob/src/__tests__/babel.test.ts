@@ -1,12 +1,12 @@
-import { expect, test } from 'vitest';
-import { transformFileAsync } from '@babel/core';
 import fs from 'node:fs';
 import path from 'node:path';
-import plugin from '../babel';
+import { expect, test } from 'vitest';
+import { transformFileAsync } from '@babel/core';
+import plugin from '../babel.ts';
 
 test.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
   const filepath = path.resolve(
-    __dirname,
+    import.meta.dirname,
     `../__fixtures__/project/code/$${name}-input.ts`
   );
 
@@ -27,7 +27,10 @@ test.each(['imports', 'exports'])(`adds extension to %s`, async (name) => {
   });
 
   const expected = await fs.promises.readFile(
-    path.resolve(__dirname, `../__fixtures__/project/code/$${name}-output.ts`),
+    path.resolve(
+      import.meta.dirname,
+      `../__fixtures__/project/code/$${name}-output.ts`
+    ),
     'utf8'
   );
 

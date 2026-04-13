@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "./lib",
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*", "package.json"],
+  "exclude": ["lib", "templates"]
+}

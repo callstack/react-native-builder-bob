@@ -1,6 +1,4 @@
-/* eslint-disable import-x/no-commonjs, no-undef */
-
-const { withMetroConfig } = require('react-native-monorepo-config');
+import { withMetroConfig } from 'react-native-monorepo-config';
 
 /**
  * Get Metro configuration for the example project.
@@ -15,5 +13,5 @@ const { withMetroConfig } = require('react-native-monorepo-config');
  * @param {string} options.project Directory containing the example project
  * @returns {import('metro-config').MetroConfig} Metro configuration
  */
-exports.getConfig = (baseConfig, { root, project }) =>
+export const getConfig = (baseConfig, { root, project }) =>
   withMetroConfig(baseConfig, { root, dirname: project });

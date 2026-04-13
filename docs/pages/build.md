@@ -62,7 +62,6 @@ To configure your project manually, follow these steps:
    ```
 
    Note that there is a difference between `prepare` and `prepack` scripts:
-
    - `prepare` is run when:
      - The package is published with Yarn 1 (`yarn publish`), npm (`npm publish`) or pnpm (`pnpm publish`)
      - The package is installed from a GIT URL with Yarn 1 (`yarn add <git-url>`), npm (`npm install <git-url>`) or pnpm (`pnpm add <git-url>`)
@@ -92,7 +91,6 @@ To configure your project manually, follow these steps:
    ```
 
    Here is what each of these fields mean:
-
    - `main`: The entry point for legacy setups that don't support the `exports` field. See [Compatibility](./esm.md#compatibility) for more details.
    - `types`: The entry point for the TypeScript definitions for legacy setups with `moduleResolution: node10` or `moduleResolution: node`.
    - `exports`: The entry points for tools that support the `exports` field in `package.json` - such as Node.js 12+, modern browsers and tools. See [the ESM support guide](./esm.md) for more details.
@@ -171,7 +169,7 @@ See the [ESM support](./esm.md) guide for more details.
 
 To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration.
 
-It is recommended that you extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/babel-preset.js) preset in your custom config file:
+It is recommended that you extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/src/configs/babel-preset.cjs) preset in your custom config file:
 
 ```js
 module.exports = {
@@ -310,7 +308,6 @@ If you want to ship codegen generated code with your library, you can do the fol
    ```
 
 4. Update imports in your ios code to use the new paths for the generated code:
-
    - If you have a Turbo Module, replace `YourProjectNameSpec.h` with `YourProjectName/YourProjectNameSpec.h`:
 
      ```diff

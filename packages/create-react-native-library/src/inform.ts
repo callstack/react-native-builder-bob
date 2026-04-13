@@ -1,7 +1,7 @@
-import path from 'path';
+import path from 'node:path';
 import dedent from 'dedent';
-import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
+import type { TemplateConfiguration } from './template.ts';
 
 export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
   const platforms = {

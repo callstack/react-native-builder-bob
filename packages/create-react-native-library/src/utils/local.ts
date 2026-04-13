@@ -1,6 +1,6 @@
+import path from 'node:path';
 import fs from 'fs-extra';
-import path from 'path';
-import type { TemplateConfiguration } from '../template';
+import type { TemplateConfiguration } from '../template.ts';
 
 type PackageJson = {
   dependencies?: Record<string, string>;

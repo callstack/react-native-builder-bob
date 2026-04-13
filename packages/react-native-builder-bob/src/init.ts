@@ -1,11 +1,11 @@
-import path from 'path';
+import path from 'node:path';
+import dedent from 'dedent';
 import fs from 'fs-extra';
 import kleur from 'kleur';
-import dedent from 'dedent';
-import isGitDirty from 'is-git-dirty';
-import prompts, { type PromptObject } from './utils/prompts';
-import { loadConfig } from './utils/loadConfig';
-import pack from '../package.json';
+import pack from '../package.json' with { type: 'json' };
+import { isGitDirty } from './utils/isGitDirty.ts';
+import { loadConfig } from './utils/loadConfig.ts';
+import prompts, { type PromptObject } from './utils/prompts.ts';
 
 const FLOW_PRGAMA_REGEX = /\*?\s*@(flow)\b/m;
 
@@ -58,7 +58,7 @@ export async function init() {
     name: 'source',
     message: 'Where are your source files?',
     initial: 'src',
-    validate: (input) => Boolean(input),
+    validate: (input: string) => Boolean(input),
   })) as { source: string };
 
   let entryFile;

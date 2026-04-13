@@ -89,3 +89,4 @@ typings/
 lib/
 typescript/
 doc_build/
+*.tsbuildinfo

@@ -1,6 +1,6 @@
-import path from 'path';
+import path from 'node:path';
 import fs from 'fs-extra';
-import sortObjectKeys from '../utils/sortObjectKeys';
+import sortObjectKeys from '../utils/sortObjectKeys.ts';
 
 type PackageJson = {
   devDependencies?: Record<string, string>;
