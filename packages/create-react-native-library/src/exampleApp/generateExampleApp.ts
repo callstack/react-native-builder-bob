@@ -1,9 +1,13 @@
 import dedent from 'dedent';
 import fs from 'fs-extra';
 import { getLatestVersion } from 'get-latest-version';
-import https from 'https';
+import kleur from 'kleur';
 import path from 'path';
-import { SUPPORTED_MONOREPO_CONFIG_VERSION } from '../constants';
+import {
+  SUPPORTED_EXPO_SDK_VERSION,
+  SUPPORTED_MONOREPO_CONFIG_VERSION,
+  SUPPORTED_REACT_NATIVE_VERSION,
+} from '../constants';
 import type { TemplateConfiguration } from '../template';
 import sortObjectKeys from '../utils/sortObjectKeys';
 import { spawn } from '../utils/spawn';
@@ -48,10 +52,75 @@ const PACKAGES_TO_ADD_DEV_EXPO_NATIVE = {
   'expo-dev-client': '~5.0.3',
 };
 
+async function fetchReactNativeVersion(version: string) {
+  const matchedReactNativeVersion = /(\d+\.\d+[-.0-9a-z]*)/.test(version)
+    ? version
+    : await getLatestVersion('react-native', {
+        range: version,
+      });
+
+  if (!matchedReactNativeVersion) {
+    throw new Error(
+      `Could not find a matching version for react-native: ${version}`
+    );
+  }
+
+  return matchedReactNativeVersion;
+}
+
+async function fetchCompatibleExpoSDK(reactNativeVersion: string) {
+  const matchedReactNativeVersion =
+    await fetchReactNativeVersion(reactNativeVersion);
+
+  const res = await fetch('https://api.expo.dev/v2/versions/latest');
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch Expo SDK versions: ${String(res.status)} ${res.statusText}`
+    );
+  }
+
+  const result = await res.json();
+
+  const sdkVersion = Object.entries(result.data.sdkVersions)
+    .find(([, sdkVersionInfo]) => {
+      if (
+        typeof sdkVersionInfo === 'object' &&
+        sdkVersionInfo != null &&
+        'facebookReactNativeVersion' in sdkVersionInfo &&
+        typeof sdkVersionInfo.facebookReactNativeVersion === 'string'
+      ) {
+        const requested = matchedReactNativeVersion.split('.');
+        const supported = sdkVersionInfo.facebookReactNativeVersion.split('.');
+
+        return (
+          requested[0] === supported[0] &&
+          requested[1] === supported[1] &&
+          (requested[2] ? requested[2] === supported[2] : true)
+        );
+      }
+
+      return false;
+    })?.[0]
+    // Get major SDK version (e.g. "55" from "55.0.0")
+    .split('.')[0];
+
+  if (sdkVersion == null) {
+    throw new Error(
+      `Couldn't find a compatible Expo SDK for react-native@${reactNativeVersion}`
+    );
+  }
+
+  return {
+    sdkVersion,
+    reactNativeVersion: matchedReactNativeVersion,
+  };
+}
+
 export default async function generateExampleApp({
   config,
   root,
-  reactNativeVersion = 'latest',
+  reactNativeVersion,
 }: {
   config: TemplateConfiguration;
   root: string;
@@ -63,6 +132,17 @@ export default async function generateExampleApp({
 
   switch (config.example) {
     case 'vanilla':
+      if (
+        reactNativeVersion != null &&
+        reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
+      ) {
+        console.log(
+          `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
+            `react-native@${reactNativeVersion}`
+          )} for the example`
+        );
+      }
+
       // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
       args = [
         `@react-native-community/cli`,
@@ -73,7 +153,7 @@ export default async function generateExampleApp({
         '--directory',
         directory,
         '--version',
-        reactNativeVersion,
+        reactNativeVersion || SUPPORTED_REACT_NATIVE_VERSION,
         '--skip-install',
         '--skip-git-init',
         '--pm',
@@ -82,18 +162,19 @@ export default async function generateExampleApp({
       break;
     case 'test-app':
       {
-        // Test App requires React Native version to be a semver version
-        const matchedReactNativeVersion = /(\d+\.\d+[-.0-9a-z]*)/.test(
-          reactNativeVersion
-        )
-          ? reactNativeVersion
-          : await getLatestVersion('react-native', {
-              range: reactNativeVersion,
-            });
+        // Test App doesn't support a semver range for the version
+        const matchedReactNativeVersion = reactNativeVersion
+          ? await fetchReactNativeVersion(reactNativeVersion)
+          : SUPPORTED_REACT_NATIVE_VERSION;
 
-        if (!matchedReactNativeVersion) {
-          throw new Error(
-            `Could not find a matching version for react-native: ${reactNativeVersion}`
+        if (
+          reactNativeVersion != null &&
+          reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
+        ) {
+          console.log(
+            `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
+              `react-native@${matchedReactNativeVersion}`
+            )} for the example`
           );
         }
 
@@ -115,16 +196,36 @@ export default async function generateExampleApp({
         ];
       }
       break;
-    case 'expo':
+    case 'expo': {
       // `npx create-expo-app example --no-install --template blank`
+      const { sdkVersion, reactNativeVersion: matchedReactNativeVersion } =
+        reactNativeVersion
+          ? await fetchCompatibleExpoSDK(reactNativeVersion)
+          : {
+              sdkVersion: SUPPORTED_EXPO_SDK_VERSION,
+              reactNativeVersion: null,
+            };
+
+      if (
+        sdkVersion !== SUPPORTED_EXPO_SDK_VERSION &&
+        matchedReactNativeVersion
+      ) {
+        console.log(
+          `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
+            `expo@${sdkVersion}`
+          )} with ${kleur.cyan(`react-native@${matchedReactNativeVersion}`)} for the example`
+        );
+      }
+
       args = [
         'create-expo-app@latest',
         directory,
         '--no-install',
         '--template',
-        'blank',
+        `blank@sdk-${sdkVersion}`,
       ];
       break;
+    }
     case undefined:
     case null: {
       // Do nothing
@@ -242,27 +343,26 @@ export default async function generateExampleApp({
     let bundledNativeModules: Record<string, string>;
 
     try {
-      bundledNativeModules = await new Promise((resolve, reject) => {
-        https
-          .get(
-            `https://raw.githubusercontent.com/expo/expo/sdk-${sdkVersion}/packages/expo/bundledNativeModules.json`,
-            (res) => {
-              let data = '';
+      const res = await fetch(
+        `https://raw.githubusercontent.com/expo/expo/sdk-${sdkVersion}/packages/expo/bundledNativeModules.json`
+      );
 
-              res.on('data', (chunk: string) => (data += chunk));
-              res.on('end', () => {
-                try {
-                  resolve(JSON.parse(data));
-                } catch (e) {
-                  // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-                  reject(e);
-                }
-              });
-            }
-          )
-          .on('error', reject);
-      });
+      if (!res.ok) {
+        throw new Error(
+          `Failed to fetch bundled native modules for Expo SDK ${sdkVersion}: ${String(res.status)} ${res.statusText}`
+        );
+      }
+
+      bundledNativeModules = await res.json();
     } catch (e) {
+      console.warn(
+        `${kleur.yellow(
+          '⚠'
+        )} Failed to fetch compatibility data for Expo SDK ${sdkVersion}: ${kleur.cyan(
+          config.example
+        )}`
+      );
+
       bundledNativeModules = {};
     }
 

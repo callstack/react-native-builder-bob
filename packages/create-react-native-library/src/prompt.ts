@@ -5,7 +5,6 @@ import validateNpmPackage from 'validate-npm-package-name';
 import { spawn } from './utils/spawn';
 import githubUsername from 'github-username';
 import { AVAILABLE_TOOLS } from './utils/configureTools';
-import { SUPPORTED_REACT_NATIVE_VERSION } from './constants';
 
 export type Answers = NonNullable<Awaited<ReturnType<typeof prompt.show>>>;
 
@@ -388,11 +387,10 @@ export const prompt = create(['[name]'], {
     description: 'Version of React Native to use in the example app',
     message:
       'Which version of React Native do you want to use in the example app?',
-    default: SUPPORTED_REACT_NATIVE_VERSION,
     validate: (input) =>
       input === 'latest' ||
-      /^\d+\.\d+\.\d+(-.+)?$/.test(input) ||
-      'Must be a valid semver version',
+      /^\d+\.\d+(?:\.\d+)?(?:-.+)?$/.test(input) ||
+      'Must be a valid version',
     skip: true,
   },
 });

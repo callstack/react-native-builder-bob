@@ -6,15 +6,10 @@ import path from 'path';
 import {
   FALLBACK_BOB_VERSION,
   FALLBACK_NITRO_MODULES_VERSION,
-  SUPPORTED_REACT_NATIVE_VERSION,
 } from './constants';
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
-import {
-  printLocalLibNextSteps,
-  printNonLocalLibNextSteps,
-  printUsedRNVersion,
-} from './inform';
+import { printLocalLibNextSteps, printNonLocalLibNextSteps } from './inform';
 import { prompt } from './prompt';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import { assertNpxExists } from './utils/assert';
@@ -72,13 +67,6 @@ async function create() {
 
   await fs.mkdirp(folder);
 
-  if (
-    answers.reactNativeVersion != null &&
-    answers.reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
-  ) {
-    printUsedRNVersion(answers.reactNativeVersion, config);
-  }
-
   const spinner = ora().start();
 
   if (config.example != null) {
@@ -89,6 +77,14 @@ async function create() {
       reactNativeVersion: answers.reactNativeVersion,
       config,
     });
+  } else {
+    if (answers.reactNativeVersion) {
+      console.warn(
+        `${kleur.yellow(
+          '⚠'
+        )} Ignoring --react-native-version for library without example app`
+      );
+    }
   }
 
   spinner.text = 'Copying files';

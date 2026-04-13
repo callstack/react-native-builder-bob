@@ -102,30 +102,3 @@ export function printErrorHelp(message: string, error: Error) {
     throw error;
   }
 }
-
-export function printUsedRNVersion(
-  version: string,
-  config: TemplateConfiguration
-) {
-  if (config.example === 'vanilla' || config.example === 'test-app') {
-    console.log(
-      `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
-        `react-native@${version}`
-      )} for the example`
-    );
-  } else if (config.example != null) {
-    console.warn(
-      `${kleur.yellow(
-        '⚠'
-      )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
-        config.example
-      )}`
-    );
-  } else {
-    console.warn(
-      `${kleur.yellow(
-        '⚠'
-      )} Ignoring --react-native-version for library without example app`
-    );
-  }
-}
