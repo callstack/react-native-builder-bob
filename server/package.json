@@ -1,0 +1,18 @@
+{
+  "name": "server",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#shared": "./src/shared.ts"
+  },
+  "scripts": {
+    "dev": "concurrently \"yarn dev:worker\" \"yarn dev:runner\"",
+    "dev:worker": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "dev:runner": "node src/runner.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "wrangler": "^4.13.2"
+  }
+}

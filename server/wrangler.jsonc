@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "create-react-native-library-server",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-13",
+  "vars": {
+    "GENERATOR_ORIGIN": "http://127.0.0.1:8788"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "GENERATION_CACHE",
+      "id": "replace-with-production-kv-id",
+      "preview_id": "replace-with-preview-kv-id"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "GENERATION_ARCHIVES",
+      "bucket_name": "replace-with-production-bucket",
+      "preview_bucket_name": "replace-with-preview-bucket"
+    }
+  ]
+}

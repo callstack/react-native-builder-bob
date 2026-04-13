@@ -2,7 +2,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "docs"
+    "docs",
+    "server"
   ],
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com>",
   "license": "MIT",

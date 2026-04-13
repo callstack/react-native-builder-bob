@@ -89,3 +89,6 @@ typings/
 lib/
 typescript/
 doc_build/
+
+# cloudflare
+.wrangler/

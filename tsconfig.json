@@ -3,6 +3,7 @@
     "composite": true,
     "rootDir": ".",
     "paths": {
+      "#shared": ["./server/src/shared.ts"],
       "create-react-native-library": [
         "./packages/create-react-native-library/src"
       ],
