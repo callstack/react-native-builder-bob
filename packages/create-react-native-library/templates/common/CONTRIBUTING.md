@@ -9,7 +9,9 @@ We want this community to be friendly and respectful to each other. Please follo
 This project is a monorepo managed using [Yarn workspaces](https://yarnpkg.com/features/workspaces). It contains the following packages:
 
 - The library package in the root directory.
+  <% if (example != null) { -%>
 - An example app in the `example/` directory.
+  <% } -%>
 
 To get started with the project, make sure you have the correct version of [Node.js](https://nodejs.org/) installed. See the [`.nvmrc`](./.nvmrc) file for the version used in this project.
 
@@ -23,8 +25,10 @@ yarn
 
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 This project uses Nitro Modules. If you're not familiar with how Nitro works, make sure to check the [Nitro Modules Docs](https://nitro.margelo.com/).
+<% if (example != null) { -%>
 
 You need to run [Nitrogen](https://nitro.margelo.com/docs/nitrogen) to generate the boilerplate code required for this project. The example app will not build without this step.
+<% } -%>
 
 Run **Nitrogen** in following cases:
 
@@ -39,7 +43,9 @@ yarn nitrogen
 
 <% } -%>
 <% if (project.cpp) { -%>
+<% if (example != null) { -%>
 You need to run React Native Codegen to generate the native scaffolding for the C++ Turbo Module. The example app will not build without these generated files.
+<% } -%>
 
 Run **Codegen** in following cases:
 
@@ -53,6 +59,7 @@ yarn bob build --target codegen
 ```
 
 <% } -%>
+<% if (example != null) { -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
@@ -98,6 +105,7 @@ To run the example app on Web:
 yarn example web
 ```
 
+<% } -%>
 <% } -%>
 Make sure your code passes TypeScript:
 
@@ -169,12 +177,14 @@ The `package.json` file contains various scripts for common tasks:
   <% if (tools.includes('jest')) { -%>
 - `yarn test`: run unit tests with [Jest](https://jestjs.io/).
   <% } -%>
+  <% if (example != null) { -%>
 - `yarn example start`: start the Metro server for the example app.
 - `yarn example android`: run the example app on Android.
 - `yarn example ios`: run the example app on iOS.
   <% if (example === 'expo' || tools.includes('vite')) { -%>
 - `yarn example web`: run the example app on Web.
 - `yarn example build:web`: build the example app for Web.
+  <% } -%>
   <% } -%>
 
 ### Sending a pull request

@@ -4,6 +4,24 @@ import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
 
 export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
+  if (config.example == null) {
+    console.log(
+      dedent(`
+        ${kleur.magenta(
+          `${kleur.bold('Get started')} with the project`
+        )}${kleur.gray(':')}
+
+          ${kleur.gray('$')} yarn
+
+        ${kleur.yellow(
+          `See ${kleur.bold('CONTRIBUTING.md')} for more details. Good luck!`
+        )}
+      `)
+    );
+
+    return;
+  }
+
   const platforms = {
     ios: { name: 'iOS', color: 'cyan' },
     android: { name: 'Android', color: 'green' },

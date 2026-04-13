@@ -10,7 +10,7 @@ import {
 import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
 import generateExampleApp from './exampleApp/generateExampleApp';
 import { printLocalLibNextSteps, printNonLocalLibNextSteps } from './inform';
-import { prompt } from './prompt';
+import { prompt, type Answers } from './prompt';
 import { applyTemplates, generateTemplateConfiguration } from './template';
 import { assertNpxExists } from './utils/assert';
 import { configureTools } from './utils/configureTools';
@@ -36,15 +36,20 @@ async function create() {
 
   await assertNpxExists();
 
-  const answers = await prompt.show({
+  const rawAnswers = await prompt.show({
     name: pak.name,
     version: pak.version,
     description: pak.description,
   });
 
-  if (answers == null) {
+  if (rawAnswers == null) {
     process.exit(0);
   }
+
+  const answers = {
+    ...rawAnswers,
+    example: rawAnswers.example === 'none' ? undefined : rawAnswers.example,
+  } satisfies Answers;
 
   console.log(''); // Empty new line after prompts
 

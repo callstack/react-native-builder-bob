@@ -6,7 +6,13 @@ import { spawn } from './utils/spawn';
 import githubUsername from 'github-username';
 import { AVAILABLE_TOOLS } from './utils/configureTools';
 
-export type Answers = NonNullable<Awaited<ReturnType<typeof prompt.show>>>;
+type PromptExampleApp = ExampleApp | 'none';
+
+type RawAnswers = NonNullable<Awaited<ReturnType<typeof prompt.show>>>;
+
+export type Answers = Omit<RawAnswers, 'example'> & {
+  example: ExampleApp;
+};
 
 export type ExampleApp = 'test-app' | 'expo' | 'vanilla' | undefined;
 
@@ -95,7 +101,20 @@ const EXAMPLE_CHOICES = [
     value: 'test-app',
     description: "Test app with app's native code abstracted",
   },
+  {
+    title: 'None',
+    value: 'none',
+    description: 'Library only, without an example app',
+  },
 ] as const;
+
+function getExampleApp(value: PromptExampleApp): ExampleApp {
+  if (value === 'none') {
+    return undefined;
+  }
+
+  return value;
+}
 
 const validateDirectory = (input: string) => {
   if (!input) {
@@ -333,7 +352,7 @@ export const prompt = create(['[name]'], {
         const answers = prompt.read();
 
         if (answers.languages === 'cpp') {
-          return choice.value !== 'vanilla';
+          return choice.value !== 'vanilla' && choice.value !== 'none';
         }
 
         return false;
@@ -356,7 +375,9 @@ export const prompt = create(['[name]'], {
       description: tool.description,
       skip: (): boolean => {
         if ('condition' in tool && tool.condition) {
-          return !tool.condition({ example: prompt.read().example });
+          return !tool.condition({
+            example: getExampleApp(prompt.read().example),
+          });
         }
 
         return false;
@@ -368,7 +389,9 @@ export const prompt = create(['[name]'], {
       return Object.entries(AVAILABLE_TOOLS)
         .filter(([, tool]) => {
           if ('condition' in tool && tool.condition) {
-            return tool.condition({ example: answers.example });
+            return tool.condition({
+              example: getExampleApp(answers.example),
+            });
           }
 
           return true;

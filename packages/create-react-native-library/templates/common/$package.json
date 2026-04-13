@@ -36,10 +36,12 @@
     "!**/.*"
   ],
   "scripts": {
-<% if (example !== 'none') { -%>
+<% if (example != null) { -%>
     "example": "yarn workspace <%- project.slug -%>-example",
 <% } -%>
-<% if (example !== 'expo') { -%>
+<% if (example == null) { -%>
+    "clean": "del-cli android/build lib",
+<% } else if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
 <% } else { -%>
     "clean": "del-cli lib",
@@ -95,7 +97,7 @@
     "react-native": "*"
 <% } -%>
   },
-<% if (example !== 'none') { -%>
+<% if (example != null) { -%>
   "workspaces": [
     "example"
   ],
