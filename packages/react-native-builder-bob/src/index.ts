@@ -1,8 +1,8 @@
 import yargs, { type Options } from 'yargs';
-import { build } from './build';
-import { init } from './init';
-import type { Target } from './schema';
 import { hideBin } from 'yargs/helpers';
+import { build } from './build.ts';
+import { init } from './init.ts';
+import type { Target } from './schema.ts';
 
 type ArgName = 'target';
 

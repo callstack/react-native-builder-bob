@@ -1,9 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "module": "preserve",
     "moduleResolution": "bundler"
   },
   "include": ["**/*"],
+  "exclude": ["doc_build", "node_modules"],
   "mdx": {
     "checkMdx": true
   }

@@ -1,12 +1,12 @@
+import { platform } from 'node:os';
+import path from 'node:path';
 import { deleteAsync } from 'del';
 import fs from 'fs-extra';
 import JSON5 from 'json5';
 import kleur from 'kleur';
-import { platform } from 'os';
-import path from 'path';
 import which from 'which';
-import type { Input, Variants } from '../types';
-import { spawn } from '../utils/spawn';
+import type { Input, Variants } from '../types.ts';
+import { spawn } from '../utils/spawn.ts';
 
 type Options = Input & {
   options?: {

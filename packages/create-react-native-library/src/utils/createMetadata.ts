@@ -1,5 +1,5 @@
-import { version } from '../../package.json';
-import type { Answers } from '../prompt';
+import pack from '../../package.json' with { type: 'json' };
+import type { Answers } from '../prompt.ts';
 
 export function createMetadata(answers: Partial<Answers>) {
   // Some of the passed args can already be derived from the generated package.json file.
@@ -27,7 +27,7 @@ export function createMetadata(answers: Partial<Answers>) {
     )
   );
 
-  libraryMetadata.version = version;
+  libraryMetadata.version = pack.version;
 
   return libraryMetadata;
 }

@@ -1,8 +1,8 @@
-import { expect, describe, beforeEach, afterEach, test } from 'vitest';
-import fs from 'fs-extra';
 import path from 'node:path';
-import { removeCodegenAppLevelCode } from './removeCodegenAppLevelCode';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import fs from 'fs-extra';
 import mockfs from 'mock-fs';
+import { removeCodegenAppLevelCode } from './removeCodegenAppLevelCode.ts';
 
 const mockPackageJson = {
   codegenConfig: {
@@ -13,7 +13,7 @@ const mockPackageJson = {
   },
 };
 
-const mockProjectPath = path.resolve(__dirname, 'mockProject');
+const mockProjectPath = path.resolve(import.meta.dirname, 'mockProject');
 
 describe('patchCodegenAndroidPackage', () => {
   beforeEach(() => {

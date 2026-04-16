@@ -1,8 +1,7 @@
 /* eslint-disable import-x/no-commonjs, no-undef */
 
 const path = require('path');
-// @ts-ignore -- Ignore missing types for this module
-const { loadConfig } = require('../lib/utils/loadConfig');
+const { loadConfig } = require('../utils/loadConfig.js');
 
 /**
  * Get Babel configuration for the example project.
@@ -38,7 +37,7 @@ const getConfig = (defaultConfig, { root }) => {
         include: path.join(root, source),
         presets: [
           [
-            require.resolve('./babel-preset'),
+            require.resolve('./babel-preset.cjs'),
             {
               // Let the app's preset handle the commonjs transform
               // Otherwise this causes `export` statements in wrong places causing syntax error

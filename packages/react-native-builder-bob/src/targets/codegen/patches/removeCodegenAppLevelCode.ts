@@ -1,7 +1,7 @@
+import path from 'node:path';
 import fs from 'fs-extra';
-import path from 'path';
-import { CODEGEN_DOCS } from './patchCodegenAndroidPackage';
-import { spawn } from '../../../utils/spawn';
+import { spawn } from '../../../utils/spawn.ts';
+import { CODEGEN_DOCS } from './patchCodegenAndroidPackage.ts';
 
 const FILES_TO_REMOVE = [
   'RCTAppDependencyProvider.h',

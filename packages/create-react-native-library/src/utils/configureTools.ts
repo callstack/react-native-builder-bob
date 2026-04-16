@@ -1,7 +1,7 @@
-import fs from 'fs-extra';
 import path from 'node:path';
-import { applyTemplate, type TemplateConfiguration } from '../template';
-import sortObjectKeys from './sortObjectKeys';
+import fs from 'fs-extra';
+import { applyTemplate, type TemplateConfiguration } from '../template.ts';
+import sortObjectKeys from './sortObjectKeys.ts';
 
 type PackageJson = {
   dependencies?: Record<string, string>;
@@ -128,7 +128,10 @@ export async function configureTools({
       continue;
     }
 
-    const toolDir = path.resolve(__dirname, `../../templates/tools/${key}`);
+    const toolDir = path.resolve(
+      import.meta.dirname,
+      `../../../templates/tools/${key}`
+    );
 
     if (fs.existsSync(toolDir)) {
       await applyTemplate(config, toolDir, root);

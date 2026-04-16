@@ -1,10 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import githubUsername from 'github-username';
 import { create } from 'pigment';
 import validateNpmPackage from 'validate-npm-package-name';
-import { spawn } from './utils/spawn';
-import githubUsername from 'github-username';
-import { AVAILABLE_TOOLS } from './utils/configureTools';
+import { AVAILABLE_TOOLS } from './utils/configureTools.ts';
+import { spawn } from './utils/spawn.ts';
 
 export type Answers = NonNullable<Awaited<ReturnType<typeof prompt.show>>>;
 

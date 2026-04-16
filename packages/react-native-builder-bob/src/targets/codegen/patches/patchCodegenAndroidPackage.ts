@@ -1,7 +1,7 @@
+import path from 'node:path';
 import fs from 'fs-extra';
-import path from 'path';
-import type { Report } from '../../../types';
 import kleur from 'kleur';
+import type { Report } from '../../../types.ts';
 
 export const CODEGEN_DOCS =
   'https://reactnative.dev/docs/the-new-architecture/using-codegen#configuring-codegen';

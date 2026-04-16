@@ -1,16 +1,16 @@
+import path from 'node:path';
 import dedent from 'dedent';
 import fs from 'fs-extra';
 import { getLatestVersion } from 'get-latest-version';
 import kleur from 'kleur';
-import path from 'path';
 import {
   SUPPORTED_EXPO_SDK_VERSION,
   SUPPORTED_MONOREPO_CONFIG_VERSION,
   SUPPORTED_REACT_NATIVE_VERSION,
-} from '../constants';
-import type { TemplateConfiguration } from '../template';
-import sortObjectKeys from '../utils/sortObjectKeys';
-import { spawn } from '../utils/spawn';
+} from '../constants.ts';
+import type { TemplateConfiguration } from '../template.ts';
+import sortObjectKeys from '../utils/sortObjectKeys.ts';
+import { spawn } from '../utils/spawn.ts';
 
 const FILES_TO_DELETE = [
   '__tests__',
