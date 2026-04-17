@@ -34,7 +34,7 @@
     "eslint-config-satya164": "^5.1.8",
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   },
   "resolutions": {
     "@rspress/plugin-llms@2.0.0-beta.34": "patch:@rspress/plugin-llms@npm%3A2.0.0-beta.34#./.yarn/patches/@rspress-plugin-llms-npm-2.0.0-beta.34-d374542281.patch"
