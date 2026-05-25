@@ -4,7 +4,7 @@ import { transformerNotationHighlight } from '@shikijs/transformers';
 
 export default withCallstackPreset(
   {
-    context: __dirname,
+    context: import.meta.dirname,
     docs: {
       title: 'Bob - Create and build React Native libraries',
       description:

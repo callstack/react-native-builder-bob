@@ -22,6 +22,8 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
+
+      'import-x/extensions': ['error', 'ignorePackages'],
     },
   },
 

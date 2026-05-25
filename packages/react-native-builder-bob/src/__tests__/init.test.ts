@@ -1,9 +1,9 @@
+import { join } from 'node:path';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { readFile } from 'fs-extra';
 import mockFs from 'mock-fs';
 import { stdin } from 'mock-stdin';
-import { join } from 'node:path';
-import { init } from '../init';
+import { init } from '../init.ts';
 
 vi.mock('../../package.json', () => ({
   default: {

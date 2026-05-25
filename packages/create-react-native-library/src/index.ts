@@ -1,32 +1,27 @@
-import pak from '../package.json';
+import path from 'node:path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import ora from 'ora';
-import path from 'path';
+import pak from '../package.json' with { type: 'json' };
 import {
   FALLBACK_BOB_VERSION,
   FALLBACK_NITRO_MODULES_VERSION,
-  SUPPORTED_REACT_NATIVE_VERSION,
-} from './constants';
-import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies';
-import generateExampleApp from './exampleApp/generateExampleApp';
-import {
-  printLocalLibNextSteps,
-  printNonLocalLibNextSteps,
-  printUsedRNVersion,
-} from './inform';
-import { prompt } from './prompt';
-import { applyTemplates, generateTemplateConfiguration } from './template';
-import { assertNpxExists } from './utils/assert';
-import { configureTools } from './utils/configureTools';
-import { createInitialGitCommit } from './utils/initialCommit';
+} from './constants.ts';
+import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies.ts';
+import generateExampleApp from './exampleApp/generateExampleApp.ts';
+import { printLocalLibNextSteps, printNonLocalLibNextSteps } from './inform.ts';
+import { prompt } from './prompt.ts';
+import { applyTemplates, generateTemplateConfiguration } from './template.ts';
+import { assertNpxExists } from './utils/assert.ts';
+import { configureTools } from './utils/configureTools.ts';
+import { createMetadata } from './utils/createMetadata.ts';
+import { createInitialGitCommit } from './utils/initialCommit.ts';
 import {
   addNitroDependencyToLocalLibrary,
   linkLocalLibrary,
-} from './utils/local';
-import { determinePackageManager } from './utils/packageManager';
-import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion';
-import { createMetadata } from './utils/createMetadata';
+} from './utils/local.ts';
+import { determinePackageManager } from './utils/packageManager.ts';
+import { resolveNpmPackageVersion } from './utils/resolveNpmPackageVersion.ts';
 
 async function create() {
   // Prefetch bob version in background while asking questions
@@ -72,13 +67,6 @@ async function create() {
 
   await fs.mkdirp(folder);
 
-  if (
-    answers.reactNativeVersion != null &&
-    answers.reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
-  ) {
-    printUsedRNVersion(answers.reactNativeVersion, config);
-  }
-
   const spinner = ora().start();
 
   if (config.example != null) {
@@ -89,6 +77,14 @@ async function create() {
       reactNativeVersion: answers.reactNativeVersion,
       config,
     });
+  } else {
+    if (answers.reactNativeVersion) {
+      console.warn(
+        `${kleur.yellow(
+          '⚠'
+        )} Ignoring --react-native-version for library without example app`
+      );
+    }
   }
 
   spinner.text = 'Copying files';

@@ -4,13 +4,13 @@ import {
   parentPort,
   workerData,
 } from 'node:worker_threads';
-import codegen from '../targets/codegen';
-import commonjs from '../targets/commonjs';
-import custom from '../targets/custom';
-import module from '../targets/module';
-import typescript from '../targets/typescript';
-import type { Report } from '../types';
-import type { Target } from '../schema';
+import type { Target } from '../schema.ts';
+import codegen from '../targets/codegen/index.ts';
+import commonjs from '../targets/commonjs.ts';
+import custom from '../targets/custom.ts';
+import module from '../targets/module.ts';
+import typescript from '../targets/typescript.ts';
+import type { Report } from '../types.ts';
 
 type WorkerData<T extends Target> = {
   target: T;
@@ -34,7 +34,7 @@ export const run = async <T extends Target>(
   }
 
   return new Promise<void>((resolve, reject) => {
-    const worker = new Worker(__filename, {
+    const worker = new Worker(import.meta.filename, {
       workerData: {
         target,
         data,

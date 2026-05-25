@@ -1,9 +1,9 @@
-import { expect, test, describe, beforeEach, afterEach } from 'vitest';
-import fs from 'fs-extra';
 import path from 'node:path';
-import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import fs from 'fs-extra';
 import mockfs from 'mock-fs';
-import type { Report } from '../../../types';
+import type { Report } from '../../../types.ts';
+import { patchCodegenAndroidPackage } from './patchCodegenAndroidPackage.ts';
 
 const mockPackageJson = {
   codegenConfig: {
@@ -50,7 +50,7 @@ public interface SomeInterface<T extends View> {
 }
 `;
 
-const mockProjectPath = path.resolve(__dirname, 'mockProject');
+const mockProjectPath = path.resolve(import.meta.dirname, 'mockProject');
 const mockCodegenModuleSpecsPath = path.resolve(
   mockProjectPath,
   'android/generated/java/com/facebook/fbreact/specs'

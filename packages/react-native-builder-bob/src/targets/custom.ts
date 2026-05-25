@@ -1,9 +1,9 @@
-import kleur from 'kleur';
-import path from 'path';
-import fs from 'fs-extra';
-import type { Input } from '../types';
-import { spawn } from '../utils/spawn';
+import path from 'node:path';
 import { deleteAsync } from 'del';
+import fs from 'fs-extra';
+import kleur from 'kleur';
+import type { Input } from '../types.ts';
+import { spawn } from '../utils/spawn.ts';
 
 type Options = Omit<Input, 'output'> & {
   options?: {

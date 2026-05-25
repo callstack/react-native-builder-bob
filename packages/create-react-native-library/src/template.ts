@@ -1,7 +1,7 @@
-import path from 'path';
-import fs from 'fs-extra';
+import path from 'node:path';
 import ejs from 'ejs';
-import type { Answers, ExampleApp, ProjectType } from './prompt';
+import fs from 'fs-extra';
+import type { Answers, ExampleApp, ProjectType } from './prompt.ts';
 
 export type TemplateVersions = {
   bob: string;
@@ -51,48 +51,93 @@ const BINARIES = [
   /\$\.yarn(?![a-z])/,
 ];
 
-const COMMON_FILES = path.resolve(__dirname, '../templates/common');
-const COMMON_LOCAL_FILES = path.resolve(__dirname, '../templates/common-local');
+const COMMON_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/common'
+);
+const COMMON_LOCAL_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/common-local'
+);
 const EXAMPLE_COMMON_FILES = path.resolve(
-  __dirname,
-  '../templates/example-common'
+  import.meta.dirname,
+  '../../templates/example-common'
 );
-const EXAMPLE_BARE_FILES = path.resolve(__dirname, '../templates/example-bare');
+const EXAMPLE_BARE_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/example-bare'
+);
 const EXAMPLE_MODULE_NEW_FILES = path.resolve(
-  __dirname,
-  '../templates/example-module-new'
+  import.meta.dirname,
+  '../../templates/example-module-new'
 );
-const EXAMPLE_VIEW_FILES = path.resolve(__dirname, '../templates/example-view');
-const EXAMPLE_EXPO_FILES = path.resolve(__dirname, '../templates/example-expo');
+const EXAMPLE_VIEW_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/example-view'
+);
+const EXAMPLE_EXPO_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/example-expo'
+);
 
-const JS_FILES = path.resolve(__dirname, '../templates/js-library');
-const JS_VIEW_FILES = path.resolve(__dirname, '../templates/js-view');
+const JS_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/js-library'
+);
+const JS_VIEW_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/js-view'
+);
 const NATIVE_COMMON_FILES = path.resolve(
-  __dirname,
-  '../templates/native-common'
+  import.meta.dirname,
+  '../../templates/native-common'
 );
 const EXAMPLE_NATIVE_COMMON_FILES = path.resolve(
-  __dirname,
-  '../templates/example-native-common'
+  import.meta.dirname,
+  '../../templates/example-native-common'
 );
-const NITRO_COMMON_FILES = path.resolve(__dirname, '../templates/nitro-common');
-const CPP_FILES = path.resolve(__dirname, '../templates/cpp-library');
+const NITRO_COMMON_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/nitro-common'
+);
+const CPP_FILES = path.resolve(
+  import.meta.dirname,
+  '../../templates/cpp-library'
+);
 
 const NATIVE_FILES = {
-  module_new: path.resolve(__dirname, '../templates/native-library-new'),
-  view_new: path.resolve(__dirname, '../templates/native-view-new'),
-  module_nitro: path.resolve(__dirname, '../templates/nitro-module'),
-  view_nitro: path.resolve(__dirname, '../templates/nitro-view'),
+  module_new: path.resolve(
+    import.meta.dirname,
+    '../../templates/native-library-new'
+  ),
+  view_new: path.resolve(
+    import.meta.dirname,
+    '../../templates/native-view-new'
+  ),
+  module_nitro: path.resolve(
+    import.meta.dirname,
+    '../../templates/nitro-module'
+  ),
+  view_nitro: path.resolve(import.meta.dirname, '../../templates/nitro-view'),
 } as const;
 
 const OBJC_FILES = {
-  module_common: path.resolve(__dirname, '../templates/objc-library'),
-  view_new: path.resolve(__dirname, '../templates/objc-view-new'),
+  module_common: path.resolve(
+    import.meta.dirname,
+    '../../templates/objc-library'
+  ),
+  view_new: path.resolve(import.meta.dirname, '../../templates/objc-view-new'),
 } as const;
 
 const KOTLIN_FILES = {
-  module_new: path.resolve(__dirname, '../templates/kotlin-library-new'),
-  view_new: path.resolve(__dirname, '../templates/kotlin-view-new'),
+  module_new: path.resolve(
+    import.meta.dirname,
+    '../../templates/kotlin-library-new'
+  ),
+  view_new: path.resolve(
+    import.meta.dirname,
+    '../../templates/kotlin-view-new'
+  ),
 } as const;
 
 export function generateTemplateConfiguration({

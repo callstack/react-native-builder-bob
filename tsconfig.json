@@ -1,51 +1,35 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "paths": {
-      "create-react-native-library": [
-        "./packages/create-react-native-library/src"
-      ],
-      "react-native-builder-bob": ["./packages/react-native-builder-bob/src"]
-    },
-    "outDir": "./lib",
+    "noEmit": true,
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "erasableSyntaxOnly": true,
-    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
+    "rewriteRelativeImportExtensions": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
     "useDefineForClassFields": true,
     "verbatimModuleSyntax": true
   },
+  "files": [],
   "references": [
-    { "path": "docs"}
-  ],
-  "include": [
-    "**/*",
-    "**/package.json"
-  ],
-  "exclude": [
-    "**/lib",
-    "**/doc_build",
-    "packages/react-native-builder-bob/src/__fixtures__",
-    "packages/create-react-native-library/templates"
+    { "path": "docs" },
+    { "path": "packages/react-native-builder-bob" },
+    { "path": "packages/create-react-native-library" }
   ]
 }

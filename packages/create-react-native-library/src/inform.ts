@@ -1,7 +1,7 @@
-import path from 'path';
+import path from 'node:path';
 import dedent from 'dedent';
-import type { TemplateConfiguration } from './template';
 import kleur from 'kleur';
+import type { TemplateConfiguration } from './template.ts';
 
 export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
   const platforms = {
@@ -100,32 +100,5 @@ export function printErrorHelp(message: string, error: Error) {
     console.log('\n');
 
     throw error;
-  }
-}
-
-export function printUsedRNVersion(
-  version: string,
-  config: TemplateConfiguration
-) {
-  if (config.example === 'vanilla' || config.example === 'test-app') {
-    console.log(
-      `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
-        `react-native@${version}`
-      )} for the example`
-    );
-  } else if (config.example != null) {
-    console.warn(
-      `${kleur.yellow(
-        '⚠'
-      )} Ignoring --react-native-version for unsupported example type: ${kleur.cyan(
-        config.example
-      )}`
-    );
-  } else {
-    console.warn(
-      `${kleur.yellow(
-        '⚠'
-      )} Ignoring --react-native-version for library without example app`
-    );
   }
 }
