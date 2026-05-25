@@ -1284,29 +1284,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@callstack/rspress-preset@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "@callstack/rspress-preset@npm:0.6.3"
+"@callstack/rspress-preset@npm:^0.6.4":
+  version: 0.6.4
+  resolution: "@callstack/rspress-preset@npm:0.6.4"
   dependencies:
-    "@callstack/rspress-theme": "npm:0.6.3"
+    "@callstack/rspress-theme": "npm:0.6.4"
     "@rspress/plugin-sitemap": "npm:^2.0.8"
     "@vercel/analytics": "npm:^2.0.1"
     rsbuild-plugin-open-graph: "npm:^1.1.2"
     zod: "npm:^4.3.6"
   peerDependencies:
     "@rspress/core": ^2.0.8
-  checksum: 10c0/067821847b8f6b5fe371a5dbca2a2dff865dd26ef2233e250b271a92544ecd8ea22ba8ad182aea7b771e2f9e569f580c8ec6a9666d3ed8dd6c81ea25f2d8100a
+  checksum: 10c0/8b37d237cd4fbf6ec5d4b6b443f329f00cf2d85bf417668e6e6117a6398663a1e22f0c95a8986e1f960930bb4b32a4a4ad12d0b2d0aec87c5b776852f8728f4c
   languageName: node
   linkType: hard
 
-"@callstack/rspress-theme@npm:0.6.3, @callstack/rspress-theme@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "@callstack/rspress-theme@npm:0.6.3"
+"@callstack/rspress-theme@npm:0.6.4, @callstack/rspress-theme@npm:^0.6.4":
+  version: 0.6.4
+  resolution: "@callstack/rspress-theme@npm:0.6.4"
   peerDependencies:
     "@rspress/core": ^2.0.8
     react: ^19.2.4
     react-dom: ^19.2.4
-  checksum: 10c0/7702d35a473bc2c35c55358282c464edc9116065fea9491309dd799537cbc4f26ef36f7bc760ffd6f45113955db30479f90c37d96133d64918e8cca175a980d7
+  checksum: 10c0/f17efbf8a65b752bbb00df5083c6431ce9f62858350b5086cfd3ed709790710cffafc2abed6d73d97eaebc79e3ba8cc0ae7b400b868b8d195edb3cfabf916d64
   languageName: node
   linkType: hard
 
@@ -5528,8 +5528,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "docs@workspace:docs"
   dependencies:
-    "@callstack/rspress-preset": "npm:^0.6.3"
-    "@callstack/rspress-theme": "npm:^0.6.3"
+    "@callstack/rspress-preset": "npm:^0.6.4"
+    "@callstack/rspress-theme": "npm:^0.6.4"
     "@rspress/core": "npm:^2.0.8"
     "@shikijs/transformers": "npm:^3.13.0"
     "@types/react": "npm:^19.2.14"

@@ -10,8 +10,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@callstack/rspress-preset": "^0.6.3",
-    "@callstack/rspress-theme": "^0.6.3",
+    "@callstack/rspress-preset": "^0.6.4",
+    "@callstack/rspress-theme": "^0.6.4",
     "@rspress/core": "^2.0.8",
     "@shikijs/transformers": "^3.13.0",
     "clsx": "^2.1.1"
