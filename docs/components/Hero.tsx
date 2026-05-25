@@ -26,6 +26,7 @@ export function Hero() {
             />
           </div>
         }
+        routePath="/react-native-builder-bob"
       />
     </>
   );
