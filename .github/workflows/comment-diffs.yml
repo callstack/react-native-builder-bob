@@ -1,0 +1,306 @@
+name: Comment template diffs
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/comment-diffs.yml'
+      - 'packages/create-react-native-library/**'
+
+jobs:
+  generate-diffs-if-needed:
+    name: Generate diffs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Copy config matrix to persist it
+        run: |
+          mkdir ../configMatrix
+          cp ./.github/workflows/configMatrix.sh ../configMatrix/
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Setup
+        uses: ./.github/actions/setup
+      
+      - name: Build crnl
+        run: |
+          yarn workspace create-react-native-library prepare
+      
+      - name: Create old version libraries
+        run: |
+          # Source all the configuration values to load $languages, $types, and $exclude
+          source ../configMatrix/configMatrix.sh
+
+          create_library() {
+            library_type=$1
+            language=$2
+
+            echo "Generating $library_type/$language"
+            path_prefix="../test/$library_type/$language"
+            target_path="$path_prefix/new-version"
+
+            npx create-react-native-library "$target_path" \
+              --slug @bob/react-native-test \
+              --description test \
+              --author-name test \
+              --author-email test@test \
+              --author-url https://test.test \
+              --repo-url https://test.test \
+              --type "$library_type" \
+              --languages "$language" \
+              --no-example \
+              --no-local
+
+            # Remove the .git folder of the created library
+            rm -rf "$target_path/.git"
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                create_library "$library_type" "$language"
+              fi
+            done
+          done
+      
+      - name: Setup
+        uses: ./.github/actions/setup
+      
+      - name: Remove old build and build again
+        run: |
+          rm -rf ./packages/create-react-native-library/lib
+          yarn workspace create-react-native-library prepare
+      
+      - name: Create library again
+        run: |
+          # Source all the configuration values to load $languages, $types, and $exclude
+          source ../configMatrix/configMatrix.sh
+
+          git fetch origin main
+          git checkout origin/main
+          git pull || true
+
+          create_library() {
+            library_type=$1
+            language=$2
+
+            echo "Running $library_type/$language"
+            path_prefix="../test/$library_type/$language"
+            target_path="$path_prefix/old-version"
+
+            npx create-react-native-library "$target_path" \
+              --slug @bob/react-native-test \
+              --description test \
+              --author-name test \
+              --author-email test@test \
+              --author-url https://test.test \
+              --repo-url https://test.test \
+              --type "$library_type" \
+              --languages "$language" \
+              --no-example \
+              --no-local
+
+            # Remove the .git folder of the created library
+            rm -rf "$target_path/.git"
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                create_library "$library_type" "$language"
+              fi
+            done
+          done
+
+      - name: Remove everything in the working directory
+        run: for i in $(ls) ; do rm -rf "$i"; done;
+
+      - name: Create new empty repo
+        run: git init
+
+      - name: Create diffs
+        id: create-diffs
+        run: |
+          # Source all the configuration values to load $languages, $types, and $exclude
+          source ../configMatrix/configMatrix.sh
+
+          output_path="../outputs"
+          mkdir -p "$output_path"
+
+          # Set author
+          git config --global user.email "text@test.com"
+          git config --global user.name "create-react-native-library diff generator action"
+
+          function copy_commit_diff(){
+            library_type=$1
+            language=$2
+
+            output_file="$output_path/$library_type+$language.txt"
+
+            path_prefix="../test/$library_type/$language"
+            target_path_new_version="$path_prefix/new-version"
+            target_path_old_version="$path_prefix/old-version"
+
+            # Remove everything except the .git folder
+            for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
+
+            # Copy the old version
+            cp -r "$target_path_old_version/." .
+
+            # Add all files and commit
+            git add -A || true 
+
+            if git commit -qm "Automatic commit"; then
+              echo "Commit successful"
+            else
+              echo "No changes"
+              return
+            fi
+
+            # Remove everything except the .git folder
+            for i in $(ls | grep -v ".git") ; do rm -rf "$i"; done;
+
+            # Copy the new version
+            cp -r "$target_path_new_version/." .
+
+            # Add all files and commit
+            git add -A || true 
+
+            if git commit -qm "Automatic commit"; then
+              echo "Commit successful"
+            else
+              echo "No changes"
+              return
+            fi
+
+            # Check if there is a diff
+            if git diff --quiet HEAD~; then
+              echo "No diff"
+            else
+              # Push the branches
+              # git push --set-upstream origin diffs
+
+              # Get new version remote commit hash
+              # new_version_commit_hash=$(git rev-parse --short origin/diffs)
+
+              # Get old version remote commit hash
+              # old_version_commit_hash=$(git rev-parse --short origin/diffs~)
+
+              # Add output to file
+              # echo "[$library_type/$language](https://github.com/${{github.repository}}/compare/$old_version_commit_hash..$new_version_commit_hash)" >> "$output_file"
+ 
+              # Write the diff to the output file
+              git diff HEAD~ >> $output_file
+            fi
+          }
+
+          for library_type in "${libraryTypes[@]}"; do
+            for language in "${languages[@]}"; do
+              if [[ ! "${exclude[*]}" =~ ${library_type}/${language} ]]; then
+                copy_commit_diff "$library_type" "$language"
+              fi
+            done
+          done
+
+          if ls $output_path/*.txt; then
+            echo "DIFF_IS_NON_EMPTY=1" >> $GITHUB_OUTPUT
+          else
+            echo "DIFF_IS_NON_EMPTY=0" >> $GITHUB_OUTPUT
+          fi
+
+          # Remove outputs folder in cwd if it exists
+          rm -rf ./outputs || true
+
+          # Copy the outputs to cwd
+          cp -r $output_path ./outputs
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ steps.create-diffs.outputs.DIFF_IS_NON_EMPTY == '1' }}
+        with:
+          name: outputs
+          path: outputs/*.txt
+
+  read-artifacts-and-comment:
+    name: Read the artifacts and comment
+    runs-on: ubuntu-latest
+    needs: [generate-diffs-if-needed]
+    steps:
+      - name: Load outputs
+        uses: actions/download-artifact@v3
+        continue-on-error: true
+        with:
+          name: outputs
+          path: outputs
+
+      - name: Output artifacts
+        id: artifacts
+        run: |
+          if ls outputs/*.txt; then
+            result=1 # Artifacts are not empty
+          else
+            result=0 # Artifacts are empty
+          fi
+
+          echo "ARTIFACTS_ARE_NON_EMPTY=$result" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        if: ${{ steps.artifacts.outputs.ARTIFACTS_ARE_NON_EMPTY == '1' }}
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs');
+
+            const replaceTable = {
+              "module-legacy": "Native module",
+              "module-mixed": "Turbo module with backward compat",
+              "module-new": "Turbo module",
+              "view-legacy": "Native view",
+              "view-mixed": "Fabric view with backward compat",
+              "view-new": "Fabric view",
+              "java-objc": "Java and Objective C",
+              "java-swift": "Java and Swift",
+              "kotlin-objc": "Kotlin and Objective C",
+              "kotlin-swift": "Kotlin and Swift",
+              ".txt": ""
+            }
+
+            const parsedArtifacts = fs.readdirSync('./outputs').map(fileName => {
+              const [type, language] = fileName.split("+");
+
+              const title = Object.entries(replaceTable).reduce((acc, [key, value]) => {
+                return acc.replace(new RegExp(key, "g"), value);
+              }, `${language} ${type}`);
+
+              const fileContents = fs.readFileSync(`./outputs/${fileName}`, 'utf8');
+
+              return `<details><summary>${title}</summary>\n\n\`\`\`diff\n${fileContents}\n\`\`\`\n</details>\n\n`;
+            })
+
+            const body = `🤓☝️ This PR changes the output of \`create-react-native-library\`. You can find the diffs of affected templates below:
+
+            ${parsedArtifacts.join("")}
+            `;
+
+            const comments = await github.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            if (comments.data.some(comment => comment.body === body)) {
+              return;
+            }
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            })
+                      
