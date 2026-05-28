@@ -25,6 +25,29 @@ type Field = {
   message: string | undefined;
 };
 
+export async function findBinInAncestorNodeModules(
+  root: string,
+  binary: string
+) {
+  let current = root;
+
+  while (true) {
+    const candidate = path.resolve(current, 'node_modules', '.bin', binary);
+
+    if (await fs.pathExists(candidate)) {
+      return candidate;
+    }
+
+    const parent = path.dirname(current);
+
+    if (parent === current) {
+      return undefined;
+    }
+
+    current = parent;
+  }
+}
+
 export default async function build({
   source,
   root,
@@ -89,7 +112,7 @@ export default async function build({
       );
     }
 
-    let tsc;
+    let tsc: string | undefined;
 
     if (options?.tsc) {
       tsc = path.resolve(root, options.tsc);
@@ -117,7 +140,12 @@ export default async function build({
 
         tsc = result.trim();
       } else {
-        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+        tsc = await findBinInAncestorNodeModules(
+          root,
+          platform() === 'win32' ? 'tsc.cmd' : 'tsc'
+        );
+
+        tsc ??= path.resolve(root, 'node_modules', '.bin', 'tsc');
       }
 
       if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
