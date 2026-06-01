@@ -51,6 +51,7 @@
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
+    "@jridgewell/sourcemap-codec": "^1.5.5",
     "arktype": "^2.2.0",
     "babel-plugin-syntax-hermes-parser": "^0.34.0",
     "browserslist": "^4.28.2",

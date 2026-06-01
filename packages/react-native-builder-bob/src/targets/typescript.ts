@@ -2,11 +2,19 @@ import { platform } from 'node:os';
 import path from 'node:path';
 import { deleteAsync } from 'del';
 import fs from 'fs-extra';
+import { glob } from 'glob';
 import JSON5 from 'json5';
 import kleur from 'kleur';
+import ts from 'typescript';
 import which from 'which';
 import type { Input, Variants } from '../types.ts';
+import { isCodegenSpec } from '../utils/isCodegenSpec.ts';
+import {
+  resolveModuleSpecifier,
+  SOURCE_EXTENSIONS,
+} from '../utils/resolveModuleSpecifier.ts';
 import { spawn } from '../utils/spawn.ts';
+import { type Replacement, updateSourceMap } from '../utils/updateSourceMap.ts';
 
 type Options = Input & {
   options?: {
@@ -32,6 +40,15 @@ const LOCKFILES = [
   'pnpm-lock.yaml',
   'yarn.lock',
 ];
+
+const DECLARATION_EXTENSIONS = [{ source: 'd.ts', output: 'js' }];
+
+const EXPLICIT_SOURCE_EXTENSIONS = ['ts', 'tsx'].map((source) => ({
+  source,
+  emitted: DECLARATION_EXTENSIONS,
+}));
+
+const DECLARATION_REWRITE_BATCH_SIZE = 32;
 
 function isPathInside(root: string, file: string) {
   const relative = path.relative(root, file);
@@ -87,6 +104,140 @@ export async function findBinInAncestorNodeModules(
     current = parent;
   }
 }
+
+const getModuleSpecifier = (node: ts.Node) => {
+  if (
+    (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+    node.moduleSpecifier &&
+    ts.isStringLiteral(node.moduleSpecifier)
+  ) {
+    return node.moduleSpecifier;
+  }
+
+  if (
+    ts.isImportTypeNode(node) &&
+    ts.isLiteralTypeNode(node.argument) &&
+    ts.isStringLiteral(node.argument.literal)
+  ) {
+    return node.argument.literal;
+  }
+
+  return undefined;
+};
+
+const rewriteDeclarationImports = async (
+  output: string,
+  source: string,
+  root: string,
+  codegenEnabled: boolean
+) => {
+  const isCodegenImport = (filepath: string, specifier: string) => {
+    if (!codegenEnabled || !specifier.startsWith('.')) {
+      return false;
+    }
+
+    // The declaration output mirrors the source tree, so map the import back to the source file
+    const target = path.resolve(path.dirname(filepath), specifier);
+    const relative = path.relative(output, target);
+
+    // The tree root depends on tsc's inferred `rootDir`, so check both the project and source roots
+    return [root, source].some((base) => {
+      const candidate = path.join(base, relative);
+
+      return (
+        isCodegenSpec(candidate) ||
+        SOURCE_EXTENSIONS.some((ext) => isCodegenSpec(`${candidate}.${ext}`))
+      );
+    });
+  };
+
+  const files = await glob('**/*.d.ts', {
+    cwd: output,
+    absolute: true,
+    nodir: true,
+  });
+
+  // Process files in chunks to avoid firing read/writes for each file at once
+  for (let i = 0; i < files.length; i += DECLARATION_REWRITE_BATCH_SIZE) {
+    const promises = files
+      .slice(i, i + DECLARATION_REWRITE_BATCH_SIZE)
+      .map(async (filepath) => {
+        const code = await fs.readFile(filepath, 'utf-8');
+        const sourceFile = ts.createSourceFile(
+          filepath,
+          code,
+          ts.ScriptTarget.Latest,
+          true
+        );
+
+        // Collect text changes before writing the file.
+        const replacements: Replacement[] = [];
+
+        const addReplacement = (node: ts.StringLiteral) => {
+          // Rewrite the module path if it points to an emitted file.
+          // Only replace the text inside quotes to preserve the rest of tsc's output.
+          const value = resolveModuleSpecifier({
+            filepath,
+            specifier: node.text,
+            extensions: DECLARATION_EXTENSIONS,
+            explicitExtensions: EXPLICIT_SOURCE_EXTENSIONS,
+          });
+
+          if (value !== node.text) {
+            replacements.push({
+              start: node.getStart(sourceFile) + 1,
+              end: node.getEnd() - 1,
+              value,
+            });
+          }
+        };
+
+        const visit = (node: ts.Node) => {
+          // Find module paths in this node.
+          // Cover static imports/exports and import() types.
+          const specifier = getModuleSpecifier(node);
+
+          if (specifier && !isCodegenImport(filepath, specifier.text)) {
+            addReplacement(specifier);
+          }
+
+          ts.forEachChild(node, visit);
+        };
+
+        visit(sourceFile);
+
+        if (replacements.length) {
+          // Keep the source map in sync with the changed declaration file.
+          const sourceMapPath = `${filepath}.map`;
+
+          if (await fs.pathExists(sourceMapPath)) {
+            await updateSourceMap({
+              filepath: sourceMapPath,
+              replacements,
+              sourceFile,
+            });
+          }
+
+          // Write the declaration file with the new module paths.
+          await fs.writeFile(
+            filepath,
+            replacements
+              // Apply edits from the end so earlier offsets stay valid.
+              .sort((a, b) => b.start - a.start)
+              .reduce(
+                (result, replacement) =>
+                  result.slice(0, replacement.start) +
+                  replacement.value +
+                  result.slice(replacement.end),
+                code
+              )
+          );
+        }
+      });
+
+    await Promise.all(promises);
+  }
+};
 
 export default async function build({
   source,
@@ -270,6 +421,12 @@ export default async function build({
       // Ignore
     }
 
+    const pkg = JSON.parse(
+      await fs.readFile(path.join(root, 'package.json'), 'utf-8')
+    );
+
+    const codegenEnabled = 'codegenConfig' in pkg;
+
     if (esm) {
       if (outputs?.commonjs && outputs?.module) {
         // When ESM compatible output is enabled and commonjs build is present, we need to generate 2 builds for commonjs and esm
@@ -290,14 +447,19 @@ export default async function build({
           type: 'module',
         });
       }
+
+      if (outputs.module) {
+        await rewriteDeclarationImports(
+          outputs.module,
+          source,
+          root,
+          codegenEnabled
+        );
+      }
     }
 
     report.success(
       `Wrote definition files to ${kleur.blue(path.relative(root, output))}`
-    );
-
-    const pkg = JSON.parse(
-      await fs.readFile(path.join(root, 'package.json'), 'utf-8')
     );
 
     const fields: Field[] = [
