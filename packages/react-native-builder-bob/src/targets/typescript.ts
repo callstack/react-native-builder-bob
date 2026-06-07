@@ -25,6 +25,69 @@ type Field = {
   message: string | undefined;
 };
 
+const LOCKFILES = [
+  'bun.lock',
+  'bun.lockb',
+  'package-lock.json',
+  'pnpm-lock.yaml',
+  'yarn.lock',
+];
+
+function isPathInside(root: string, file: string) {
+  const relative = path.relative(root, file);
+  const isOutside = relative === '..' || relative.startsWith(`..${path.sep}`);
+
+  return relative === '' || (!isOutside && !path.isAbsolute(relative));
+}
+
+async function findWorkspaceRoot(root: string) {
+  let current = root;
+
+  while (true) {
+    for (const lockfile of LOCKFILES) {
+      if (await fs.pathExists(path.join(current, lockfile))) {
+        return current;
+      }
+    }
+
+    const parent = path.dirname(current);
+
+    if (parent === current) {
+      return root;
+    }
+
+    current = parent;
+  }
+}
+
+export async function findBinInAncestorNodeModules(
+  root: string,
+  binary: string,
+  limit: string
+) {
+  let current = root;
+
+  while (true) {
+    const candidate = path.resolve(current, 'node_modules', '.bin', binary);
+
+    if (await fs.pathExists(candidate)) {
+      return candidate;
+    }
+
+    if (current === limit) {
+      return undefined;
+    }
+
+    const parent = path.dirname(current);
+
+    if (parent === current) {
+      return undefined;
+    }
+
+    current = parent;
+  }
+}
+
 export default async function build({
   source,
   root,
@@ -89,7 +152,7 @@ export default async function build({
       );
     }
 
-    let tsc;
+    let tsc: string | null | undefined;
 
     if (options?.tsc) {
       tsc = path.resolve(root, options.tsc);
@@ -104,38 +167,28 @@ export default async function build({
         );
       }
     } else {
-      const execpath = process.env.npm_execpath;
-      const cli = execpath?.split(path.sep).pop()?.includes('yarn')
-        ? 'yarn'
-        : 'npm';
+      const binary = platform() === 'win32' ? 'tsc.cmd' : 'tsc';
 
-      if (cli === 'yarn') {
-        const result = await spawn('yarn', ['bin', 'tsc'], {
-          cwd: root,
-          env: { ...process.env, FORCE_COLOR: '0' },
-        });
+      tsc = path.resolve(root, 'node_modules', '.bin', binary);
 
-        tsc = result.trim();
-      } else {
-        tsc = path.resolve(root, 'node_modules', '.bin', 'tsc');
+      if (!(await fs.pathExists(tsc))) {
+        tsc = await which(binary, { nothrow: true });
       }
 
-      if (platform() === 'win32' && !tsc.endsWith('.cmd')) {
-        tsc += '.cmd';
-      }
-    }
+      let workspaceRoot: string | undefined;
 
-    if (!(await fs.pathExists(tsc))) {
-      try {
-        tsc = await which('tsc');
+      if (tsc != null && !isPathInside(root, tsc)) {
+        workspaceRoot = await findWorkspaceRoot(root);
 
-        if (await fs.pathExists(tsc)) {
+        if (!isPathInside(workspaceRoot, tsc)) {
           report.warn(
-            `Failed to locate ${kleur.blue(
-              'tsc'
-            )} in the workspace. Falling back to the binary found in ${kleur.blue(
+            `Found ${kleur.blue('tsc')} in ${kleur.blue(
               'PATH'
-            )} at ${kleur.blue(tsc)}. Consider adding ${kleur.blue(
+            )} at ${kleur.blue(
+              tsc
+            )}, but it is outside the workspace root at ${kleur.blue(
+              workspaceRoot
+            )}. Consider adding ${kleur.blue(
               'typescript'
             )} to your ${kleur.blue(
               'devDependencies'
@@ -144,8 +197,11 @@ export default async function build({
             )} option for the typescript target.`
           );
         }
-      } catch (e) {
-        // Ignore
+      }
+
+      if (tsc == null) {
+        workspaceRoot ??= await findWorkspaceRoot(root);
+        tsc = await findBinInAncestorNodeModules(root, binary, workspaceRoot);
       }
     }
 
