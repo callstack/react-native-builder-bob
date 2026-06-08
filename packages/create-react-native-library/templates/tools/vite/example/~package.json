@@ -4,7 +4,7 @@
     "build:web": "vite build"
   },
   "dependencies": {
-    "react-native-web": "~0.21.1"
+    "react-native-web": "~0.21.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",

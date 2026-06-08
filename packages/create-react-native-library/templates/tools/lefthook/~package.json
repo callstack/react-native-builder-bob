@@ -3,8 +3,8 @@
     "extends": ["@commitlint/config-conventional"]
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^20.5.0",
-    "commitlint": "^20.5.0",
-    "lefthook": "^2.1.4"
+    "@commitlint/config-conventional": "^21.0.2",
+    "commitlint": "^21.0.2",
+    "lefthook": "^2.1.9"
   }
 }
