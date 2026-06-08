@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { platform } from 'node:os';
 import path from 'node:path';
 import { deleteAsync } from 'del';
@@ -33,14 +34,6 @@ type Field = {
   message: string | undefined;
 };
 
-const LOCKFILES = [
-  'bun.lock',
-  'bun.lockb',
-  'package-lock.json',
-  'pnpm-lock.yaml',
-  'yarn.lock',
-];
-
 const DECLARATION_EXTENSIONS = [{ source: 'd.ts', output: 'js' }];
 
 const EXPLICIT_SOURCE_EXTENSIONS = ['ts', 'tsx'].map((source) => ({
@@ -49,61 +42,6 @@ const EXPLICIT_SOURCE_EXTENSIONS = ['ts', 'tsx'].map((source) => ({
 }));
 
 const DECLARATION_REWRITE_BATCH_SIZE = 32;
-
-function isPathInside(root: string, file: string) {
-  const relative = path.relative(root, file);
-  const isOutside = relative === '..' || relative.startsWith(`..${path.sep}`);
-
-  return relative === '' || (!isOutside && !path.isAbsolute(relative));
-}
-
-async function findWorkspaceRoot(root: string) {
-  let current = root;
-
-  while (true) {
-    for (const lockfile of LOCKFILES) {
-      if (await fs.pathExists(path.join(current, lockfile))) {
-        return current;
-      }
-    }
-
-    const parent = path.dirname(current);
-
-    if (parent === current) {
-      return root;
-    }
-
-    current = parent;
-  }
-}
-
-export async function findBinInAncestorNodeModules(
-  root: string,
-  binary: string,
-  limit: string
-) {
-  let current = root;
-
-  while (true) {
-    const candidate = path.resolve(current, 'node_modules', '.bin', binary);
-
-    if (await fs.pathExists(candidate)) {
-      return candidate;
-    }
-
-    if (current === limit) {
-      return undefined;
-    }
-
-    const parent = path.dirname(current);
-
-    if (parent === current) {
-      return undefined;
-    }
-
-    current = parent;
-  }
-}
 
 const getModuleSpecifier = (node: ts.Node) => {
   if (
@@ -303,71 +241,73 @@ export default async function build({
       );
     }
 
-    let tsc: string | null | undefined;
+    const args = [
+      '--pretty',
+      '--declaration',
+      '--declarationMap',
+      '--noEmit',
+      'false',
+      '--emitDeclarationOnly',
+      '--project',
+      project,
+    ];
+
+    let command: string | null;
 
     if (options?.tsc) {
-      tsc = path.resolve(root, options.tsc);
+      command = path.resolve(root, options.tsc);
 
-      if (!(await fs.pathExists(tsc))) {
+      if (!(await fs.pathExists(command))) {
         throw new Error(
           `The ${kleur.blue(
             'tsc'
           )} binary doesn't seem to be installed at ${kleur.blue(
-            tsc
+            command
           )}. Please specify the correct path in options or remove it to use the workspace's version.`
         );
       }
     } else {
-      const binary = platform() === 'win32' ? 'tsc.cmd' : 'tsc';
+      try {
+        const manifest = createRequire(path.join(root, 'package.json')).resolve(
+          'typescript/package.json'
+        );
 
-      tsc = path.resolve(root, 'node_modules', '.bin', binary);
+        const { bin } = JSON.parse(await fs.readFile(manifest, 'utf-8'));
 
-      if (!(await fs.pathExists(tsc))) {
-        tsc = await which(binary, { nothrow: true });
-      }
+        // Run the binary with node command
+        command = process.execPath;
+        args.unshift(path.join(path.dirname(manifest), bin.tsc));
+      } catch {
+        const binary = platform() === 'win32' ? 'tsc.cmd' : 'tsc';
 
-      let workspaceRoot: string | undefined;
+        command = await which(binary, { nothrow: true });
 
-      if (tsc != null && !isPathInside(root, tsc)) {
-        workspaceRoot = await findWorkspaceRoot(root);
-
-        if (!isPathInside(workspaceRoot, tsc)) {
-          report.warn(
-            `Found ${kleur.blue('tsc')} in ${kleur.blue(
-              'PATH'
-            )} at ${kleur.blue(
-              tsc
-            )}, but it is outside the workspace root at ${kleur.blue(
-              workspaceRoot
-            )}. Consider adding ${kleur.blue(
+        if (command == null) {
+          throw new Error(
+            `The ${kleur.blue(
+              'tsc'
+            )} binary doesn't seem to be installed in the workspace or present in $PATH. Make sure you have added ${kleur.blue(
               'typescript'
             )} to your ${kleur.blue(
               'devDependencies'
-            )} or specifying the ${kleur.blue(
-              'tsc'
-            )} option for the typescript target.`
+            )} or specify the ${kleur.blue('tsc')} option for typescript.`
           );
         }
-      }
 
-      if (tsc == null) {
-        workspaceRoot ??= await findWorkspaceRoot(root);
-        tsc = await findBinInAncestorNodeModules(root, binary, workspaceRoot);
+        report.warn(
+          `Failed to resolve ${kleur.blue(
+            'tsc'
+          )} in the workspace. Falling back to the binary found in ${kleur.blue(
+            'PATH'
+          )} at ${kleur.blue(command)}. Consider adding ${kleur.blue(
+            'typescript'
+          )} to your ${kleur.blue(
+            'devDependencies'
+          )} or specifying the ${kleur.blue(
+            'tsc'
+          )} option for the typescript target.`
+        );
       }
-    }
-
-    if (tsc == null || !(await fs.pathExists(tsc))) {
-      throw new Error(
-        `The ${kleur.blue(
-          'tsc'
-        )} binary doesn't seem to be installed under ${kleur.blue(
-          'node_modules'
-        )} or present in $PATH. Make sure you have added ${kleur.blue(
-          'typescript'
-        )} to your ${kleur.blue('devDependencies')} or specify the ${kleur.blue(
-          'tsc'
-        )} option for typescript.`
-      );
     }
 
     const outputs: { commonjs?: string; module?: string } = {};
@@ -387,6 +327,8 @@ export default async function build({
       throw new Error('Neither commonjs nor module output is enabled.');
     }
 
+    args.push('--outDir', outDir);
+
     const tsbuildinfo = path.join(
       outDir,
       project.replace(/\.json$/, '.tsbuildinfo')
@@ -398,22 +340,7 @@ export default async function build({
       // Ignore
     }
 
-    await spawn(
-      tsc,
-      [
-        '--pretty',
-        '--declaration',
-        '--declarationMap',
-        '--noEmit',
-        'false',
-        '--emitDeclarationOnly',
-        '--project',
-        project,
-        '--outDir',
-        outDir,
-      ],
-      { cwd: root }
-    );
+    await spawn(command, args, { cwd: root });
 
     try {
       await deleteAsync([tsbuildinfo]);
