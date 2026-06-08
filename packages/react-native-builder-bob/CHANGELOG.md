@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.42.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.41.0...react-native-builder-bob@0.42.0) (2026-06-08)
+
+### Bug Fixes
+
+- resolve hoisted tsc binaries ([#944](https://github.com/callstack/react-native-builder-bob/issues/944)) ([ff44a19](https://github.com/callstack/react-native-builder-bob/commit/ff44a198f00ceea3297a462f68c5513b061055ed)) - by @mrousavy
+
+### Features
+
+- add extensions in .d.ts files for nodenext compat ([#945](https://github.com/callstack/react-native-builder-bob/issues/945)) ([e10243e](https://github.com/callstack/react-native-builder-bob/commit/e10243e6b15465726d1322dba7dd957422f53c50)) - by @satya164
+
 # [0.41.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.40.18...react-native-builder-bob@0.41.0) (2026-04-01)
 
 ### Features
