@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.42.0...react-native-builder-bob@0.42.1) (2026-06-08)
+
+### Bug Fixes
+
+- rework typescript binary resolution to use node resolution ([17225a9](https://github.com/callstack/react-native-builder-bob/commit/17225a953dc8c936ecf5e483278228f411463165)) - by @
+
 # [0.42.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.41.0...react-native-builder-bob@0.42.0) (2026-06-08)
 
 ### Bug Fixes
