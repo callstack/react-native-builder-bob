@@ -3,7 +3,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
-import { globSync } from 'glob';
+import { glob } from 'glob';
 import type { Input, Variants } from '../types.ts';
 import { isCodegenSpec } from './isCodegenSpec.ts';
 
@@ -42,7 +42,7 @@ export default async function compile({
   jsxRuntime = 'automatic',
   variants,
 }: Options) {
-  const files = globSync('**/*', {
+  const files = await glob('**/*', {
     cwd: source,
     absolute: true,
     nodir: true,

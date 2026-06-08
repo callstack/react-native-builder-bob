@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import type { ConfigAPI, NodePath, PluginObj, PluginPass } from '@babel/core';
 import type {
@@ -7,6 +6,10 @@ import type {
   ExportNamedDeclaration,
 } from '@babel/types';
 import { isCodegenSpec } from './utils/isCodegenSpec.ts';
+import {
+  resolveModuleSpecifier,
+  SOURCE_EXTENSIONS,
+} from './utils/resolveModuleSpecifier.ts';
 
 type Options = {
   /**
@@ -25,36 +28,6 @@ type Options = {
   platforms?: string[];
 };
 
-const extensions = ['ts', 'tsx', 'js', 'jsx'];
-
-const isFile = (filename: string): boolean => {
-  const exists =
-    fs.lstatSync(filename, { throwIfNoEntry: false })?.isFile() ?? false;
-
-  return exists;
-};
-
-const isDirectory = (filename: string): boolean => {
-  const exists =
-    fs.lstatSync(filename, { throwIfNoEntry: false })?.isDirectory() ?? false;
-
-  return exists;
-};
-
-const isModuleWithoutPlatform = (
-  filename: string,
-  extension: string,
-  platforms: string[]
-): boolean => {
-  const exts = [...extensions, extension];
-
-  return exts.some(
-    (ext) =>
-      isFile(`${filename}.${ext}`) &&
-      platforms.every((platform) => !isFile(`${filename}.${platform}.${ext}`))
-  );
-};
-
 const isTypeImport = (
   node: ImportDeclaration | ExportNamedDeclaration | ExportAllDeclaration
 ) =>
@@ -71,25 +44,22 @@ const assertFilename: (
 
 export default function (
   api: ConfigAPI,
-  {
-    extension,
-    platforms = [
-      'native',
-      'android',
-      'ios',
-      'windows',
-      'macos',
-      'visionos',
-      'web',
-      'tv',
-      'android.tv',
-      'ios.tv',
-    ],
-  }: Options
+  { extension, platforms }: Options
 ): PluginObj {
   api.assertVersion(7);
 
   const codegenEnabled = api.caller((caller) => caller?.codegenEnabled);
+
+  const toExtensions = (sources: string[]) =>
+    extension == null
+      ? []
+      : sources.map((source) => ({ source, output: extension }));
+
+  const rewriteExtensions = toExtensions(
+    extension ? [...SOURCE_EXTENSIONS, extension] : SOURCE_EXTENSIONS
+  );
+
+  const explicitRewriteExtensions = toExtensions(['ts', 'tsx']);
 
   function addExtension(
     {
@@ -120,39 +90,18 @@ export default function (
     if (
       codegenEnabled &&
       (isCodegenSpec(filename) ||
-        extensions.some((ext) => isCodegenSpec(`${filename}.${ext}`)))
+        SOURCE_EXTENSIONS.some((ext) => isCodegenSpec(`${filename}.${ext}`)))
     ) {
       return;
     }
 
-    // Replace .ts extension with .js if file with extension is explicitly imported
-    if (isFile(filename)) {
-      node.source.value = node.source.value.replace(/\.tsx?$/, `.${extension}`);
-      return;
-    }
-
-    // Add extension if .ts file or file with extension exists
-    // And no platform specific file exists
-    if (isModuleWithoutPlatform(filename, extension, platforms)) {
-      node.source.value += `.${extension}`;
-      return;
-    }
-
-    // Expand folder imports to index and add extension
-    if (
-      isDirectory(filename) &&
-      isModuleWithoutPlatform(
-        path.join(filename, 'index'),
-        extension,
-        platforms
-      )
-    ) {
-      node.source.value = node.source.value.replace(
-        /\/?$/,
-        `/index.${extension}`
-      );
-      return;
-    }
+    node.source.value = resolveModuleSpecifier({
+      filepath: state.filename,
+      specifier: node.source.value,
+      extensions: rewriteExtensions,
+      explicitExtensions: explicitRewriteExtensions,
+      platforms,
+    });
   }
 
   return {

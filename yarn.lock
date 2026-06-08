@@ -10331,6 +10331,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.29.2"
     "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.28.5"
+    "@jridgewell/sourcemap-codec": "npm:^1.5.5"
     "@types/babel__core": "npm:^7.20.5"
     "@types/browserslist": "npm:^4.15.4"
     "@types/cross-spawn": "npm:^6.0.6"
