@@ -204,6 +204,36 @@ export const prompt = create(['[name]'], {
       const basename = path.basename(value);
 
       if (validateNpmPackage(basename).validForNewPackages) {
+        if (answers.local) {
+          try {
+            const { name }: { name?: string } = JSON.parse(
+              fs.readFileSync(
+                path.resolve(process.cwd(), 'package.json'),
+                'utf8'
+              )
+            );
+
+            const scopeOrName = name?.split('/')?.[0];
+
+            if (scopeOrName) {
+              const scope = scopeOrName?.startsWith('@')
+                ? scopeOrName
+                : `@${scopeOrName}`;
+
+              const packageName = `${scope}/${basename}`;
+
+              if (
+                scopeOrName &&
+                validateNpmPackage(packageName).validForNewPackages
+              ) {
+                return packageName;
+              }
+            }
+          } catch {
+            // Ignore invalid package.json and use the regular default.
+          }
+        }
+
         if (/^(@|react-native)/.test(basename)) {
           return basename;
         }
