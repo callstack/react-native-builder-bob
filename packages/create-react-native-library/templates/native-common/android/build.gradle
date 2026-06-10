@@ -2,8 +2,7 @@ buildscript {
   ext.<%- project.name -%> = [
     kotlinVersion: "2.0.21",
     minSdkVersion: 24,
-    compileSdkVersion: 36,
-    targetSdkVersion: 36
+    compileSdkVersion: 36
   ]
 
   ext.getExtOrDefault = { prop ->
@@ -26,7 +25,7 @@ buildscript {
   }
 }
 
-<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
@@ -52,8 +51,7 @@ android {
 
   defaultConfig {
     minSdkVersion getExtOrDefault("minSdkVersion")
-    targetSdkVersion getExtOrDefault("targetSdkVersion")
-<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
     externalNativeBuild {
       cmake {
@@ -73,58 +71,50 @@ android {
     }
 <% } -%>
   }
-<% if (project.cpp || project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
     }
   }
-<% } -%>
-<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
-  packagingOptions {
-    excludes = [
-      "META-INF",
-      "META-INF/**",
-      "**/libc++_shared.so",
-      "**/libfbjni.so",
-      "**/libjsi.so",
-      "**/libfolly_json.so",
-      "**/libfolly_runtime.so",
-      "**/libglog.so",
-      "**/libhermes.so",
-      "**/libhermes-executor-debug.so",
-      "**/libhermes_executor.so",
-      "**/libreactnative.so",
-      "**/libreactnativejni.so",
-      "**/libturbomodulejsijni.so",
-      "**/libreact_nativemodule_core.so",
-      "**/libjscexecutor.so"
-    ]
-  }
-<% } -%>
+  packaging {
+    resources {
+      excludes += [
+        "META-INF",
+        "META-INF/**"
+      ]
+    }
 
-  buildFeatures {
-    buildConfig true
-<% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
-    prefab true
-<% } -%>
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
+    jniLibs {
+      excludes += [
+        "**/libc++_shared.so",
+        "**/libfbjni.so",
+        "**/libjsi.so",
+        "**/libfolly_json.so",
+        "**/libfolly_runtime.so",
+        "**/libglog.so",
+        "**/libhermes.so",
+        "**/libhermes-executor-debug.so",
+        "**/libhermes_executor.so",
+        "**/libreactnative.so",
+        "**/libreactnativejni.so",
+        "**/libturbomodulejsijni.so",
+        "**/libreact_nativemodule_core.so",
+        "**/libjscexecutor.so"
+      ]
     }
   }
 
-  lint {
-    disable "GradleCompatible"
+  buildFeatures {
+    prefab true
   }
+<% } -%>
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 }
 
