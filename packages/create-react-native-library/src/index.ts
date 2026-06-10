@@ -48,6 +48,10 @@ async function create() {
 
   console.log(''); // Empty new line after prompts
 
+  if (answers.directory == null) {
+    throw new Error('Missing required option: --directory');
+  }
+
   const bobVersion = await bobVersionPromise;
   const nitroModulesVersion =
     answers.type === 'nitro-module' || answers.type === 'nitro-view'
@@ -101,7 +105,7 @@ async function create() {
     spinner.text = 'Configuring tools';
 
     await configureTools({
-      tools: answers.tools,
+      tools: config.tools,
       config,
       root: folder,
       packageJson: rootPackageJson,

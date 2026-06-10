@@ -172,6 +172,7 @@ export const prompt = create(['[name]'], {
       return answers.name;
     },
     validate: validateDirectory,
+    required: true,
     skip: () => {
       const answers = prompt.read();
 
@@ -261,6 +262,7 @@ export const prompt = create(['[name]'], {
     message: 'What is the name of the package author?',
     default: async () => getGitConfig('user.name'),
     validate: (input) => Boolean(input) || 'Cannot be empty',
+    required: true,
     skip: (): boolean => prompt.read().local === true,
   },
   authorEmail: {
@@ -270,6 +272,7 @@ export const prompt = create(['[name]'], {
     default: async () => getGitConfig('user.email'),
     validate: (input) =>
       /^\S+@\S+$/.test(input) || 'Must be a valid email address',
+    required: true,
     skip: (): boolean => prompt.read().local === true,
   },
   authorUrl: {
@@ -296,6 +299,7 @@ export const prompt = create(['[name]'], {
       return undefined;
     },
     validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
+    required: true,
     skip: (): boolean => prompt.read().local === true,
   },
   repoUrl: {
@@ -318,6 +322,7 @@ export const prompt = create(['[name]'], {
       return undefined;
     },
     validate: (input) => /^https?:\/\//.test(input) || 'Must be a valid URL',
+    required: true,
     skip: (): boolean => prompt.read().local === true,
   },
   type: {
