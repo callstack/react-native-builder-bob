@@ -36,7 +36,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-15
+          - macos-latest
         app:
           - community-cli
           - expo
