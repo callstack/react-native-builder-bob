@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.62.2](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.62.1...create-react-native-library@0.62.2) (2026-06-11)
+
+### Bug Fixes
+
+- scope name of local library with app name by default ([499d822](https://github.com/callstack/react-native-builder-bob/commit/499d82289ab40c52f2f39d41d62cf5fe3c69494f)) - by @satya164
+
 ## [0.62.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.62.0...create-react-native-library@0.62.1) (2026-06-08)
 
 **Note:** Version bump only for package create-react-native-library
