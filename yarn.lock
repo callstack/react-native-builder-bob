@@ -5347,7 +5347,7 @@ __metadata:
     github-username: "npm:^9.0.0"
     kleur: "npm:^4.1.5"
     ora: "npm:^9.3.0"
-    pigment: "npm:^0.4.4"
+    pigment: "npm:^0.4.5"
     typescript: "npm:^6.0.3"
     validate-npm-package-name: "npm:^7.0.2"
   bin:
@@ -10105,13 +10105,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pigment@npm:^0.4.4":
-  version: 0.4.4
-  resolution: "pigment@npm:0.4.4"
+"pigment@npm:^0.4.5":
+  version: 0.4.5
+  resolution: "pigment@npm:0.4.5"
   dependencies:
     ansi-escapes: "npm:^7.2.0"
     wrap-ansi: "npm:^9.0.2"
-  checksum: 10c0/d2663d4e44603ed4bdab7b1c7c73c0c8a42390599c7f7f880dc91b2cb00f252667e9e22606ca7c56db6bd36e4a6067e68141afd17d1e7d03867da8866bde5bb0
+  checksum: 10c0/696ba9feee6f22d59de62a37e31ced40845dc061c78175b18805eb9550215685e5fd6612e355025742152d8bc093b56ef258044e5dae7265d781cd2b353b3aac
   languageName: node
   linkType: hard
 

@@ -15,6 +15,9 @@ on:
     types:
       - checks_requested
 
+permissions:
+  contents: read
+
 jobs:
   build:
     env:
@@ -30,7 +33,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-15
+          - macos-latest
         type:
           - name: turbo-module
             language: kotlin-objc

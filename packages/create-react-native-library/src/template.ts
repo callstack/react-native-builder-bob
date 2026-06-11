@@ -151,6 +151,31 @@ export function generateTemplateConfiguration({
 }): TemplateConfiguration {
   const { slug, languages, type } = answers;
 
+  let { authorName, authorEmail, authorUrl, repoUrl } = answers;
+
+  if (answers.local) {
+    authorName = '';
+    authorEmail = '';
+    authorUrl = '';
+    repoUrl = '';
+  } else {
+    if (authorName == null) {
+      throw new Error('Missing required option: --author-name');
+    }
+
+    if (authorEmail == null) {
+      throw new Error('Missing required option: --author-email');
+    }
+
+    if (authorUrl == null) {
+      throw new Error('Missing required option: --author-url');
+    }
+
+    if (repoUrl == null) {
+      throw new Error('Missing required option: --repo-url');
+    }
+  }
+
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
   let namespace: string | undefined;
 
@@ -190,13 +215,13 @@ export function generateTemplateConfiguration({
       moduleConfig: getModuleConfig(type),
     },
     author: {
-      name: answers.authorName,
-      email: answers.authorEmail,
-      url: answers.authorUrl,
+      name: authorName,
+      email: authorEmail,
+      url: authorUrl,
     },
-    repo: answers.repoUrl,
+    repo: repoUrl,
     example: answers.example,
-    tools: answers.tools,
+    tools: answers.tools ?? [],
     year: new Date().getFullYear(),
   };
 }

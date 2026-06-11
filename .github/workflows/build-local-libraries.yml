@@ -1,0 +1,239 @@
+name: Build local library
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - main
+      - next
+  pull_request:
+    branches:
+      - main
+      - next
+  merge_group:
+    types:
+      - checks_requested
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    env:
+      XCODE_VERSION: 26
+      RCT_REMOVE_LEGACY_ARCH: 1
+      RCT_USE_RN_DEP: 1
+      RCT_USE_PREBUILT_RNCORE: 1
+      REACT_NATIVE_VERSION: 0.85.0
+      EXPO_SDK_VERSION: 55
+      APP_NAME: LocalLibraryApp
+      LIBRARY_NAME: TestLibrary
+      LIBRARY_DIR: modules/TestLibrary
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        app:
+          - community-cli
+          - expo
+        type:
+          - name: turbo-module
+            language: kotlin-objc
+          - name: nitro-module
+            language: kotlin-swift
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os }}-${{ matrix.app }}-${{ matrix.type.name }}-${{ matrix.type.language }}
+      cancel-in-progress: true
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build package
+        run: |
+          yarn workspace create-react-native-library prepare
+
+      - name: Create app
+        shell: bash
+        run: |
+          if [[ "${{ matrix.app }}" == "community-cli" ]]; then
+            npx @react-native-community/cli init "$APP_NAME" \
+              --directory "$APP_NAME" \
+              --version "$REACT_NATIVE_VERSION" \
+              --skip-install \
+              --skip-git-init \
+              --pm npm \
+              --package-name com.locallibraryapp
+          else
+            npx create-expo-app@latest "$APP_NAME" \
+              --no-install \
+              --template "blank@sdk-$EXPO_SDK_VERSION"
+          fi
+
+      - name: Create local library
+        working-directory: ${{ env.APP_NAME }}
+        shell: bash
+        run: |
+          ../packages/create-react-native-library/bin/create-react-native-library "$LIBRARY_NAME" \
+            --local \
+            --directory "$LIBRARY_DIR" \
+            --slug @bob/react-native-test \
+            --description test \
+            --type ${{ matrix.type.name }} \
+            --languages ${{ matrix.type.language }}
+
+      - name: Restore dependencies of app
+        id: app-npm-cache
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ${{ env.APP_NAME }}/node_modules
+            ${{ env.APP_NAME }}/package-lock.json
+          key: ${{ runner.os }}-local-library-npm-${{ matrix.app }}-${{ matrix.type.name }}-${{ matrix.type.language }}-${{ hashFiles(format('{0}/package.json', env.APP_NAME), format('{0}/modules/**/package.json', env.APP_NAME)) }}
+          restore-keys: |
+            ${{ runner.os }}-local-library-npm-${{ matrix.app }}-${{ matrix.type.name }}-${{ matrix.type.language }}-
+            ${{ runner.os }}-local-library-npm-${{ matrix.app }}-
+
+      - name: Install dependencies of app
+        if: steps.app-npm-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        run: |
+          npm install --no-audit --no-fund
+
+      - name: Cache dependencies of app
+        if: steps.app-npm-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ${{ env.APP_NAME }}/node_modules
+            ${{ env.APP_NAME }}/package-lock.json
+          key: ${{ steps.app-npm-cache.outputs.cache-primary-key }}
+
+      - name: Generate nitrogen code
+        if: matrix.type.name == 'nitro-module'
+        working-directory: ${{ env.APP_NAME }}/${{ env.LIBRARY_DIR }}
+        shell: bash
+        run: |
+          nitro_version=$(node -p "require('../../package.json').dependencies['react-native-nitro-modules']")
+          npm exec --yes --package "nitrogen@$nitro_version" -- nitrogen
+
+      - name: Check local build cache
+        if: github.event_name != 'schedule'
+        id: local-build-cache
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          lookup-only: true
+          path: ${{ env.APP_NAME }}/.local-build-cache
+          key: ${{ runner.os }}-local-library-build-${{ matrix.app }}-${{ matrix.type.name }}-${{ matrix.type.language }}-${{ env.REACT_NATIVE_VERSION }}-${{ env.EXPO_SDK_VERSION }}-${{ hashFiles('yarn.lock', 'package.json', '.github/workflows/build-local-libraries.yml', 'packages/create-react-native-library/package.json', 'packages/create-react-native-library/src/**', 'packages/create-react-native-library/templates/**') }}
+
+      - name: Install JDK
+        if: runner.os == 'Linux' && steps.local-build-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Finalize Android SDK
+        if: runner.os == 'Linux' && steps.local-build-cache.outputs.cache-hit != 'true'
+        run: |
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      - name: Prebuild Expo app (Android)
+        if: runner.os == 'Linux' && matrix.app == 'expo' && steps.local-build-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        run: |
+          npx expo prebuild --platform android --non-interactive
+
+      - name: Cache Gradle
+        if: runner.os == 'Linux' && steps.local-build-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-local-library-gradle-${{ matrix.app }}-${{ hashFiles(format('{0}/android/gradle/wrapper/gradle-wrapper.properties', env.APP_NAME)) }}
+          restore-keys: |
+            ${{ runner.os }}-local-library-gradle-${{ matrix.app }}-
+            ${{ runner.os }}-local-library-gradle-
+
+      - name: Build app (Android)
+        if: runner.os == 'Linux' && steps.local-build-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        shell: bash
+        env:
+          JAVA_OPTS: "-XX:MaxHeapSize=6g"
+        run: |
+          if [[ "${{ matrix.app }}" == "community-cli" ]]; then
+            npx react-native build-android --extra-params "--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a"
+          else
+            cd android
+            ./gradlew assembleDebug -DtestBuildType=debug -Dorg.gradle.jvmargs=-Xmx4g -PreactNativeArchitectures=arm64-v8a --no-daemon --console=plain
+          fi
+
+      - name: Use appropriate Xcode version
+        if: runner.os == 'macOS' && steps.local-build-cache.outputs.cache-hit != 'true'
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Prebuild Expo app (iOS)
+        if: runner.os == 'macOS' && matrix.app == 'expo' && steps.local-build-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        run: |
+          npx expo prebuild --platform ios --non-interactive
+
+      - name: Install cocoapods
+        if: runner.os == 'macOS' && steps.local-build-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        shell: bash
+        run: |
+          if [[ -f Gemfile ]]; then
+            bundle install
+            bundle exec pod repo update --verbose
+            bundle exec pod install --project-directory=ios
+          else
+            pod repo update --verbose
+            pod install --project-directory=ios
+          fi
+
+      - name: Build app (iOS)
+        if: runner.os == 'macOS' && steps.local-build-cache.outputs.cache-hit != 'true'
+        working-directory: ${{ env.APP_NAME }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.app }}" == "community-cli" ]]; then
+            npx react-native build-ios --mode Debug
+          else
+            xcodebuild ONLY_ACTIVE_ARCH=YES \
+              -workspace "ios/$APP_NAME.xcworkspace" \
+              -UseNewBuildSystem=YES \
+              -scheme "$APP_NAME" \
+              -configuration Debug \
+              -sdk iphonesimulator \
+              -derivedDataPath ios/build \
+              -quiet
+          fi
+
+      - name: Mark local build cache
+        if: github.event_name != 'schedule' && steps.local-build-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$APP_NAME/.local-build-cache"
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > "$APP_NAME/.local-build-cache/success"
+
+      - name: Save local build cache
+        if: github.event_name != 'schedule' && steps.local-build-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ env.APP_NAME }}/.local-build-cache
+          key: ${{ steps.local-build-cache.outputs.cache-primary-key }}

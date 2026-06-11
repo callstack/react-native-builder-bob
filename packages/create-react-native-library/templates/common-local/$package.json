@@ -6,7 +6,19 @@
   "codegenConfig": {
     "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": <%- project.viewConfig !== null ? '"all"': '"modules"' %>,
-    "jsSrcsDir": "src"
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.<%- project.package %>"
+    <% if (project.viewConfig === 'fabric-view') { -%>
+    },
+    "ios": {
+      "components": {
+        "<%- project.name -%>View": {
+          "className": "<%- project.name -%>View"
+        }
+      }
+    <% } -%>
+    }
   },
   "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "UNLICENSED",
