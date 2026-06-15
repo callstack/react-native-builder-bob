@@ -35,6 +35,12 @@ export async function init() {
   const pkg = JSON.parse(await fs.readFile(projectPackagePath, 'utf-8'));
   const result = loadConfig(root);
 
+  const name = pkg.name;
+
+  if (typeof name !== 'string' || name.length === 0) {
+    throw new Error(`Couldn't find a 'name' field in '${projectPackagePath}'.`);
+  }
+
   if (
     result?.config &&
     pkg.devDependencies &&
@@ -144,10 +150,8 @@ export async function init() {
       : undefined;
 
   const entries: {
-    [key in 'source' | 'commonjs' | 'module']?: string;
-  } = {
-    source: `./${path.join(source, entryFile)}`,
-  };
+    [key in 'commonjs' | 'module']?: string;
+  } = {};
 
   let esm = false;
 
@@ -263,18 +267,15 @@ export async function init() {
 
     if (targets.includes('commonjs') && targets.includes('module')) {
       exportsField['.'] = {
-        source: entries.source,
         import: importField,
         require: requireField,
       };
     } else if (targets.includes('commonjs')) {
       exportsField['.'] = {
-        source: entries.source,
         ...requireField,
       };
     } else if (targets.includes('module')) {
       exportsField['.'] = {
-        source: entries.source,
         ...importField,
       };
     }
@@ -464,7 +465,7 @@ export async function init() {
 
   process.stdout.write(
     dedent(`
-    Project ${kleur.yellow(pkg.name)} configured successfully!
+    Project ${kleur.yellow(name)} configured successfully!
 
     ${kleur.magenta(
       `${kleur.bold('Perform last steps')} by running`

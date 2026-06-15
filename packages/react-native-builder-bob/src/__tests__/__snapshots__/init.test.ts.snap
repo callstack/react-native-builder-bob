@@ -9,7 +9,6 @@ exports[`initializes the configuration 1`] = `
   },
   "exports": {
     ".": {
-      "source": "./src/index.ts",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },

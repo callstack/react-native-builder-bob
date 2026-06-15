@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
   },
   resolve: {
     extensions,
-    conditions: ['source', 'module', 'browser', mode],
+    conditions: ['module', 'browser', mode],
     alias: {
       'react-native': 'react-native-web',
     },

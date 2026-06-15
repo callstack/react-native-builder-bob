@@ -32,7 +32,6 @@ If your library depends on another react-native library containing native code, 
 - **Add the native library to `peerDependencies`**
 
   This means that the consumer of the library will need to install the native library and add it to the `dependencies` section of their `package.json`. It makes sure that:
-
   - There are no version conflicts if another package also happens to use the same library, or if the user wants to use the library in their app. While there can be multiple versions of a JavaScript-only library, there can only be one version of a native library - so avoiding version conflicts is important.
   - The package manager installs it in correct location so that autolinking can work properly.
 
@@ -51,7 +50,6 @@ If your library depends on another react-native library containing native code, 
 Since this is a library, the `react-native` version specified in the `package.json` is not relevant for the consumers. It's only used for developing and testing the library. If you'd like to upgrade the `react-native` version to test with it, you'd need to:
 
 1. **Bump versions of the following packages under `devDependencies` in the `package.json`:**
-
    - `react-native`
    - `react`
    - `@types/react`
@@ -74,9 +72,8 @@ There are 2 parts to this process.
 1. **Aliasing the JavaScript code**
 
    The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. We configure several tools to make this work:
-
-   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, to use the appropriate peer dependencies, and to import source code of the library in the example. This configuration exists in the `example/metro.config.js` file.
-   - [TypeScript](https://www.typescriptlang.org/) is configured to use the source code for type checking by using the `paths` property under `compilerOptions`. This configuration exists in the `tsconfig.json` file at the root.
+   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, to use the appropriate peer dependencies, and to resolve the library's custom source condition. This configuration exists in the `example/metro.config.js` file.
+   - [TypeScript](https://www.typescriptlang.org/) is configured to use the source code for type checking with the custom source condition and the `paths` property under `compilerOptions`. This configuration exists in the `tsconfig.json` file at the root.
 
 2. **Linking the native code**
 

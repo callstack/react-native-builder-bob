@@ -42,7 +42,7 @@ To make use of the output files, ensure that your `package.json` file contains t
 "types": "./lib/typescript/src/index.d.ts",
 "exports": {
   ".": {
-    "source": "./src/index.tsx",
+    "my-library-source": "./src/index.tsx",
     "types": "./lib/typescript/src/index.d.ts",
     "default": "./lib/module/index.js"
   },
@@ -56,9 +56,56 @@ The `exports` field is used by Node.js 12+, modern browsers and tools to determi
 
 Here, we specify 3 conditions:
 
-- `source`: A custom condition used by `react-native-builder-bob` to determine the source file for the library.
+- `my-library-source`: A custom condition used to resolve the source file for the library in development.
 - `types`: Used for the TypeScript definitions.
 - `default`: Used for the actual JS code when the library is imported or required.
+
+When creating a project, a custom condition name pointing to the source code is automatically set. You can also change it to something else if you want by updating any occurrences in your project.
+
+TypeScript can resolve the source condition by adding it to [`customConditions`](https://www.typescriptlang.org/tsconfig/#customConditions):
+
+```json
+{
+  "compilerOptions": {
+    "customConditions": ["my-library-source"]
+  }
+}
+```
+
+When using [`react-native-monorepo-config`](https://github.com/satya164/react-native-monorepo-config), pass the same condition to Metro so the example app resolves the library source:
+
+```js
+const config = withMetroConfig(getDefaultConfig(__dirname), {
+  root,
+  dirname: __dirname,
+  conditions: ['my-library-source'],
+});
+```
+
+If you use [Jest](https://jestjs.io), add the source condition to [`testEnvironmentOptions.customExportConditions`](https://jestjs.io/docs/configuration#testenvironmentoptions-object). With the React Native Jest preset, keep React Native's default conditions as well:
+
+```json
+{
+  "jest": {
+    "preset": "@react-native/jest-preset",
+    "testEnvironmentOptions": {
+      "customExportConditions": ["require", "react-native", "my-library-source"]
+    }
+  }
+}
+```
+
+If you use [Vite](https://vitejs.dev), add the source condition to [`resolve.conditions`](https://vitejs.dev/config/#resolve-conditions):
+
+```ts
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  resolve: {
+    conditions: ['my-library-source'],
+  },
+});
+```
 
 You can also specify additional conditions for different scenarios, such as `react-native`, `browser`, `production`, `development` etc. Note that support for these conditions depends on the tooling you're using.
 
@@ -74,7 +121,7 @@ Using the `exports` field has a few benefits, such as:
   ```diff
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "my-library-source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -135,7 +182,6 @@ To configure a dual package setup, you can follow these steps:
    ```
 
    Here, we specify 2 conditions:
-
    - `import`: Used when the library is imported with an `import` statement or a dynamic `import()`. It will point to the ESM build.
    - `require`: Used when the library is required with a `require` call. It will point to the CommonJS build.
 
@@ -292,7 +338,6 @@ There are still a few things to keep in mind if you want your library to be ESM-
   ```
 
   Alternatively, if you want to be able to use the library in Node.js with `import` syntax, there are a few options:
-
   - Use `Platform.select` instead of platform-specific extensions:
 
     ```js

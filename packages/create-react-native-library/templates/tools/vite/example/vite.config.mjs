@@ -9,6 +9,7 @@ export default defineConfig((env) =>
       alias: {
         [pack.name]: new URL('..', import.meta.url),
       },
+      conditions: ['<%- project.sourceCondition -%>'],
       dedupe: Object.keys(pack.peerDependencies),
     },
   })

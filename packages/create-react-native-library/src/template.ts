@@ -33,6 +33,7 @@ export type TemplateConfiguration = {
     swift: boolean;
     viewConfig: ViewConfig;
     moduleConfig: ModuleConfig;
+    sourceCondition: string;
   };
   author: {
     name: string;
@@ -177,6 +178,8 @@ export function generateTemplateConfiguration({
   }
 
   const project = slug.replace(/^(react-native-|@[^/]+\/)/, '');
+  const sourceCondition = `${slug.replace(/^@/, '').replace(/\//g, '-')}-source`;
+
   let namespace: string | undefined;
 
   if (slug.startsWith('@') && slug.includes('/')) {
@@ -213,6 +216,7 @@ export function generateTemplateConfiguration({
       swift: languages === 'kotlin-swift',
       viewConfig: getViewConfig(type),
       moduleConfig: getModuleConfig(type),
+      sourceCondition,
     },
     author: {
       name: authorName,

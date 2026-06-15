@@ -78,7 +78,6 @@ To configure your project manually, follow these steps:
    "types": "./lib/typescript/src/index.d.ts",
    "exports": {
      ".": {
-        "source": "./src/index.tsx",
         "types": "./lib/typescript/src/index.d.ts",
         "default": "./lib/module/index.js"
      },
