@@ -128,6 +128,8 @@ function main() {
       'bob-upgrade-test',
       '--description',
       'test',
+      '--author-name',
+      'test',
       '--type',
       'turbo-module',
       '--languages',
