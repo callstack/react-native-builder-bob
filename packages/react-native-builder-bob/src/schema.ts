@@ -1,15 +1,25 @@
 import { type } from 'arktype';
 
+const babelOptions = type({
+  compiler: type('"babel"').default('babel'),
+  esm: type('boolean').default(false),
+  babelrc: type('boolean').default(false),
+  configFile: type('boolean | string').default(false),
+  sourceMaps: type('boolean').default(true),
+  copyFlow: type('boolean').default(false),
+  jsxRuntime: type('"automatic" | "classic"').default('automatic'),
+});
+
+const swcOptions = type({
+  compiler: '"swc"',
+  esm: type('boolean').default(false),
+  sourceMaps: type('boolean').default(true),
+  jsxRuntime: type('"automatic" | "classic"').default('automatic'),
+});
+
 const module = {
   name: '"module"',
-  options: type({
-    esm: type('boolean').default(false),
-    babelrc: type('boolean').default(false),
-    configFile: type('boolean | string').default(false),
-    sourceMaps: type('boolean').default(true),
-    copyFlow: type('boolean').default(false),
-    jsxRuntime: type('"automatic" | "classic"').default('automatic'),
-  }),
+  options: type.or(babelOptions, swcOptions),
 } as const;
 
 const commonjs = {

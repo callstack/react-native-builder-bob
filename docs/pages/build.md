@@ -2,7 +2,7 @@
 title: Build a React Native library
 ---
 
-When code is in non-standard syntaxes such as JSX, TypeScript etc, it needs to be compiled before it can run. Configuring this manually can be error-prone and annoying. `react-native-builder-bob` aims to simplify this process by wrapping `babel` and `tsc` and taking care of the configuration. See [this section](./faq.md#why-should-i-compile-my-project-with-react-native-builder-bob) for a longer explanation.
+When code is in non-standard syntaxes such as JSX, TypeScript etc, it needs to be compiled before it can run. Configuring this manually can be error-prone and annoying. `react-native-builder-bob` aims to simplify this process by wrapping Babel, SWC and `tsc` and taking care of the configuration. See [this section](./faq.md#why-should-i-compile-my-project-with-react-native-builder-bob) for a longer explanation.
 
 Supported targets are:
 
@@ -148,15 +148,27 @@ Various targets to build for. The available targets are:
 
 #### `module`
 
-Enable compiling source files with Babel and use ES module system (`import`/`export`).
+Enable compiling source files with Babel or SWC and use ES module system (`import`/`export`).
 
 This is useful for modern bundlers that understand ES modules. Bundlers such as [webpack](https://webpack.js.org) can also tree-shake code using ES modules.
 
 The output file should be referenced in the `module` field and `exports['.'].import` (when `esm: true`) field of `package.json`.
 
-By default, the code is compiled to support the last 2 versions of modern browsers. It also strips TypeScript and Flow annotations as well as compiles JSX code. You can customize the environments to compile for by using a [browserslist config](https://github.com/browserslist/browserslist#config-file).
+By default, the code is compiled with Babel to support the last 2 versions of modern browsers. It also strips TypeScript and Flow annotations as well as compiles JSX code. You can customize the environments to compile for by using a [browserslist config](https://github.com/browserslist/browserslist#config-file).
 
 In addition, the following options are supported:
+
+##### `compiler`
+
+The compiler to use. It can be set to `babel` or `swc` and defaults to `babel`.
+
+SWC supports JavaScript, JSX and TypeScript source files. Flow source files require Babel. The `babelrc`, `configFile` and `copyFlow` options cannot be used with SWC.
+
+Example:
+
+```json
+["module", { "compiler": "swc", "esm": true }]
+```
 
 ##### `esm`
 
@@ -166,7 +178,9 @@ See the [ESM support](./esm.md) guide for more details.
 
 ##### `configFile`
 
-To customize the babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration.
+To customize the Babel config used, you can pass the [`configFile`](https://babeljs.io/docs/en/options#configfile) option as `true` if you have a `babel.config.js` or a path to a custom config file. This will override the default configuration.
+
+This option is only available with Babel.
 
 It is recommended that you extend the default configuration by using the [`react-native-builder-bob/babel-preset`](https://github.com/callstack/react-native-builder-bob/blob/main/packages/react-native-builder-bob/src/configs/babel-preset.cjs) preset in your custom config file:
 
@@ -197,7 +211,7 @@ If you're using [`@babel/preset-env`](https://babeljs.io/docs/babel-preset-env) 
 
 ##### `babelrc`
 
-You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files. Similar considerations apply as with the `configFile` option.
+You can set the [`babelrc`](https://babeljs.io/docs/en/options#babelrc) option to `true` to enable using `.babelrc` files. Similar considerations apply as with the `configFile` option. This option is only available with Babel.
 
 ##### `jsxRuntime`
 
@@ -209,7 +223,7 @@ This option has no effect when overriding the default babel configuration withou
 
 ##### `copyFlow`
 
-If your source code is written in [Flow](https://flow.org/), You can specify the `copyFlow` option to `true` to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions.
+If your source code is written in [Flow](https://flow.org/), You can specify the `copyFlow` option to `true` to copy the source files as `.js.flow` to the output folder. If the `main` entry in `package.json` points to the `index` file in the output folder, the flow type checker will pick these files up to use for type definitions. This option is only available with Babel.
 
 ##### `sourceMaps`
 
@@ -223,7 +237,7 @@ Example:
 
 #### `commonjs`
 
-Enable compiling source files with Babel and use CommonJS module system. This is essentially the same as the `module` target and accepts the same options, but transforms the `import`/`export` statements in your code to `require`/`module.exports`.
+Enable compiling source files with Babel or SWC and use CommonJS module system. This is essentially the same as the `module` target and accepts the same options, but transforms the `import`/`export` statements in your code to `require`/`module.exports`.
 
 This is useful for supporting tools that don't support ES modules yet, see [the Compatibility section in our ESM guide](./esm.md#compatibility) for more details.
 

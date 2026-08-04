@@ -1,6 +1,7 @@
 /* eslint-disable import-x/no-commonjs, no-undef */
 
 const browserslist = require('browserslist');
+const targets = require('./default-targets.cjs');
 
 /**
  * Babel preset for React Native Builder Bob
@@ -24,21 +25,7 @@ module.exports = function (api, options, cwd) {
       [
         require.resolve('@babel/preset-env'),
         {
-          targets: browserslist.findConfig(cwd) || {
-            browsers: [
-              '> 1%',
-              'chrome 109',
-              'edge 124',
-              'firefox 127',
-              'safari 17.4',
-              'not dead',
-              'not ie <= 11',
-              'not op_mini all',
-              'not android <= 4.4',
-              'not samsung <= 4',
-            ],
-            node: '18',
-          },
+          targets: browserslist.findConfig(cwd) || targets.babel,
           useBuiltIns: false,
           modules: supportsStaticESM ? false : 'commonjs',
         },

@@ -1,22 +1,33 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import * as babel from '@babel/core';
 import fs from 'fs-extra';
 import kleur from 'kleur';
-import * as babel from '@babel/core';
 import { glob } from 'glob';
 import type { Input, Variants } from '../types.ts';
+import { compileSwc } from './compileSwc.ts';
 import { isCodegenSpec } from './isCodegenSpec.ts';
 
 const require = createRequire(import.meta.url);
 
-export type CompileOptions = {
+type SharedCompileOptions = {
   esm?: boolean;
-  babelrc?: boolean | null;
-  configFile?: string | false | null;
   sourceMaps?: boolean;
-  copyFlow?: boolean;
   jsxRuntime?: 'automatic' | 'classic';
 };
+
+type BabelCompileOptions = SharedCompileOptions & {
+  compiler?: 'babel';
+  babelrc?: boolean | null;
+  configFile?: string | false | null;
+  copyFlow?: boolean;
+};
+
+type SwcCompileOptions = SharedCompileOptions & {
+  compiler: 'swc';
+};
+
+export type CompileOptions = BabelCompileOptions | SwcCompileOptions;
 
 type Options = Input &
   CompileOptions & {
@@ -27,21 +38,26 @@ type Options = Input &
 
 const sourceExt = /\.([cm])?[jt]sx?$/;
 
-export default async function compile({
-  root,
-  source,
-  output,
-  esm = false,
-  babelrc = false,
-  configFile = false,
-  exclude,
-  modules,
-  copyFlow,
-  sourceMaps = true,
-  report,
-  jsxRuntime = 'automatic',
-  variants,
-}: Options) {
+export default async function compile(options: Options) {
+  const {
+    root,
+    source,
+    output,
+    esm = false,
+    exclude,
+    modules,
+    sourceMaps = true,
+    report,
+    jsxRuntime = 'automatic',
+    variants,
+  } = options;
+  const compiler = options.compiler ?? 'babel';
+  const babelrc =
+    options.compiler === 'swc' ? false : (options.babelrc ?? false);
+  const configFile =
+    options.compiler === 'swc' ? false : (options.configFile ?? false);
+  const copyFlow =
+    options.compiler === 'swc' ? false : (options.copyFlow ?? false);
   const files = await glob('**/*', {
     cwd: source,
     absolute: true,
@@ -52,12 +68,13 @@ export default async function compile({
   report.info(
     `Compiling ${kleur.blue(String(files.length))} files in ${kleur.blue(
       path.relative(root, source)
-    )} with ${kleur.blue('babel')}`
+    )} with ${kleur.blue(compiler)}`
   );
 
   const pkg = JSON.parse(
     await fs.readFile(path.join(root, 'package.json'), 'utf-8')
   );
+  const codegenEnabled = 'codegenConfig' in pkg;
 
   if (copyFlow) {
     if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
@@ -111,8 +128,6 @@ export default async function compile({
 
       // If codegen is used in the app, then we need to preserve TypeScript source
       // So we copy the file as is instead of transforming it
-      const codegenEnabled = 'codegenConfig' in pkg;
-
       if (codegenEnabled && isCodegenSpec(filepath)) {
         await fs.copy(
           filepath,
@@ -121,31 +136,42 @@ export default async function compile({
         return;
       }
 
-      const result = await babel.transformAsync(content, {
-        caller: {
-          name: 'react-native-builder-bob',
-          supportsStaticESM:
-            /\.m[jt]s$/.test(filepath) || // If a file is explicitly marked as ESM, then preserve the syntax
-            modules === 'preserve'
-              ? true
-              : false,
-          rewriteImportExtensions: esm,
-          jsxRuntime,
-          codegenEnabled,
-        },
-        cwd: root,
-        babelrc: babelrc,
-        configFile: configFile,
-        sourceMaps,
-        sourceRoot: path.relative(path.dirname(outputFilename), source),
-        sourceFileName: path.relative(source, filepath),
-        filename: filepath,
-        ...(babelrc || configFile
-          ? null
-          : {
-              presets: [require.resolve('../configs/babel-preset.cjs')],
-            }),
-      });
+      const result =
+        compiler === 'swc'
+          ? await compileSwc({
+              code: content,
+              filepath,
+              outputFilename,
+              root,
+              source,
+              modules,
+              esm,
+              sourceMaps,
+              jsxRuntime,
+              codegenEnabled,
+            })
+          : await babel.transformAsync(content, {
+              caller: {
+                name: 'react-native-builder-bob',
+                supportsStaticESM:
+                  /\.m[jt]s$/.test(filepath) || modules === 'preserve',
+                rewriteImportExtensions: esm,
+                jsxRuntime,
+                codegenEnabled,
+              },
+              cwd: root,
+              babelrc,
+              configFile,
+              sourceMaps,
+              sourceRoot: path.relative(path.dirname(outputFilename), source),
+              sourceFileName: path.relative(source, filepath),
+              filename: filepath,
+              ...(babelrc || configFile
+                ? null
+                : {
+                    presets: [require.resolve('../configs/babel-preset.cjs')],
+                  }),
+            });
 
       if (result == null) {
         throw new Error('Output code was null');
@@ -156,12 +182,19 @@ export default async function compile({
       if (sourceMaps && result.map) {
         const mapFilename = outputFilename + '.map';
 
-        code += '\n//# sourceMappingURL=' + path.basename(mapFilename);
+        code +=
+          (code.endsWith('\n') ? '' : '\n') +
+          '//# sourceMappingURL=' +
+          path.basename(mapFilename);
 
-        // Don't inline the source code, it can be retrieved from the source file
-        result.map.sourcesContent = undefined;
+        if (typeof result.map === 'string') {
+          await fs.writeFile(mapFilename, result.map);
+        } else {
+          // Don't inline the source code, it can be retrieved from the source file
+          result.map.sourcesContent = undefined;
 
-        await fs.writeJSON(mapFilename, result.map);
+          await fs.writeJSON(mapFilename, result.map);
+        }
       }
 
       await fs.writeFile(outputFilename, code);

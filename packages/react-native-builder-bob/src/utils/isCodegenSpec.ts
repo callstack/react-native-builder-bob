@@ -1,10 +1,10 @@
 import fs from 'fs-extra';
 
 export function isCodegenSpec(filepath: string): boolean {
-  const looksLikeCodgenSpec =
+  const looksLikeCodegenSpec =
     /(?:^|[\\/])(?:(\w+)NativeComponent)\.[jt]sx?$/i.test(filepath);
 
-  if (looksLikeCodgenSpec) {
+  if (looksLikeCodegenSpec) {
     // This is used in the babel plugin so needs to be synchronous
     const content = fs.readFileSync(filepath, 'utf8');
 

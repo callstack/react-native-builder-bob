@@ -1,15 +1,10 @@
-import path from 'node:path';
 import type { ConfigAPI, NodePath, PluginObj, PluginPass } from '@babel/core';
 import type {
   ImportDeclaration,
   ExportAllDeclaration,
   ExportNamedDeclaration,
 } from '@babel/types';
-import { isCodegenSpec } from './utils/isCodegenSpec.ts';
-import {
-  resolveModuleSpecifier,
-  SOURCE_EXTENSIONS,
-} from './utils/resolveModuleSpecifier.ts';
+import { resolveOutputModuleSpecifier } from './utils/resolveOutputModuleSpecifier.ts';
 
 type Options = {
   /**
@@ -34,14 +29,6 @@ const isTypeImport = (
   ('importKind' in node && node.importKind === 'type') ||
   ('exportKind' in node && node.exportKind === 'type');
 
-const assertFilename: (
-  filename: string | null | undefined
-) => asserts filename is string = (filename) => {
-  if (filename == null) {
-    throw new Error("Couldn't find a filename for the current file.");
-  }
-};
-
 export default function (
   api: ConfigAPI,
   { extension, platforms }: Options
@@ -49,17 +36,6 @@ export default function (
   api.assertVersion(7);
 
   const codegenEnabled = api.caller((caller) => caller?.codegenEnabled);
-
-  const toExtensions = (sources: string[]) =>
-    extension == null
-      ? []
-      : sources.map((source) => ({ source, output: extension }));
-
-  const rewriteExtensions = toExtensions(
-    extension ? [...SOURCE_EXTENSIONS, extension] : SOURCE_EXTENSIONS
-  );
-
-  const explicitRewriteExtensions = toExtensions(['ts', 'tsx']);
 
   function addExtension(
     {
@@ -71,36 +47,25 @@ export default function (
   ) {
     if (
       extension == null ||
-      // Skip type imports as they'll be removed
+      node.source == null ||
       isTypeImport(node) ||
-      // Skip non-relative imports
-      !node.source?.value.startsWith('.')
+      !node.source.value.startsWith('.')
     ) {
       return;
     }
 
-    assertFilename(state.filename);
+    const filepath = state.filename;
 
-    const filename = path.resolve(
-      path.dirname(state.filename),
-      node.source.value
-    );
-
-    // Skip imports for codegen spec if codegen is enabled
-    if (
-      codegenEnabled &&
-      (isCodegenSpec(filename) ||
-        SOURCE_EXTENSIONS.some((ext) => isCodegenSpec(`${filename}.${ext}`)))
-    ) {
-      return;
+    if (filepath == null) {
+      throw new Error("Couldn't find a filename for the current file.");
     }
 
-    node.source.value = resolveModuleSpecifier({
-      filepath: state.filename,
+    node.source.value = resolveOutputModuleSpecifier({
+      filepath,
       specifier: node.source.value,
-      extensions: rewriteExtensions,
-      explicitExtensions: explicitRewriteExtensions,
+      extension,
       platforms,
+      codegenEnabled,
     });
   }
 
