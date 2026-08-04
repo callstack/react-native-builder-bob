@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import kleur from 'kleur';
 import * as babel from '@babel/core';
 import { glob } from 'glob';
+import ts from 'typescript';
 import type { Input, Variants } from '../types.ts';
 import { isCodegenSpec } from './isCodegenSpec.ts';
 
@@ -26,6 +27,29 @@ type Options = Input &
   };
 
 const sourceExt = /\.([cm])?[jt]sx?$/;
+
+const getPreserveJSXFromTsconfig = async (root: string) => {
+  const tsconfig = path.join(root, 'tsconfig.json');
+
+  if (!(await fs.pathExists(tsconfig))) {
+    return false;
+  }
+
+  const configFile = ts.readConfigFile(tsconfig, (file) =>
+    ts.sys.readFile(file)
+  );
+
+  if (configFile.error) {
+    return false;
+  }
+
+  const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, root);
+
+  return (
+    parsed.options.jsx === ts.JsxEmit.Preserve ||
+    parsed.options.jsx === ts.JsxEmit.ReactNative
+  );
+};
 
 export default async function compile({
   root,
@@ -58,6 +82,7 @@ export default async function compile({
   const pkg = JSON.parse(
     await fs.readFile(path.join(root, 'package.json'), 'utf-8')
   );
+  const preserveJSX = await getPreserveJSXFromTsconfig(root);
 
   if (copyFlow) {
     if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
@@ -131,6 +156,7 @@ export default async function compile({
               : false,
           rewriteImportExtensions: esm,
           jsxRuntime,
+          preserveJSX,
           codegenEnabled,
         },
         cwd: root,
