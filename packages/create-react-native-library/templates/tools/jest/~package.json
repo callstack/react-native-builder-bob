@@ -17,7 +17,7 @@
     ]
   },
   "devDependencies": {
-    "@react-native/jest-preset": "0.85.0",
+    "@react-native/jest-preset": "0.86.2",
     "@jest/globals": "^29.7.0",
     "jest": "^29.7.0"
   }

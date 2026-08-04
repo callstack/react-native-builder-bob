@@ -44,12 +44,12 @@ const PACKAGES_TO_REMOVE = [
 ];
 
 const PACKAGES_TO_ADD_EXPO_WEB = {
-  '@expo/metro-runtime': '~5.0.4',
-  'react-native-web': '~0.21.1',
+  '@expo/metro-runtime': '~57.0.8',
+  'react-native-web': '~0.21.0',
 };
 
 const PACKAGES_TO_ADD_DEV_EXPO_NATIVE = {
-  'expo-dev-client': '~5.0.3',
+  'expo-dev-client': '~57.0.10',
 };
 
 async function fetchReactNativeVersion(version: string) {

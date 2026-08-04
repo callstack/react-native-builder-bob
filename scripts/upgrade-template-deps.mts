@@ -21,6 +21,8 @@ const IGNORED_PACKAGES = [
   /^@react-native\//,
 ];
 
+const REACT_NATIVE_PACKAGE_REGEX = /^@react-native\//;
+
 function readDevDependencies(filePath: string) {
   const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8')) as PackageJson;
 
@@ -41,9 +43,11 @@ function getDependencyChanges(
 
   for (const [name, ncuVersion] of Object.entries(ncuDeps)) {
     if (isIgnoredPackage(name)) {
-      // Sync the CLI-generated version back to the template, not the ncu upgrade.
-      // updateDeps will skip if the template already has this version.
-      changes[name] = { from: '', to: generatedDeps[name] ?? ncuVersion };
+      const generatedVersion = REACT_NATIVE_PACKAGE_REGEX.test(name)
+        ? generatedDeps['react-native']
+        : generatedDeps[name];
+
+      changes[name] = { from: '', to: generatedVersion ?? ncuVersion };
     } else if (generatedDeps[name] !== ncuVersion) {
       changes[name] = { from: generatedDeps[name] ?? '', to: ncuVersion };
     }
@@ -133,7 +137,7 @@ function main() {
       '--type',
       'turbo-module',
       '--languages',
-      'kotlin-objc',
+      'cpp',
       '--example',
       'vanilla',
       '--yes',
@@ -144,17 +148,22 @@ function main() {
     }
   );
 
-  const pkgPath = path.join(libDir, 'package.json');
-  const generatedDeps = readDevDependencies(pkgPath);
+  const pkgPaths = [
+    path.join(libDir, 'example', 'package.json'),
+    path.join(libDir, 'package.json'),
+  ];
+  const generatedDeps = Object.assign({}, ...pkgPaths.map(readDevDependencies));
 
   console.log('\nChecking for dependency upgrades...');
 
-  execSync('npx npm-check-updates -u', {
-    cwd: libDir,
-    stdio: 'inherit',
-  });
+  for (const pkgPath of pkgPaths) {
+    execSync('npx npm-check-updates -u', {
+      cwd: path.dirname(pkgPath),
+      stdio: 'inherit',
+    });
+  }
 
-  const ncuDeps = readDevDependencies(pkgPath);
+  const ncuDeps = Object.assign({}, ...pkgPaths.map(readDevDependencies));
   const changes = getDependencyChanges(generatedDeps, ncuDeps);
 
   if (Object.keys(changes).length === 0) {
