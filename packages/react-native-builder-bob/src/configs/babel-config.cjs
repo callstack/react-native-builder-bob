@@ -34,7 +34,9 @@ const getConfig = (defaultConfig, { root }) => {
     overrides: [
       ...(defaultConfig.overrides == null ? [] : defaultConfig.overrides),
       {
-        include: path.join(root, source),
+        include: (filename) =>
+          filename != null &&
+          filename.startsWith(`${path.join(root, source)}${path.sep}`),
         presets: [
           [
             require.resolve('./babel-preset.cjs'),
