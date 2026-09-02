@@ -149,6 +149,9 @@ export async function init() {
       ? targets[0]
       : undefined;
 
+  // These end up in `main`, `module`, `types` and `exports` in package.json,
+  // which are specifiers rather than filesystem paths and always use forward
+  // slashes, so they are joined with `path.posix` regardless of platform.
   const entries: {
     [key in 'commonjs' | 'module']?: string;
   } = {};
@@ -157,11 +160,11 @@ export async function init() {
 
   if (targets.includes('module')) {
     esm = true;
-    entries.module = `./${path.join(output, 'module', 'index.js')}`;
+    entries.module = `./${path.posix.join(output, 'module', 'index.js')}`;
   }
 
   if (targets.includes('commonjs')) {
-    entries.commonjs = `./${path.join(output, 'commonjs', 'index.js')}`;
+    entries.commonjs = `./${path.posix.join(output, 'commonjs', 'index.js')}`;
   }
 
   const types: {
@@ -170,7 +173,7 @@ export async function init() {
 
   if (targets.includes('typescript')) {
     if (targets.includes('commonjs') && targets.includes('module')) {
-      types.require = `./${path.join(
+      types.require = `./${path.posix.join(
         output,
         'typescript',
         'commonjs',
@@ -178,7 +181,7 @@ export async function init() {
         'index.d.ts'
       )}`;
 
-      types.import = `./${path.join(
+      types.import = `./${path.posix.join(
         output,
         'typescript',
         'module',
@@ -186,7 +189,7 @@ export async function init() {
         'index.d.ts'
       )}`;
     } else {
-      types.require = `./${path.join(
+      types.require = `./${path.posix.join(
         output,
         'typescript',
         source,
