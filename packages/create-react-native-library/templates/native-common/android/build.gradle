@@ -48,7 +48,7 @@ android {
 <% } -%>
 
   compileSdkVersion getExtOrDefault("compileSdkVersion")
-  ndkVersion getExtOrDefault("ndkVersion")
+
   defaultConfig {
     minSdkVersion getExtOrDefault("minSdkVersion")
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
@@ -72,6 +72,10 @@ android {
 <% } -%>
   }
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
+
+  if (rootProject.ext.has("ndkVersion")) {
+    ndkVersion rootProject.ext.ndkVersion
+  }
 
   externalNativeBuild {
     cmake {
