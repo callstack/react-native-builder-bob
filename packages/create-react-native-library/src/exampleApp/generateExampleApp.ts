@@ -48,10 +48,6 @@ const PACKAGES_TO_ADD_EXPO_WEB = {
   'react-native-web': '~0.21.0',
 };
 
-const PACKAGES_TO_ADD_DEV_EXPO_NATIVE = {
-  'expo-dev-client': '~57.0.10',
-};
-
 async function fetchReactNativeVersion(version: string) {
   const matchedReactNativeVersion = /(\d+\.\d+[-.0-9a-z]*)/.test(version)
     ? version
@@ -367,12 +363,6 @@ export default async function generateExampleApp({
     }
 
     if (config.project.native) {
-      Object.entries(PACKAGES_TO_ADD_DEV_EXPO_NATIVE).forEach(
-        ([name, version]) => {
-          devDependencies[name] = bundledNativeModules[name] || version;
-        }
-      );
-
       scripts.start = 'expo start --dev-client';
       scripts.android = 'expo run:android';
       scripts.ios = 'expo run:ios';
