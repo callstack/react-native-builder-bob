@@ -28,8 +28,20 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-      - name: Test
-        run: yarn test
-
       - name: Build packages
         run: yarn lerna run prepare
+
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Test
+        run: yarn test
