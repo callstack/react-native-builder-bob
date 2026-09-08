@@ -33,7 +33,11 @@ def reactNativeArchitectures() {
 <% } -%>
 
 apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+
+if (project.extensions.findByName("kotlin") == null) {
+  apply plugin: "kotlin-android"
+}
+
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 apply from: '../nitrogen/generated/android/<%- project.package_cpp -%>+autolinking.gradle'
 <% } -%>
