@@ -77,6 +77,10 @@ android {
   }
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
 
+  if (rootProject.ext.has("ndkVersion")) {
+    ndkVersion rootProject.ext.ndkVersion
+  }
+
   externalNativeBuild {
     cmake {
       path "CMakeLists.txt"
