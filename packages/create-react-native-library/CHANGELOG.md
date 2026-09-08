@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.63.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.63.0...create-react-native-library@0.63.1) (2026-09-08)
+
+### Bug Fixes
+
+- add ndkVersion to nitro library templates ([#951](https://github.com/callstack/react-native-builder-bob/issues/951)) ([844957e](https://github.com/callstack/react-native-builder-bob/commit/844957e95b095e0d61c35e15d9f004e20955d457)) - by @riteshshukla04
+- handle AGP9's built-in kotlin support ([7919535](https://github.com/callstack/react-native-builder-bob/commit/791953506733d913e909c38f37f657355cb4d0b3)) - by @satya164
+- remove expo-dev-client from expo example ([dab4b2a](https://github.com/callstack/react-native-builder-bob/commit/dab4b2a666f8bdf684cf8390e469dd99d3c31f7a)) - by @satya164
+
 # [0.63.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.62.2...create-react-native-library@0.63.0) (2026-06-16)
 
 ### Features

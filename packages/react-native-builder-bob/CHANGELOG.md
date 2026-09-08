@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.43.0...react-native-builder-bob@0.43.1) (2026-09-08)
+
+### Bug Fixes
+
+- fix bob init producing incorrect paths on windows ([#954](https://github.com/callstack/react-native-builder-bob/issues/954)) ([e7b11ca](https://github.com/callstack/react-native-builder-bob/commit/e7b11cabb1f0cac6c05ac73b7c8e0c2698df5b3e)) - by @satya164
+- gracefully handle expo calling babel config without a filename ([ca7bdc0](https://github.com/callstack/react-native-builder-bob/commit/ca7bdc0ec324e529f2c4088d8fd32ce1307ac6e0)) - by @satya164
+
 # [0.43.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.42.1...react-native-builder-bob@0.43.0) (2026-06-16)
 
 ### Features
