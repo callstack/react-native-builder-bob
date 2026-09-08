@@ -149,9 +149,6 @@ export async function init() {
       ? targets[0]
       : undefined;
 
-  // These end up in `main`, `module`, `types` and `exports` in package.json,
-  // which are specifiers rather than filesystem paths and always use forward
-  // slashes, so they are joined with `path.posix` regardless of platform.
   const entries: {
     [key in 'commonjs' | 'module']?: string;
   } = {};
