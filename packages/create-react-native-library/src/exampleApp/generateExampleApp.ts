@@ -232,8 +232,14 @@ export default async function generateExampleApp({
     env: { ...process.env, npm_config_yes: 'true' },
   });
 
+  // Keep react-native-test-app's generated .gitignore for its app-specific rules.
+  const filesToDelete =
+    config.example === 'test-app'
+      ? FILES_TO_DELETE.filter((file) => file !== '.gitignore')
+      : FILES_TO_DELETE;
+
   // Remove unnecessary files and folders
-  for (const file of FILES_TO_DELETE) {
+  for (const file of filesToDelete) {
     await fs.remove(path.join(directory, file));
   }
 
