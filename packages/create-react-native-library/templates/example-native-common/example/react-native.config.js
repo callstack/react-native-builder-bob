@@ -12,13 +12,13 @@ module.exports = {
     },
     ios: {
       sourceDir: 'ios',
-      automaticPodsInstallation: true,
+      automaticPodsInstallation: <%- experimentalSpm ? 'false' : 'true' %>,
     },
   }),
 <% } else if (example === 'vanilla') { -%>
   project: {
     ios: {
-      automaticPodsInstallation: true,
+      automaticPodsInstallation: <%- experimentalSpm ? 'false' : 'true' %>,
     },
   },
 <% } -%>

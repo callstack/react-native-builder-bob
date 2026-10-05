@@ -19,6 +19,7 @@ export type ViewConfig = 'paper-view' | 'fabric-view' | 'nitro-view' | null;
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
 export type TemplateConfiguration = {
+  experimentalSpm: boolean;
   versions: TemplateVersions;
   project: {
     slug: string;
@@ -105,6 +106,7 @@ const CPP_FILES = path.resolve(
   import.meta.dirname,
   '../../templates/cpp-library'
 );
+const SPM_FILES = path.resolve(import.meta.dirname, '../../templates/spm');
 
 const NATIVE_FILES = {
   module_new: path.resolve(
@@ -195,6 +197,12 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
+    // Nitro requires Swift/C++ interoperability that's not supported by SPM
+    experimentalSpm:
+      answers.experimentalSpm === true &&
+      languages !== 'js' &&
+      getModuleConfig(type) !== 'nitro-modules' &&
+      getViewConfig(type) !== 'nitro-view',
     versions,
     project: {
       slug,
@@ -263,6 +271,14 @@ export async function applyTemplates(
   folder: string
 ) {
   const { local } = answers;
+
+  if (config.experimentalSpm) {
+    await applyTemplate(config, SPM_FILES, folder);
+  } else if (answers.experimentalSpm === true && config.project.native) {
+    console.warn(
+      "Swift Package Manager manifest was not generated: Nitro libraries mix Swift and C++ sources, which Swift Package Manager can't compile in a single target."
+    );
+  }
 
   if (local) {
     await applyTemplate(config, COMMON_LOCAL_FILES, folder);

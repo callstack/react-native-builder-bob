@@ -18,7 +18,18 @@ export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}
 
-        ${kleur.gray('$')} yarn
+        ${kleur.gray('$')} yarn${
+          config.experimentalSpm &&
+          (config.example === 'vanilla' || config.example === 'test-app')
+            ? `
+
+      ${kleur.magenta(
+        `Set up ${kleur.bold('Swift Package Manager')} for the example app (React Native 0.87+)`
+      )}${kleur.gray(':')}
+
+        ${kleur.gray('$')} cd example && npx react-native spm`
+            : ''
+        }
       ${Object.entries(platforms)
         .map(
           ([script, { name, color }]) => `

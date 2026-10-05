@@ -29,6 +29,13 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 **/.xcode.env.local
+<% if (experimentalSpm) { -%>
+
+# Swift Package Manager
+#
+.build/
+.swiftpm/
+<% } -%>
 
 # Android/IJ
 #
