@@ -19,15 +19,14 @@ export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
       )}${kleur.gray(':')}
 
         ${kleur.gray('$')} yarn${
-          config.experimentalSpm &&
-          (config.example === 'vanilla' || config.example === 'test-app')
+          config.experimentalSpm && config.example === 'vanilla'
             ? `
 
       ${kleur.magenta(
         `Set up ${kleur.bold('Swift Package Manager')} for the example app (React Native 0.87+)`
       )}${kleur.gray(':')}
 
-        ${kleur.gray('$')} cd example && npx react-native spm`
+        ${kleur.gray('$')} cd example && npx react-native spm --deintegrate`
             : ''
         }
       ${Object.entries(platforms)
