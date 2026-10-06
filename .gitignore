@@ -90,3 +90,6 @@ lib/
 typescript/
 doc_build/
 *.tsbuildinfo
+
+# Swift Package Manager
+.build/

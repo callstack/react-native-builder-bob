@@ -6,7 +6,7 @@
 #import <react/renderer/components/<%- project.name -%>ViewSpec/Props.h>
 #import <react/renderer/components/<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 
 using namespace facebook::react;
 

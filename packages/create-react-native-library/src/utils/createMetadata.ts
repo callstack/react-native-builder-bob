@@ -15,6 +15,7 @@ export function createMetadata(answers: Partial<Answers>) {
     'example',
     'reactNativeVersion',
     'local',
+    'experimentalSpm',
   ];
 
   const libraryMetadata = Object.fromEntries(
