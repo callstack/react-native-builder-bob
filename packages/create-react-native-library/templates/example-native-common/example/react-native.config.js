@@ -18,7 +18,7 @@ module.exports = {
 <% } else if (example === 'vanilla') { -%>
   project: {
     ios: {
-      automaticPodsInstallation: true,
+      automaticPodsInstallation: <%- experimentalSpm ? 'false' : 'true' %>,
     },
   },
 <% } -%>

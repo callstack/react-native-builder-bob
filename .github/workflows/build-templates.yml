@@ -285,3 +285,109 @@ jobs:
           rm -rf lib/*
 
           yarn example build:web
+
+  build-spm:
+    env:
+      XCODE_VERSION: 26
+      # Swift Package Manager support was introduced in React Native 0.87
+      REACT_NATIVE_VERSION: 0.87.1
+
+    strategy:
+      fail-fast: false
+      matrix:
+        type:
+          - name: turbo-module
+            language: kotlin-objc
+          - name: turbo-module
+            language: cpp
+          - name: fabric-view
+            language: kotlin-objc
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-spm-${{ matrix.type.name }}-${{ matrix.type.language }}
+      cancel-in-progress: true
+
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build package
+        run: |
+          yarn workspace create-react-native-library prepare
+
+      - name: Get working directory
+        shell: bash
+        run: |
+          echo "work_dir=spm-${{ matrix.type.name }}-${{ matrix.type.language }}" >> $GITHUB_ENV
+
+      - name: Create library
+        shell: bash
+        run: |
+          rm -rf ${{ env.work_dir }}
+
+          ./packages/create-react-native-library/bin/create-react-native-library ${{ env.work_dir }} \
+            --slug @bob/react-native-test \
+            --description test \
+            --author-name test \
+            --author-email test@test \
+            --author-url https://test.test \
+            --repo-url https://test.test \
+            --type ${{ matrix.type.name }} \
+            --languages ${{ matrix.type.language }} \
+            --example vanilla \
+            --tools eslint \
+            --react-native-version ${{ env.REACT_NATIVE_VERSION }} \
+            --experimental-spm
+
+      - name: Install dependencies of library
+        working-directory: ${{ env.work_dir }}
+        shell: bash
+        run: |
+          touch yarn.lock # Without this Yarn will fail due to the parent directory being a Yarn workspace
+          yarn install --no-immutable
+
+      - name: Use local version of react-native-builder-bob
+        shell: bash
+        run: |
+          cd packages/react-native-builder-bob
+          npm pack
+          tgz=$(ls react-native-builder-bob-*.tgz)
+          cd -
+          cd ${{ env.work_dir }}
+
+          export YARN_CHECKSUM_BEHAVIOR=ignore
+
+          yarn add --dev ../packages/react-native-builder-bob/$tgz
+          yarn --cwd example add --dev ../../packages/react-native-builder-bob/$tgz
+
+      - name: Generate codegen native code
+        if: matrix.type.language == 'cpp'
+        working-directory: ${{ env.work_dir }}
+        run: yarn bob build --target codegen
+
+      - name: Use appropriate Xcode version
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Set up SPM
+        working-directory: ${{ env.work_dir }}/example
+        run: |
+          npx react-native spm --deintegrate --yes
+
+      - name: Build example (iOS, Debug)
+        working-directory: ${{ env.work_dir }}
+        run: |
+          yarn example build:ios
+
+      - name: Build example (iOS, Release)
+        working-directory: ${{ env.work_dir }}/example/ios
+        run: |
+          # The CLI builds Release for a device, which requires code signing
+          project=$(ls -d *.xcodeproj)
+          xcodebuild -project "$project" -scheme "${project%.xcodeproj}" -configuration Release -sdk iphonesimulator -destination "generic/platform=iOS Simulator" build

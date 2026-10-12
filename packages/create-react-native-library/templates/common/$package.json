@@ -23,6 +23,9 @@
     "nitro.json",
 <% } -%>
     "*.podspec",
+<% if (experimentalSpm) { -%>
+    "Package.swift",
+<% } -%>
     "react-native.config.js",
     "!ios/build",
     "!android/build",
