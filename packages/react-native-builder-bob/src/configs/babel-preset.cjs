@@ -2,12 +2,21 @@
 
 const browserslist = require('browserslist');
 
+const bobPlugin = (() => {
+  try {
+    return require.resolve('../babel');
+  } catch {
+    return require.resolve('../babel.ts');
+  }
+})();
+
 /**
  * Babel preset for React Native Builder Bob
  *
  * @param {Boolean} options.supportsStaticESM - Whether to preserve ESM imports/exports, defaults to `false`
  * @param {Boolean} options.rewriteImportExtensions - Whether to rewrite import extensions to '.js', defaults to `false`
  * @param {'automatic' | 'classic'} options.jsxRuntime - Which JSX runtime to use, defaults to 'automatic'
+ * @param {Boolean} options.preserveJSX - Whether to preserve JSX syntax, defaults to `false`
  */
 module.exports = function (api, options, cwd) {
   const opt = (name) =>
@@ -18,6 +27,7 @@ module.exports = function (api, options, cwd) {
   const supportsStaticESM = opt('supportsStaticESM');
   const rewriteImportExtensions = opt('rewriteImportExtensions');
   const jsxRuntime = opt('jsxRuntime');
+  const preserveJSX = opt('preserveJSX');
 
   return {
     presets: [
@@ -43,12 +53,16 @@ module.exports = function (api, options, cwd) {
           modules: supportsStaticESM ? false : 'commonjs',
         },
       ],
-      [
-        require.resolve('@babel/preset-react'),
-        {
-          runtime: jsxRuntime !== undefined ? jsxRuntime : 'automatic',
-        },
-      ],
+      ...(preserveJSX
+        ? []
+        : [
+            [
+              require.resolve('@babel/preset-react'),
+              {
+                runtime: jsxRuntime !== undefined ? jsxRuntime : 'automatic',
+              },
+            ],
+          ]),
       require.resolve('@babel/preset-typescript'),
     ],
     plugins: [
@@ -59,7 +73,7 @@ module.exports = function (api, options, cwd) {
       ],
       require.resolve('@babel/plugin-transform-flow-strip-types'),
       [
-        require.resolve('../babel'),
+        bobPlugin,
         {
           extension: rewriteImportExtensions ? 'js' : undefined,
         },
