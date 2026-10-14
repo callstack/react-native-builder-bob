@@ -140,6 +140,27 @@ Additionally, the `import.meta` syntax is currently not supported in [Metro](htt
 
 So be careful when using properties from `import.meta`, as relying on properties only available in specific tools may lock your library into supporting only those specific tools. Also, since this is an ESM-only feature, you should avoid using it if you compile your library to CommonJS as well.
 
+### Subpath imports
+
+When `esm` is enabled, Bob adds a `package.json` file with the `type` field to the output folders (e.g. `lib/module/package.json`) so that tools know which module system the files use. Node.js, TypeScript and Metro read [subpath imports](https://nodejs.org/api/packages.html#subpath-imports) from the closest `package.json` file, so the `imports` field in your `package.json` won't apply to the files in these folders.
+
+Bob skips this file when the `type` field in your `package.json` has the same value. So to use the `imports` field, set `type` to `module` in your `package.json`:
+
+```json
+"type": "module",
+"imports": {
+  "#internal/*": {
+    "my-library-source": "./src/internal/*.ts",
+    "types": "./lib/typescript/src/internal/*.d.ts",
+    "default": "./lib/module/internal/*.js"
+  }
+}
+```
+
+Node.js will then treat the `.js` files in your project as ES modules, so CommonJS config files in the project root (e.g. `babel.config.js`) need to use the `.cjs` extension or ESM syntax.
+
+In a [dual package setup](#dual-package-setup), the CommonJS build still gets a `package.json` with `"type": "commonjs"`, so subpath imports won't work in the CommonJS build.
+
 ## Dual package setup
 
 The previously mentioned setup only works with tools that support ES modules. If you want to support tools that don't support ESM and use the CommonJS module system, you can configure a dual package setup.

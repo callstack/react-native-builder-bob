@@ -267,3 +267,77 @@ test('keeps platform-specific declaration imports extensionless', async () => {
     await fs.remove(root);
   }
 });
+
+test('resolves package imports when package.json has the same type', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'bob-typescript-'));
+
+  try {
+    vi.mocked(report.warn).mockClear();
+
+    await buildLibrary(root, {
+      compilerOptions: { customConditions: ['library-source'] },
+      packageJson: {
+        imports: {
+          '#internal/*': {
+            'library-source': './src/internal/*.ts',
+            types: './lib/typescript/src/internal/*.d.ts',
+          },
+        },
+      },
+      files: {
+        'src/index.ts': "export { type Foo } from '#internal/foo';\n",
+        'src/internal/foo.ts': 'export type Foo = { value: string };\n',
+      },
+    });
+
+    expect(
+      await fs.pathExists(path.join(root, 'lib/typescript/package.json'))
+    ).toBe(false);
+
+    expect(report.warn).not.toHaveBeenCalled();
+
+    const stdout = await typeCheckConsumer(
+      root,
+      ["import type { Foo } from 'library';", '', 'type Test = Foo;'].join('\n')
+    );
+
+    expect(stdout).toBeUndefined();
+  } finally {
+    await fs.remove(root);
+  }
+});
+
+test('warns about package imports when package.json has a different type', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'bob-typescript-'));
+
+  try {
+    vi.mocked(report.warn).mockClear();
+
+    await buildLibrary(root, {
+      compilerOptions: { customConditions: ['library-source'] },
+      packageJson: {
+        type: undefined,
+        imports: {
+          '#internal/*': {
+            'library-source': './src/internal/*.ts',
+            types: './lib/typescript/src/internal/*.d.ts',
+          },
+        },
+      },
+      files: {
+        'src/index.ts': "export { type Foo } from '#internal/foo';\n",
+        'src/internal/foo.ts': 'export type Foo = { value: string };\n',
+      },
+    });
+
+    expect(
+      await fs.readJSON(path.join(root, 'lib/typescript/package.json'))
+    ).toEqual({ type: 'module' });
+
+    expect(report.warn).toHaveBeenCalledWith(
+      expect.stringContaining("won't apply to the files in")
+    );
+  } finally {
+    await fs.remove(root);
+  }
+});
