@@ -16,6 +16,7 @@ import {
 } from '../utils/resolveModuleSpecifier.ts';
 import { spawn } from '../utils/spawn.ts';
 import { type Replacement, updateSourceMap } from '../utils/updateSourceMap.ts';
+import { writePackageType } from '../utils/writePackageType.ts';
 
 type Options = Input & {
   options?: {
@@ -359,19 +360,35 @@ export default async function build({
         // When ESM compatible output is enabled and commonjs build is present, we need to generate 2 builds for commonjs and esm
         // In this case we copy the already generated types, and add `package.json` with `type` field
         await fs.copy(outputs.commonjs, outputs.module);
-        await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
+        await writePackageType({
+          root,
+          output: outputs.commonjs,
           type: 'commonjs',
+          pkg,
+          report,
         });
-        await fs.writeJSON(path.join(outputs.module, 'package.json'), {
+        await writePackageType({
+          root,
+          output: outputs.module,
           type: 'module',
+          pkg,
+          report,
         });
       } else if (outputs?.commonjs) {
-        await fs.writeJSON(path.join(outputs.commonjs, 'package.json'), {
+        await writePackageType({
+          root,
+          output: outputs.commonjs,
           type: 'commonjs',
+          pkg,
+          report,
         });
       } else if (outputs?.module) {
-        await fs.writeJSON(path.join(outputs.module, 'package.json'), {
+        await writePackageType({
+          root,
+          output: outputs.module,
           type: 'module',
+          pkg,
+          report,
         });
       }
 
