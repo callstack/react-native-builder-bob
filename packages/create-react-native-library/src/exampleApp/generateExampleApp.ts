@@ -139,9 +139,9 @@ export default async function generateExampleApp({
         );
       }
 
-      // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
+      // `npx @react-native-community/cli@latest init <projectName> --directory example --skip-install`
       args = [
-        `@react-native-community/cli`,
+        `@react-native-community/cli@latest`,
         'init',
         `${config.project.name}Example`,
         '--package-name',
