@@ -6,6 +6,7 @@ import * as babel from '@babel/core';
 import { glob } from 'glob';
 import type { Input, Variants } from '../types.ts';
 import { isCodegenSpec } from './isCodegenSpec.ts';
+import { writePackageType } from './writePackageType.ts';
 
 const require = createRequire(import.meta.url);
 
@@ -89,8 +90,13 @@ export default async function compile({
   // So we skip generating `package.json` if `esm` is not enabled and `modules` is not `commonjs`
   // This means that user can't use `type: 'module'` in root `package.json` without enabling `esm` for `module` target
   if (esm || modules === 'commonjs') {
-    await fs.writeJSON(path.join(output, 'package.json'), {
+    await writePackageType({
+      root,
+      output,
       type: modules === 'commonjs' ? 'commonjs' : 'module',
+      pkg,
+      variants,
+      report,
     });
   }
 
