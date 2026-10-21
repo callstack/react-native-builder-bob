@@ -4,6 +4,7 @@ import type { TemplateConfiguration } from '../template.ts';
 
 type PackageJson = {
   dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 };
 
 /** @returns `true` if successfull */
@@ -21,10 +22,13 @@ export async function addNitroDependencyToLocalLibrary(
 
   const appPackageJson: PackageJson = await fs.readJson(appPackageJsonPath);
   const dependencies = appPackageJson['dependencies'] ?? {};
+  const devDependencies = appPackageJson['devDependencies'] ?? {};
 
   dependencies['react-native-nitro-modules'] = config.versions.nitro;
+  devDependencies['nitrogen'] = config.versions.nitro;
 
   appPackageJson['dependencies'] = dependencies;
+  appPackageJson['devDependencies'] = devDependencies;
   await fs.writeJson(appPackageJsonPath, appPackageJson, {
     spaces: 2,
   });

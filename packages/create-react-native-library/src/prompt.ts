@@ -240,9 +240,17 @@ export const prompt = create(['[name]'], {
 
       return undefined;
     },
-    validate: (input) =>
-      validateNpmPackage(input).validForNewPackages ||
-      'Must be a valid npm package name',
+    validate: (input) => {
+      if (!validateNpmPackage(input).validForNewPackages) {
+        return 'Must be a valid npm package name';
+      }
+
+      if (!/^[a-z]/.test(input.replace(/^(react-native-|@[^/]+\/)/, ''))) {
+        return 'Must start with a letter after the scope or the react-native- prefix';
+      }
+
+      return true;
+    },
     required: true,
   },
   description: {

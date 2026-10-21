@@ -12,6 +12,12 @@ const ROOT_DIR = path.resolve(import.meta.dirname, '..');
 const CRNL_DIR = path.join(ROOT_DIR, 'packages/create-react-native-library');
 const TEMPLATES_DIR = path.join(CRNL_DIR, 'templates');
 const BIN_PATH = path.join(CRNL_DIR, 'bin/create-react-native-library');
+const CONSTANTS_PATH = path.join(CRNL_DIR, 'src/constants.ts');
+
+const FALLBACK_VERSIONS = {
+  FALLBACK_BOB_VERSION: 'react-native-builder-bob',
+  FALLBACK_NITRO_MODULES_VERSION: 'react-native-nitro-modules',
+};
 
 // These are tied to the React Native release and can't be upgraded independently
 const IGNORED_PACKAGES = [
@@ -112,7 +118,31 @@ function updateDeps(filePath: string, changes: Record<string, Change>) {
   }
 }
 
+function updateFallbackVersions() {
+  const content = fs.readFileSync(CONSTANTS_PATH, 'utf8');
+
+  let updated = content;
+
+  for (const [constant, name] of Object.entries(FALLBACK_VERSIONS)) {
+    const version = execFileSync('npm', ['view', name, 'dist-tags.latest'], {
+      encoding: 'utf8',
+    }).trim();
+
+    updated = updated.replace(
+      new RegExp(`(${constant} = ')[^']*'`),
+      `$1${version}'`
+    );
+  }
+
+  if (updated !== content) {
+    fs.writeFileSync(CONSTANTS_PATH, updated);
+    console.log(`Updated: ${path.relative(CRNL_DIR, CONSTANTS_PATH)}`);
+  }
+}
+
 function main() {
+  updateFallbackVersions();
+
   console.log('Building create-react-native-library...');
 
   execSync('yarn workspace create-react-native-library prepare', {

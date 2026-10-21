@@ -11,13 +11,11 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "<%- repo -%>.git", :tag => "#{s.version}" }
+  s.source       = { :git => "<%- repo -%>.git", :tag => "v#{s.version}" }
 
 <% if (project.moduleConfig !== "nitro-modules" && project.viewConfig !== "nitro-view") { -%>
   s.source_files = "ios/**/*.{h,m,mm,swift,cpp}"
-<% if (!project.swift) { -%>
   s.private_header_files = "ios/**/*.h"
-<% } -%>
 <% } else { -%>
   s.source_files = [
     "ios/**/*.{swift}",

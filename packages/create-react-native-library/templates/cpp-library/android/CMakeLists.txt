@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.13)
 project(<%- project.name -%>)
-
-set (CMAKE_VERBOSE_MAKEFILE ON)
 
 add_library(
     <%- project.identifier -%>

@@ -1,8 +1,7 @@
+cmake_minimum_required(VERSION 3.13)
 project(<%- project.package_cpp -%>)
-cmake_minimum_required(VERSION 3.9.0)
 
 set(PACKAGE_NAME <%- project.package_cpp -%>)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 20)
 
 # Define C++ library and add all sources

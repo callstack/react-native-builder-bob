@@ -1,7 +1,7 @@
 {
   "name": "<%- project.slug -%>",
   "version": "0.1.0",
-  "description": "<%- project.description %>",
+  "description": <%- JSON.stringify(project.description) %>,
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -10,6 +10,9 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+<% if (project.viewConfig === 'nitro-view') { -%>
+    "./nitrogen/generated/shared/json/*": "./nitrogen/generated/shared/json/*",
+<% } -%>
     "./package.json": "./package.json"
   },
   "files": [
@@ -36,9 +39,7 @@
     "!**/.*"
   ],
   "scripts": {
-<% if (example !== 'none') { -%>
     "example": "yarn workspace <%- project.slug -%>-example",
-<% } -%>
 <% if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
 <% } else { -%>
@@ -57,14 +58,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+<%- repo -%>.git"
+    "url": <%- JSON.stringify(`git+${repo}.git`) %>
   },
-  "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
+  "author": <%- JSON.stringify(`${author.name} <${author.email}> (${author.url})`) %>,
   "license": "MIT",
   "bugs": {
-    "url": "<%- repo -%>/issues"
+    "url": <%- JSON.stringify(`${repo}/issues`) %>
   },
-  "homepage": "<%- repo -%>#readme",
+  "homepage": <%- JSON.stringify(`${repo}#readme`) %>,
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -92,11 +93,9 @@
     "react-native": "*"
 <% } -%>
   },
-<% if (example !== 'none') { -%>
   "workspaces": [
     "example"
   ],
-<% } -%>
   "packageManager": "yarn@4.18.1",
   "react-native-builder-bob": {
     "source": "src",

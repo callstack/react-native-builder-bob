@@ -7,7 +7,6 @@
 
 # VSCode
 .vscode/
-jsconfig.json
 
 # Xcode
 #
@@ -55,12 +54,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# BUCK
-buck-out/
-\.buckd/
-android/app/libs
-android/keystores/debug.keystore
-
 # Yarn
 .yarn/*
 !.yarn/patches
@@ -68,9 +61,6 @@ android/keystores/debug.keystore
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-
-# Expo
-.expo/
 
 # Turborepo
 .turbo/

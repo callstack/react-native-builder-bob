@@ -11,13 +11,8 @@ class Hybrid<%- project.name -%> : Hybrid<%- project.name -%>Spec {
   }
   
   func hexStringToUIColor(hexColor: String) -> UIColor {
-    let stringScanner = Scanner(string: hexColor)
-
-    if(hexColor.hasPrefix("#")) {
-      stringScanner.scanLocation = 1
-    }
-    var color: UInt32 = 0
-    stringScanner.scanHexInt32(&color)
+    let hex = hexColor.hasPrefix("#") ? String(hexColor.dropFirst()) : hexColor
+    let color = UInt32(hex, radix: 16) ?? 0
 
     let r = CGFloat(Int(color >> 16) & 0x000000FF)
     let g = CGFloat(Int(color >> 8) & 0x000000FF)

@@ -133,7 +133,10 @@ async function create() {
 
     let addedNitro = false;
 
-    if (config.project.moduleConfig === 'nitro-modules') {
+    if (
+      config.project.moduleConfig === 'nitro-modules' ||
+      config.project.viewConfig === 'nitro-view'
+    ) {
       addedNitro = await addNitroDependencyToLocalLibrary(config);
     }
 
