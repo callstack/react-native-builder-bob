@@ -64,7 +64,7 @@ const LANGUAGE_CHOICES: {
     types: ['turbo-module', 'fabric-view'],
   },
   {
-    title: 'C++ (Experimental)',
+    title: 'C++',
     value: 'cpp',
     types: ['turbo-module'],
   },
@@ -364,7 +364,7 @@ export const prompt = create(['[name]'], {
         const answers = prompt.read();
 
         if (answers.languages === 'cpp') {
-          return choice.value !== 'vanilla';
+          return choice.value === 'test-app';
         }
 
         return false;
