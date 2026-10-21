@@ -33,7 +33,7 @@
     "lib"
   ],
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >= 23.4.0"
+    "node": "^22.22.2 || ^24.15.0 || >= 26.0.0"
   },
   "publishConfig": {
     "access": "public",
@@ -56,7 +56,7 @@
     "browserslist": "^4.29.4",
     "cross-spawn": "^7.0.6",
     "dedent": "^1.7.2",
-    "del": "^8.0.1",
+    "del": "^9.0.1",
     "escape-string-regexp": "^5.0.0",
     "fs-extra": "^11.4.1",
     "glob": "^13.0.6",
@@ -64,7 +64,7 @@
     "kleur": "^4.1.5",
     "prompts": "^2.4.2",
     "typescript": "^6.0.3",
-    "which": "^6.0.1",
+    "which": "^7.0.0",
     "yargs": "^18.2.0"
   },
   "devDependencies": {
@@ -75,7 +75,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/json5": "^2.2.0",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^20.19.43",
+    "@types/node": "^22.20.5",
     "@types/prompts": "^2.4.9",
     "@types/which": "^3.0.4",
     "@types/yargs": "^17.0.35",
