@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -109,7 +109,7 @@ jobs:
 
       - name: Restore dependencies of library
         id: library-yarn-cache
-        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
@@ -129,7 +129,7 @@ jobs:
 
       - name: Cache dependencies of library
         if: steps.library-yarn-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ${{ env.work_dir }}/**/node_modules
@@ -180,7 +180,7 @@ jobs:
 
       - name: Cache turborepo
         if: env.android_build == 1 || env.ios_build == 1
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ${{ env.work_dir }}/.turbo
@@ -226,7 +226,7 @@ jobs:
 
       - name: Install JDK
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -238,7 +238,7 @@ jobs:
 
       - name: Cache Gradle
         if: env.android_build == 1 && env.turbo_cache_hit_android != 1
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~/.gradle/wrapper
@@ -257,7 +257,7 @@ jobs:
 
       - name: Use appropriate Xcode version
         if: env.ios_build == 1 && env.turbo_cache_hit_ios != 1
-        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 

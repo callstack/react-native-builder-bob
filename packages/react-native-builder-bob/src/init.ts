@@ -85,7 +85,7 @@ export async function init() {
 
   pkg.devDependencies = Object.fromEntries(
     [
-      ...Object.entries(pkg.devDependencies || {}),
+      ...Object.entries(pkg.devDependencies ?? {}),
       [pack.name, `^${pack.version}`],
     ].sort(([a], [b]) => a.localeCompare(b))
   );
@@ -133,7 +133,7 @@ export async function init() {
       type: 'confirm',
       name: 'flow',
       message: 'Do you want to publish definitions for flow?',
-      initial: Object.keys(pkg.devDependencies || {}).includes('flow-bin'),
+      initial: Object.keys(pkg.devDependencies ?? {}).includes('flow-bin'),
     });
   }
 
@@ -248,7 +248,7 @@ export async function init() {
   ];
 
   if (esm) {
-    let replace = false;
+    let replace: boolean;
 
     const exportsField = {
       '.': {},
@@ -375,7 +375,7 @@ export async function init() {
       pkg.scripts.prepare = prepare;
     }
   } else {
-    pkg.scripts = pkg.scripts || {};
+    pkg.scripts = pkg.scripts ?? {};
     pkg.scripts.prepare = prepare;
   }
 
@@ -431,7 +431,7 @@ export async function init() {
     }
   }
 
-  pkg.eslintIgnore = pkg.eslintIgnore || ['node_modules/'];
+  pkg.eslintIgnore = pkg.eslintIgnore ?? ['node_modules/'];
 
   if (!pkg.eslintIgnore.includes(`${output}/`)) {
     pkg.eslintIgnore.push(`${output}/`);

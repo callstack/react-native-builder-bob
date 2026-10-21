@@ -7,6 +7,7 @@ import {
   SUPPORTED_EXPO_SDK_VERSION,
   SUPPORTED_MONOREPO_CONFIG_VERSION,
   SUPPORTED_REACT_NATIVE_VERSION,
+  SUPPORTED_TEST_APP_REACT_NATIVE_VERSION,
 } from '../constants.ts';
 import type { TemplateConfiguration } from '../template.ts';
 import sortObjectKeys from '../utils/sortObjectKeys.ts';
@@ -43,7 +44,7 @@ const PACKAGES_TO_REMOVE = [
 ];
 
 const PACKAGES_TO_ADD_EXPO_WEB = {
-  '@expo/metro-runtime': '~57.0.8',
+  '@expo/metro-runtime': '~58.0.14',
   'react-native-web': '~0.21.0',
 };
 
@@ -148,7 +149,7 @@ export default async function generateExampleApp({
         '--directory',
         directory,
         '--version',
-        reactNativeVersion || SUPPORTED_REACT_NATIVE_VERSION,
+        reactNativeVersion ?? SUPPORTED_REACT_NATIVE_VERSION,
         '--skip-install',
         '--skip-git-init',
         '--pm',
@@ -160,11 +161,11 @@ export default async function generateExampleApp({
         // Test App doesn't support a semver range for the version
         const matchedReactNativeVersion = reactNativeVersion
           ? await fetchReactNativeVersion(reactNativeVersion)
-          : SUPPORTED_REACT_NATIVE_VERSION;
+          : SUPPORTED_TEST_APP_REACT_NATIVE_VERSION;
 
         if (
           reactNativeVersion != null &&
-          reactNativeVersion !== SUPPORTED_REACT_NATIVE_VERSION
+          reactNativeVersion !== SUPPORTED_TEST_APP_REACT_NATIVE_VERSION
         ) {
           console.log(
             `${kleur.blue('ℹ')} Using untested ${kleur.cyan(
@@ -228,7 +229,17 @@ export default async function generateExampleApp({
   }
 
   await spawn('npx', args, {
-    env: { ...process.env, npm_config_yes: 'true' },
+    env: {
+      ...process.env,
+      npm_config_yes: 'true',
+      // `npx` also installs the peer dependencies of `react-native-test-app`.
+      // It picks the latest `react-native`, which can need a newer `react`
+      // than `react-native-test-app` accepts, and then the install fails.
+      // We only need its `init` command, so skip installing peer dependencies.
+      ...(config.example === 'test-app'
+        ? { npm_config_legacy_peer_deps: 'true' }
+        : null),
+    },
   });
 
   // Remove unnecessary files and folders
@@ -246,9 +257,9 @@ export default async function generateExampleApp({
 
   // Make sure we have at least empty objects
   // Otherwise generation will fails if package doesn't contain these fields
-  pkg.scripts = pkg.scripts || {};
-  pkg.dependencies = pkg.dependencies || {};
-  pkg.devDependencies = pkg.devDependencies || {};
+  pkg.scripts = pkg.scripts ?? {};
+  pkg.dependencies = pkg.dependencies ?? {};
+  pkg.devDependencies = pkg.devDependencies ?? {};
 
   const { scripts, dependencies, devDependencies } = pkg;
 
@@ -295,9 +306,9 @@ export default async function generateExampleApp({
 
     const app = await fs.readJSON(path.join(directory, 'app.json'));
 
-    app.android = app.android || {};
+    app.android = app.android ?? {};
     app.android.package = `${config.project.package}.example`;
-    app.ios = app.ios || {};
+    app.ios = app.ios ?? {};
     app.ios.bundleIdentifier = `${config.project.package}.example`;
 
     await fs.writeJSON(path.join(directory, 'app.json'), app, {
@@ -322,7 +333,7 @@ export default async function generateExampleApp({
     config.project.viewConfig === 'nitro-view'
   ) {
     const packagesToAddNitro = {
-      'react-native-nitro-modules': `^${config.versions.nitro || 'latest'}`,
+      'react-native-nitro-modules': `^${config.versions.nitro ?? 'latest'}`,
     };
 
     Object.assign(dependencies, packagesToAddNitro);
@@ -385,7 +396,7 @@ export default async function generateExampleApp({
     }
 
     Object.entries(PACKAGES_TO_ADD_EXPO_WEB).forEach(([name, version]) => {
-      dependencies[name] = bundledNativeModules[name] || version;
+      dependencies[name] = bundledNativeModules[name] ?? version;
     });
 
     dependencies['react-dom'] = reactVersion;
@@ -396,9 +407,9 @@ export default async function generateExampleApp({
 
     app.expo.name = `${config.project.name} Example`;
     app.expo.slug = `${config.project.slug}-example`;
-    app.expo.android = app.expo.android || {};
+    app.expo.android = app.expo.android ?? {};
     app.expo.android.package = `${config.project.package}.example`;
-    app.expo.ios = app.expo.ios || {};
+    app.expo.ios = app.expo.ios ?? {};
     app.expo.ios.bundleIdentifier = `${config.project.package}.example`;
 
     await fs.writeJSON(path.join(directory, 'app.json'), app, {

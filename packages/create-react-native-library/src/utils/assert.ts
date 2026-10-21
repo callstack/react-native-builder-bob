@@ -10,7 +10,8 @@ export async function assertNpxExists() {
       throw new Error(
         `Couldn't find ${kleur.blue(
           'npx'
-        )}! Please install it by running ${kleur.blue('npm install -g npx')}`
+        )}! Please install it by running ${kleur.blue('npm install -g npx')}`,
+        { cause: error }
       );
     } else {
       throw error;
