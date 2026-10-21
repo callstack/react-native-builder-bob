@@ -18,7 +18,6 @@ const FILES_TO_DELETE = [
   '.eslintrc.js',
   '.flowconfig',
   '.git',
-  '.gitignore',
   '.prettierrc.js',
   'App.js',
   'App.tsx',
@@ -139,9 +138,9 @@ export default async function generateExampleApp({
         );
       }
 
-      // `npx @react-native-community/cli init <projectName> --directory example --skip-install`
+      // `npx @react-native-community/cli@latest init <projectName> --directory example --skip-install`
       args = [
-        `@react-native-community/cli`,
+        `@react-native-community/cli@latest`,
         'init',
         `${config.project.name}Example`,
         '--package-name',
@@ -367,13 +366,15 @@ export default async function generateExampleApp({
       scripts.android = 'expo run:android';
       scripts.ios = 'expo run:ios';
 
-      await fs.writeFile(
+      await fs.appendFile(
         path.join(directory, '.gitignore'),
-        dedent`
-        # These folders are generated with prebuild (CNG)
-        android/
-        ios/
-        `
+        '\n' +
+          dedent`
+          # These folders are generated with prebuild (CNG)
+          android/
+          ios/
+          ` +
+          '\n'
       );
     }
 
