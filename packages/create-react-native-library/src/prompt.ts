@@ -13,11 +13,7 @@ export type ExampleApp = 'test-app' | 'expo' | 'vanilla' | undefined;
 export type ProjectLanguages = 'kotlin-objc' | 'kotlin-swift' | 'cpp' | 'js';
 
 export type ProjectType =
-  | 'turbo-module'
-  | 'fabric-view'
-  | 'nitro-module'
-  | 'nitro-view'
-  | 'library';
+  'turbo-module' | 'fabric-view' | 'nitro-module' | 'nitro-view' | 'library';
 
 const TYPE_CHOICES: {
   title: string;

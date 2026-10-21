@@ -62,7 +62,7 @@ export default async function compile({
   );
 
   if (copyFlow) {
-    if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
+    if (!Object.keys(pkg.devDependencies ?? {}).includes('flow-bin')) {
       report.warn(
         `The ${kleur.blue(
           'copyFlow'
@@ -161,7 +161,7 @@ export default async function compile({
         throw new Error('Output code was null');
       }
 
-      let code = result.code || '';
+      let code = result.code ?? '';
 
       if (sourceMaps && result.map) {
         const mapFilename = outputFilename + '.map';

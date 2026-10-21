@@ -51,6 +51,18 @@ export async function alignDependencyVersionsWithExampleApp(
     }
   });
 
+  const reactNativeVersion = devDependencies['react-native'];
+
+  // Packages under `@react-native/` are released together with `react-native`
+  // So the ones not in the example app need to match its `react-native` version
+  if (reactNativeVersion != null) {
+    for (const name of Object.keys(pkg.devDependencies ?? {})) {
+      if (name.startsWith('@react-native/') && devDependencies[name] == null) {
+        devDependencies[name] = reactNativeVersion;
+      }
+    }
+  }
+
   pkg['devDependencies'] = sortObjectKeys({
     ...pkg['devDependencies'],
     ...devDependencies,

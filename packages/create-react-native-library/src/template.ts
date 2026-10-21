@@ -9,10 +9,7 @@ export type TemplateVersions = {
 };
 
 export type ModuleConfig =
-  | 'native-modules'
-  | 'turbo-modules'
-  | 'nitro-modules'
-  | null;
+  'native-modules' | 'turbo-modules' | 'nitro-modules' | null;
 
 export type ViewConfig = 'paper-view' | 'fabric-view' | 'nitro-view' | null;
 
