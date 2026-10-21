@@ -18,7 +18,6 @@ const FILES_TO_DELETE = [
   '.eslintrc.js',
   '.flowconfig',
   '.git',
-  '.gitignore',
   '.prettierrc.js',
   'App.js',
   'App.tsx',
@@ -232,14 +231,8 @@ export default async function generateExampleApp({
     env: { ...process.env, npm_config_yes: 'true' },
   });
 
-  // Keep react-native-test-app's generated .gitignore for its app-specific rules.
-  const filesToDelete =
-    config.example === 'test-app'
-      ? FILES_TO_DELETE.filter((file) => file !== '.gitignore')
-      : FILES_TO_DELETE;
-
   // Remove unnecessary files and folders
-  for (const file of filesToDelete) {
+  for (const file of FILES_TO_DELETE) {
     await fs.remove(path.join(directory, file));
   }
 
@@ -373,13 +366,15 @@ export default async function generateExampleApp({
       scripts.android = 'expo run:android';
       scripts.ios = 'expo run:ios';
 
-      await fs.writeFile(
+      await fs.appendFile(
         path.join(directory, '.gitignore'),
-        dedent`
-        # These folders are generated with prebuild (CNG)
-        android/
-        ios/
-        `
+        '\n' +
+          dedent`
+          # These folders are generated with prebuild (CNG)
+          android/
+          ios/
+          ` +
+          '\n'
       );
     }
 
