@@ -95,6 +95,7 @@ export default async function compile({
       output,
       type: modules === 'commonjs' ? 'commonjs' : 'module',
       pkg,
+      variants,
       report,
     });
   }

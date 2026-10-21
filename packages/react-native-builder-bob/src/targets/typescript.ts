@@ -358,41 +358,31 @@ export default async function build({
     if (esm) {
       if (outputs?.commonjs && outputs?.module) {
         // When ESM compatible output is enabled and commonjs build is present, we need to generate 2 builds for commonjs and esm
-        // In this case we copy the already generated types, and add `package.json` with `type` field
+        // In this case we copy the already generated types
         await fs.copy(outputs.commonjs, outputs.module);
+      }
+
+      if (outputs.commonjs) {
         await writePackageType({
           root,
           output: outputs.commonjs,
           type: 'commonjs',
           pkg,
-          report,
-        });
-        await writePackageType({
-          root,
-          output: outputs.module,
-          type: 'module',
-          pkg,
-          report,
-        });
-      } else if (outputs?.commonjs) {
-        await writePackageType({
-          root,
-          output: outputs.commonjs,
-          type: 'commonjs',
-          pkg,
-          report,
-        });
-      } else if (outputs?.module) {
-        await writePackageType({
-          root,
-          output: outputs.module,
-          type: 'module',
-          pkg,
+          variants,
           report,
         });
       }
 
       if (outputs.module) {
+        await writePackageType({
+          root,
+          output: outputs.module,
+          type: 'module',
+          pkg,
+          variants,
+          report,
+        });
+
         await rewriteDeclarationImports(
           outputs.module,
           source,
