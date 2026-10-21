@@ -33,7 +33,7 @@
     "templates"
   ],
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >= 23.4.0"
+    "node": "^22.22.2 || ^24.15.0 || >= 26.0.0"
   },
   "publishConfig": {
     "access": "public",
@@ -53,14 +53,14 @@
     "ora": "^9.4.1",
     "pigment": "^0.4.5",
     "typescript": "^6.0.3",
-    "validate-npm-package-name": "^7.0.2"
+    "validate-npm-package-name": "^8.0.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^21.2.4",
     "@types/cross-spawn": "^6.0.6",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.19.43",
+    "@types/node": "^22.20.5",
     "@types/validate-npm-package-name": "^4.0.2",
     "del-cli": "^8.0.1"
   }

@@ -163,7 +163,7 @@ function main() {
   console.log('\nChecking for dependency upgrades...');
 
   for (const pkgPath of pkgPaths) {
-    execSync('npx npm-check-updates -u', {
+    execSync('npx npm-check-updates -u --cooldown 1d', {
       cwd: path.dirname(pkgPath),
       stdio: 'inherit',
     });
