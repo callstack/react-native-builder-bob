@@ -61,7 +61,7 @@ jobs:
       - name: Build package
         run: yarn prepare
 
-<% if (project.native) { -%>
+<% if (example != null) { -%>
   build-android:
     runs-on: ubuntu-latest
 
