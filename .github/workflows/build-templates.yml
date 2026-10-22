@@ -284,8 +284,6 @@ jobs:
   build-spm:
     env:
       XCODE_VERSION: 26
-      # Swift Package Manager support was introduced in React Native 0.87
-      REACT_NATIVE_VERSION: 0.87.1
 
     strategy:
       fail-fast: false
@@ -336,7 +334,6 @@ jobs:
             --languages ${{ matrix.type.language }} \
             --example vanilla \
             --tools eslint \
-            --react-native-version ${{ env.REACT_NATIVE_VERSION }} \
             --experimental-spm
 
       - name: Install dependencies of library

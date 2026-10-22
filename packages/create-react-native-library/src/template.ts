@@ -193,7 +193,6 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
-    // Nitro requires Swift/C++ interoperability that's not supported by SPM
     experimentalSpm:
       answers.experimentalSpm === true &&
       languages !== 'js' &&
