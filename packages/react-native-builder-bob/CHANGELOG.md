@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob%400.44.0...react-native-builder-bob%400.44.1) (2026-10-22)
+
+### Bug Fixes
+
+- add fixes for expo and ssr in bite config ([e2db44f](https://github.com/callstack/react-native-builder-bob/commit/e2db44f14504f5f95669587de9c55b37fa4d234d)) - by @
+
 # [0.44.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob%400.43.2...react-native-builder-bob%400.44.0) (2026-10-22)
 
 ### Bug Fixes
