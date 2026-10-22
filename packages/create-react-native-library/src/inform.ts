@@ -50,6 +50,10 @@ export function printLocalLibNextSteps({
   addedNitro: boolean;
   packageManager: string;
 }) {
+  const isNitro =
+    config.project.moduleConfig === 'nitro-modules' ||
+    config.project.viewConfig === 'nitro-view';
+
   console.log(
     dedent(`
       ${kleur.magenta(
@@ -64,10 +68,17 @@ export function printLocalLibNextSteps({
           : `- Link the library at ${kleur.blue(
               path.relative(process.cwd(), folder)
             )} based on your project setup\n`) +
-        (config.project.moduleConfig === 'nitro-modules' && !addedNitro
+        (isNitro && !addedNitro
           ? `- Run ${kleur.blue(
               `${packageManager} add react-native-nitro-modules`
+            )} and ${kleur.blue(
+              `${packageManager} add --dev nitrogen`
             )} to install nitro modules \n`
+          : '') +
+        (isNitro
+          ? `- Run ${kleur.blue(
+              `cd ${path.relative(process.cwd(), folder)} && npx nitrogen`
+            )} to generate the nitro code \n`
           : '') +
         `- Run ${kleur.blue(
           'pod install --project-directory=ios'

@@ -1,28 +1,14 @@
-buildscript {
-  ext.<%- project.name -%> = [
-    kotlinVersion: "2.0.21",
-    minSdkVersion: 24,
-    compileSdkVersion: 36
-  ]
+ext.<%- project.name -%> = [
+  minSdkVersion: 24,
+  compileSdkVersion: 36
+]
 
-  ext.getExtOrDefault = { prop ->
-    if (rootProject.ext.has(prop)) {
-      return rootProject.ext.get(prop)
-    }
-
-    return <%- project.name -%>[prop]
+ext.getExtOrDefault = { prop ->
+  if (rootProject.ext.has(prop)) {
+    return rootProject.ext.get(prop)
   }
 
-  repositories {
-    google()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath "com.android.tools.build:gradle:8.7.2"
-    // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
-  }
+  return <%- project.name -%>[prop]
 }
 
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
@@ -104,13 +90,7 @@ android {
         "**/libfolly_runtime.so",
         "**/libglog.so",
         "**/libhermes.so",
-        "**/libhermes-executor-debug.so",
-        "**/libhermes_executor.so",
-        "**/libreactnative.so",
-        "**/libreactnativejni.so",
-        "**/libturbomodulejsijni.so",
-        "**/libreact_nativemodule_core.so",
-        "**/libjscexecutor.so"
+        "**/libreactnative.so"
       ]
     }
   }
@@ -119,11 +99,6 @@ android {
     prefab true
   }
 <% } -%>
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
-  }
 }
 
 dependencies {

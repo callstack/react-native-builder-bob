@@ -1,8 +1,9 @@
 {
   "name": "<%- project.slug -%>",
   "version": "0.0.0",
-  "description": "<%- project.description %>",
+  "description": <%- JSON.stringify(project.description) %>,
   "main": "src/index",
+<% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
   "codegenConfig": {
     "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": <%- project.viewConfig !== null ? '"all"': '"modules"' %>,
@@ -20,6 +21,7 @@
     <% } -%>
     }
   },
+<% } -%>
   "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "UNLICENSED",
   "homepage": "<%- repo -%>#readme"

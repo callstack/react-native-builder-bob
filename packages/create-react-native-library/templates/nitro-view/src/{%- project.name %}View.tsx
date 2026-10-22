@@ -1,7 +1,7 @@
-import type { ColorValue, ViewProps } from 'react-native';
+import type { ViewProps } from 'react-native';
 
 type Props = ViewProps & {
-  color?: ColorValue;
+  color: string;
 };
 
 export function <%- project.name -%>View(_props: Props): never {

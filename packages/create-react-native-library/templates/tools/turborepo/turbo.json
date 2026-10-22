@@ -4,13 +4,15 @@
   "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build:android": {
-      "env": ["ANDROID_HOME", "ORG_GRADLE_PROJECT_newArchEnabled"],
+      "env": ["ANDROID_HOME"],
       "inputs": [
         "package.json",
+        "react-native.config.js",
+        "nitro.json",
         "android",
         "!android/build",
-        "src/*.ts",
-        "src/*.tsx",
+        "cpp",
+        "src/**",
         "example/package.json",
         "example/android",
         "!example/android/.gradle",
@@ -21,7 +23,6 @@
     },
     "build:ios": {
       "env": [
-        "RCT_NEW_ARCH_ENABLED",
         "RCT_REMOVE_LEGACY_ARCH",
         "RCT_USE_RN_DEP",
         "RCT_USE_PREBUILT_RNCORE"
@@ -29,9 +30,10 @@
       "inputs": [
         "package.json",
         "*.podspec",
+        "nitro.json",
         "ios",
-        "src/*.ts",
-        "src/*.tsx",
+        "cpp",
+        "src/**",
         "example/package.json",
         "example/ios",
         "!example/ios/build",

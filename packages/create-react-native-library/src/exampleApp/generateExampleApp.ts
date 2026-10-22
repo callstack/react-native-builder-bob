@@ -406,7 +406,7 @@ export default async function generateExampleApp({
     const app = await fs.readJSON(path.join(directory, 'app.json'));
 
     app.expo.name = `${config.project.name} Example`;
-    app.expo.slug = `${config.project.slug}-example`;
+    app.expo.slug = `${config.project.identifier}-example`;
     app.expo.android = app.expo.android ?? {};
     app.expo.android.package = `${config.project.package}.example`;
     app.expo.ios = app.expo.ios ?? {};

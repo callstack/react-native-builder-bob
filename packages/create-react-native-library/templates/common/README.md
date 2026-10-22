@@ -8,9 +8,9 @@
 
 ```sh
 npm install <%- project.slug %> react-native-nitro-modules
+```
 
 > `react-native-nitro-modules` is required as this library relies on [Nitro Modules](https://nitro.margelo.com/).
-```
 
 <% } else { -%>
 
@@ -29,7 +29,7 @@ import { <%- project.name -%>View } from "<%- project.slug -%>";
 
 // ...
 
-<<%- project.name -%>View color="tomato" />
+<<%- project.name -%>View color="#32a852" />
 ```
 
 <% } else { -%>

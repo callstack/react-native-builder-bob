@@ -9,21 +9,21 @@ import com.facebook.react.uimanager.ViewManager
 import com.margelo.nitro.<%- project.package %>.views.Hybrid<%- project.name -%>Manager
 
 class <%- project.name -%>Package : BaseReactPackage() {
-    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-        return null
-    }
+  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
+    return null
+  }
 
-    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-        return ReactModuleInfoProvider { HashMap() }
-    }
+  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
+    return ReactModuleInfoProvider { emptyMap() }
+  }
 
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf(Hybrid<%- project.name -%>Manager())
-    }
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return listOf(Hybrid<%- project.name -%>Manager())
+  }
 
-    companion object {
-        init {
-            System.loadLibrary("<%- project.package_cpp -%>")
-        }
+  companion object {
+    init {
+      System.loadLibrary("<%- project.package_cpp -%>")
     }
+  }
 }
