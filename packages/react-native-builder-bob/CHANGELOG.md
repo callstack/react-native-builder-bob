@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.44.0](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob%400.43.2...react-native-builder-bob%400.44.0) (2026-10-22)
+
+### Bug Fixes
+
+- skip the generated package.json when the root type matches ([#957](https://github.com/callstack/react-native-builder-bob/issues/957)) ([7d120d2](https://github.com/callstack/react-native-builder-bob/commit/7d120d245a01fc89d1ee8f9b7474e916b9f42395)) - by @mrousavy
+
+### Features
+
+- update tools in templates ([#962](https://github.com/callstack/react-native-builder-bob/issues/962)) ([2a8f2f7](https://github.com/callstack/react-native-builder-bob/commit/2a8f2f72b55a00099c17992c4ef12f6b0ba87a93)) - by @satya164
+
 ## [0.43.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.43.1...react-native-builder-bob@0.43.2) (2026-10-12)
 
 ### Bug Fixes

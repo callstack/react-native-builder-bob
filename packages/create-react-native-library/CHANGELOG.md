@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.64.0](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library%400.63.1...create-react-native-library%400.64.0) (2026-10-22)
+
+### Bug Fixes
+
+- don't skip android and ios builds for example for js only libs ([f339a01](https://github.com/callstack/react-native-builder-bob/commit/f339a01ffdf56c2c7f830ac260e5c038b181e351)) - by @satya164
+- keep generated gitignore in example apps ([#952](https://github.com/callstack/react-native-builder-bob/issues/952)) ([1dfdfdf](https://github.com/callstack/react-native-builder-bob/commit/1dfdfdffc7064299ef5f45b7420c6f84b2114592)) - by @dcavalcante
+- skip the generated package.json when the root type matches ([#957](https://github.com/callstack/react-native-builder-bob/issues/957)) ([7d120d2](https://github.com/callstack/react-native-builder-bob/commit/7d120d245a01fc89d1ee8f9b7474e916b9f42395)) - by @mrousavy
+- use latest Community CLI when generating example ([#959](https://github.com/callstack/react-native-builder-bob/issues/959)) ([c68693e](https://github.com/callstack/react-native-builder-bob/commit/c68693e12847689c38128e74a745337a51076823)), closes [#958](https://github.com/callstack/react-native-builder-bob/issues/958) - by @RezoanurRahman
+
+### Features
+
+- remove experimental label from c++ template ([#961](https://github.com/callstack/react-native-builder-bob/issues/961)) ([75a630a](https://github.com/callstack/react-native-builder-bob/commit/75a630a03633d512404bc1a982d0bd7c0ce9dfb2)) - by @satya164
+- update tools in templates ([#962](https://github.com/callstack/react-native-builder-bob/issues/962)) ([2a8f2f7](https://github.com/callstack/react-native-builder-bob/commit/2a8f2f72b55a00099c17992c4ef12f6b0ba87a93)) - by @satya164
+
 ## [0.63.1](https://github.com/callstack/react-native-builder-bob/compare/create-react-native-library@0.63.0...create-react-native-library@0.63.1) (2026-09-08)
 
 ### Bug Fixes
