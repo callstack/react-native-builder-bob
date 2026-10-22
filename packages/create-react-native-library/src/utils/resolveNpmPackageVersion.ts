@@ -3,7 +3,7 @@ import { spawn } from './spawn.ts';
 export async function resolveNpmPackageVersion(
   name: string,
   fallback: string,
-  timeout: number = 1000
+  timeout: number = 5000
 ): Promise<string> {
   let result: string;
 
@@ -14,7 +14,7 @@ export async function resolveNpmPackageVersion(
       new Promise<string>((resolve) => {
         setTimeout(() => {
           resolve(fallback);
-        }, timeout);
+        }, timeout).unref();
       }),
       promise,
     ]);

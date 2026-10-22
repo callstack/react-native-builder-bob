@@ -97,10 +97,6 @@ async function create() {
 
   const rootPackageJson = await fs.readJson(path.join(folder, 'package.json'));
 
-  if (config.example != null) {
-    await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
-  }
-
   if (!answers.local) {
     spinner.text = 'Configuring tools';
 
@@ -110,6 +106,11 @@ async function create() {
       root: folder,
       packageJson: rootPackageJson,
     });
+  }
+
+  // Align after configuring tools since they also add React Native packages
+  if (config.example != null) {
+    await alignDependencyVersionsWithExampleApp(rootPackageJson, folder);
   }
 
   const libraryMetadata = createMetadata(answers);
@@ -132,7 +133,10 @@ async function create() {
 
     let addedNitro = false;
 
-    if (config.project.moduleConfig === 'nitro-modules') {
+    if (
+      config.project.moduleConfig === 'nitro-modules' ||
+      config.project.viewConfig === 'nitro-view'
+    ) {
       addedNitro = await addNitroDependencyToLocalLibrary(config);
     }
 

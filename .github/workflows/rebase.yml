@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
       - name: Automatic Rebase
-        uses: cirrus-actions/rebase@cf2ad5908b365d40882ef06dab959717ec1aaf71 # 1.2
+        uses: cirrus-actions/rebase@b87d48154a87a85666003575337e27b8cd65f691 # 1.8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

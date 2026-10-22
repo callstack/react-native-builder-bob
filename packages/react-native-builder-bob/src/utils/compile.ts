@@ -6,6 +6,7 @@ import * as babel from '@babel/core';
 import { glob } from 'glob';
 import type { Input, Variants } from '../types.ts';
 import { isCodegenSpec } from './isCodegenSpec.ts';
+import { writePackageType } from './writePackageType.ts';
 
 const require = createRequire(import.meta.url);
 
@@ -26,6 +27,7 @@ type Options = Input &
   };
 
 const sourceExt = /\.([cm])?[jt]sx?$/;
+const declarationExt = /\.d\.[cm]?ts$/;
 
 export default async function compile({
   root,
@@ -60,7 +62,7 @@ export default async function compile({
   );
 
   if (copyFlow) {
-    if (!Object.keys(pkg.devDependencies || {}).includes('flow-bin')) {
+    if (!Object.keys(pkg.devDependencies ?? {}).includes('flow-bin')) {
       report.warn(
         `The ${kleur.blue(
           'copyFlow'
@@ -88,18 +90,29 @@ export default async function compile({
   // So we skip generating `package.json` if `esm` is not enabled and `modules` is not `commonjs`
   // This means that user can't use `type: 'module'` in root `package.json` without enabling `esm` for `module` target
   if (esm || modules === 'commonjs') {
-    await fs.writeJSON(path.join(output, 'package.json'), {
+    await writePackageType({
+      root,
+      output,
       type: modules === 'commonjs' ? 'commonjs' : 'module',
+      pkg,
+      variants,
+      report,
     });
   }
 
   await Promise.all(
     files.map(async (filepath) => {
-      const outputFilename = path
-        .join(output, path.relative(source, filepath))
-        .replace(sourceExt, '.$1js');
+      const outputFilepath = path.join(output, path.relative(source, filepath));
+      const outputFilename = outputFilepath.replace(sourceExt, '.$1js');
 
       await fs.mkdirp(path.dirname(outputFilename));
+
+      // Declaration files only contain types, so compiling them produces empty JS files
+      // So we copy them as is to preserve the types alongside the compiled code
+      if (declarationExt.test(filepath)) {
+        await fs.copy(filepath, outputFilepath);
+        return;
+      }
 
       if (!sourceExt.test(filepath)) {
         // Copy files which aren't source code
@@ -114,10 +127,7 @@ export default async function compile({
       const codegenEnabled = 'codegenConfig' in pkg;
 
       if (codegenEnabled && isCodegenSpec(filepath)) {
-        await fs.copy(
-          filepath,
-          path.join(output, path.relative(source, filepath))
-        );
+        await fs.copy(filepath, outputFilepath);
         return;
       }
 
@@ -151,7 +161,7 @@ export default async function compile({
         throw new Error('Output code was null');
       }
 
-      let code = result.code || '';
+      let code = result.code ?? '';
 
       if (sourceMaps && result.map) {
         const mapFilename = outputFilename + '.map';

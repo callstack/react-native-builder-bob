@@ -38,21 +38,6 @@ yarn nitrogen
 ```
 
 <% } -%>
-<% if (project.cpp) { -%>
-You need to run React Native Codegen to generate the native scaffolding for the C++ Turbo Module. The example app will not build without these generated files.
-
-Run **Codegen** in following cases:
-
-- When you make changes to `src/Native<%- project.name -%>.ts`.
-- When running the project for the first time (since the generated files are not committed to the repository).
-
-To invoke **Codegen**, use the following command:
-
-```sh
-yarn bob build --target codegen
-```
-
-<% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
@@ -82,14 +67,6 @@ To run the example app on iOS:
 ```sh
 yarn example ios
 ```
-
-To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
-
-```sh
-Running "<%- project.name -%>Example" with {"fabric":true,"initialProps":{"concurrentRoot":true},"rootTag":1}
-```
-
-Note the `"fabric":true` and `"concurrentRoot":true` properties.
 
 <% if (example === 'expo' || tools.includes('vite')) { -%>
 To run the example app on Web:
@@ -163,19 +140,19 @@ The `package.json` file contains various scripts for common tasks:
 
 - `yarn`: setup project by installing dependencies.
 - `yarn typecheck`: type-check files with TypeScript.
-  <% if (tools.includes('eslint')) { -%>
+  <%_ if (tools.includes('eslint')) { -%>
 - `yarn lint`: lint files with [ESLint](https://eslint.org/).
-  <% } -%>
-  <% if (tools.includes('jest')) { -%>
+  <%_ } -%>
+  <%_ if (tools.includes('jest')) { -%>
 - `yarn test`: run unit tests with [Jest](https://jestjs.io/).
-  <% } -%>
+  <%_ } -%>
 - `yarn example start`: start the Metro server for the example app.
 - `yarn example android`: run the example app on Android.
 - `yarn example ios`: run the example app on iOS.
-  <% if (example === 'expo' || tools.includes('vite')) { -%>
+  <%_ if (example === 'expo' || tools.includes('vite')) { -%>
 - `yarn example web`: run the example app on Web.
 - `yarn example build:web`: build the example app for Web.
-  <% } -%>
+  <%_ } -%>
 
 ### Sending a pull request
 

@@ -2,9 +2,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { decode } from '@jridgewell/sourcemap-codec';
 import fs from 'fs-extra';
-import { expect, test, vi } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import build from '../targets/typescript.ts';
-import type { Report } from '../types.ts';
+import type { Report, Variants } from '../types.ts';
 import { spawn } from '../utils/spawn.ts';
 
 const tsc = path.resolve(
@@ -19,6 +19,10 @@ const report: Report = {
   success: vi.fn(),
   error: vi.fn(),
 };
+
+beforeEach(() => {
+  vi.mocked(report.warn).mockClear();
+});
 
 const readDeclarationMap = async (filepath: string) => {
   const value: unknown = await fs.readJSON(filepath);
@@ -47,10 +51,12 @@ const buildLibrary = async (
     files,
     compilerOptions,
     packageJson,
+    variants = { module: true },
   }: {
     files: Record<string, string>;
     compilerOptions?: Record<string, unknown>;
     packageJson?: Record<string, unknown>;
+    variants?: Variants;
   }
 ) => {
   await fs.writeJSON(path.join(root, 'package.json'), {
@@ -90,7 +96,7 @@ const buildLibrary = async (
     report,
     options: { project: 'tsconfig.json', tsc },
     esm: true,
-    variants: { module: true },
+    variants,
   });
 };
 
@@ -263,6 +269,98 @@ test('keeps platform-specific declaration imports extensionless', async () => {
     expect(stdout).toContain(
       'Relative import paths need explicit file extensions'
     );
+  } finally {
+    await fs.remove(root);
+  }
+});
+
+test('resolves package imports when package.json has the same type', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'bob-typescript-'));
+
+  try {
+    await buildLibrary(root, {
+      compilerOptions: { customConditions: ['library-source'] },
+      packageJson: {
+        imports: {
+          '#internal/*': {
+            'library-source': './src/internal/*.ts',
+            types: './lib/typescript/src/internal/*.d.ts',
+          },
+        },
+      },
+      files: {
+        'src/index.ts': "export { type Foo } from '#internal/foo';\n",
+        'src/internal/foo.ts': 'export type Foo = { value: string };\n',
+      },
+    });
+
+    expect(
+      await fs.pathExists(path.join(root, 'lib/typescript/package.json'))
+    ).toBe(false);
+
+    expect(report.warn).not.toHaveBeenCalled();
+
+    const stdout = await typeCheckConsumer(
+      root,
+      ["import type { Foo } from 'library';", '', 'type Test = Foo;'].join('\n')
+    );
+
+    expect(stdout).toBeUndefined();
+  } finally {
+    await fs.remove(root);
+  }
+});
+
+test('warns about package imports when package.json has a different type', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'bob-typescript-'));
+
+  try {
+    await buildLibrary(root, {
+      packageJson: {
+        type: undefined,
+        imports: { '#internal/*': './src/internal/*.ts' },
+      },
+      files: { 'src/index.ts': 'export type Foo = string;\n' },
+    });
+
+    expect(
+      await fs.readJSON(path.join(root, 'lib/typescript/package.json'))
+    ).toEqual({ type: 'module' });
+
+    expect(report.warn).toHaveBeenCalledWith(
+      expect.stringContaining("won't apply to the files in")
+    );
+  } finally {
+    await fs.remove(root);
+  }
+});
+
+test('keeps package.json for commonjs declarations in a dual package setup', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'bob-typescript-'));
+
+  try {
+    await buildLibrary(root, {
+      packageJson: {
+        exports: {
+          '.': {
+            types: './lib/typescript/module/src/index.d.ts',
+          },
+        },
+        imports: { '#internal/*': './src/internal/*.ts' },
+      },
+      files: { 'src/index.ts': 'export type Foo = string;\n' },
+      variants: { commonjs: true, module: true },
+    });
+
+    expect(
+      await fs.pathExists(path.join(root, 'lib/typescript/module/package.json'))
+    ).toBe(false);
+
+    expect(
+      await fs.readJSON(path.join(root, 'lib/typescript/commonjs/package.json'))
+    ).toEqual({ type: 'commonjs' });
+
+    expect(report.warn).not.toHaveBeenCalled();
   } finally {
     await fs.remove(root);
   }

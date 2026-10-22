@@ -1,4 +1,5 @@
 import path from 'node:path';
+import ejs from 'ejs';
 import fs from 'fs-extra';
 import { applyTemplate, type TemplateConfiguration } from '../template.ts';
 import sortObjectKeys from './sortObjectKeys.ts';
@@ -141,7 +142,8 @@ export async function configureTools({
 
     await mergePackageJsonTemplate(
       path.join(toolDir, '~package.json'),
-      packageJson
+      packageJson,
+      config
     );
 
     if (fs.existsSync(examplePkgPath)) {
@@ -152,7 +154,8 @@ export async function configureTools({
 
       await mergePackageJsonTemplate(
         examplePkgPath,
-        existingExamplePackageJson
+        existingExamplePackageJson,
+        config
       );
 
       await fs.writeJson(
@@ -170,14 +173,17 @@ export async function configureTools({
 
 async function mergePackageJsonTemplate(
   templatePath: string,
-  packageJson: PackageJson
+  packageJson: PackageJson,
+  config: TemplateConfiguration
 ) {
   if (!fs.existsSync(templatePath)) {
     return;
   }
 
+  const content = await fs.readFile(templatePath, 'utf8');
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const template = (await fs.readJson(templatePath)) as PackageJson;
+  const template = JSON.parse(ejs.render(content, config)) as PackageJson;
 
   for (const [field, value] of Object.entries(template)) {
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {

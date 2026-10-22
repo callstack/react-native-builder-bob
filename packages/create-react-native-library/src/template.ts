@@ -8,13 +8,9 @@ export type TemplateVersions = {
   nitro: string | undefined;
 };
 
-export type ModuleConfig =
-  | 'native-modules'
-  | 'turbo-modules'
-  | 'nitro-modules'
-  | null;
+export type ModuleConfig = 'turbo-modules' | 'nitro-modules' | null;
 
-export type ViewConfig = 'paper-view' | 'fabric-view' | 'nitro-view' | null;
+export type ViewConfig = 'fabric-view' | 'nitro-view' | null;
 
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
@@ -212,9 +208,10 @@ export function generateTemplateConfiguration({
           ? // If the project name is already in PascalCase, use it as-is
             basename
           : // Otherwise, convert it to PascalCase and remove any non-alphanumeric characters
-            `${project.charAt(0).toUpperCase()}${project
-              .replace(/[^a-z0-9](\w)/g, (_, $1: string) => $1.toUpperCase())
-              .slice(1)}`,
+            project
+              .split(/[^a-z0-9]+/)
+              .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+              .join(''),
       package: pack,
       package_dir: pack.replace(/\./g, path.sep),
       package_cpp: pack.replace(/\./g, '_'),
@@ -296,104 +293,52 @@ export async function applyTemplates(
     }
   }
 
+  if (config.example != null) {
+    if (config.example === 'expo') {
+      await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
+    } else {
+      await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
+    }
+
+    if (config.project.native) {
+      await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
+    }
+  }
+
   if (answers.languages === 'js') {
     await applyTemplate(config, JS_FILES, folder);
 
-    if (config.example != null) {
-      if (config.example === 'expo') {
-        await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
-      } else {
-        await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
-      }
-    }
+    return;
+  }
+
+  if (answers.languages === 'cpp') {
+    await applyTemplate(config, NATIVE_FILES['module_new'], folder);
+    await applyTemplate(config, CPP_FILES, folder);
   } else {
-    if (answers.languages === 'cpp') {
-      if (config.example === 'expo') {
-        await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
-
-        if (config.project.native) {
-          await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
-        }
-      } else if (config.example != null) {
-        await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
-
-        if (config.project.native) {
-          await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
-        }
-      }
-
-      await applyTemplate(config, NATIVE_FILES['module_new'], folder);
-      await applyTemplate(config, CPP_FILES, folder);
-
-      if (config.example === 'expo' || config.tools.includes('vite')) {
-        await applyTemplate(config, JS_FILES, folder);
-      }
-
-      return;
-    }
-
     await applyTemplate(config, NATIVE_COMMON_FILES, folder);
-
-    if (config.example === 'expo') {
-      await applyTemplate(config, EXAMPLE_EXPO_FILES, folder);
-
-      if (config.project.native) {
-        await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
-      }
-    } else if (config.example != null) {
-      await applyTemplate(config, EXAMPLE_BARE_FILES, folder);
-
-      if (config.project.native) {
-        await applyTemplate(config, EXAMPLE_NATIVE_COMMON_FILES, folder);
-      }
-    }
 
     if (config.project.moduleConfig === 'nitro-modules') {
       await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['module_nitro'], folder);
-
-      if (config.example === 'expo' || config.tools.includes('vite')) {
-        await applyTemplate(config, JS_FILES, folder);
-      }
-
-      return;
-    }
-
-    if (config.project.viewConfig === 'nitro-view') {
+    } else if (config.project.viewConfig === 'nitro-view') {
       await applyTemplate(config, NITRO_COMMON_FILES, folder);
       await applyTemplate(config, NATIVE_FILES['view_nitro'], folder);
-
-      if (config.example === 'expo' || config.tools.includes('vite')) {
-        await applyTemplate(config, JS_VIEW_FILES, folder);
-      }
-
-      return;
-    }
-
-    if (config.project.moduleConfig !== null) {
-      await applyTemplate(config, NATIVE_FILES[`module_new`], folder);
+    } else if (config.project.moduleConfig !== null) {
+      await applyTemplate(config, NATIVE_FILES['module_new'], folder);
+      await applyTemplate(config, OBJC_FILES['module_common'], folder);
+      await applyTemplate(config, KOTLIN_FILES['module_new'], folder);
     } else {
-      await applyTemplate(config, NATIVE_FILES[`view_new`], folder);
+      await applyTemplate(config, NATIVE_FILES['view_new'], folder);
+      await applyTemplate(config, OBJC_FILES['view_new'], folder);
+      await applyTemplate(config, KOTLIN_FILES['view_new'], folder);
     }
+  }
 
-    if (config.project.moduleConfig !== null) {
-      await applyTemplate(config, OBJC_FILES[`module_common`], folder);
+  if (config.example === 'expo' || config.tools.includes('vite')) {
+    if (config.project.viewConfig !== null) {
+      await applyTemplate(config, JS_VIEW_FILES, folder);
     } else {
-      await applyTemplate(config, OBJC_FILES[`view_new`], folder);
-    }
-
-    const templateType = `${
-      config.project.moduleConfig !== null ? 'module' : 'view'
-    }_new` as const;
-
-    await applyTemplate(config, KOTLIN_FILES[templateType], folder);
-
-    if (config.example === 'expo' || config.tools.includes('vite')) {
-      if (config.project.viewConfig !== null) {
-        await applyTemplate(config, JS_VIEW_FILES, folder);
-      } else {
-        await applyTemplate(config, JS_FILES, folder);
-      }
+      await applyTemplate(config, JS_FILES, folder);
     }
   }
 }

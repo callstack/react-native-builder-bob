@@ -6,17 +6,15 @@
 #import <react/renderer/components/<%- project.name -%>ViewSpec/Props.h>
 #import <react/renderer/components/<%- project.name -%>ViewSpec/RCTComponentViewHelpers.h>
 
-#import <React/RCTFabricComponentsPlugins.h>
-
 using namespace facebook::react;
 
 @implementation <%- project.name -%>View {
-    UIView * _view;
+  UIView * _view;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
-    return concreteComponentDescriptorProvider<<%- project.name -%>ViewComponentDescriptor>();
+  return concreteComponentDescriptorProvider<<%- project.name -%>ViewComponentDescriptor>();
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -35,14 +33,14 @@ using namespace facebook::react;
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-    const auto &oldViewProps = *std::static_pointer_cast<<%- project.name -%>ViewProps const>(_props);
-    const auto &newViewProps = *std::static_pointer_cast<<%- project.name -%>ViewProps const>(props);
+  const auto &oldViewProps = *std::static_pointer_cast<<%- project.name -%>ViewProps const>(_props);
+  const auto &newViewProps = *std::static_pointer_cast<<%- project.name -%>ViewProps const>(props);
 
-    if (oldViewProps.color != newViewProps.color) {
-        [_view setBackgroundColor: RCTUIColorFromSharedColor(newViewProps.color)];
-    }
+  if (oldViewProps.color != newViewProps.color) {
+    [_view setBackgroundColor: RCTUIColorFromSharedColor(newViewProps.color)];
+  }
 
-    [super updateProps:props oldProps:oldProps];
+  [super updateProps:props oldProps:oldProps];
 }
 
 @end

@@ -1,7 +1,7 @@
 {
   "name": "<%- project.slug -%>",
   "version": "0.1.0",
-  "description": "<%- project.description %>",
+  "description": <%- JSON.stringify(project.description) %>,
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -10,6 +10,9 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+<% if (project.viewConfig === 'nitro-view') { -%>
+    "./nitrogen/generated/shared/json/*": "./nitrogen/generated/shared/json/*",
+<% } -%>
     "./package.json": "./package.json"
   },
   "files": [
@@ -39,9 +42,7 @@
     "!**/.*"
   ],
   "scripts": {
-<% if (example !== 'none') { -%>
     "example": "yarn workspace <%- project.slug -%>-example",
-<% } -%>
 <% if (example !== 'expo') { -%>
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
 <% } else { -%>
@@ -60,29 +61,26 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+<%- repo -%>.git"
+    "url": <%- JSON.stringify(`git+${repo}.git`) %>
   },
-  "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
+  "author": <%- JSON.stringify(`${author.name} <${author.email}> (${author.url})`) %>,
   "license": "MIT",
   "bugs": {
-    "url": "<%- repo -%>/issues"
+    "url": <%- JSON.stringify(`${repo}/issues`) %>
   },
-  "homepage": "<%- repo -%>#readme",
+  "homepage": <%- JSON.stringify(`${repo}#readme`) %>,
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-<% if (project.cpp) { -%>
-    "@react-native-community/cli": "20.2.0",
-<% } -%>
-    "@react-native/babel-preset": "0.86.2",
+    "@react-native/babel-preset": "0.88.0",
     "@types/react": "^19.2.0",
-    "del-cli": "^7.0.0",
+    "del-cli": "^8.0.1",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "nitrogen": "^<%- versions.nitro %>",
 <% } -%>
-    "react": "19.2.3",
-    "react-native": "0.86.2",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
     "react-native-builder-bob": "^<%- versions.bob %>",
 <% if (project.moduleConfig === 'nitro-modules' || project.viewConfig === 'nitro-view') { -%>
     "react-native-nitro-modules": "^<%- versions.nitro %>",
@@ -98,12 +96,10 @@
     "react-native": "*"
 <% } -%>
   },
-<% if (example !== 'none') { -%>
   "workspaces": [
     "example"
   ],
-<% } -%>
-  "packageManager": "yarn@4.11.0",
+  "packageManager": "yarn@4.18.1",
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
@@ -128,9 +124,7 @@
         {
           "project": "tsconfig.build.json"
         }
-      ]<% if (project.cpp) { -%>,
-      "codegen"
-<% } -%>
+      ]
     ]
 <% if (project.moduleConfig === 'turbo-modules' || project.viewConfig === 'fabric-view') { -%>
   },
@@ -138,12 +132,6 @@
     "name": "<%- project.name -%><%- project.viewConfig !== null ? 'View': '' -%>Spec",
     "type": "<%- project.viewConfig !== null ? 'all': 'modules' -%>",
     "jsSrcsDir": "src",
-<% if (project.cpp) { -%>
-    "outputDir": {
-      "ios": "ios/generated",
-      "android": "android/generated"
-    },
-<% } -%>
     "android": {
       "javaPackageName": "com.<%- project.package %>"
     <% if (project.viewConfig === 'fabric-view') { -%>
@@ -156,9 +144,6 @@
       }
     <% } -%>
     }
-<% if (project.cpp) { -%>,
-    "includesGeneratedCode": true
-<% } -%>
 <% } -%>
   }
 }

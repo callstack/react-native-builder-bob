@@ -4,9 +4,6 @@ import sortObjectKeys from '../utils/sortObjectKeys.ts';
 
 type PackageJson = {
   devDependencies?: Record<string, string>;
-  'react-native-builder-bob'?: {
-    targets?: (string | [string, unknown])[];
-  };
 };
 
 export async function alignDependencyVersionsWithExampleApp(
@@ -23,15 +20,6 @@ export async function alignDependencyVersionsWithExampleApp(
     '@types/react',
     '@react-native/babel-preset',
   ];
-
-  const usesCodegen =
-    pkg['react-native-builder-bob']?.targets?.some((target) =>
-      Array.isArray(target) ? target[0] === 'codegen' : target === 'codegen'
-    ) ?? false;
-
-  if (usesCodegen) {
-    PACKAGES_TO_COPY.push('@react-native-community/cli');
-  }
 
   const devDependencies: Record<string, string> = {};
 
@@ -50,6 +38,18 @@ export async function alignDependencyVersionsWithExampleApp(
       }
     }
   });
+
+  const reactNativeVersion = devDependencies['react-native'];
+
+  // Packages under `@react-native/` are released together with `react-native`
+  // So the ones not in the example app need to match its `react-native` version
+  if (reactNativeVersion != null) {
+    for (const name of Object.keys(pkg.devDependencies ?? {})) {
+      if (name.startsWith('@react-native/') && devDependencies[name] == null) {
+        devDependencies[name] = reactNativeVersion;
+      }
+    }
+  }
 
   pkg['devDependencies'] = sortObjectKeys({
     ...pkg['devDependencies'],

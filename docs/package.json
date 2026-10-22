@@ -10,13 +10,13 @@
   },
   "type": "module",
   "dependencies": {
-    "@callstack/rspress-preset": "^0.6.4",
-    "@callstack/rspress-theme": "^0.6.4",
-    "@rspress/core": "^2.0.8",
-    "@shikijs/transformers": "^3.13.0",
+    "@callstack/rspress-preset": "^0.6.6",
+    "@callstack/rspress-theme": "^0.6.6",
+    "@rspress/core": "^2.0.23",
+    "@shikijs/transformers": "^4.5.0",
     "clsx": "^2.1.1"
   },
   "devDependencies": {
-    "@types/react": "^19.2.14"
+    "@types/react": "^19.3.0"
   }
 }

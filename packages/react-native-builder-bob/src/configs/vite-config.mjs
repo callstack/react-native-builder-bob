@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig, transformWithEsbuild } from 'vite';
+import { defineConfig, transformWithOxc } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
 
 const extensions = [
@@ -25,9 +25,9 @@ const jsx = (regex) => ({
   enforce: 'pre',
   transform(code, id) {
     if (id.endsWith('.js') && regex.test(id)) {
-      return transformWithEsbuild(code, id, {
-        loader: 'jsx',
-        jsx: 'automatic',
+      return transformWithOxc(code, id, {
+        lang: 'jsx',
+        jsx: { runtime: 'automatic' },
       });
     }
 
@@ -51,12 +51,21 @@ export default defineConfig(({ mode }) => ({
     dedupe: ['react', 'react-dom', 'react-native-web'],
   },
   optimizeDeps: {
-    esbuildOptions: {
-      resolveExtensions: extensions,
-      jsx: 'automatic',
-      loader: {
+    rolldownOptions: {
+      resolve: {
+        extensions,
+      },
+      moduleTypes: {
         '.js': 'jsx',
       },
+      transform: {
+        jsx: 'react-jsx',
+      },
+      // Some packages such as `expo-modules-core` publish TypeScript source,
+      // Where type-only names are re-exported inside `declare namespace`.
+      // Rolldown keeps those imports and fails.
+      // So we shim the missing exports.
+      shimMissingExports: true,
     },
   },
 }));

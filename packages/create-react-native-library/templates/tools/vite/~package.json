@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "web": "vite",
-    "build:web": "vite build"
-  },
-  "devDependencies": {
-    "react-native-web": "~0.21.2"
-  }
-}

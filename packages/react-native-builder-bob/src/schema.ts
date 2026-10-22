@@ -1,3 +1,5 @@
+// The rule mistakes the `module` variable below for the CommonJS `module` object
+// eslint-disable-next-line import-x/no-import-module-exports
 import { type } from 'arktype';
 
 const module = {

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.2](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.43.1...react-native-builder-bob@0.43.2) (2026-10-12)
+
+### Bug Fixes
+
+- copy typescript declaration files as is when compiling ([aecdcdf](https://github.com/callstack/react-native-builder-bob/commit/aecdcdf3466e52e33e04d62b8c44c1a7bf887d0b)) - by @satya164
+
 ## [0.43.1](https://github.com/callstack/react-native-builder-bob/compare/react-native-builder-bob@0.43.0...react-native-builder-bob@0.43.1) (2026-09-08)
 
 ### Bug Fixes

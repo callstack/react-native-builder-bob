@@ -22,8 +22,7 @@ type Extension = {
 };
 
 type ExplicitExtension = { source: string } & (
-  | { output: string }
-  | { emitted: Extension[] }
+  { output: string } | { emitted: Extension[] }
 );
 
 type Options = {
