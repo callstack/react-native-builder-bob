@@ -25,6 +25,20 @@ To create new project, run the following:
 npx create-react-native-library@latest awesome-library
 ```
 
+To also generate a `Package.swift` for React Native experimental [Swift Package Manager support](https://reactnative.dev/blog/2026/08/11/react-native-0.87#experimental-swift-package-manager-support-for-ios), pass `--experimental-spm`:
+
+```sh
+npx create-react-native-library@latest awesome-library --experimental-spm
+```
+
+The podspec is still generated, so CocoaPods keeps working. The example app is set up for SPM instead of CocoaPods: run `npx react-native spm --deintegrate` in `example` once to set it up, and `npx react-native spm` after a fresh install.
+
+### Limitations
+
+- Requires React Native 0.87 or newer
+- Nitro libraries aren't supported, since SwiftPM can't compile Swift and C++ sources in the same target.
+- Expo and react-native-test-app examples can't use SPM yet.
+
 This will ask you a few questions about your project and generate a new project in a folder named `awesome-library`.
 
 ![Demo](../assets/create-react-native-library.svg)
