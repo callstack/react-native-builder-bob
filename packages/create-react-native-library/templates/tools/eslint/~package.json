@@ -12,9 +12,9 @@
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
     "@eslint/eslintrc": "^3.3.7",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@react-native/eslint-config": "0.88.0",
-    "eslint": "^9.39.5",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-prettier": "^5.5.7",
