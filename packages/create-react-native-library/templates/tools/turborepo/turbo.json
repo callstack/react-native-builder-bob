@@ -30,6 +30,7 @@
       "inputs": [
         "package.json",
         "*.podspec",
+        "Package.swift",
         "nitro.json",
         "ios",
         "cpp",

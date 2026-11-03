@@ -152,6 +152,17 @@ jobs:
       - name: Generate nitrogen code
         run: yarn nitrogen
 <% } -%>
+<% if (experimentalSpm) { -%>
+
+      - name: Use appropriate Xcode version
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Set up SwiftPM
+        run: |
+          yarn example react-native spm --yes
+<% } -%>
 
       - name: Cache turborepo for iOS
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -169,18 +180,20 @@ jobs:
             echo "turbo_cache_hit=1" >> $GITHUB_ENV
           fi
 
+<% if (!experimentalSpm) { -%>
       - name: Use appropriate Xcode version
         if: env.turbo_cache_hit != 1
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+<% } -%>
 <% if (example === 'expo') { -%>
       - name: Prebuild expo app for iOS
         if: env.turbo_cache_hit != 1
         run: |
           yarn example expo prebuild --platform ios
-<% } else { -%>
+<% } else if (!experimentalSpm) { -%>
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1
         run: |

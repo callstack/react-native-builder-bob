@@ -22,6 +22,11 @@
     }
   },
 <% } -%>
+<% if (experimentalSpm) { -%>
+  "swiftpmConfig": {
+    "name": "<%- project.name -%>"
+  },
+<% } -%>
   "author": "<%- author.name -%> <<%- author.email -%>> (<%- author.url -%>)",
   "license": "UNLICENSED",
   "homepage": "<%- repo -%>#readme"

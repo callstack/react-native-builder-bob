@@ -15,6 +15,7 @@ export type ViewConfig = 'fabric-view' | 'nitro-view' | null;
 // Please think at least 5 times before introducing a new config key
 // You can just reuse the existing ones most of the time
 export type TemplateConfiguration = {
+  experimentalSpm: boolean;
   versions: TemplateVersions;
   project: {
     slug: string;
@@ -101,6 +102,7 @@ const CPP_FILES = path.resolve(
   import.meta.dirname,
   '../../templates/cpp-library'
 );
+const SPM_FILES = path.resolve(import.meta.dirname, '../../templates/spm');
 
 const NATIVE_FILES = {
   module_new: path.resolve(
@@ -191,6 +193,9 @@ export function generateTemplateConfiguration({
     .toLowerCase()}`;
 
   return {
+    experimentalSpm:
+      answers.experimentalSpm === true &&
+      getExperimentalSpmUnsupportedReason(answers) == null,
     versions,
     project: {
       slug,
@@ -227,6 +232,36 @@ export function generateTemplateConfiguration({
   };
 }
 
+/**
+ * Returns why SwiftPM can't be set up for the given answers, or `undefined` if it can
+ */
+export function getExperimentalSpmUnsupportedReason(
+  answers: Answers
+): string | undefined {
+  if (answers.languages === 'js') {
+    return 'for library without native code';
+  }
+
+  if (
+    getModuleConfig(answers.type) === 'nitro-modules' ||
+    getViewConfig(answers.type) === 'nitro-view'
+  ) {
+    return "for Nitro library, since SwiftPM can't compile Swift and C++ sources in the same target";
+  }
+
+  if (answers.example === 'expo' || answers.example === 'test-app') {
+    return `for ${answers.example} example app, since it doesn't support SwiftPM yet`;
+  }
+
+  const minor = answers.reactNativeVersion?.match(/^0\.(\d+)/)?.[1];
+
+  if (minor != null && Number(minor) < 88) {
+    return 'for React Native older than 0.88, since SwiftPM requires React Native 0.88 or newer';
+  }
+
+  return undefined;
+}
+
 function getModuleConfig(projectType: ProjectType): ModuleConfig {
   switch (projectType) {
     case 'nitro-module':
@@ -260,6 +295,10 @@ export async function applyTemplates(
   folder: string
 ) {
   const { local } = answers;
+
+  if (config.experimentalSpm) {
+    await applyTemplate(config, SPM_FILES, folder);
+  }
 
   if (local) {
     await applyTemplate(config, COMMON_LOCAL_FILES, folder);

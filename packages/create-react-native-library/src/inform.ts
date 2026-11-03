@@ -18,7 +18,19 @@ export function printNonLocalLibNextSteps(config: TemplateConfiguration) {
         `${kleur.bold('Get started')} with the project`
       )}${kleur.gray(':')}
 
-        ${kleur.gray('$')} yarn
+        ${kleur.gray('$')} yarn${
+          config.experimentalSpm
+            ? `
+
+      ${kleur.magenta(
+        `Set up ${kleur.bold('Swift Package Manager (SwiftPM)')} for the example app (React Native 0.88+)`
+      )}${kleur.gray(':')}
+
+        ${kleur.gray('$')} yarn example react-native spm --deintegrate
+
+      Then commit the changes, so CI and fresh clones use SwiftPM.`
+            : ''
+        }
       ${Object.entries(platforms)
         .map(
           ([script, { name, color }]) => `
@@ -80,9 +92,15 @@ export function printLocalLibNextSteps({
               `cd ${path.relative(process.cwd(), folder)} && npx nitrogen`
             )} to generate the nitro code \n`
           : '') +
-        `- Run ${kleur.blue(
-          'pod install --project-directory=ios'
-        )} to install dependencies with CocoaPods\n` +
+        (config.experimentalSpm
+          ? `- Run ${kleur.blue(
+              'npx react-native spm'
+            )} to install dependencies with Swift Package Manager (SwiftPM), or ${kleur.blue(
+              'pod install --project-directory=ios'
+            )} if the app uses CocoaPods\n`
+          : `- Run ${kleur.blue(
+              'pod install --project-directory=ios'
+            )} to install dependencies with CocoaPods\n`) +
         `- Run ${kleur.blue('npx react-native run-android')} or ${kleur.blue(
           'npx react-native run-ios'
         )} to build and run the app\n` +

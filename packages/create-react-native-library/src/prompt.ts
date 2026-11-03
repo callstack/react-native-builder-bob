@@ -432,4 +432,11 @@ export const prompt = create(['[name]'], {
       'Must be a valid version',
     skip: true,
   },
+  experimentalSpm: {
+    type: 'confirm',
+    description:
+      'Whether to generate an experimental Swift Package Manager (SwiftPM) manifest',
+    message: 'Do you want to generate a SwiftPM manifest?',
+    skip: true,
+  },
 });

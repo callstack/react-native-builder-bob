@@ -84,6 +84,28 @@ By default, the generated library is automatically linked to the project using `
 
 This creates a symlink to the library under `node_modules` which makes autolinking work. But if you're using a monorepo or have non-standard setup, you'll need to manually set up the package to be linked to your app based on your project setup.
 
+## Swift Package Manager (experimental)
+
+To also generate a `Package.swift` for React Native's experimental [Swift Package Manager (SwiftPM) support](https://reactnative.dev/blog/2026/08/11/react-native-0.87#experimental-swift-package-manager-support-for-ios), pass `--experimental-spm`:
+
+```sh
+npx create-react-native-library@latest awesome-library --experimental-spm
+```
+
+The podspec is still generated, so CocoaPods keeps working. The example app is set up for SwiftPM instead of CocoaPods. Run the following once in the root of the generated project to set it up:
+
+```sh
+yarn example react-native spm --deintegrate
+```
+
+Then commit the changes to the example app's Xcode project, so that CI and fresh clones use SwiftPM. After a fresh clone, run `yarn example react-native spm` to regenerate the SwiftPM build files, since they aren't committed to the repository.
+
+Limitations:
+
+- Requires React Native 0.88 or newer.
+- Nitro libraries aren't supported, since SwiftPM can't compile Swift and C++ sources in the same target.
+- Expo and react-native-test-app examples can't use SwiftPM yet.
+
 ## Writing native code
 
 Once the project is created, you can follow the official React Native docs to learn the API for writing native modules and components:
