@@ -11,7 +11,11 @@ import { alignDependencyVersionsWithExampleApp } from './exampleApp/dependencies
 import generateExampleApp from './exampleApp/generateExampleApp.ts';
 import { printLocalLibNextSteps, printNonLocalLibNextSteps } from './inform.ts';
 import { prompt } from './prompt.ts';
-import { applyTemplates, generateTemplateConfiguration } from './template.ts';
+import {
+  applyTemplates,
+  generateTemplateConfiguration,
+  getExperimentalSpmUnsupportedReason,
+} from './template.ts';
 import { assertNpxExists } from './utils/assert.ts';
 import { configureTools } from './utils/configureTools.ts';
 import { createMetadata } from './utils/createMetadata.ts';
@@ -66,6 +70,16 @@ async function create() {
     basename: path.basename(answers.name ?? answers.directory),
     answers,
   });
+
+  if (answers.experimentalSpm === true) {
+    const reason = getExperimentalSpmUnsupportedReason(answers);
+
+    if (reason != null) {
+      console.warn(
+        `${kleur.yellow('⚠')} Ignoring --experimental-spm ${reason}`
+      );
+    }
+  }
 
   const folder = path.resolve(process.cwd(), answers.directory);
 

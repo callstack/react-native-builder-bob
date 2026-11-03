@@ -38,12 +38,24 @@ yarn nitrogen
 ```
 
 <% } -%>
+<% if (experimentalSpm) { -%>
+The example app uses [Swift Package Manager (SwiftPM)](https://reactnative.dev/blog/2026/08/11/react-native-0.87#experimental-swift-package-manager-support-for-ios) instead of CocoaPods for iOS. The SwiftPM build files are not committed to the repository, so you need to run the following after cloning the project or changing native dependencies:
+
+```sh
+yarn example react-native spm
+```
+
+<% } -%>
 The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
 
 It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
 
 <% if (project.native) { -%>
+<% if (experimentalSpm) { -%>
+If you want to use Android Studio or Xcode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcodeproj` in Xcode and find the source files at `Package Dependencies > <%- project.name -%>`.
+<% } else { -%>
 If you want to use Android Studio or Xcode to edit the native code, you can open the `example/android` or `example/ios` directories respectively in those editors. To edit the Objective-C or Swift files, open `example/ios/<%- project.name -%>Example.xcworkspace` in Xcode and find the source files at `Pods > Development Pods > <%- project.slug -%>`.
+<% } -%>
 
 To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `<%- project.identifier -%>` under `Android`.
 

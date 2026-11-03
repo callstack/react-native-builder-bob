@@ -195,9 +195,7 @@ export function generateTemplateConfiguration({
   return {
     experimentalSpm:
       answers.experimentalSpm === true &&
-      languages !== 'js' &&
-      getModuleConfig(type) !== 'nitro-modules' &&
-      getViewConfig(type) !== 'nitro-view',
+      getExperimentalSpmUnsupportedReason(answers) == null,
     versions,
     project: {
       slug,
@@ -232,6 +230,36 @@ export function generateTemplateConfiguration({
     tools: answers.tools ?? [],
     year: new Date().getFullYear(),
   };
+}
+
+/**
+ * Returns why SwiftPM can't be set up for the given answers, or `undefined` if it can
+ */
+export function getExperimentalSpmUnsupportedReason(
+  answers: Answers
+): string | undefined {
+  if (answers.languages === 'js') {
+    return 'for library without native code';
+  }
+
+  if (
+    getModuleConfig(answers.type) === 'nitro-modules' ||
+    getViewConfig(answers.type) === 'nitro-view'
+  ) {
+    return "for Nitro library, since SwiftPM can't compile Swift and C++ sources in the same target";
+  }
+
+  if (answers.example === 'expo' || answers.example === 'test-app') {
+    return `for ${answers.example} example app, since it doesn't support SwiftPM yet`;
+  }
+
+  const minor = answers.reactNativeVersion?.match(/^0\.(\d+)/)?.[1];
+
+  if (minor != null && Number(minor) < 88) {
+    return 'for React Native older than 0.88, since SwiftPM requires React Native 0.88 or newer';
+  }
+
+  return undefined;
 }
 
 function getModuleConfig(projectType: ProjectType): ModuleConfig {
@@ -270,10 +298,6 @@ export async function applyTemplates(
 
   if (config.experimentalSpm) {
     await applyTemplate(config, SPM_FILES, folder);
-  } else if (answers.experimentalSpm === true && config.project.native) {
-    console.warn(
-      "Swift Package Manager manifest was not generated: Nitro libraries mix Swift and C++ sources, which Swift Package Manager can't compile in a single target."
-    );
   }
 
   if (local) {

@@ -1,20 +1,11 @@
 // swift-tools-version: 6.0
-<%
-// Must match the name React Native's SPM autolinker derives from the package name
-const spmName = project.slug
-  .replace(/^@[^/]+\//, '')
-  .split(/[^a-zA-Z0-9]+/)
-  .filter(Boolean)
-  .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-  .join('');
--%>
 import PackageDescription
 
 let package = Package(
-    name: "<%- spmName -%>",
-    platforms: [.iOS(.v15)],
+    name: "<%- project.name -%>",
+    platforms: [.iOS("15.1")],
     products: [
-        .library(name: "<%- spmName -%>", targets: ["<%- spmName -%>"]),
+        .library(name: "<%- project.name -%>", targets: ["<%- project.name -%>"]),
     ],
     dependencies: [
         .package(name: "ReactNative", path: "../../../../xcframeworks"),
@@ -22,7 +13,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "<%- spmName -%>",
+            name: "<%- project.name -%>",
             dependencies: [
                 .product(name: "ReactHeaders", package: "ReactNative"),
                 .product(name: "ReactNativeHeaders", package: "ReactNative"),
@@ -42,7 +33,6 @@ let package = Package(
             cxxSettings: [
 <% if (project.cpp) { -%>
                 .headerSearchPath("cpp"),
-                .headerSearchPath("ios/generated/ReactCodegen"),
 <% } -%>
                 .define("DEBUG", .when(configuration: .debug)),
                 .define("NDEBUG", .when(configuration: .release)),

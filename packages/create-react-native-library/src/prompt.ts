@@ -143,13 +143,6 @@ const isInPackage = (): boolean => {
 };
 
 export const prompt = create(['[name]'], {
-  experimentalSpm: {
-    type: 'confirm',
-    description: 'Whether to generate an experimental Swift package manifest',
-    message: 'Generate a Swift Package Manager manifest?',
-    default: false,
-    skip: () => !process.argv.includes('--experimental-spm'),
-  },
   local: {
     type: 'confirm',
     description: 'Whether to create a local library',
@@ -437,6 +430,13 @@ export const prompt = create(['[name]'], {
       input === 'latest' ||
       /^\d+\.\d+(?:\.\d+)?(?:-.+)?$/.test(input) ||
       'Must be a valid version',
+    skip: true,
+  },
+  experimentalSpm: {
+    type: 'confirm',
+    description:
+      'Whether to generate an experimental Swift Package Manager (SwiftPM) manifest',
+    message: 'Do you want to generate a SwiftPM manifest?',
     skip: true,
   },
 });

@@ -144,6 +144,11 @@
       }
     <% } -%>
     }
+<% if (experimentalSpm) { -%>
+  },
+  "swiftpmConfig": {
+    "name": "<%- project.name -%>"
+<% } -%>
 <% } -%>
   }
 }
