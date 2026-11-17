@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '..');
 
 /**
  * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
+ * https://metrobundler.dev/docs/configuration/
  *
  * @type {import('metro-config').MetroConfig}
  */
