@@ -72,7 +72,7 @@ There are 2 parts to this process.
 1. **Aliasing the JavaScript code**
 
    The JavaScript (or TypeScript) source code is aliased to be used by the example app. This makes it so that when you import from `'your-library-name'`, it imports the source code directly and avoids having to rebuild the library for JavaScript only changes. We configure several tools to make this work:
-   - [Metro](https://facebook.github.io/metro/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, to use the appropriate peer dependencies, and to resolve the library's custom source condition. This configuration exists in the `example/metro.config.js` file.
+   - [Metro](https://metrobundler.dev/) is configured to allow importing from outside of the `example` directory by configuring `watchFolders`, to use the appropriate peer dependencies, and to resolve the library's custom source condition. This configuration exists in the `example/metro.config.js` file.
    - [TypeScript](https://www.typescriptlang.org/) is configured to use the source code for type checking with the custom source condition and the `paths` property under `compilerOptions`. This configuration exists in the `tsconfig.json` file at the root.
 
 2. **Linking the native code**
